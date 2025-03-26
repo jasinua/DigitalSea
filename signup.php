@@ -57,14 +57,15 @@ if(isset($_POST['submit'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
+    <!-- <script src="script.js" defer></script> -->
     <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f9;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            /* justify-content: center; */
+            /* align-items: center; */
+            height: 100%;
             margin: 0;
         }
 
@@ -75,6 +76,9 @@ if(isset($_POST['submit'])){
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
+            margin: auto;
+            margin-bottom: 20px;
+            margin-top: 20px;
         }
 
         .signup-container h1 {
@@ -127,7 +131,10 @@ if(isset($_POST['submit'])){
         }
     </style>
 </head>
-<body>
+<body onload="loadHeader(), loadFooter()">
+    
+    <div id="header"></div>
+
     <div class="signup-container">
         <h1>Sign Up</h1>
         <form action="" method="post">
@@ -171,5 +178,31 @@ if(isset($_POST['submit'])){
         }
         ?>
     </div>
+
+    <div id="footer"></div>
+    
+    <script>
+        function loadHeader() {
+        fetch('header.php')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+
+                // document.getElementById('triangle').addEventListener('click', function () {
+                //     window.location.href = "mbetja.html"
+                // })
+            })
+            .catch(error => console.error('Error loading header:', error));
+        }
+
+        function loadFooter() {
+            fetch('footer.php')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => console.error('Error loading footer:', error));
+        }
+    </script>
 </body>
 </html>
