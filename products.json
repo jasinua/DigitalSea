@@ -1,0 +1,146 @@
+{
+    "products": [
+      {
+        "product_id": 1,
+        "name": "Desktop",
+        "description": "Ergonomic wireless mouse with long battery life.",
+        "type": "computer",
+        "details": {
+          "RAM": 8,
+          "SSD": 256,
+          "Graphics card": "Intel UHD",
+          "Processor": "Intel Core i7",
+          "OS": "Windows 10"
+        },
+        "price": 899.99,
+        "image_url": {
+          "main_image": "https://example.com/images/desktop-main.jpg",
+          "1": "https://example.com/images/desktop-1.jpg",
+          "2": "https://example.com/images/desktop-2.jpg"
+        },
+        "stock": 50,
+        "api_source": "Internal"
+      },
+      {
+        "product_id": 2,
+        "name": "Smartphone",
+        "description": "Latest smartphone with 5G support and AMOLED display.",
+        "type": "phone",
+        "details": {
+          "RAM": 12,
+          "Storage": 128,
+          "Screen": "6.5 inch AMOLED",
+          "Camera": "108MP",
+          "Battery": "5000mAh"
+        },
+        "price": 699.99,
+        "image_url": {
+          "main_image": "https://example.com/images/smartphone-main.jpg",
+          "1": "https://example.com/images/smartphone-1.jpg",
+          "2": "https://example.com/images/smartphone-2.jpg"
+        },
+        "stock": 100,
+        "api_source": "Internal"
+      },
+      {
+        "product_id": 3,
+        "name": "Laptop",
+        "description": "Lightweight laptop with long battery life.",
+        "type": "computer",
+        "details": {
+          "RAM": 16,
+          "SSD": 512,
+          "Graphics card": "NVIDIA GTX 1650",
+          "Processor": "Intel Core i5",
+          "OS": "Windows 11"
+        },
+        "price": 1199.99,
+        "image_url": {
+          "main_image": "https://example.com/images/laptop-main.jpg",
+          "1": "https://example.com/images/laptop-1.jpg",
+          "2": "https://example.com/images/laptop-2.jpg"
+        },
+        "stock": 75,
+        "api_source": "Internal"
+      },
+      {
+        "product_id": 4,
+        "name": "Smartwatch",
+        "description": "Smartwatch with health tracking features.",
+        "type": "phone",
+        "details": {
+          "Battery": "14 days",
+          "Water Resistance": "5ATM",
+          "Screen": "1.4 inch AMOLED",
+          "Heart Rate Monitor": true
+        },
+        "price": 199.99,
+        "image_url": {
+          "main_image": "https://example.com/images/smartwatch-main.jpg",
+          "1": "https://example.com/images/smartwatch-1.jpg",
+          "2": "https://example.com/images/smartwatch-2.jpg"
+        },
+        "stock": 150,
+        "api_source": "Internal"
+      },
+      {
+        "product_id": 5,
+        "name": "Bluetooth Headphones",
+        "description": "Noise-canceling Bluetooth headphones with long battery life.",
+        "type": "accessory",
+        "details": {
+          "Battery": "20 hours",
+          "Bluetooth Version": "5.0",
+          "Weight": "250g"
+        },
+        "price": 129.99,
+        "image_url": {
+          "main_image": "https://example.com/images/headphones-main.jpg",
+          "1": "https://example.com/images/headphones-1.jpg",
+          "2": "https://example.com/images/headphones-2.jpg"
+        },
+        "stock": 200,
+        "api_source": "Internal"
+      },
+      {
+        "product_id": 6,
+        "name": "Gaming Chair",
+        "description": "Comfortable gaming chair with adjustable armrests and lumbar support.",
+        "type": "furniture",
+        "details": {
+          "Material": "Leather",
+          "Weight Capacity": "300 lbs",
+          "Adjustability": "360-degree swivel"
+        },
+        "price": 349.99,
+        "image_url": {
+          "main_image": "https://example.com/images/gaming-chair-main.jpg",
+          "1": "https://example.com/images/gaming-chair-1.jpg",
+          "2": "https://example.com/images/gaming-chair-2.jpg"
+        },
+        "stock": 30,
+        "api_source": "External"
+      },
+      {
+        "product_id": 7,
+        "name": "4K TV",
+        "description": "Ultra HD 4K Smart TV with HDR support and voice control.",
+        "type": "electronics",
+        "details": {
+          "Screen Size": "55 inches",
+          "Resolution": "3840x2160",
+          "Smart Features": "Yes",
+          "HDMI Ports": "3"
+        },
+        "price": 799.99,
+        "image_url": {
+          "main_image": "https://example.com/images/4k-tv-main.jpg",
+          "1": "https://example.com/images/4k-tv-1.jpg",
+          "2": "https://example.com/images/4k-tv-2.jpg"
+        },
+        "stock": 50,
+        "api_source": "Internal"
+      }
+    ]
+  }
+  
