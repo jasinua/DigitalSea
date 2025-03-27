@@ -2,6 +2,8 @@
 include_once "includes/login.inc.php"; 
 include_once "includes/function.php";
 
+include "header.php";
+
 if(!isset($_SESSION['user_id'])) {
     if(isset($_POST['submit'])){
         $email = $_POST['email'];
