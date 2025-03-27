@@ -51,9 +51,11 @@
             display: block;
             margin-bottom: 10px;
         }
+
         .footer-column a:hover {
             text-decoration: underline;
         }
+
         .social-icons {
             display: flex;
             justify-content: center;

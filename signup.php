@@ -58,9 +58,84 @@ if(isset($_POST['submit'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Sign Up</title>
-   
+    <!-- <script src="script.js" defer></script> -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            /* justify-content: center; */
+            /* align-items: center; */
+            height: 100%;
+            margin: 0;
+        }
+
+        .signup-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .signup-container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .signup-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .signup-container input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .signup-container input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .signup-container input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .signup-container .error, .signup-container .success {
+            text-align: center;
+            margin-top: 15px;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .signup-container .error {
+            background-color: #f44336;
+        }
+
+        .signup-container .success {
+            background-color: #4CAF50;
+        }
+    </style>
 </head>
-<body>
+<body onload="loadHeader(), loadFooter()">
+    
+    <div id="header"></div>
+
     <div class="signup-container">
         <h1>Sign Up</h1>
         <form action="" method="post">
@@ -104,5 +179,31 @@ if(isset($_POST['submit'])){
         }
         ?>
     </div>
+
+    <div id="footer"></div>
+    
+    <script>
+        function loadHeader() {
+        fetch('header.php')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+
+                // document.getElementById('triangle').addEventListener('click', function () {
+                //     window.location.href = "mbetja.html"
+                // })
+            })
+            .catch(error => console.error('Error loading header:', error));
+        }
+
+        function loadFooter() {
+            fetch('footer.php')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => console.error('Error loading footer:', error));
+        }
+    </script>
 </body>
 </html>

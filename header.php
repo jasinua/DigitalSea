@@ -19,7 +19,14 @@
                 --background-color: #2b2b2e;        /* Deep charcoal for balanced contrast */
                 --modal-text-color: #f0f0f0;        /* Light gray text for clear readability */
             }
-          
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: var(--background-color);
+                color: var(--modal-text-color);
+                line-height: 1.5;
+            }
+
             header {
                 background-color: var(--header-color);
                 color: white;
@@ -41,9 +48,11 @@
                 justify-content: center;
                 padding: 0;
             }
+
             nav ul li {
                 margin: 0 30px;
             }
+
             nav ul li i {
                 color: white;
                 text-decoration: none;
@@ -66,9 +75,11 @@
                 transform: translateX(-50%);
                 transition: width 0.3s ease; /* Controls the animation speed and timing */
             }
+
             nav ul li a:hover::after {
                 width: 100%; /* Expands the underline from left to right */
             }
+
         </style>
     <body>
         <header>
