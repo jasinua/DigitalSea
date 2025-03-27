@@ -5,6 +5,7 @@
     --button-color-hover: rgb(49, 68, 133);
     --success-color: #4CAF50;
     --error-color: #f44336;
+
 }
 
 
@@ -18,6 +19,96 @@ body {
     margin: 0;
 }
 
+
+/* HEADER START */
+
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Header Styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo */
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Icons */
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Icon Buttons */
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.icon-btn img {
+    width: 24px;
+    height: 24px;
+}
+
+.icon-btn:hover {
+    opacity: 0.7;
+}
+
+/* Dropdown */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    display: none;
+    width: 120px;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.dropdown-menu a:hover {
+    background: #f4f4f4;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+
+
+/* HEADER END */
 
 
 /* SIGN UP PAGE */
@@ -85,3 +176,65 @@ body {
 
 
 
+/* LOGIN START */
+
+.login-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.login-container input[type="submit"] {
+    background-color:var(--button-colors);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+}
+
+.login-container input[type="submit"]:hover {
+    background-color: var(--button-color-hover);
+    transition: all 0.2s ease-in-out;
+}
+
+.login-container input:focus {
+    border-color: var(--button-color-hover);
+    outline: none;
+}
+
+.login-container .error, .login-container .success {
+    text-align: center;
+    margin-top: 15px;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.login-container .error {
+    background-color: var(--error-color);
+}
+
+.login-container .success {
+    background-color: var(--success-color);
+}
+
+/* LOGIN END */
