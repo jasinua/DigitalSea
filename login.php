@@ -1,24 +1,31 @@
 <?php 
-include_once "includes/login.inc.php";
+include_once "includes/login.inc.php"; 
+include_once "includes/function.php";
 
+if(!isset($_SESSION['user_id'])) {
+    if(isset($_POST['submit'])){
+        $email = $_POST['email'];
+        $password = $_POST['password'];
 
-if(isset($_POST['submit'])){
-    // Storing variables for validation
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // Data validation using methods
-    if(checkData($email)) {
-        header("Location: login.php?email=doesntexist");
-        exit();
-    }
+        if(checkData($email)) {
+            header("Location: login.php?email=doesntexist");
+            exit();
+        }
   
-    login($email,$password);
-    header("Location: login.php?login=success");
-
-   
+        $loginResult = login($email, $password); 
+  
+        if ($loginResult) {
+            header("Location: homepage.php"); 
+            exit();
+        } else {
+            echo "<div class='error'>Invalid email or password.</div>";
+        }
+    }
+} else {
+    header("Location: homepage.php"); 
+    exit();
 }
- ?>
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +34,6 @@ if(isset($_POST['submit'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Log in</title>
-   
 </head>
 <body>
     <div class="login-container">
@@ -43,8 +49,6 @@ if(isset($_POST['submit'])){
         if (isset($_GET['email']) && $_GET['email'] == 'doesntexist') {
             echo "<div class='error'>Email does not exist.</div>";
         }
-       
-  
         ?>
     </div>
 </body>

@@ -1,6 +1,6 @@
 <?php
-include "dbh.inc.php"; 
-
+session_start();  // Start the session at the top of the file
+include_once "dbh.inc.php"; 
 
 // shiqon nese email ekziston
 function checkData($email) {
@@ -13,7 +13,7 @@ function checkData($email) {
     return $result->num_rows === 0; 
 }
 
-//qasja ne llogari
+// qasja ne llogari
 function login($email, $password) {
     global $conn;
 
@@ -26,25 +26,17 @@ function login($email, $password) {
         $result = $stmt->get_result();
         $user = $result->fetch_assoc(); 
 
-        // Check if the user exists and the password is correct
+        
         if ($user && password_verify($password, $user['password'])) {
-            // Start the session and store user id in the session
-            session_start();
-            $_SESSION['user_id'] = $user['user_id'];
-
             
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['isAdministrator'] = $user['isAdmin'];
+            return true;  // Successfully logged in
         } else {
-            return false;
+            return false; // Incorrect credentials
         }
     } else {
-
-        header("Location: ../login.php?sucess=failed"); // Change this to your desired page
-        exit();
-
-        // Query execution failed
-        return false;
+        return false; // Something went wrong with the query
     }
 }
-
-
 ?>
