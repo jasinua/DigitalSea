@@ -13,8 +13,9 @@
             box-sizing: border-box;
         }
         html, body {
-            height: 100%;
-            color: ;
+            /* height: 100%; */
+            /* width: 100%; */
+            /* color: ; */
             margin: 0;
             padding: 0;
             display: flex;
