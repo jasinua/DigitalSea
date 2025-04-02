@@ -12,7 +12,7 @@
                 --header-color:rgb(213, 237, 230);
     
                 --background-color: #f5f5fa;         /* Light background with a soft, neutral tone */
-                --modal-text-color: #3a3a3a;        /* Dark gray for easy readability */
+                --text-color: #3a3a3a;        /* Dark gray for easy readability */
             }
             /* Dark Mode Colors */
             body.dark-mode {
@@ -33,15 +33,17 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                /* padding: 15px 20px; */
+                padding: 12px 20px;
                 width: 100%;
             }
+
             header .logo {
                 margin: 10px;
                 padding: 0;
                 height: 25px;
                 width: 25px;
             }
+
             nav ul {
                 list-style: none;
                 display: flex;
