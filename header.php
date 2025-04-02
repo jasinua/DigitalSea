@@ -83,7 +83,7 @@
         </style>
     <body>
         <header>
-            <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><img class="logo" src="logo.png" alt="logo e kompanise tone"></div>
+            <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "homepage.php"><img class="logo" src="logo.png" alt="logo e kompanise tone"></a></div>
             <nav>
                 <ul>
                     <li><a href="wishlist.php"><i class="fas fa-heart"></i></a></li>
