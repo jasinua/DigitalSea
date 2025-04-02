@@ -90,7 +90,7 @@
                 <ul>
                     <li><i class="fas fa-heart"></i></li>
                     <li><i class="fas fa-cart-plus"></i></li>
-                    <li><i class="fas fa-user"></i></li>
+                    <li><a href="profile.php"><i class="fas fa-user"></a></i></li>
                 </ul>
             </nav>
         </header>
