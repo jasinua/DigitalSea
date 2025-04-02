@@ -20,8 +20,8 @@ if(!isset($_SESSION['user_id'])) {
             header("Location: homepage.php"); 
             exit();
         } else {
-            echo "<div class='error'>Invalid email or password.</div>";
-        }
+            header("Location: login.php?input=error"); 
+            exit();  }
     }
 } else {
     header("Location: homepage.php"); 
@@ -48,7 +48,7 @@ if(!isset($_SESSION['user_id'])) {
 
         <?php 
         // Displaying error or success messages based on URL parameters
-        if (isset($_GET['email']) && $_GET['email'] == 'doesntexist') {
+        if (isset($_GET['input']) && $_GET['input'] == 'error') {
             echo "<div class='error'>Email does not exist.</div>";
         }
         ?>
