@@ -39,34 +39,30 @@ function checkAge($date) {
 // shiqon nese email ekziston
 function emailExists($email) {
     global $conn;
-    $sql = "SELECT * FROM users WHERE email = ?;";
-    $stmt = $conn->prepare($sql);
+
+    $stmt = $conn->prepare("CALL checkUserExist(?)");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
     return $result->num_rows === 0; 
 }
 
-//krijimki i userit
 function createUser($first_name, $last_name, $birthday, $email, $password) {
     global $conn;
 
     // Hash the password before storing it in the database
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insert the new user into the database
-    $sql = "INSERT INTO users (first_name, last_name, email, password, date_of_birth) VALUES (?, ?, ?, ?, ?);";
-    $stmt = $conn->prepare($sql);
+    // Prepare the statement for calling the procedure
+    $stmt = $conn->prepare("CALL insertUser(?, ?, ?, ?, ?)");
     $stmt->bind_param("sssss", $first_name, $last_name, $email, $hashed_password, $birthday);
     
-
     if ($stmt->execute()) {
-        return true; 
-        //header("Location: ..index.php?good=job");
-        //exit;
+        return true;
     } else {
         return false;
     }
 }
+
 
 ?>

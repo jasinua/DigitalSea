@@ -7,15 +7,15 @@
     if(isLoggedIn($_SESSION['user_id'])) {
 
 
-        $res = returnWishList($_SESSION['user_id']);
+        $res = returnCart($_SESSION['user_id']);
 
 ?>
 
 <?php include "header.php";?>
 <link rel="stylesheet" href="style.css">
         <div class="wishlist-container">
-            <?php foreach($res as $wishlist) {
-                $product_result = returnProduct($wishlist['product_id']);
+            <?php foreach($res as $cart) {
+                $product_result = returnProduct($cart['product_id']);
 
 
             ?>
