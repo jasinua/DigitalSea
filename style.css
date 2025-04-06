@@ -1,114 +1,23 @@
 :root {
 
     --background-color: #f4f4f9;
-    --button-colors: rgb(69, 100, 204);
+    --button-colors: rgb(4, 175, 126);
     --button-color-hover: rgb(49, 68, 133);
     --success-color: #4CAF50;
     --error-color: #f44336;
 
 }
 
-
 body {
     font-family: 'Arial', sans-serif;
     background-color: var(--background-color);
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-
-
-/* HEADER START */
-
-
-/* General Reset */
-* {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
 }
-
-/* Header Styling */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    background: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Logo */
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-}
-
-/* Icons */
-.icons {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-/* Icon Buttons */
-.icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.icon-btn img {
-    width: 24px;
-    height: 24px;
-}
-
-.icon-btn:hover {
-    opacity: 0.7;
-}
-
-/* Dropdown */
-.dropdown {
-    position: relative;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    background: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    overflow: hidden;
-    display: none;
-    width: 120px;
-}
-
-.dropdown-menu a {
-    display: block;
-    padding: 10px;
-    color: #333;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.dropdown-menu a:hover {
-    background: #f4f4f4;
-}
-
-/* Show dropdown on hover */
-.dropdown:hover .dropdown-menu {
-    display: block;
-}
-
-
-
-/* HEADER END */
-
 
 /* SIGN UP PAGE */
 .signup-container {
@@ -118,6 +27,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
+    margin: 20px auto;
 }
 
 .signup-container h1 {
@@ -173,8 +83,6 @@ body {
 /* END OF SIGN UP PAGE */
 
 
-
-
 /* LOGIN START */
 
 .login-container {
@@ -184,8 +92,10 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
-    margin: auto;
-    margin-top:100px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .login-container h1 {
@@ -240,8 +150,6 @@ body {
 
 /* LOGIN END */
 
-
-
 /* WISHLIST START */
 
 .wishlist-container {
@@ -257,7 +165,6 @@ body {
     align-items: center;
     align-self: center;
     flex-wrap:wrap;
-
 }
 
 .wishlist-products-container {
@@ -289,3 +196,177 @@ body {
 }
 
 /* WISHLIST END */
+
+/* PROFILE START */
+
+.profile {
+    display: flex;
+    flex-direction: row;
+}
+
+.userProfile {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    color: var(--text-color);
+    max-width: 400px;
+    width: 100%;
+    margin: 20px 0 20px 37%;
+    background: var(--background-color-test);
+    padding: 30px;
+    opacity: 1;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, opacity 0.5s ease-in;
+    flex-grow: 1;
+    z-index: 2;
+}
+
+/* kjo veq perkohsisht deri sa te implementohet img */
+.userProfile i {
+    font-size: 70px;
+    border-radius: 50%;
+}
+
+.userProfile .user_data {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.userProfile .user_name_lastname {
+    font-size: 34px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.userProfile .edit_button {
+    padding: 0;
+    margin-top: 15px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.userProfile .edit_button:hover {
+    color: #757575;
+    cursor: pointer;
+}
+
+.editProfile {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    opacity: 0;
+    color: var(--text-color);
+    max-width: 400px;
+    width: 100%;
+    margin: 35px -10%;
+    background: var(--background-color-test);
+    padding: 30px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, opacity 0.5s ease;
+    flex-grow: 1;
+}
+
+/* When active, slide editProfile into view */
+.editProfile.active {
+    opacity: 1;
+    transform: translateX(39%);
+}
+
+.editProfile.hidden {
+    opacity: 0;
+    transform: translateX(-60%);
+}
+
+/* Hide userProfile when editProfile is active */
+.userProfile.hidden {
+    margin-left: 30%;
+    transition: margin-left 0.5s ease-in-out;
+}
+
+.userProfile.active {
+    margin-left: 37%;
+    transition: margin-left 0.5s ease-in-out;
+}
+
+/* Style the inputs */
+.input-field {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+    outline: none;
+}
+
+/* Style for first and last name inputs */
+.first_last_name {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.submitCancel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Style for the submit button */
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--button-colors);
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: var(--button-color-hover);
+}
+
+.submit-btn:focus {
+    outline: none;
+}
+
+/* Style for the submit button */
+.cancel-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--button-colors);
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background-color: var(--button-color-hover);
+}
+
+.cancel-btn:focus {
+    outline: none;
+}
+
+/* PROFILE END */

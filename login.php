@@ -38,6 +38,8 @@ if(!isset($_SESSION['user_id'])) {
     <title>Log in</title>
 </head>
 <body>
+    <div id="header"></div>
+
     <div class="login-container">
         <h1>Login</h1>
         <form action="" method="post">
@@ -53,5 +55,9 @@ if(!isset($_SESSION['user_id'])) {
         }
         ?>
     </div>
+
+    <div id="footer"></div>
+
+    <?php include "footer.php"; ?>
 </body>
 </html>

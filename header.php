@@ -12,7 +12,7 @@
                 --header-color:rgb(213, 237, 230);
     
                 --background-color: #f5f5fa;         /* Light background with a soft, neutral tone */
-                --modal-text-color: #3a3a3a;        /* Dark gray for easy readability */
+                --text-color: #3a3a3a;        /* Dark gray for easy readability */
             }
             /* Dark Mode Colors */
             body.dark-mode {
@@ -33,15 +33,17 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                /* padding: 15px 20px; */
+                padding: 12px 20px;
                 width: 100%;
             }
+
             header .logo {
                 margin: 10px;
                 padding: 0;
                 height: 25px;
                 width: 25px;
             }
+
             nav ul {
                 list-style: none;
                 display: flex;
@@ -86,9 +88,9 @@
             <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "homepage.php"><img class="logo" src="logo.png" alt="logo e kompanise tone"></a></div>
             <nav>
                 <ul>
-                    <li><a href="wishlist.php"><i class="fas fa-heart"></i></a></li>
-                    <li><a href="cart.php"><i class="fas fa-cart-plus"></i></a></li>
-                    <li><a href="profile.php"><i class="fas fa-user"></i></a></li>
+                    <li><a href="wishlist.php"><i class="fas fa-star"></i></a></li>
+                    <li><a href="cart.php"><i class="fas fa-cart-plus"></a></i></li>
+                    <li><a href="profile.php"><i class="fas fa-user"></a></i></li>
                 </ul>
             </nav>
         </header>

@@ -2,7 +2,6 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/> -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     </head>
     <style>
@@ -12,42 +11,49 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         html, body {
-            /* height: 100%; */
-            /* width: 100%; */
-            /* color: ; */
             margin: 0;
             padding: 0;
+            height: 100%;
             display: flex;
             flex-direction: column;
             font-family: Arial, sans-serif;
             background-color: var(--background-color);
             /* align-self: flex-end; */
         }
+
         /* qitu per root i ndrrojm*/
         :root {
             /* Footer Colors */
-            --footer-bg-color: #3a3a3a;         /* Dark gray footer background for modern feel */
-            --footer-text-color: #ffffff;       /* White footer text for strong contrast */
+            --background-color-test:rgb(107, 174, 156);
+            --footer-bg-color: #4a7c68;
+            --footer-text-color: #3a3a3a;
+            --footer-items-color: #fff;
+
+            --success-color: #4CAF50;
+            --error-color: #f44336;
         }
+        
         .footer {
             display: flex;
             justify-content: center;
             padding: 40px 0;
             text-align: left;
             margin:0;
-            background-color: #4a7c68;
+            background-color: var(--footer-bg-color);
         }
         .footer-column {
             flex: 1;
             margin-left:5%;
         }
         .footer-column h3 {
+            color: var(--footer-text-color);
             font-size: 18px;
             margin-bottom: 10px;
         }
         .footer-column a {
-            color: #fff;
+            color: var(--footer-items-color);
             text-decoration: none;
             display: block;
             margin-bottom: 10px;
@@ -60,11 +66,11 @@
         .social-icons {
             display: flex;
             justify-content: center;
-            background-color: #4a7c68;
+            background-color: var(--footer-bg-color);
             margin: 0;
         }
         .social-icons a {
-            color: #fff;
+            color: var(--footer-items-color);
             font-size: 20px;
             margin: 0 20px;
             margin-bottom: 1%;
