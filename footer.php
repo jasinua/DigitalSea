@@ -16,8 +16,8 @@
             margin: 0;
             padding: 0;
             height: 100%;
-            display: flex;
-            flex-direction: column;
+            /* display: flex;
+            flex-direction: column; */
             font-family: Arial, sans-serif;
             background-color: var(--background-color);
             /* align-self: flex-end; */
