@@ -7,33 +7,37 @@
         <title>Header</title>
     </head>
         <style>
-           /* Light Mode Colors (default) */
             :root {
-                --header-color:rgb(213, 237, 230);
-    
-                --background-color: #f5f5fa;         /* Light background with a soft, neutral tone */
-                --text-color: #3a3a3a;        /* Dark gray for easy readability */
-            }
-            /* Dark Mode Colors */
-            body.dark-mode {
-                --background-color: #2b2b2e;        /* Deep charcoal for balanced contrast */
-                --modal-text-color: #f0f0f0;        /* Light gray text for clear readability */
+                --background-color: #f5f5fa;       
+                --text-color: white;
+                --page-text-color: #232a2f;
+                                
+                --button-color: #153147;
+                --button-color-hover:rgb(26, 78, 118);
+
+                --noir-color: #232a2f;
+                --navy-color: #153147;
+                --mist-color: #adb8bb;
+                --almond-color: #edeae4;
+                --ivory-color: #f9f8f7;
+
+
             }
 
             body {
                 font-family: Arial, sans-serif;
-                background-color: var(--background-color);
-                color: var(--modal-text-color);
+                background-color: white;
+                color: var(--text-color);
                 line-height: 1.5;
             }
 
             header {
-                background-color: var(--header-color);
+                background-color: var(--noir-color);
                 color: white;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: 12px 20px;
+                padding: 10px 20px;
                 width: 100%;
             }
 

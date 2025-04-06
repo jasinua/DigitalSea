@@ -53,6 +53,187 @@ if (!isLoggedIn($user_id)) {
 <link rel="stylesheet" href="style.css"/>
 <title>Profile Page</title>
 </head>
+<style>
+    /* PROFILE START */
+
+    .profile {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .userProfile {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        color: var(--page-text-color);
+        max-width: 400px;
+        width: 100%;
+        margin: 20px 0 20px 37%;
+        background-color: white;
+        padding: 30px;
+        opacity: 1;
+        border-radius: 10px;
+        /* border: 1px solid var(--navy-color); */
+        box-shadow: 0 0px 5px #153147;
+        transition: transform 0.3s ease-in-out, opacity 0.5s ease-in;
+        flex-grow: 1;
+        z-index: 2;
+    }
+
+    /* kjo veq perkohsisht deri sa te implementohet img */
+    .userProfile i {
+        font-size: 70px;
+        border-radius: 50%;
+    }
+
+    .userProfile .user_data {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+
+    .userProfile .user_name_lastname {
+        font-size: 34px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .userProfile .edit_button {
+        padding: 0;
+        margin-top: 15px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .userProfile .edit_button:hover {
+        color: #757575;
+        cursor: pointer;
+    }
+
+    /* Hide userProfile when editProfile is active */
+    .userProfile.hidden {
+        margin-left: 30%;
+        transition: margin-left 0.5s ease-in-out;
+    }
+
+    .userProfile.active {
+        margin-left: 37%;
+        transition: margin-left 0.5s ease-in-out;
+    }
+
+    .editProfile {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        opacity: 0;
+        color: var(--page-text-color);
+        max-width: 400px;
+        width: 100%;
+        margin: 35px -10%;
+        background-color: white;
+        padding: 30px;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        /* border: 1px solid var(--navy-color); */
+        box-shadow: 0 0 5px #153147;
+        transition: transform 0.3s ease-in-out, opacity 0.5s ease;
+        flex-grow: 1;
+    }
+
+    /* When active, slide editProfile into view */
+    .editProfile.active {
+        opacity: 1;
+        transform: translateX(39%);
+    }
+
+    .editProfile.hidden {
+        opacity: 0;
+        transform: translateX(-60%);
+    }
+
+    /* Style the inputs */
+    .input-field {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .input-field:focus {
+        border-color: var(--navy-color);
+        box-shadow: 0 0 5px var(--navy-color);
+        outline: none;
+    }
+
+    /* Style for first and last name inputs */
+    .first_last_name {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .submitCancel {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    /* Style for the submit button */
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--navy-color);
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        background-color: var(--button-color-hover);
+    }
+
+    .submit-btn:focus {
+        outline: none;
+    }
+
+    /* Style for the submit button */
+    .cancel-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--button-color);
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .cancel-btn:hover {
+        background-color: var(--button-color-hover);
+    }
+
+    .cancel-btn:focus {
+        outline: none;
+    }
+
+    .emailXaddress p {
+        margin: 0;
+        padding: 0;
+    }
+
+</style>
 <body>
 
     <div class="profile">
@@ -60,8 +241,10 @@ if (!isLoggedIn($user_id)) {
             <!-- <img src="" alt=""> -->
             <p><i class="fas fa-user"></i></p> <!-- perkohsisht deri sa te implementojme img-->
             <h2 class="user_name_lastname" id="user_name"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
-            <p class="user_data" id="user_email">Email: <?php echo htmlspecialchars($user['email']); ?></p>
-            <p class="user_data" id="user_address">Address: <?php echo htmlspecialchars($user['address']); ?> </p>
+            <div class="emailXaddress">
+                <p class="user_data" id="user_email">Email: <?php echo htmlspecialchars($user['email']); ?></p>
+                <p class="user_data" id="user_address">Address: <?php echo htmlspecialchars($user['address']); ?> </p>
+            </div>
             <p class="edit_button" id="edit" onclick="editFunction()">Edito Profilin</p>
         </div>
         <div class="editProfile">
