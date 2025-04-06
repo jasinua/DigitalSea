@@ -39,7 +39,7 @@ if (isset($_POST['first_name']) || isset($_POST['last_name']) || isset($_POST['e
 
 // Check login status
 if (!isLoggedIn($user_id)) {
-    header("Location: homepage.php");
+    header("Location: login.php");
     exit();
 }
 ?>
@@ -54,7 +54,6 @@ if (!isLoggedIn($user_id)) {
 <title>Profile Page</title>
 </head>
 <body>
-    <div id="header"></div>
 
     <div class="profile">
         <div class="userProfile">
@@ -79,91 +78,104 @@ if (!isLoggedIn($user_id)) {
             </div>
         </form>
     </div>
-    </div>
-    <div id="footer"></div>
+    </div> 
 
     <?php include "footer.php"; ?>
 </body>
 <script>
-   let fields = ["user_name", "user_email", "user_address"];
-    let userProfile = document.querySelector(".userProfile");
-    let editProfile = document.querySelector(".editProfile");
-    let edit_profile = document.getElementById("edit");
+        let userProfile = document.querySelector(".userProfile");
+        let editProfile = document.querySelector(".editProfile");
+        let editButton = document.getElementById("edit");
+        let isEditing = false;
 
-    function editFunction() {
+        function editFunction() {
+            if (!isEditing) {
+                // Show edit form
+                userProfile.classList.add("hidden");
+                userProfile.classList.remove("active");
+                setTimeout(() => {
+                    editProfile.classList.add("active");
+                    editProfile.classList.remove("hidden");
+                }, 300);
+                
+                editButton.innerText = "Duke edituar profilin";
+                isEditing = true;
+            } else if(isEditing && editButton.innerText === "Duke edituar profilin") {
+                isEditing = true;
+            } else {
+                // Submit changes
+                submitChanges();
+                isEditing = false;
+            }
+        }
 
-        if (edit_profile.innerText === "Edito Profilin") {
-            userProfile.classList.add("hidden");
-            userProfile.classList.remove("active");
-            setTimeout(() => {
-                editProfile.classList.add("active");
-                editProfile.classList.remove("hidden");
-            }, 300);
-
-            // Change button to submit
-            edit_profile.innerText = "Duke Edituar Profili";
-        } else {
+        function submitChanges() {
             let first_name = document.querySelector("input[name='first_name']").value.trim();
             let last_name = document.querySelector("input[name='last_name']").value.trim();
-            let after_email = document.querySelector("input[name='email']").value.trim();
-            let after_address = document.querySelector("input[name='address']").value.trim();
+            let email = document.querySelector("input[name='email']").value.trim();
+            let address = document.querySelector("input[name='address']").value.trim();
 
-            // Create a request to send data via AJAX to the server
+            // Validate email if changed
+            if (email !== "<?php echo htmlspecialchars($user['email']); ?>" && !validateEmail(email)) {
+                alert("Ju lutem shkruani një email valid!");
+                return;
+            }
+
             let xhr = new XMLHttpRequest();
-            xhr.open("POST", "profile.php", true); // Point to the update script
+            xhr.open("POST", "profile.php", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-            // Handle the response from the server
-            xhr.onload = function () {
+            xhr.onload = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    // Log the response and update the page if success
-                    if (xhr.responseText.trim() === "Profile updated successfully.") {
-                        console.log("Profile successfully updated!");
+                        // Update UI only if server responded successfully
+                        document.getElementById("user_name").innerText = 
+                        (first_name || "<?php echo htmlspecialchars($user['first_name']); ?>") + " " + 
+                        (last_name || "<?php echo htmlspecialchars($user['last_name']); ?>");
+                        
+                    document.getElementById("user_email").innerText = 
+                        "Email: " + (email || "<?php echo htmlspecialchars($user['email']); ?>");
+                        
+                    document.getElementById("user_address").innerText = 
+                        "Address: " + (address || "<?php echo htmlspecialchars($user['address']); ?>");
 
-                        // Update the displayed user info immediately
-                        if (first_name !== "") document.getElementById("user_name").innerText = first_name + " " + (last_name !== "" ? last_name : "<?php echo htmlspecialchars($user['last_name']); ?>");
-                        if (last_name !== "") document.getElementById("user_name").innerText = (first_name !== "" ? first_name : "<?php echo htmlspecialchars($user['first_name']); ?>") + " " + last_name;
-                        if (after_email !== "") document.getElementById("user_email").innerText = "Email: " + after_email;
-                        if (after_address !== "") document.getElementById("user_address").innerText = "Address: " + after_address;
-
-                        // Close edit mode
-                        cancelEdit();
-                        edit_profile.innerText = "Edito Profilin";
-                    } else {
-                        console.log("Unexpected response:", xhr.responseText);
-                    }
+                    // Reset edit state
+                    cancelEdit();
                 } else {
-                    console.log("XHR request failed with status:", xhr.status);
+                    console.error("Error updating profile:", xhr.responseText);
                 }
             };
 
-            // Send the data to the server
             xhr.send(
                 "first_name=" + encodeURIComponent(first_name) + 
                 "&last_name=" + encodeURIComponent(last_name) + 
-                "&email=" + encodeURIComponent(after_email) + 
-                "&address=" + encodeURIComponent(after_address)
+                "&email=" + encodeURIComponent(email) + 
+                "&address=" + encodeURIComponent(address)
             );
         }
-    }
 
-    // Prevent form submission on 'Save Changes'
-    document.querySelector("form").addEventListener("submit", editFunction);
+        function cancelEdit() {
+            // Hide edit form and show profile
+            setTimeout(() => {
+                userProfile.classList.remove("hidden");
+                userProfile.classList.add("active");
+                editProfile.classList.remove("active");
+                editProfile.classList.add("hidden");
+            }, 0);
 
-    function cancelEdit() {
-        document.querySelector("input[name='first_name']").value = "<?php echo htmlspecialchars($user['first_name']); ?>";
-        document.querySelector("input[name='last_name']").value = "<?php echo htmlspecialchars($user['last_name']); ?>";
-        document.querySelector("input[name='email']").value = "<?php echo htmlspecialchars($user['email']); ?>";
-        document.querySelector("input[name='address']").value = "<?php echo htmlspecialchars($user['address']); ?>";
+            // Reset button state
+            editButton.innerText = "Edito Profilin";
+            isEditing = false;
+        }
 
-        setTimeout(() => {
-            userProfile.classList.remove("hidden");
-            userProfile.classList.add("active");
-
-            editProfile.classList.remove("active");
-            editProfile.classList.add("hidden");
-        }, 0);
-    }
-
+        // Email validation helper
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        // Prevent form submission (we'll handle it via AJAX)
+        document.querySelector("form").addEventListener("submit", function(e) {
+                e.preventDefault();
+                submitChanges();
+        });
 </script>
 </html>

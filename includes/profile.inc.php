@@ -1,27 +1,42 @@
 <?php
-session_start();  // Start the session at the top of the file
-include_once "dbh.inc.php"; 
+session_start();
+include_once "dbh.inc.php";
 
-// Ensure user_id is in session
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    die("Session user_id is not set. Please log in.");
+    die("Error: You're not logged in. Session user_id is not set.");
 }
 
-// Fetch user data from database using user_id
-$user_id = $_SESSION['user_id']; 
+$user_id = $_SESSION['user_id'];
 
-// Prepare SQL query to fetch user details based on user_id
-$stmt = $conn->prepare("SELECT first_name, last_name, email, address FROM users WHERE user_id = ?");
-$stmt->bind_param("i", $user_id);  // Bind user_id parameter as an integer
-$stmt->execute();  // Execute the query
-$result = $stmt->get_result();  // Get the result set
-$user = $result->fetch_assoc();  // Fetch associative array with user data
-$stmt->close();  // Close the statement
-
-// Check if user was found
-if (!$user) {
-    die("User not found.");
+// Verify database connection
+if (!$conn) {
+    die("Database connection failed: " . mysqli_connect_error());
 }
 
-// You can now access $user['first_name'], $user['last_name'], and $user['email']
+// Prepare query - adjust table/column names as needed
+$query = "SELECT first_name, last_name, email, address FROM users WHERE user_id = ?";
+$stmt = $conn->prepare($query);
+
+if (!$stmt) {
+    die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+}
+
+$stmt->bind_param("i", $user_id);
+
+if (!$stmt->execute()) {
+    die("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
+}
+
+$result = $stmt->get_result();
+
+// Check if we got any results
+if ($result->num_rows === 0) {
+    // Debug: Show the user_id we searched for
+    die("User not found. Searched for user_id: " . $user_id . 
+        "<br>Query was: " . $query);
+}
+
+$user = $result->fetch_assoc();
+$stmt->close();
 ?>

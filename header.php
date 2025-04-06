@@ -88,7 +88,7 @@
             <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><img class="logo" src="logo.png" alt="logo e kompanise tone"></div>
             <nav>
                 <ul>
-                    <li><a href="wishlist.php"><i class="fas fa-heart"></i></a></li>
+                    <li><a href="wishlist.php"><i class="fas fa-star"></i></a></li>
                     <li><a href="cart.php"><i class="fas fa-cart-plus"></a></i></li>
                     <li><a href="profile.php"><i class="fas fa-user"></a></i></li>
                 </ul>
