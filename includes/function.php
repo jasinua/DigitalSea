@@ -90,7 +90,7 @@
 
     function addProductsToDatabase($conn) {
 
-        callJsonFIle();
+        $products = callJsonFIle();
                 
         // Check if 'products' key exists
         if (isset($products['products'])) {
@@ -124,5 +124,43 @@
         } else {
             echo "No products found in JSON data.";
         }
+    }
+
+
+    function addDetailsToDatabase($conn) {
+        $products = callJsonFIle();
+        
+        
+        if (isset($products['products'])) {
+            foreach ($products['products'] as $product) {
+                // Check if the product already exists in the database
+                $stmt = $conn->prepare("CALL checkProducts(?)");
+                $stmt->bind_param("i", $product['product_id']);
+                $stmt->execute();
+                $stmt->bind_result($count);
+                $stmt->fetch();
+                $stmt->close();
+
+                foreach($product['details'] as $key => $value) {
+                    
+                    $stmt = $conn->prepare("INSERT INTO product_details (product_id, prod_desc1,prod_desc2) VALUES (?,?,?)");
+                    $stmt->bind_param("iss", $product['product_id'], $key,$value);
+        
+                    // Execute the statement
+                    if (!$stmt->execute()) {
+                        echo "Error inserting product ID ";
+                    } else {
+                        echo "Product ID";
+                    }
+                    $stmt->close();
+                    
+                }
+            }
+            echo "Products update completed.";
+        } else {
+            echo "No products found in JSON data.";
+        }
+
+
     }
     

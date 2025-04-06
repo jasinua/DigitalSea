@@ -31,6 +31,8 @@
 // include "includes/function.php";
 // include "includes/dbh.inc.php";
 
+// addDetailsToDatabase($conn);
+
 // addProductsToDatabase($conn);
 
 

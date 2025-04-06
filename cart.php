@@ -44,9 +44,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     include "header.php";
 ?>
-<link rel="stylesheet" href="style.css">
+<!-- <link rel="stylesheet" href="style.css"> -->
 <style>
-    body {
+    body { margin: 0;
+        padding: 0;
         background: #f5f5f5;
         font-family: Arial, sans-serif;
     }
@@ -54,7 +55,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
     .cart-wrapper {
         display: flex;
         justify-content: space-between;
-        flex-wrap: wrap;
+        /* flex-wrap: wrap; */
         width: 95%;
         max-width: 1300px;
         margin: 40px auto;
