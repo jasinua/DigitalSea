@@ -27,4 +27,12 @@
 
 // // Close the connection
 // $conn->close();
+
+// include "includes/function.php";
+// include "includes/dbh.inc.php";
+
+// addProductsToDatabase($conn);
+
+
+
 // ?>

@@ -1,35 +1,138 @@
 <?php 
+include_once "includes/function.php";
+session_start();
 
-    include_once "includes/function.php";
-    session_start();
-
-
-    if(isLoggedIn($_SESSION['user_id'])) {
-
-
-        $res = returnWishList($_SESSION['user_id']);
-
+if (isLoggedIn($_SESSION['user_id'])) {
+    $res = returnWishList($_SESSION['user_id']);
+    include "header.php";
 ?>
-
-<?php include "header.php";?>
 <link rel="stylesheet" href="style.css">
-        <div class="wishlist-container">
-            <?php foreach($res as $wishlist) {
-                $product_result = returnProduct($wishlist['product_id']);
-
-
-            ?>
-            <div class="wishlist-products-container">
-                <div class="wishlist-image-container"><img src="<?php echo $product_result['image_url'] ?>" alt="prod"></div>
-                <div class="wishlist-product-title"><?php $product_result['name'];?></div>
-            </div>
-            <?php }?>
-
-
-        </div>
-<?php
-
-    } else {
-        header("Location: homepage.php");
+<style>
+    .wishlist-container {
+        max-width: 1100px;
+        margin: 50px auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
     }
+
+    .wishlist-container h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead {
+        background: #f5f5f5;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    td:first-child, th:first-child {
+        text-align: left;
+    }
+
+    .product-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .product-info img {
+        width: 70px;
+        height: 90px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+
+    .remove-btn {
+        background: none;
+        border: none;
+        font-size: 18px;
+        color: #888;
+        cursor: pointer;
+    }
+
+    .add-to-cart-btn {
+        background-color: rgb(33, 35, 58);;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        font-size: 0.9rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-transform: uppercase;
+    }
+
+    .original-price {
+        text-decoration: line-through;
+        color: #999;
+        margin-right: 5px;
+    }
+
+    .discounted-price {
+        color: #000;
+        font-weight: bold;
+    }
+</style>
+
+<div class="wishlist-container">
+    <h2>My Wishlist ✎</h2>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Product Name</th>
+                <th>Unit Price</th>
+                <th>Stock Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($res as $wishlist) {
+                $product_result = returnProduct($wishlist['product_id']);
+                $product = $product_result->fetch_assoc();
+            ?>
+            <tr>
+                <td>
+                    <form method="post" action="remove_from_wishlist.php">
+                        <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                        <button class="remove-btn" type="submit">&times;</button>
+                    </form>
+                </td>
+                <td>
+                    <div class="product-info">
+                        <img src="<?php echo $product['image_url']; ?>" alt="Product">
+                        <span><?php echo $product['name']; ?></span>
+                    </div>
+                </td>
+                <td>
+                        €<?php echo number_format($product['price'], 2); ?>
+                  
+                </td>
+                <td><?php if($product['stock'] > 0) { echo "In stock";} else { echo "Out of stock";}?></td>
+                <td>
+                    <form method="post" action="add_to_cart.php">
+                        <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                    </form>
+                </td>
+            </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
+
+<?php
+} else {
+    header("Location: homepage.php");
+}
 ?>

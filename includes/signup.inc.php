@@ -36,7 +36,6 @@ function checkAge($date) {
     return $age >= 16;
 }
 
-// shiqon nese email ekziston
 function emailExists($email) {
     global $conn;
 
@@ -50,10 +49,8 @@ function emailExists($email) {
 function createUser($first_name, $last_name, $birthday, $email, $password) {
     global $conn;
 
-    // Hash the password before storing it in the database
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Prepare the statement for calling the procedure
     $stmt = $conn->prepare("CALL insertUser(?, ?, ?, ?, ?)");
     $stmt->bind_param("sssss", $first_name, $last_name, $email, $hashed_password, $birthday);
     
