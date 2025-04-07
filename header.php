@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-    <title>Header</title>
+    <title>DigitalSea</title>
 </head>
 <style>
     :root {
@@ -117,11 +117,11 @@
         position: absolute;
         right: 40px;
         top: 55px;
-        background: #444;
+        background-color: #444;
         border-radius: 5px;
         padding: 10px;
         display: none;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
         z-index: 100;
     }
 
