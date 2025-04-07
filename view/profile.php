@@ -1,7 +1,7 @@
 <?php
-include_once "includes/function.php";
-include_once "includes/profile.inc.php";  // This should include the session and user data
-include "header.php";
+include_once "../controller/function.php";
+include_once "../controller/profile.inc.php";  // This should include the session and user data
+include "header/header.php";
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -276,7 +276,7 @@ if (!isLoggedIn($user_id)) {
         </div>
         </div> 
     </div>
-    <?php include "footer.php"; ?>
+    <?php include "footer/footer.php"; ?>
 </body>
 <script>
         let userProfile = document.querySelector(".userProfile");

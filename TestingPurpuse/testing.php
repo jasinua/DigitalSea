@@ -1,14 +1,7 @@
 <?php
-
-
-//QEKJO FAQE ESHTE PER ME I SHTI TE DHANAT NE CART EDHE NE WISHLIST 
-
-// DERI SA I NDREQNUM PJESEN E HOME PAGE E SENE
-
-
 session_start();
-include "header.php";
-include "includes/dbh.inc.php";
+include "../view/header/header.php";
+include "../model/dbh.inc.php";
 
     $sql = "SELECT * FROM products"; // Fixed missing semicolon
     $stmt = $conn->query($sql); // For MySQLi
@@ -34,12 +27,7 @@ include "includes/dbh.inc.php";
         $cartstmt->execute();
     }
     
-    foreach($results as $result) {
-        ?>
-
-
-
-    
+    foreach($results as $result) { ?>
     <form action="" method="post">
         <input type="hidden" name="product_id" value="<?php echo $result['product_id'];?>">
         <img src="<?php echo $result['image_url'] ?>" alt="" width="100px", height = "100px">
@@ -48,19 +36,6 @@ include "includes/dbh.inc.php";
         <button ><?php echo $result['product_id'];?></button>
     </form>
 
-<?php
-    
+<?php } ?>
 
-    }
-
-
-?>
-
-
-
-
-
-
-<?php
-include "footer.php";
-?>
+<?php include "../view/footer/footer.php"; ?>

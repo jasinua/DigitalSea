@@ -1,10 +1,10 @@
 <?php 
-include_once "includes/function.php";
+include_once "../controller/function.php";
 session_start();
 
 if (isLoggedIn($_SESSION['user_id'])) {
     $res = returnWishList($_SESSION['user_id']);
-    include "header.php";
+    include "header/header.php";
 ?>
 <link rel="stylesheet" href="style.css">
 <style>

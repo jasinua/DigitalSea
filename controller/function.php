@@ -1,7 +1,4 @@
 <?php 
-
-
-
     function isLoggedIn($check) {
         if($check) {
             return true;
@@ -9,7 +6,6 @@
             return false;
         }
     }
-
 
     function isAdmin($user) {
         if($user == 0 || $user == "0") {
@@ -19,9 +15,8 @@
         }
     }
 
-
     function returnWishlist($userid) {
-        include "dbh.inc.php";
+        include "../model/dbh.inc.php";
         
         $stmt = $conn->prepare("CALL showWishList(?)");
         $stmt->bind_param("i", $userid);
@@ -31,7 +26,7 @@
     }
 
     function returnCart($userid) {
-        include "dbh.inc.php";
+        include "../model/dbh.inc.php";
         
         $stmt = $conn->prepare("CALL showCartList(?)");
         $stmt->bind_param("i", $userid);
@@ -41,7 +36,7 @@
     }
 
     function returnProduct($productId) {
-        include "dbh.inc.php";
+        include "../model/dbh.inc.php";
         $stmt = $conn->prepare("CALL showProductDetail(?)");
         $stmt->bind_param("i",$productId);
         $stmt -> execute();
@@ -50,7 +45,7 @@
     }
 
     function returnProductImage($productId) {
-        include "dbh.inc.php";
+        include "../model/dbh.inc.php";
         $stmt = $conn->prepare("CALL returnImages(?)");
         $stmt->bind_param("i",$productId);
         $stmt -> execute();
@@ -58,7 +53,6 @@
         return $stmt->get_result();
     }
     
-
     function callJsonFIle() {
         // Firebase URL to fetch data
         $firebaseUrl = 'https://fondacionifreskia-2feb3-default-rtdb.europe-west1.firebasedatabase.app/.json';
@@ -85,7 +79,6 @@
         $products = json_decode($jsonData, true);
 
         return $products;
-
     }
 
     function addProductsToDatabase($conn) {
@@ -126,10 +119,8 @@
         }
     }
 
-
     function addDetailsToDatabase($conn) {
         $products = callJsonFIle();
-        
         
         if (isset($products['products'])) {
             foreach ($products['products'] as $product) {
@@ -153,14 +144,11 @@
                         echo "Product ID";
                     }
                     $stmt->close();
-                    
                 }
             }
             echo "Products update completed.";
         } else {
             echo "No products found in JSON data.";
         }
-
-
     }
     

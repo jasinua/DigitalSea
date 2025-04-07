@@ -1,7 +1,7 @@
 <?php 
     session_start();
-    include_once "includes/function.php";
-    include "header.php";
+    include_once "../controller/function.php";
+    include "header/header.php";
 
     // Check if user is logged in
     if (!isset($_SESSION['user_id'])) {
@@ -106,7 +106,7 @@
             </form>
         </div>
     </div>
-    <?php include "footer.php"?>
+    <?php include "footer/footer.php"?>
 </body>
 </html>
 

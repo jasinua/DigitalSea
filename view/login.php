@@ -1,6 +1,6 @@
 <?php 
-include_once "includes/login.inc.php"; 
-include_once "includes/function.php";
+include_once "../controller/login.inc.php"; 
+include_once "../controller/function.php";
 
 // include "header.php";
 
@@ -120,7 +120,7 @@ if(!isset($_SESSION['user_id'])) {
 </style>
 <body>
     <div class="page-wrapper">
-        <?php include "header.php"?>
+        <?php include "header/header.php"?>
         <div class="login-container">
             <h1>Login</h1>
             <form action="" method="post">
@@ -138,6 +138,6 @@ if(!isset($_SESSION['user_id'])) {
         </div>
     </div>
     
-    <?php include "footer.php"; ?>
+    <?php include "footer/footer.php"; ?>
 </body>
 </html>

@@ -1,8 +1,10 @@
 <?php 
 
-include_once "includes/signup.inc.php";
+include_once "../controller/signup.inc.php";
+session_start();
 
-include "header.php";
+include "header/header.php";
+
 
 if(isset($_POST['submit'])){
     // Storing variables for validation
@@ -51,6 +53,11 @@ if(isset($_POST['submit'])){
         exit();
     }
 }
+
+
+if(isset($_SESSION['user_id'])) {
+    header("Location: homepage.php");
+} else {
 ?>
 
 <!DOCTYPE html>
@@ -162,6 +169,8 @@ if(isset($_POST['submit'])){
             }
             if (isset($_GET['signup']) && $_GET['signup'] == 'success') {
                 echo "<div class='success'>Sign up successful! Welcome.</div>";
+                header("Location: homepage.php");
+                exit();
             }
             if (isset($_GET['signup']) && $_GET['signup'] == 'error') {
                 echo "<div class='error'>Something went wrong. Please try again.</div>";
@@ -170,7 +179,8 @@ if(isset($_POST['submit'])){
         </div>
 
     </div>
-
-    <?php include "footer.php"; ?>
+    
+    <?php include "footer/footer.php"; ?>
 </body>
 </html>
+<?php } ?>

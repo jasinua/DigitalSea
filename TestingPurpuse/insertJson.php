@@ -28,7 +28,7 @@ if (isset($_POST['sumbit'])) {
     }
 
     // Read existing JSON file
-    $file = 'products.json';
+    $file = '../controller/products.json';
     if (file_exists($file)) {
         $json_data = file_get_contents($file);
         $data = json_decode($json_data, true);

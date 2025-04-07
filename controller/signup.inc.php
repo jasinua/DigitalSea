@@ -1,6 +1,6 @@
 <?php
 
-include "dbh.inc.php"; 
+include "../model/dbh.inc.php"; 
 
 
 //kontrollon nese inputet jane jo te zbrazeta

@@ -1,6 +1,6 @@
 <?php
 session_start();  // Start the session at the top of the file
-include_once "dbh.inc.php"; 
+include_once "../model/dbh.inc.php"; 
 
 // shiqon nese email ekziston
 function checkData($email) {
@@ -16,8 +16,6 @@ function checkData($email) {
 // qasja ne llogari
 function login($email, $password) {
     global $conn;
-
-    
 
     if(checkData($email)) {
         return false;
@@ -42,6 +40,5 @@ function login($email, $password) {
             return false; // Something went wrong with the query
         }
     }
-
 }
 ?>

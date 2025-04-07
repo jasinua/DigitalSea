@@ -1,6 +1,6 @@
 <?php 
-include_once "includes/dbh.inc.php";
-include_once "includes/function.php";
+include_once "../model/dbh.inc.php";
+include_once "../controller/function.php";
 session_start();
 
 if (isLoggedIn($_SESSION['user_id'])) {
@@ -23,7 +23,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
         }
     }
     
-
     // Handle product removal
     if (isset($_POST['remove'])) {
         $remove_id = (int)$_POST['remove'];
@@ -52,11 +51,9 @@ if (isLoggedIn($_SESSION['user_id'])) {
         }
     }
     $res = array_values($mergedCart);
-    
 
-    include "header.php";
+    include "header/header.php";
 ?>
-<!-- <link rel="stylesheet" href="style.css"> -->
 <style>
     * {
         margin: 0;
@@ -69,12 +66,17 @@ if (isLoggedIn($_SESSION['user_id'])) {
         font-family: Arial, sans-serif;
     }
 
+    .page-wrapper {
+        justify-content: center;
+        align-items: center;
+    }
+
     .cart-wrapper {
         display: flex;
-        width: 95%;
-        max-width: 1000px;
-        margin: 40px auto;
-        gap: 20px;
+        width: 100%;
+        max-width: 1200px;
+        /* margin: 40px auto; */
+        gap: 40px;
     }
 
     .cart-left, .cart-right {
@@ -337,7 +339,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
     </form>
 </div>
 
-<?php include "footer.php" ?>
+<?php include "footer/footer.php" ?>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const quantityInputs = document.querySelectorAll('.quantity-input');
@@ -381,8 +383,4 @@ if (isLoggedIn($_SESSION['user_id'])) {
     });
 </script>
 
-<?php 
-} else {
-    header("Location: homepage.php");
-} 
-?>
+<?php } else {    header("Location: homepage.php"); } ?>
