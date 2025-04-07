@@ -40,7 +40,19 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
 
     // Fetch cart again after updates
-    $res = returnCart($userId);
+    $rawCart = returnCart($userId);
+    $mergedCart = [];
+    
+    foreach ($rawCart as $item) {
+        $pid = $item['product_id'];
+        if (isset($mergedCart[$pid])) {
+            $mergedCart[$pid]['quantity'] += $item['quantity'];
+        } else {
+            $mergedCart[$pid] = $item;
+        }
+    }
+    $res = array_values($mergedCart);
+    
 
     include "header.php";
 ?>
@@ -74,9 +86,12 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
 
     .cart-left {
+        display: flex;
+        flex-direction: column;
         border-radius: 10px;
         flex: 1 1 60%;
-        max-height: 450px;
+        max-height: 500px;
+        justify-content: space-between;
         /* overflow-y: auto; */
     }
 
@@ -91,7 +106,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
         border-radius: 10px;
         color: var(--page-text-color);
         flex: 1 1 35%;
-        max-height: 450px;
+        max-height: 500px;
     }
 
     .cart-right h3 {
@@ -172,7 +187,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        /* gap: 0px;     */
+        gap: 40px;    
     }
 
     .summary-box h3 {
@@ -201,6 +216,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
         border-radius: 8px;
         cursor: pointer;
         margin-top: 10px;
+        align-self: end;
     }
 
     #prodNameXprice {
