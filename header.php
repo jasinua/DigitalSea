@@ -147,7 +147,6 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        /* justify-content: center; */
     }
 </style>
 <body>
@@ -155,9 +154,9 @@
         <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "homepage.php"><img class="logo" src="logo.png" alt="logo e kompanise tone"></a></div>
         <nav>
             <ul>
+                <?php if(isset($_SESSION['user_id'])) { ?>
                 <li><a href="wishlist.php"><i class="fas fa-star"></i></a></li>
                 <li><a href="cart.php"><i class="fas fa-cart-plus"></a></i></li>
-                <?php if(isset($_SESSION['user_id'])) { ?>
                 <li><a href="profile.php"><i class="fas fa-user"></a></i></li>
                 <?php } ?>
                 <li>
