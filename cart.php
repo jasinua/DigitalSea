@@ -35,7 +35,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
     // Handle checkout
     if (isset($_POST['continue'])) {
         // Redirect to checkout page
-        header("Location: checkout.php");
+        header("Location: payment.php");
         exit;
     }
 
@@ -46,37 +46,58 @@ if (isLoggedIn($_SESSION['user_id'])) {
 ?>
 <!-- <link rel="stylesheet" href="style.css"> -->
 <style>
-    body { margin: 0;
+    * {
+        margin: 0;
         padding: 0;
-        background: #f5f5f5;
+        box-sizing: border-box;
+    }
+    
+    body {
+        background-color: var(--background-color);
         font-family: Arial, sans-serif;
     }
 
     .cart-wrapper {
         display: flex;
-        justify-content: space-between;
-        /* flex-wrap: wrap; */
         width: 95%;
-        max-width: 1300px;
+        max-width: 1000px;
         margin: 40px auto;
         gap: 20px;
     }
 
     .cart-left, .cart-right {
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        background-color: white;
+        color: var(--page-text-color)
+        border-radius: 50px;
+        box-shadow: 0 0 5px var(--navy-color);
         padding: 20px;
     }
 
     .cart-left {
+        border-radius: 10px;
         flex: 1 1 60%;
-        overflow-x: auto;
+        max-height: 450px;
+        /* overflow-y: auto; */
+    }
+
+    .itemsTable {
+        max-height: 340px;
+        overflow-y: auto;
     }
 
     .cart-right {
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        color: var(--page-text-color);
         flex: 1 1 35%;
-        max-height: 500px;
+        max-height: 450px;
+    }
+
+    .cart-right h3 {
+        background-color: var(--background-color);
+        padding: 10px;
+        border-bottom: 1px solid var(--mist-color);
     }
 
     table {
@@ -85,13 +106,16 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
 
     thead tr {
-        background-color: #f9f9f9;
+        /* color: var(--page-text-color); */
+        background-color: var(--background-color);
     }
 
     th, td {
         padding: 12px;
+        /* background-color: var(--navy-color); */
+        color: var(--page-text-color);
         text-align: center;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid var(--mist-color);
     }
 
     td:first-child {
@@ -118,7 +142,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     .product-info .desc {
         font-size: 0.8rem;
-        color: #888;
+        color: var(--navy-color);
     }
 
     .quantity-controls {
@@ -132,7 +156,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
         width: 40px;
         height: 30px;
         text-align: center;
-        border: 1px solid #ccc;
+        border: 1px solid var(--ivory-color);
         border-radius: 4px;
     }
 
@@ -142,6 +166,13 @@ if (isLoggedIn($_SESSION['user_id'])) {
         font-size: 1.4rem;
         color: #888;
         cursor: pointer;
+    }
+
+    .summary-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        /* gap: 0px;     */
     }
 
     .summary-box h3 {
@@ -161,8 +192,8 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
 
     .checkout-btn {
-        background-color: rgb(33, 35, 58);
-        color: white;
+        background-color: var(--navy-color);
+        color: var(--text-color);
         border: none;
         padding: 15px;
         width: 100%;
@@ -171,125 +202,167 @@ if (isLoggedIn($_SESSION['user_id'])) {
         cursor: pointer;
         margin-top: 10px;
     }
+
+    #prodNameXprice {
+        overflow-y: auto;
+        max-height: 180px;
+    }
 </style>
+<div class="page-wrapper">
+    <form action="" method="post" id="cartForm">
+        <div class="cart-wrapper">
 
-<form action="" method="post" id="cartForm">
-    <div class="cart-wrapper">
+            <!-- Left: Cart Table -->
+            <div class="cart-left">
 
-        <!-- Left: Cart Table -->
-        <div class="cart-left">
             <table>
                 <thead>
                     <tr>
                         <th>Produkti</th>
                         <th>Çmimi</th>
                         <th>Sasia</th>
-                        <th>Totali</th>
                         <th>Fshi</th>
                     </tr>
+
                 </thead>
-                <tbody>
-                    <?php 
-                    $subtotal = 0;
-                    foreach ($res as $cart) {
-                        $product_result = returnProduct($cart['product_id']);
-                        $product = $product_result->fetch_assoc();
-                        $total = $product['price'] * $cart['quantity'];
-                        $subtotal += $total;
-                    ?>
-                    <tr>
-                        <td>
-                            <div class="product-info">
-                                <input type="hidden" name="prod_id[]" value="<?php echo $product['product_id']; ?>">
-                                <img src="<?php echo $product['image_url']; ?>" alt="Product Image">
-                                <div>
-                                    <h4><?php echo $product['name']; ?></h4>
-                                    <div class="desc"><?php echo $product['description']; ?></div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>€<?php echo number_format($product['price'], 2); ?></td>
-                        <td>
-                            <div class="quantity-controls">
-                                <input 
-                                    type="number" 
-                                    name="quantity[]" 
-                                    class="quantity-input" 
-                                    min="1" 
-                                    value="<?php echo $cart['quantity']; ?>" 
-                                    data-price="<?php echo $product['price']; ?>" 
-                                >
-                            </div>
-                        </td>
-                        <input type="hidden" name="price[]" value="<?php echo $total; ?>">
-
-                        <td class="total-price">€<?php echo number_format($total, 2); ?></td>
-                        <td>
-                            <button class="remove-btn" type="submit" name="remove" value="<?php echo $product['product_id']; ?>">&times;</button>
-                        </td>
-                    </tr>
-                    <?php } ?>
-                </tbody>
             </table>
+                <div class="itemsTable">
+                    <table>
+                        <tbody>
+                            <?php 
+                            $subtotal = 0;
+                            foreach ($res as $cart) {
+                                $product_result = returnProduct($cart['product_id']);
+                                $product = $product_result->fetch_assoc();
+                                $total = $product['price'] * $cart['quantity'];
+                                $subtotal += $total;
+                            ?>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <input type="hidden" name="prod_id[]" value="<?php echo $product['product_id']; ?>">
+                                        <img src="<?php echo $product['image_url']; ?>" alt="Product Image">
+                                        <div>
+                                            <h4><?php echo $product['name']; ?></h4>
+                                            <div class="desc"><?php echo $product['description']; ?></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>€<?php echo number_format($product['price'], 2); ?></td>
+                                <td>
+                                    <div class="quantity-controls">
+                                        <input 
+                                            type="number" 
+                                            name="quantity[]" 
+                                            class="quantity-input" 
+                                            min="1" 
+                                            value="<?php echo $cart['quantity']; ?>" 
+                                            data-price="<?php echo $product['price']; ?>" 
+                                            data-product-id="<?php echo $product['product_id']; ?>"
+                                        >
+                                    </div>
+                                </td>
+                                <input type="hidden" name="price[]" value="<?php echo $total; ?>">
 
-            <!-- Save Changes Button -->
-            <button type="submit" class="checkout-btn" name="save">Ruaj Ndryshimet</button>
-        </div>
-
-        <!-- Right: Summary Box -->
-        <div class="cart-right">
-            <h3>Totali i porosisë:</h3>
-            <div class="summary-box">
-                <div class="summary-item"><span>Nëntotali:</span> <span>€<?php echo number_format($subtotal, 2); ?></span></div>
-                <div class="summary-item"><span>TVSH 18%:</span> <span>€<?php echo number_format($subtotal * 0.18, 2); ?></span></div>
-                <div class="summary-item"><span>Zbritje:</span> <span style="color:red">- €50.00</span></div>
-                <div class="summary-item total">
-                    <span>Total:</span>
-                    <span>€<?php echo number_format($subtotal * 1.18 - 50, 2); ?></span>
+                                <!-- Qita me qit te cart-right edhe me bo si kupon fiskal per produktin e caktun: cmini * sasia -->
+                                
+                                <td>
+                                    <button class="remove-btn" type="submit" name="remove" value="<?php echo $product['product_id']; ?>">&times;</button>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
                 </div>
 
-                <!-- Checkout Button -->
-                <button class="checkout-btn" type="submit" name="continue">Vazhdo ne checkout</button>
+                <!-- Save Changes Button -->
+                <button type="submit" class="checkout-btn" name="save">Ruaj Ndryshimet</button>
+            </div>
+
+            <!-- Right: Summary Box -->
+            <div class="cart-right">
+                <h3>Totali i porosisë:</h3>
+                
+                <div class="summary-box">
+                    <div>
+                        <div id="prodNameXprice">
+                            <?php 
+                                $subtotal = 0;
+                                foreach ($res as $cartItem) {
+                                    $product = returnProduct($cartItem['product_id'])->fetch_assoc();
+                                    $qty = $cartItem['quantity'];
+                                    $prc = $product['price'];
+                                    $ttl = $qty * $prc;
+                                    $subtotal += $ttl;
+                                ?>
+                                <div class="summary-item" data-product-id="<?php echo $product['product_id']; ?>">
+                                    <span><?php echo $product['name']; ?></span>
+                                    <span class="total-price">€<?php echo number_format($prc, 2); ?> × <?php echo $qty; ?> = €<?php echo number_format($ttl, 2); ?></span>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        
+                        <div class="summary-item"><span>Nëntotali:</span> <span>€<?php echo number_format($subtotal, 2); ?></span></div>
+                        <div class="summary-item"><span>TVSH 18%:</span> <span>€<?php echo number_format($subtotal * 0.18, 2); ?></span></div>
+                        <div class="summary-item"><span>Zbritje:</span> <span style="color:red">- €50.00</span></div>
+
+                    </div>
+                    <div>
+                        <div class="summary-item total">
+                            <span>Total:</span>
+                            <span>€<?php echo number_format($subtotal * 1.18 - 50, 2); ?></span>
+                        </div>
+                        <!-- Checkout Button -->
+                        <button class="checkout-btn" type="submit" name="continue">Vazhdo ne checkout</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 
+<?php include "footer.php" ?>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const quantityInputs = document.querySelectorAll('.quantity-input');
+    document.addEventListener("DOMContentLoaded", () => {
+        const quantityInputs = document.querySelectorAll('.quantity-input');
 
-    quantityInputs.forEach(input => {
-        input.addEventListener('input', () => {
-            const price = parseFloat(input.dataset.price);
-            const quantity = parseInt(input.value) || 1;
-            const row = input.closest('tr');
-            const totalCell = row.querySelector('.total-price');
+        quantityInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                const price = parseFloat(input.dataset.price);
+                const productId = input.dataset.productId;
+                const quantity = parseInt(input.value) || 1;
 
-            const total = price * quantity;
-            totalCell.textContent = '€' + total.toFixed(2);
+                const total = price * quantity;
 
-            updateCartSummary();
+                // Update the corresponding summary item
+                const summaryItem = document.querySelector(`.summary-item[data-product-id="${productId}"] .total-price`);
+                if (summaryItem) {
+                    summaryItem.textContent = `€${price.toFixed(2)} × ${quantity} = €${total.toFixed(2)}`;
+                }
+
+                updateCartSummary();
+            });
         });
+
+        function updateCartSummary() {
+            const summaryTotals = document.querySelectorAll('.summary-item .total-price');
+            let subtotal = 0;
+
+            summaryTotals.forEach(item => {
+                const match = item.textContent.match(/= €([\d.]+)/);
+                if (match) subtotal += parseFloat(match[1]);
+            });
+
+            const tvsh = subtotal * 0.18;
+            const discount = 50;
+            const finalTotal = subtotal + tvsh - discount;
+
+            const summaryItems = document.querySelectorAll('.summary-box .summary-item');
+            summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = '€' + subtotal.toFixed(2);
+            summaryItems[summaryItems.length - 2].querySelector('span:last-child').textContent = '€' + tvsh.toFixed(2);
+            summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = '€' + finalTotal.toFixed(2);
+        }
     });
-
-    function updateCartSummary() {
-        const totalCells = document.querySelectorAll('.total-price');
-        let subtotal = 0;
-        totalCells.forEach(cell => {
-            const amount = parseFloat(cell.textContent.replace('€', '')) || 0;
-            subtotal += amount;
-        });
-
-        const tvsh = subtotal * 0.18;
-        const discount = 50;
-        const finalTotal = subtotal + tvsh - discount;
-
-        document.querySelector('.summary-item:nth-child(1) span:last-child').textContent = '€' + subtotal.toFixed(2);
-        document.querySelector('.summary-item:nth-child(2) span:last-child').textContent = '€' + tvsh.toFixed(2);
-        document.querySelector('.summary-item.total span:last-child').textContent = '€' + finalTotal.toFixed(2);
-    }
-});
 </script>
 
 <?php 

@@ -1,98 +1,180 @@
+<?php
+    ob_start(); // Fillon output buffering
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-        <title>Header</title>
-    </head>
-        <style>
-           /* Light Mode Colors (default) */
-            :root {
-                --header-color:rgb(213, 237, 230);
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <title>Header</title>
+</head>
+<style>
+    :root {
+        --background-color: #f5f5fa;       
+        --text-color: white;
+        --page-text-color: #232a2f;
+
+        --modal-bg-color: white;
+                        
+        --button-color: #153147;
+        --button-color-hover:rgb(26, 78, 118);
+
+        --noir-color: #232a2f;
+        --navy-color: #153147;
+        --mist-color: #adb8bb;
+        --almond-color: #edeae4;
+        --ivory-color: #f9f8f7;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        font-family: Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        min-height: 100vh;
+    }
+
+    header {
+        background-color: var(--noir-color);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        width: 100%;
+    }
+
+    header .logo {
+        margin: 10px;
+        padding: 0;
+        height: 25px;
+        width: 25px;
+    }
+
+    nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        padding: 0;
+    }
+
+    nav ul li {
+        margin: 0 30px;
+    }
+
+    nav ul li i {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 25px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        position: relative;
+        display: inline-block;
+        /* padding-bottom: 5px; Adds a little space below the text */
+    }
     
-                --background-color: #f5f5fa;         /* Light background with a soft, neutral tone */
-                --text-color: #3a3a3a;        /* Dark gray for easy readability */
-            }
-            /* Dark Mode Colors */
-            body.dark-mode {
-                --background-color: #2b2b2e;        /* Deep charcoal for balanced contrast */
-                --modal-text-color: #f0f0f0;        /* Light gray text for clear readability */
-            }
+    nav ul li i::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        width: 0;
+        height: 2px; /* Thickness of the underline */
+        background-color: white; /* Color of the underline */
+        transform: translateX(-50%);
+        transition: width 0.3s ease; /* Controls the animation speed and timing */
+    }
 
-            body {
-                font-family: Arial, sans-serif;
-                background-color: var(--background-color);
-                color: var(--modal-text-color);
-                line-height: 1.5;
-            }
+    nav ul li a:hover::after {
+        width: 100%; /* Expands the underline from left to right */
+    }
 
-            header {
-                background-color: var(--header-color);
-                color: white;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 12px 20px;
-                width: 100%;
-            }
+    /* ===== Auth Dropdown ===== */
+    .auth-menu {
+        cursor: pointer;
+        font-size: 25px;
+        font-weight: bold;
+        color: white;
+    /* user-select: none; */
+    display: inline-block;
+    }
 
-            header .logo {
-                margin: 10px;
-                padding: 0;
-                height: 25px;
-                width: 25px;
-            }
+    #auth-toggle {
+        display: none;
+    }
 
-            nav ul {
-                list-style: none;
-                display: flex;
-                justify-content: center;
-                padding: 0;
-            }
+    .auth-dropdown {
+        position: absolute;
+        right: 40px;
+        top: 55px;
+        background: #444;
+        border-radius: 5px;
+        padding: 10px;
+        display: none;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+    }
 
-            nav ul li {
-                margin: 0 30px;
-            }
+    #auth-toggle:checked + .auth-dropdown {
+        display: block;
+    }
 
-            nav ul li i {
-                color: white;
-                text-decoration: none;
-                font-weight: bold;
-                font-size: 25px;
-                font-family: Verdana, Geneva, Tahoma, sans-serif;
-                position: relative;
-                display: inline-block;
-                /* padding-bottom: 5px; Adds a little space below the text */
-            }
-            
-            nav ul li i::after {
-                content: "";
-                position: absolute;
-                left: 50%;
-                bottom: 0;
-                width: 0;
-                height: 2px; /* Thickness of the underline */
-                background-color: white; /* Color of the underline */
-                transform: translateX(-50%);
-                transition: width 0.3s ease; /* Controls the animation speed and timing */
-            }
+    .auth-dropdown a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 8px 12px;
+        transition: background 0.3s ease;
+    }
 
-            nav ul li a:hover::after {
-                width: 100%; /* Expands the underline from left to right */
-            }
+    .auth-dropdown a:hover {
+        background: #555;
+    }
 
-        </style>
-    <body>
-        <header>
-            <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "homepage.php"><img class="logo" src="logo.png" alt="logo e kompanise tone"></a></div>
-            <nav>
-                <ul>
-                    <li><a href="wishlist.php"><i class="fas fa-star"></i></a></li>
-                    <li><a href="cart.php"><i class="fas fa-cart-plus"></a></i></li>
-                    <li><a href="profile.php"><i class="fas fa-user"></a></i></li>
-                </ul>
-            </nav>
-        </header>
-    </body>
+    
+    .page-wrapper {
+        flex: 1;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        /* justify-content: center; */
+    }
+</style>
+<body>
+    <header>
+        <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "homepage.php"><img class="logo" src="logo.png" alt="logo e kompanise tone"></a></div>
+        <nav>
+            <ul>
+                <li><a href="wishlist.php"><i class="fas fa-star"></i></a></li>
+                <li><a href="cart.php"><i class="fas fa-cart-plus"></a></i></li>
+                <?php if(isset($_SESSION['user_id'])) { ?>
+                <li><a href="profile.php"><i class="fas fa-user"></a></i></li>
+                <?php } ?>
+                <li>
+                    <label class="auth-menu" for="auth-toggle">☰</label>
+                    <input type="checkbox" id="auth-toggle">
+                    <div class="auth-dropdown">
+                        <?php if(!isset($_SESSION['user_id'])) { ?>
+                            <a href="login.php">Login</a>
+                            <a href="signup.php">Signup</a>
+                            <?php } else { ?>
+                                <a href="profile.php">Profile</a>
+                                <a href="logout.php">Log out</a>
+                        <?php } ?>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+</body>
 </html>

@@ -53,33 +53,229 @@ if (!isLoggedIn($user_id)) {
 <link rel="stylesheet" href="style.css"/>
 <title>Profile Page</title>
 </head>
+<style>
+
+    .page-wrapper {
+        /* justify-content: center; */
+        margin-top: 80px;
+    }
+
+    .profile {
+        display: flex;
+        flex-direction: row;
+        /* margin-top: auto; */
+    }
+
+    .userProfile {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        color: var(--page-text-color);
+        max-width: 400px;
+        width: 100%;
+        margin: 20px 0 20px 37%;
+        background-color: white;
+        padding: 30px;
+        opacity: 1;
+        border-radius: 10px;
+        /* border: 1px solid var(--navy-color); */
+        box-shadow: 0 0px 5px #153147;
+        transition: transform 0.3s ease-in-out, opacity 0.5s ease-in;
+        flex-grow: 1;
+        z-index: 2;
+    }
+
+    /* kjo veq perkohsisht deri sa te implementohet img */
+    .userProfile i {
+        font-size: 70px;
+        border-radius: 50%;
+    }
+
+    .userProfile .user_data {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+
+    .userProfile .user_name_lastname {
+        font-size: 34px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .editXlogout {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .userProfile .edit-button, .userProfile .logout-button {
+        padding: 0;
+        margin-top: 15px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .userProfile .edit-button:hover, .userProfile .logout-button:hover {
+        color: #757575;
+        cursor: pointer;
+    }
+
+    /* Hide userProfile when editProfile is active */
+    .userProfile.hidden {
+        margin-left: 30%;
+        transition: margin-left 0.5s ease-in-out;
+    }
+
+    .userProfile.active {
+        margin-left: 37%;
+        transition: margin-left 0.5s ease-in-out;
+    }
+
+    .editProfile {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        opacity: 0;
+        color: var(--page-text-color);
+        max-width: 400px;
+        width: 100%;
+        margin: 35px -10%;
+        background-color: white;
+        padding: 30px;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        box-shadow: 0 0px 5px var(--navy-color);
+        transition: transform 0.3s ease-in-out, opacity 0.5s ease;
+        flex-grow: 1;
+    }
+
+    /* When active, slide editProfile into view */
+    .editProfile.active {
+        opacity: 1;
+        transform: translateX(39%);
+    }
+
+    .editProfile.hidden {
+        opacity: 0;
+        transform: translateX(-60%);
+    }
+
+    /* Style the inputs */
+    .input-field {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 2px solid var(--mist-color);
+        border-radius: 6px;
+        font-size: 16px;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .input-field:focus {
+        border-color: var(--navy-color);
+        box-shadow: 0 0 5px var(--navy-color);
+        outline: none;
+    }
+
+    /* Style for first and last name inputs */
+    .first_last_name {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .submitCancel {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    /* Style for the submit button */
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--navy-color);
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        background-color: var(--button-color-hover);
+    }
+
+    .submit-btn:focus {
+        outline: none;
+    }
+
+    /* Style for the submit button */
+    .cancel-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--button-color);
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .cancel-btn:hover {
+        background-color: var(--button-color-hover);
+    }
+
+    .cancel-btn:focus {
+        outline: none;
+    }
+
+    .emailXaddress p {
+        margin: 0;
+        padding: 0;
+    }
+
+</style>
 <body>
-
-    <div class="profile">
-        <div class="userProfile">
-            <!-- <img src="" alt=""> -->
-            <p><i class="fas fa-user"></i></p> <!-- perkohsisht deri sa te implementojme img-->
-            <h2 class="user_name_lastname" id="user_name"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
-            <p class="user_data" id="user_email">Email: <?php echo htmlspecialchars($user['email']); ?></p>
-            <p class="user_data" id="user_address">Address: <?php echo htmlspecialchars($user['address']); ?> </p>
-            <p class="edit_button" id="edit" onclick="editFunction()">Edito Profilin</p>
+    <div class="page-wrapper">
+        <div class="profile">
+            <div class="userProfile">
+                <!-- <img src="" alt=""> -->
+                <p><i class="fas fa-user"></i></p> <!-- perkohsisht deri sa te implementojme img-->
+                <h2 class="user_name_lastname" id="user_name"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
+                <div class="emailXaddress">
+                    <p class="user_data" id="user_email">Email: <?php echo htmlspecialchars($user['email']); ?></p>
+                    <p class="user_data" id="user_address">Address: <?php echo htmlspecialchars($user['address']); ?> </p>
+                </div>
+                <div class="editXlogout">
+                    <p class="edit-button" id="edit" onclick="editFunction()">Edito Profilin</p>
+                    <p class="logout-button" onclick="logoutFunction()">Log out</p>
+                </div>
+            </div>
+            <div class="editProfile">
+            <form action="" method="post">
+                <div class="first_last_name">
+                    <input type="text" name="first_name" placeholder="<?php echo htmlspecialchars($user['first_name']); ?>" class="input-field">
+                    <input type="text" name="last_name" placeholder="<?php echo htmlspecialchars($user['last_name']); ?>" class="input-field">
+                </div>
+                <input type="email" name="email" placeholder="<?php echo htmlspecialchars($user['email']); ?>" class="input-field">
+                <input type="text" name="address" placeholder="<?php echo htmlspecialchars($user['address']); ?>" class="input-field">
+                <div class="submitCancel">
+                    <button type="submit" class="submit-btn">Save Changes</button>
+                    <button type="button" class="cancel-btn" onclick="cancelEdit()">Cancel</button>
+                </div>
+            </form>
         </div>
-        <div class="editProfile">
-        <form action="" method="post">
-            <div class="first_last_name">
-                <input type="text" name="first_name" placeholder="<?php echo htmlspecialchars($user['first_name']); ?>" class="input-field">
-                <input type="text" name="last_name" placeholder="<?php echo htmlspecialchars($user['last_name']); ?>" class="input-field">
-            </div>
-            <input type="email" name="email" placeholder="<?php echo htmlspecialchars($user['email']); ?>" class="input-field">
-            <input type="text" name="address" placeholder="<?php echo htmlspecialchars($user['address']); ?>" class="input-field">
-            <div class="submitCancel">
-                <button type="submit" class="submit-btn">Save Changes</button>
-                <button type="button" class="cancel-btn" onclick="cancelEdit()">Cancel</button>
-            </div>
-        </form>
+        </div> 
     </div>
-    </div> 
-
     <?php include "footer.php"; ?>
 </body>
 <script>
@@ -177,5 +373,17 @@ if (!isLoggedIn($user_id)) {
                 e.preventDefault();
                 submitChanges();
         });
+
+    function logoutFunction() {
+        // Make a call to logout.php
+        fetch('logout.php')
+            .then(() => {
+                // Once session is destroyed, redirect to login
+                window.location.href = 'login.php';
+            })
+            .catch(err => {
+                console.error('Logout failed, dear soul:', err);
+            });
+    }
 </script>
 </html>
