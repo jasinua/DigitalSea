@@ -1,5 +1,13 @@
 <?php 
-    include "header.php"
+    session_start();
+    include_once "includes/function.php";
+    include "header.php";
+
+    // Check if user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        var_dump($_SESSION); // Debug: This will output all session variables
+        die("Session user_id is not set. Please log in.");
+    }
 ?>
 
 <!DOCTYPE html>
@@ -16,14 +24,14 @@
     }
 /* f5f5f0, f2efe9, f4f1ea */
     form {
-      background-color:white;
+      background-color: white;
       color: var(--page-text-color);
       padding: 20px;
       border-radius: 10px;
       width: 400px;
       margin: auto;
       margin-bottom: 40px;
-      box-shadow: 0 0 5px #153147; 
+      box-shadow: 0 0px 5px var(--navy-color);
     }
 
     input[type="text"], input[type="number"]{
@@ -48,6 +56,10 @@
       border-radius: 5px;
     }
 
+    .paymentStuff{
+        margin: 60px auto;
+    }
+
     .backCard {
         display: flex;
         flex-direction: row;
@@ -69,28 +81,33 @@
   </style>
 </head>
 <body>
-    <h2>Present Thy Payment</h2>
-    <form action="process.php" method="POST">
-        <label for="name">Name upon the card:</label>
-        <input type="text" name="name" id="name" placeholder="Filan Fisteku" required>
+    <div class="page-wrapper">
+        <div class="paymentStuff">
+            <h2>Present Thy Payment</h2>
+            <form action="process.php" method="POST">
+                <label for="name">Name upon the card:</label>
+                <input type="text" name="name" id="name" placeholder="Filan Fisteku" required>
 
-        <label for="card">Card of fate:</label>
-        <input type="text" name="card" id="card" maxlength="16" placeholder="XXXX XXXX XXXX XXXX" required>
+                <label for="card">Card of fate:</label>
+                <input type="text" name="card" id="card" maxlength="16" placeholder="XXXX XXXX XXXX XXXX" required>
 
-        <div class="backCard">
-            <div class="expDate">
-                <label for="expiry">Expiration:</label>
-                <input type="text" name="expiry" id="expiry" maxlength="5" placeholder="MM/YY" required>
-            </div>
-            <div class="cvv">
-                <label for="cvv">CVV:</label>
-                <input type="text" name="cvv" id="cvv" maxlength="3" placeholder="XXX" required>
-            </div>
+                <div class="backCard">
+                    <div class="expDate">
+                        <label for="expiry">Expiration:</label>
+                        <input type="text" name="expiry" id="expiry" maxlength="5" placeholder="MM/YY" required>
+                    </div>
+                    <div class="cvv">
+                        <label for="cvv">CVV:</label>
+                        <input type="text" name="cvv" id="cvv" maxlength="3" placeholder="XXX" required>
+                    </div>
+                </div>
+
+                <input type="submit" value="Submit Tribute">
+            </form>
         </div>
-
-        <input type="submit" value="Submit Tribute">
-    </form>
-
+    </div>
     <?php include "footer.php"?>
 </body>
 </html>
+
+<?php //} ?>

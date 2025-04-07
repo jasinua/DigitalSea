@@ -5,38 +5,6 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     </head>
     <style>
-        /* qitu per root i ndrrojm*/
-       /* :root {
-            --background-color: #f5f5fa;
-            --text-color: white;
-
-            --button-color: rgb(4, 175, 126);
-
-            --noir-color: #232a2f;
-            --navy-color: #153147;
-            --mist-color: #adb8bb;
-            --almond-color: #edeae4;
-            --ivory-color: #f9f8f7;
-            } */
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: Arial, sans-serif;
-            color: var(--text-color);
-        }
-
-        body {
-            line-height: 1.5;
-        }
-        
         .footer {
             display: flex;
             justify-content: center;
