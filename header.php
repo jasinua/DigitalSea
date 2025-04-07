@@ -9,7 +9,7 @@
         <style>
            /* Light Mode Colors (default) */
             :root {
-                --header-color:rgb(213, 237, 230);
+                --header-color:#232a2f;
     
                 --background-color: #f5f5fa;         /* Light background with a soft, neutral tone */
                 --modal-text-color: #3a3a3a;        /* Dark gray for easy readability */
