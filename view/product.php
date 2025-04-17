@@ -49,6 +49,7 @@ $details = getProductDetails($product);
         display: flex;
         flex-direction: column;
         align-items: center;
+        color: var(--page-text-color);
     }
 
     #name{
