@@ -53,6 +53,13 @@ if (isLoggedIn($_SESSION['user_id'])) {
         height: 90px;
         object-fit: contain;
         border-radius: 6px;
+        
+        transition:ease-out 0.2s;
+    }
+
+    .product-info img:hover {
+        scale:1.2;
+        transition:ease-out 0.2s;
     }
 
     .remove-btn {
@@ -111,10 +118,12 @@ if (isLoggedIn($_SESSION['user_id'])) {
                         </form>
                     </td>
                     <td>
-                        <div class="product-info">
-                            <img src="<?php echo $product['image_url']; ?>" alt="Product">
-                            <span><?php echo $product['name']; ?></span>
-                        </div>
+                        <a style="text-decoration: none; color:black;" href="product.php?product=<?php echo $product['product_id'];?>">
+                            <div class="product-info">
+                                <img src="<?php echo $product['image_url']; ?>" alt="Product">
+                                <span><?php echo $product['name']; ?></span>
+                            </div>
+                        </a>
                     </td>
                     <td>
                             €<?php echo number_format($product['price'], 2); ?>
@@ -133,5 +142,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
         </table>
     </div>
 </div>
+
+<?php include "footer/footer.php"; ?>
 
 <?php } else {    header("Location: homepage.php"); } ?>

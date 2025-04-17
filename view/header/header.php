@@ -81,8 +81,8 @@
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         position: relative;
         display: inline-block;
-    }
-    
+    }    
+
     nav ul li i::after {
         content: "";
         position: absolute;
@@ -95,8 +95,10 @@
         transition: width 0.3s ease;
     }
 
-    nav ul li a:hover::after {
+    nav ul li i:hover {
+        transition:ease-out 0.3s;
         width: 100%;
+        color:var(--mist-color);
     }
 
     /* ===== Auth Dropdown ===== */

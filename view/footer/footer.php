@@ -45,9 +45,30 @@
 
         .social-icons a {
             color: var(--footer-items-color);
-            font-size: 20px;
-            margin: 0 20px;
+            font-size: 25px;
+            margin: 0 25px;
             margin-bottom: 1%;
+        }
+
+        #facebook:hover {
+            transition:ease-out 0.3s;
+            color:#1877F2;
+        }
+        #twitter:hover {
+            transition:ease-out 0.3s;
+            color:#1DA1F2;
+        }
+        #instagram:hover {
+            transition:ease-out 0.3s;
+            color:#e1306c;
+        }
+        #linkedin:hover {
+            transition:ease-out 0.3s;
+            color:#0a66c2;
+        }
+        #youtube:hover {
+            transition:ease-out 0.3s;
+            color:red;
         }
    </style>
   </head>
@@ -130,23 +151,23 @@
    </div>
    <div class="social-icons">
     <a href="#">
-     <i class="fab fa-facebook-f">
+     <i id="facebook" class="fab fa-facebook-f">
      </i>
     </a>
     <a href="#">
-     <i class="fab fa-twitter">
+     <i id="twitter" class="fab fa-twitter">
      </i>
     </a>
     <a href="#">
-     <i class="fab fa-instagram">
+     <i id="instagram" class="fab fa-instagram">
      </i>
     </a>
     <a href="#">
-     <i class="fab fa-linkedin-in">
+     <i id='linkedin' class="fab fa-linkedin-in">
      </i>
     </a>
     <a href="#">
-     <i class="fab fa-youtube">
+     <i id='youtube' class="fab fa-youtube">
      </i>
     </a>
    </div>

@@ -322,7 +322,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                         
                         <div class="summary-item"><span>Nëntotali:</span> <span>€<?php echo number_format($subtotal, 2); ?></span></div>
                         <div class="summary-item"><span>TVSH 18%:</span> <span>€<?php echo number_format($subtotal * 0.18, 2); ?></span></div>
-                        <div class="summary-item"><span>Zbritje:</span> <span style="color:red">- €50.00</span></div>
+                        <div class="summary-item"><span>Zbritje:</span> <span style="color:red">- <?php echo '€'.'0.00';?></span></div>
 
                     </div>
                     <div>

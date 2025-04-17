@@ -32,11 +32,16 @@
             display: flex;
             flex-direction: column;
         }
+        
 
         #container {
             display: flex;
             flex: 1;
             min-height: calc(100vh - 120px); /* Adjust based on header/footer height */
+        }
+
+        #container #moreItemsText {
+            text-align:center;
         }
 
         #filters {
@@ -124,7 +129,10 @@
         }
 
         .itemBox {
+            align-items:center;
+            
             display: flex;
+            justify-content:center;
             flex-wrap: wrap;
             margin: 17px;
             
@@ -207,6 +215,12 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+
+
+        #topItems {
+            overflow-x:hidden;
+        }
+        
     </style>
 </head>
 <body>
@@ -242,7 +256,7 @@
                             </div>
                         <?php } ?>
                     </div>
-                    <h1>More items</h1>
+                    <h1 id="moreItemsText" >More items</h1>
                     <div class='itemBox' id='randomItems'>
                         <?php foreach (getData("SELECT * FROM products") as $prod) { ?>
                             <div class='item'>
@@ -273,5 +287,29 @@
         </div>
         <?php include "footer/footer.php" ?>
     </div>
+    <script>
+        window.addEventListener('load', () => {
+            const container = document.getElementById('topItems');
+
+            // Clone all items for infinite scroll
+            const clone = container.innerHTML;
+            container.innerHTML += clone;
+
+            let scrollSpeed = 1;
+
+            function scrollLoop() {
+                container.scrollLeft += scrollSpeed;
+
+                // When scrolled past first full set, reset to start
+                if (container.scrollLeft >= container.scrollWidth / 2) {
+                    container.scrollLeft = 0;
+                }
+
+                requestAnimationFrame(scrollLoop);
+            }
+
+            scrollLoop();
+        });
+    </script>
 </body>
 </html>
