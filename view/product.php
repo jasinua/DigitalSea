@@ -12,18 +12,14 @@
 <?php include '../controller/home.inc.php'; ?>
 <?php 
 
-
-
 $productID = $_GET["product"];
 $data = getProductData($productID);
 $details = getProductDetails($productID);
-
 
 if(isset($_POST['addToCart'])){
     addToCart($_SESSION['user_id'],$productID,$_POST['quantity'],$_POST['quantity']*$data['price']);
     header("Location: cart.php");
 }
-
 
 ?>
 
@@ -172,7 +168,7 @@ if(isset($_POST['addToCart'])){
                         <?php }?>
                     </div>
                 </div>
-                <form action='product.php?product=<?php echo $productID; ?>' id='buyForm'  method='post'>
+                <form action='product.php?product=<?php echo $productID ?>' id='buyForm'  method='post'>
                 
                 <div id='stockWrapper'>
                     <div id='controlStock'>
