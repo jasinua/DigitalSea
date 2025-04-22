@@ -11,9 +11,23 @@
 </head>
 <?php include '../controller/home.inc.php'; ?>
 <?php 
-$product = $_GET["product"];
-$data = getProductData($product);
-$details = getProductDetails($product);
+
+$data = getProductData($_SESSION['pid']);
+$details = getProductDetails($_SESSION['pid']);
+
+if(isset($_POST['addToCart'])){
+    addToCart($_SESSION['user_id'],$_SESSION['pid'],$_POST['quantity'],$_POST['quantity']*$data['price']);
+    header("Location: cart.php");
+}
+
+$productID = $_GET["product"];
+$_SESSION['pid'] = $productID;
+$data = getProductData($productID);
+$details = getProductDetails($productID);
+
+
+
+
 ?>
 
 <body>
@@ -145,39 +159,34 @@ $details = getProductDetails($product);
     margin: 0;
     }
 
-    /* Firefox */
-    input[type=number] {
-    -moz-appearance: textfield;
-    }
-
 </style>
 
 <?php include 'header/header.php' ?>
     <div id='container'>
         <div id='prodContainer'>
-            <img id='productImg' src="<?php echo $data[0]['image_url']; ?>" alt="">
+            <img id='productImg' src="<?php echo $data['image_url']; ?>" alt="">
             <div id='infoSide'>
                 <div id='info'>
-                    <p id='name'><?php echo $data[0]['description']?></p>
+                    <p id='name'><?php echo $data['description']?></p>
                     <div id='details'>
                         <?php foreach($details as $detail){?>
-                        <div class='detail'><p><?php echo $detail['prod_desc1']?>:</p><p><?php echo $detail['prod_desc2']?></p>
+                        <div class='detail'><p><?php echo $detail[0]?>:</p><p><?php echo $detail[1]?></p>
                         </div>
                         <?php }?>
                     </div>
                 </div>
-                <form action='product.php' id='buyForm' method='post'>
+                <form action='product.php' id='buyForm'  method='post'>
                 
                 <div id='stockWrapper'>
                     <div id='controlStock'>
                         <button type='button' class='stockController' onclick='addToQuantity(-1)'>-</button>
-                            <input id='stock' value='1' min='1' max='<?php echo $data[0]['stock']; ?>' name='quant' type="number">
+                            <input id='stock' value='1' min='1' max='<?php echo $data['stock']; ?>' name='quantity' type="number">
                         <button type='button' class='stockController' onclick='addToQuantity(1)'>+</button>
                     </div>
                 </div>
-                
                         
-                    <input id='buy' type='submit' value='Add to cart'>
+                    <input type="hidden" value='<?php echo $productID ?>' name='prodID'>
+                    <input id='buy' type='submit' name='addToCart' value='Add to cart'>
                 </form>
             </div>
         </div>
@@ -194,5 +203,6 @@ $details = getProductDetails($product);
         }
     </script>
 </body>
+
 
 </html>

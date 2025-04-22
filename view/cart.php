@@ -81,7 +81,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     .cart-left, .cart-right {
         background-color: white;
-        color: var(--page-text-color)
+        color: var(--page-text-color);
         border-radius: 50px;
         box-shadow: 0 0 5px var(--navy-color);
         padding: 20px;

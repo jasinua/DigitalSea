@@ -37,7 +37,7 @@
 
     function returnProduct($productId) {
         include "../model/dbh.inc.php";
-        $stmt = $conn->prepare("CALL showProductDetail(?)");
+        $stmt = $conn->prepare("CALL showProduct(?)");
         $stmt->bind_param("i",$productId);
         $stmt -> execute();
 
