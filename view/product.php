@@ -12,20 +12,17 @@
 <?php include '../controller/home.inc.php'; ?>
 <?php 
 
-$data = getProductData($_SESSION['pid']);
-$details = getProductDetails($_SESSION['pid']);
 
-if(isset($_POST['addToCart'])){
-    addToCart($_SESSION['user_id'],$_SESSION['pid'],$_POST['quantity'],$_POST['quantity']*$data['price']);
-    header("Location: cart.php");
-}
 
 $productID = $_GET["product"];
-$_SESSION['pid'] = $productID;
 $data = getProductData($productID);
 $details = getProductDetails($productID);
 
 
+if(isset($_POST['addToCart'])){
+    addToCart($_SESSION['user_id'],$productID,$_POST['quantity'],$_POST['quantity']*$data['price']);
+    header("Location: cart.php");
+}
 
 
 ?>
@@ -175,7 +172,7 @@ $details = getProductDetails($productID);
                         <?php }?>
                     </div>
                 </div>
-                <form action='product.php' id='buyForm'  method='post'>
+                <form action='product.php?product=<?php echo $productID; ?>' id='buyForm'  method='post'>
                 
                 <div id='stockWrapper'>
                     <div id='controlStock'>
