@@ -15,7 +15,7 @@ if (!$conn) {
 }
 
 // Prepare query - adjust table/column names as needed
-$query = "SELECT first_name, last_name, email, address FROM users WHERE user_id = ?";
+$query = "CALL getProfile(?)";
 $stmt = $conn->prepare($query);
 
 if (!$stmt) {

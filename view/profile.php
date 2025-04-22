@@ -24,7 +24,7 @@ if (isset($_POST['first_name']) || isset($_POST['last_name']) || isset($_POST['e
     }
 
     // Update the database
-    $stmt = $conn->prepare("UPDATE users SET first_name = ?, last_name = ?, email = ?, address = ? WHERE user_id = ?");
+    $stmt = $conn->prepare("CALL updateProfile(?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssi", $first_name, $last_name, $email, $address, $user_id);
 
     if ($stmt->execute()) {
