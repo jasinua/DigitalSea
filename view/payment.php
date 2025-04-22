@@ -17,11 +17,13 @@
   <title>Offer Thy Tribute</title>
   <style>
 
+    
     h2 {
         margin: 15px;
         text-align:center;
         color: var(--page-text-color);
     }
+
 /* f5f5f0, f2efe9, f4f1ea */
     form {
       background-color: white;
@@ -57,7 +59,9 @@
     }
 
     .paymentStuff{
-        margin: 60px auto;
+        display: flex;
+        flex-direction: row;
+        margin: 10px 300px;
     }
 
     .backCard {
@@ -78,12 +82,91 @@
     .cvv input {
         width: 170px;
     }
-  </style>
+
+     /* ===== Card Visual ===== */
+     .card-container {
+        perspective: 1000px;
+        width: 100%;
+        max-width: 350px;
+        margin: auto auto;
+    }
+
+    .card {
+        width: 100%;
+        height: 200px;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+    }
+
+    .card.flipped {
+        transform: rotateY(180deg);
+    }
+
+    .card-front,
+    .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        padding: 1.5rem;
+        color: #ffffff;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .card-front {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-back {
+        background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+        transform: rotateY(180deg);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-number {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+    }
+
+    .card-details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+    }
+
+    .card-chip {
+        width: 40px;
+        height: 30px;
+        background: #d4d4d4;
+        border-radius: 4px;
+    }
+
+    .card-cvc {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+    }
+
+    .magnetic-strip {
+        width: 100%;
+        height: 30px;
+        background: #2d3748;
+        margin-bottom: 1rem;
+    }
+</style>
 </head>
 <body>
     <div class="page-wrapper">
+    <h2>Present Thy Payment</h2>
         <div class="paymentStuff">
-            <h2>Present Thy Payment</h2>
             <form action="process.php" method="POST">
                 <label for="name">Name upon the card:</label>
                 <input type="text" name="name" id="name" placeholder="Filan Fisteku" required>
@@ -101,13 +184,72 @@
                         <input type="text" name="cvv" id="cvv" maxlength="3" placeholder="XXX" required>
                     </div>
                 </div>
-
-                <input type="submit" value="Submit Tribute">
+                <input type="submit" value="Submit Payment">
             </form>
+
+                <section class="card-container">
+                <div class="card" id="card-visual">
+                    <div class="card-front">
+                        <div class="card-chip"></div>
+                        <div class="card-number" id="card-number-display">**** **** **** ****</div>
+                        <div class="card-details">
+                            <div>
+                                <span>Skadimi</span><br>
+                                <span id="card-expiry-display">MM/YY</span>
+                            </div>
+                            <div>
+                                <span id="card-name-display">Emri Juaj</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <div class="magnetic-strip"></div>
+                        <div class="card-cvc" id="card-cvc-display">***</div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
     <?php include "footer/footer.php"?>
 </body>
-</html>
 
-<?php //} ?>
+<script>
+    const cardVisual = document.getElementById('card-visual');
+
+    const cardNumberInput = document.getElementById('card');
+    const expiryInput = document.getElementById('expiry');
+    const cvvInput = document.getElementById('cvv');
+    const nameInput = document.getElementById('name');
+
+    const cardNumberDisplay = document.getElementById('card-number-display');
+    const cardExpiryDisplay = document.getElementById('card-expiry-display');
+    const cardCvcDisplay = document.getElementById('card-cvc-display');
+    const cardNameDisplay = document.getElementById('card-name-display');
+
+    // Flip the card when CVV input is focused or blurred
+    cvvInput.addEventListener('focus', () => cardVisual.classList.add('flipped'));
+    cvvInput.addEventListener('blur', () => cardVisual.classList.remove('flipped'));
+
+    // Update card number display
+    cardNumberInput.addEventListener('input', () => {
+        let val = cardNumberInput.value.replace(/\D/g, '');
+        let formatted = val.replace(/(\d{4})(?=\d)/g, '$1 ');
+        cardNumberDisplay.textContent = formatted.padEnd(19, '*') || '**** **** **** ****';
+    });
+
+    // Update expiry display
+    expiryInput.addEventListener('input', () => {
+        cardExpiryDisplay.textContent = expiryInput.value || 'MM/YY';
+    });
+
+    // Update CVV display
+    cvvInput.addEventListener('input', () => {
+        cardCvcDisplay.textContent = cvvInput.value || '***';
+    });
+
+    // Update name display
+    nameInput.addEventListener('input', () => {
+        cardNameDisplay.textContent = nameInput.value || 'Emri Juaj';
+    });
+</script>
+</html>
