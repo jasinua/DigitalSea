@@ -33,6 +33,9 @@
             flex-direction: column;
         }
         
+        body {
+            background-color:var(--background-color);
+        }
 
         #container {
             display: flex;
@@ -185,6 +188,8 @@
             font-size: 17px;
             overflow: hidden;
             padding: 0 5px 5px 10px;
+            text-align: right;
+            font-weight:600;
         }
 
         .item:hover {
@@ -252,7 +257,8 @@
                             <div class='item'>
                                 <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <p class='price'><?php echo $prod['price'] ?>&euro;</p>
+                                <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>&euro;</p>
+
                             </div>
                         <?php } ?>
                     </div>
@@ -262,7 +268,8 @@
                             <div class='item'>
                                 <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <p class='price'><?php echo $prod['price'] ?>&euro;</p>
+                                <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>&euro;</p>
+
                             </div>
                         <?php } ?>
                     </div>

@@ -1,5 +1,6 @@
 <?php
     ob_start(); // Fillon output buffering
+    include_once "../controller/function.php"
 ?>
 
 <!DOCTYPE html>
@@ -7,10 +8,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn-uicons.flaticon.com/uicons-rounded-regular/css/uicons-rounded-regular.css" rel="stylesheet">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <title>DigitalSea</title>
 </head>
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+    .montserrat-<uniquifier> {
+        font-family: "Montserrat", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: <weight>;
+        font-style: normal;
+    }
     :root {
         --background-color: #f5f5fa;       
         --text-color: white;
@@ -23,6 +35,7 @@
 
         --noir-color: #232a2f;
         --navy-color: #153147;
+        --navy-color-lighter:rgb(69, 110, 142);
         --mist-color: #adb8bb;
         --almond-color: #edeae4;
         --ivory-color: #f9f8f7;
@@ -32,6 +45,7 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        font-family:"Montserrat";
     }
 
     body {
@@ -46,20 +60,22 @@
     }
 
     header {
-        background-color: var(--noir-color);
+        
+        background-color:rgba(68, 90, 109, 0.47);
+        /* background-color: var(--noir-color); */
         color: white;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 20px;
+        padding: 0px 20px;
         width: 100%;
     }
 
     header .logo {
         margin: 10px;
         padding: 0;
-        height: 25px;
-        width: 25px;
+        height: 35px;
+        width: 35px;
     }
 
     nav ul {
@@ -70,8 +86,11 @@
     }
 
     nav ul li {
-        margin: 0 30px;
-    }
+    margin: 0 23px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
     nav ul li i {
         color: white;
@@ -105,7 +124,7 @@
     .auth-menu {
         cursor: pointer;
         font-size: 25px;
-        font-weight: bold;
+        font-weight: 100;
         color: white;
         display: inline-block;
     }
@@ -148,20 +167,37 @@
         display: flex;
         flex-direction: column;
     }
+
+    .icons {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    transition: ease-out 0.2s;
+}
+
+.icons:hover {
+    transform: scale(1.2);
+    transition: ease-out 0.2s;
+}
+
 </style>
 <body>
+
+
     <header>
-        <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "homepage.php"><img class="logo" src="logo.png" alt="logo e kompanise tone"></a></div>
+        <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "homepage.php"><img class="logo" src="logo2.png" alt="logo e kompanise tone"></a></div>
         <nav>
             <ul>
-                <li><a href="../view/homepage.php"><i class="fas fa-home"></i></a></li>
+                <li><a href="../view/homepage.php"><img src="home.png" class="icons" alt=""></a></li>
                 <?php if(isset($_SESSION['user_id'])) { ?>
-                <li><a href="../view/wishlist.php"><i class="fas fa-star"></i></a></li>
-                <li><a href="../view/cart.php"><i class="fas fa-cart-plus"></a></i></li>
-                <li><a href="../view/profile.php"><i class="fas fa-user"></a></i></li>
+                <li><a href="../view/wishlist.php"><img src="heart.png" class="icons" alt=""></a></li>
+                <li><a href="../view/cart.php"><img src="shopping-cart.png" class="icons" alt=""></a></li>
+                <li><a href="../view/profile.php"><img src="user.png" class="icons" alt=""></a></li>
                 <?php } ?>
                 <li>
-                    <label class="auth-menu" for="auth-toggle">☰</label>
+                    <label class="auth-menu" for="auth-toggle"><img src="menu.png" class="icons" alt=""></label>
                     <input type="checkbox" id="auth-toggle">
                     <div class="auth-dropdown">
                         <?php if(!isset($_SESSION['user_id'])) { ?>
@@ -170,6 +206,9 @@
                             <?php } else { ?>
                                 <a href="../view/profile.php">Profile</a>
                                 <a href="../view/logout.php">Log out</a>
+                                <?php if(isAdmin($_SESSION['user_id'])) {
+                                    echo "<a href='../view/manageStock.php'>Manage stock</a>";
+                                } ?>
                         <?php } ?>
                     </div>
                 </li>
