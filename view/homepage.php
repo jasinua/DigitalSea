@@ -323,7 +323,7 @@
         }
 
         #newItems {
-            overflow-x: auto;
+            overflow-x: hidden;
             display: flex;
             margin: 20px;
             padding-bottom: 20px;
