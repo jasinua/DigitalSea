@@ -1,10 +1,16 @@
 <?php 
 include_once "../controller/function.php";
+include_once "../controller/home.inc.php";
 session_start();
+
 
 if (isLoggedIn($_SESSION['user_id'])) {
     $res = returnWishList($_SESSION['user_id']);
     include "header/header.php";
+
+    if(isset($_POST['add'])) {
+        $result = addToCart($_SESSION['user_id'], $_POST['product_id'], 1, $_POST['price']);
+    }
 ?>
 <link rel="stylesheet" href="style.css">
 <style>
@@ -124,6 +130,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                     <td>
                         <form method="post" action="remove_from_wishlist.php">
                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                            <input type="hidden" name="price" value="<?php echo $product['price']; ?>">
                             <button class="remove-btn" type="submit">&times;</button>
                         </form>
                     </td>
@@ -141,9 +148,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
                     </td>
                     <td><?php if($product['stock'] > 0) { echo "In stock";} else { echo "Out of stock";}?></td>
                     <td>
-                        <form method="post" action="add_to_cart.php">
+                        <form method="post" action="">
                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
-                            <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                            <input type="hidden" name="price" value="<?php echo $product['price']; ?>">
+                            <button type="submit" name="add" class="add-to-cart-btn">Add to Cart</button>
                         </form>
                     </td>
                 </tr>
