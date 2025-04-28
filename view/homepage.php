@@ -153,6 +153,8 @@
             margin: 17px;
         }
 
+
+
         .item {
             min-width: 225px;
             width: 225px;
@@ -162,7 +164,7 @@
             flex-direction: column;
             align-items: center;
             border-radius: 10px;
-            box-shadow: 0 0 5px var(--navy-color);
+            box-shadow: 0 0 10px #55555563;
             transition: var(--transition);
             position: relative;
         }
@@ -209,6 +211,50 @@
             cursor: pointer;
         }
 
+
+        #newItemsItem {
+    width: 330px;
+    min-width: 300px;
+    height: 440px;
+    margin: 15px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #55555563;
+    transition: var(--transition);
+    position: relative;
+    padding-bottom: 50px; /* Make more bottom space */
+    overflow: hidden; /* optional: prevent overflow */
+}
+
+#newItemsItem img {
+    height: 280px;
+    object-fit: contain;
+    width: 100%;
+    padding: 20px;
+}
+
+#newItemsItem .title {
+    font-size: 15px;
+    text-align: center;
+    margin: 10px 10px 0 10px; /* some breathing room */
+    min-height: 50px; /* enough space for 2 lines */
+    overflow: hidden;
+}
+
+#newItemsItem .price {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    color: black;
+}
+
+        
+
         #container h1 {
             color: var(--noir-color);
             margin-left: 20px;
@@ -232,98 +278,89 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+        a {
+            text-decoration:none;
+            color:var(--page-text-color);
+        }
 
         .wheel-carousel {
             width: 100%;
             overflow: hidden;
             position: relative;
-            height: 300px;
-            margin: 30px 0;
-            display: flex;
-            justify-content: center;
+            height: 500px;
+            margin: auto; /* Center it with margin */
+            padding: 0; /* No padding */
+            box-sizing: border-box;
         }
 
-        .wheel-track {
-            display: flex;
-            position: relative;
-            gap: 40px;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
 
-        .wheel-item {
-            width: 220px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            transition: transform 1s ease, opacity 1s ease;
-            padding: 15px;
-            position: absolute;
-            flex-shrink: 0;
-        }
+    .wheel-track {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
 
-        .wheel-item img {
-            width: 100%;
-            height: 150px;
-            object-fit: contain;
-            margin-bottom: 10px;
-        }
+    .wheel-item {
+        width: 300px; /* Smaller to fit nicely */
+        height: 400px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 15px #aaa;
+        transition: transform 0.8s ease, opacity 0.8s ease;
+        padding: 15px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.8); /* Centered by default */
+        opacity: 0;
+        display:block;
+        text-align:bottom;
+    }
 
-        .wheel-item .title {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 5px;
-            height: 40px;
-            overflow: hidden;
-            text-decoration: none;
-        }
+    .wheel-item img {
+        width: 100%;
+        height: 300px;
+        object-fit: contain;
+    }
 
-        .wheel-item .price {
-            font-size: 16px;
-            font-weight: bold;
-            text-align: right;
-        }
+    .wheel-item.active {
+        transform: translate(-50%, -50%) scale(1);
+        z-index: 4;
+        opacity: 1;
+    }
 
-        .wheel-item.active {
-            transform: scale(1) translateX(0);
-            z-index: 4;
-            opacity: 1;
-            box-shadow: var(--shadow);
-        }
+    .wheel-item.left {
+        transform: translate(-150%, -50%) scale(0.9);
+        opacity: 0.8;
+        z-index: 3;
+    }
 
-        .wheel-item.left {
-            transform: scale(0.9) translateX(-250px);
-            opacity: 0.7;
-            z-index: 3;
-        }
+    .wheel-item.right {
+        transform: translate(50%, -50%) scale(0.9);
+        opacity: 0.8;
+        z-index: 3;
+    }
 
-        .wheel-item.right {
-            transform: scale(0.9) translateX(250px);
-            opacity: 0.7;
-            z-index: 3;
-        }
+    .wheel-item.far-left {
+        transform: translate(-250%, -50%) scale(0.8);
+        opacity: 0.5;
+        z-index: 2;
+    }
 
-        .wheel-item.far-left {
-            transform: scale(0.8) translateX(-530px);
-            opacity: 0.5;
-            z-index: 2;
-        }
+    .wheel-item.far-right {
+        transform: translate(150%, -50%) scale(0.8);
+        opacity: 0.5;
+        z-index: 2;
+    }
 
-        .wheel-item.far-right {
-            transform: scale(0.8) translateX(530px);
-            opacity: 0.5;
-            z-index: 2;
-        }
+    .wheel-item.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
 
-        .wheel-item.hidden {
-            transform: translateX(-5px); /* Changed to move left for disappearing effect */
-            opacity: 0;
-            z-index: 0;
-        }
 
         #newItems {
-            overflow-x: auto;
+            overflow-x: hidden;
             display: flex;
             margin: 20px;
             padding-bottom: 20px;
@@ -331,9 +368,9 @@
 
         .new-badge {
             position: absolute;
-            background-color: rgb(9, 180, 238);
-            color: black;
-            font-size: 12px;
+            color: rgb(42, 175, 169);
+            /* color: black; */
+            font-size: 15px;
             font-weight: bold;
             padding: 3px 6px;
             border-radius: 5px;
@@ -370,11 +407,12 @@
                     <div class='wheel-carousel'>
                         <div class='wheel-track' id='topItems'>
                             <?php foreach (getData("SELECT * FROM products WHERE products.price>900") as $prod) { ?>
-                                <div class='wheel-item'>
+                                <a href="product.php?product=<?php echo $prod['product_id'] ?>"><div class='wheel-item'>
                                     <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
-                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                    <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
+                                    <p class='title'><?php echo $prod['description'] ?>
+                                    <!-- <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p> -->
                                 </div>
+                                </a>
                             <?php } ?>
                         </div>
                     </div>
@@ -382,7 +420,7 @@
                     <h1 id='newItemsHeader'>New Products</h1>
                     <div class='itemLine' id='newItems'>
                         <?php foreach (getData("SELECT * FROM products ORDER BY product_id DESC LIMIT 8") as $prod) { ?>
-                            <div class='item'>
+                            <div class='item' id="newItemsItem">
                                 <div class="new-badge">NEW</div>
                                 <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
@@ -394,7 +432,7 @@
                     <h1 id="moreItemsText">More Products</h1>
                     <div class='itemBox' id='randomItems'>
                         <?php foreach (getData("SELECT * FROM products") as $prod) { ?>
-                            <div class='item'>
+                            <div class='item' id="newItems">
                                 <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
                                 <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
