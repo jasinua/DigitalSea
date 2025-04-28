@@ -125,15 +125,16 @@
 
         #items {
             background-color: var(--ivory-color);
-            width: 100%;
+            min-width: 100%;
             padding: 0 20px;
             flex: 1;
-            transform: translateX(-18%);
+            transform: translateX(-280px);
             transition: var(--transition);
         }
 
         #filters.open + #items {
-            transform: translateX(0);
+            min-width:0px;
+            transform: translateX(0px);
         }
 
         .itemLine {
@@ -232,7 +233,6 @@
             background: #555;
         }
 
-        /* Wheel Carousel Styles */
         .wheel-carousel {
             width: 100%;
             overflow: hidden;
@@ -249,6 +249,7 @@
             gap: 40px;
             align-items: center;
             justify-content: center;
+            transition: var(--transition);
         }
 
         .wheel-item {
@@ -316,7 +317,7 @@
         }
 
         .wheel-item.hidden {
-            transform: translateX(-600px); /* Changed to move left for disappearing effect */
+            transform: translateX(-5px); /* Changed to move left for disappearing effect */
             opacity: 0;
             z-index: 0;
         }
