@@ -6,6 +6,7 @@ include "header/header.php";
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     var_dump($_SESSION); // Debug: This will output all session variables
+    header("Location login.php");
     die("Session user_id is not set. Please log in.");
 }
 $user_id = $_SESSION['user_id']; // Retrieve user_id from session
@@ -28,9 +29,9 @@ if (isset($_POST['first_name']) || isset($_POST['last_name']) || isset($_POST['e
     $stmt->bind_param("ssssi", $first_name, $last_name, $email, $address, $user_id);
 
     if ($stmt->execute()) {
-        // echo "Profile updated successfully.";
+        echo "Profile updated successfully.";
     } else {
-        // echo "Error updating profile.";
+        echo "Error updating profile.";
     }
 
     $stmt->close();
@@ -54,16 +55,14 @@ if (!isLoggedIn($user_id)) {
 <title>Profile Page</title>
 </head>
 <style>
-
     .page-wrapper {
-        /* justify-content: center; */
+        display: flex;
         margin-top: 80px;
     }
 
     .profile {
         display: flex;
         flex-direction: row;
-        /* margin-top: auto; */
     }
 
     .userProfile {
@@ -71,21 +70,20 @@ if (!isLoggedIn($user_id)) {
         flex-direction: column;
         text-align: center;
         color: var(--page-text-color);
-        max-width: 400px;
+        max-width: 450px;
+        height: 370px;
         width: 100%;
         margin: 20px 0 20px 37%;
         background-color: white;
         padding: 30px;
         opacity: 1;
-        border-radius: 10px;
-        /* border: 1px solid var(--navy-color); */
+        border-radius: 15px;
         box-shadow: 0 0px 5px #153147;
         transition: transform 0.3s ease-in-out, opacity 0.5s ease-in;
         flex-grow: 1;
         z-index: 2;
     }
 
-    /* kjo veq perkohsisht deri sa te implementohet img */
     .userProfile i {
         font-size: 70px;
         border-radius: 50%;
@@ -133,7 +131,6 @@ if (!isLoggedIn($user_id)) {
     }
 
     .editProfile {
-        display: flex;
         flex-direction: column;
         text-align: center;
         opacity: 0;
@@ -279,100 +276,100 @@ if (!isLoggedIn($user_id)) {
     <?php include "footer/footer.php"; ?>
 </body>
 <script>
-        let userProfile = document.querySelector(".userProfile");
-        let editProfile = document.querySelector(".editProfile");
-        let editButton = document.getElementById("edit");
-        let isEditing = false;
+    let userProfile = document.querySelector(".userProfile");
+    let editProfile = document.querySelector(".editProfile");
+    let editButton = document.getElementById("edit");
+    let isEditing = false;
 
-        function editFunction() {
-            if (!isEditing) {
-                // Show edit form
-                userProfile.classList.add("hidden");
-                userProfile.classList.remove("active");
-                setTimeout(() => {
-                    editProfile.classList.add("active");
-                    editProfile.classList.remove("hidden");
-                }, 300);
-                
-                editButton.innerText = "Duke edituar profilin";
-                isEditing = true;
-            } else if(isEditing && editButton.innerText === "Duke edituar profilin") {
-                isEditing = true;
-            } else {
-                // Submit changes
-                submitChanges();
-                isEditing = false;
-            }
-        }
-
-        function submitChanges() {
-            let first_name = document.querySelector("input[name='first_name']").value.trim();
-            let last_name = document.querySelector("input[name='last_name']").value.trim();
-            let email = document.querySelector("input[name='email']").value.trim();
-            let address = document.querySelector("input[name='address']").value.trim();
-
-            // Validate email if changed
-            if (email !== "<?php echo htmlspecialchars($user['email']); ?>" && !validateEmail(email)) {
-                alert("Ju lutem shkruani një email valid!");
-                return;
-            }
-
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", "profile.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-            xhr.onload = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                        // Update UI only if server responded successfully
-                        document.getElementById("user_name").innerText = 
-                        (first_name || "<?php echo htmlspecialchars($user['first_name']); ?>") + " " + 
-                        (last_name || "<?php echo htmlspecialchars($user['last_name']); ?>");
-                        
-                    document.getElementById("user_email").innerText = 
-                        "Email: " + (email || "<?php echo htmlspecialchars($user['email']); ?>");
-                        
-                    document.getElementById("user_address").innerText = 
-                        "Address: " + (address || "<?php echo htmlspecialchars($user['address']); ?>");
-
-                    // Reset edit state
-                    cancelEdit();
-                } else {
-                    console.error("Error updating profile:", xhr.responseText);
-                }
-            };
-
-            xhr.send(
-                "first_name=" + encodeURIComponent(first_name) + 
-                "&last_name=" + encodeURIComponent(last_name) + 
-                "&email=" + encodeURIComponent(email) + 
-                "&address=" + encodeURIComponent(address)
-            );
-        }
-
-        function cancelEdit() {
-            // Hide edit form and show profile
+    function editFunction() {
+        if (!isEditing) {
+            // Show edit form
+            userProfile.classList.add("hidden");
+            userProfile.classList.remove("active");
             setTimeout(() => {
-                userProfile.classList.remove("hidden");
-                userProfile.classList.add("active");
-                editProfile.classList.remove("active");
-                editProfile.classList.add("hidden");
-            }, 0);
-
-            // Reset button state
-            editButton.innerText = "Edito Profilin";
+                editProfile.classList.add("active");
+                editProfile.classList.remove("hidden");
+            }, 300);
+            
+            editButton.innerText = "Duke edituar profilin";
+            isEditing = true;
+        } else if(isEditing && editButton.innerText === "Duke edituar profilin") {
+            isEditing = true;
+        } else {
+            // Submit changes
+            submitChanges();
             isEditing = false;
         }
+    }
 
-        // Email validation helper
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
+    function submitChanges() {
+        let first_name = document.querySelector("input[name='first_name']").value.trim();
+        let last_name = document.querySelector("input[name='last_name']").value.trim();
+        let email = document.querySelector("input[name='email']").value.trim();
+        let address = document.querySelector("input[name='address']").value.trim();
+
+        // Validate email if changed
+        if (email !== "<?php echo htmlspecialchars($user['email']); ?>" && !validateEmail(email)) {
+            alert("Ju lutem shkruani një email valid!");
+            return;
         }
-        // Prevent form submission (we'll handle it via AJAX)
-        document.querySelector("form").addEventListener("submit", function(e) {
-                e.preventDefault();
-                submitChanges();
-        });
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "profile.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onload = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Update UI only if server responded successfully
+                    document.getElementById("user_name").innerText = 
+                    (first_name || "<?php echo htmlspecialchars($user['first_name']); ?>") + " " + 
+                    (last_name || "<?php echo htmlspecialchars($user['last_name']); ?>");
+                    
+                document.getElementById("user_email").innerText = 
+                    "Email: " + (email || "<?php echo htmlspecialchars($user['email']); ?>");
+                    
+                document.getElementById("user_address").innerText = 
+                    "Address: " + (address || "<?php echo htmlspecialchars($user['address']); ?>");
+
+                // Reset edit state
+                cancelEdit();
+            } else {
+                console.error("Error updating profile:", xhr.responseText);
+            }
+        };
+
+        xhr.send(
+            "first_name=" + encodeURIComponent(first_name) + 
+            "&last_name=" + encodeURIComponent(last_name) + 
+            "&email=" + encodeURIComponent(email) + 
+            "&address=" + encodeURIComponent(address)
+        );
+    }
+
+    function cancelEdit() {
+        // Hide edit form and show profile
+        setTimeout(() => {
+            userProfile.classList.remove("hidden");
+            userProfile.classList.add("active");
+            editProfile.classList.remove("active");
+            editProfile.classList.add("hidden");
+        }, 0);
+
+        // Reset button state
+        editButton.innerText = "Edito Profilin";
+        isEditing = false;
+    }
+
+    // Email validation helper
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    // Prevent form submission (we'll handle it via AJAX)
+    document.querySelector("form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            submitChanges();
+    });
 
     function logoutFunction() {
         // Make a call to logout.php

@@ -45,7 +45,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
     foreach ($rawCart as $item) {
         $pid = $item['product_id'];
         if (isset($mergedCart[$pid])) {
-            $mergedCart[$pid]['quantity'] += $item['quantity'];
+            $mergedCart[$pid]['quantity'] = $item['quantity'];
         } else {
             $mergedCart[$pid] = $item;
         }
@@ -54,18 +54,8 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     include "header/header.php";
 ?>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
-    body {
-        background-color: var(--background-color);
-        font-family: Arial, sans-serif;
-    }
 
+<style>
     .page-wrapper {
         justify-content: center;
         align-items: center;
@@ -75,7 +65,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
         display: flex;
         width: 100%;
         max-width: 1200px;
-        /* margin: 40px auto; */
         gap: 40px;
     }
 
@@ -123,13 +112,11 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
 
     thead tr {
-        /* color: var(--page-text-color); */
         background-color: var(--background-color);
     }
 
     th, td {
         padding: 12px;
-        /* background-color: var(--navy-color); */
         color: var(--page-text-color);
         text-align: center;
         border-bottom: 1px solid var(--mist-color);
@@ -137,6 +124,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     td:first-child {
         text-align: left;
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none;
     }
 
     .product-info {
@@ -189,7 +180,8 @@ if (isLoggedIn($_SESSION['user_id'])) {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        gap: 40px;    
+        gap: 40px;   
+        flex: 1; 
     }
 
     .summary-box h3 {
@@ -217,8 +209,8 @@ if (isLoggedIn($_SESSION['user_id'])) {
         font-size: 1rem;
         border-radius: 8px;
         cursor: pointer;
-        margin-top: 10px;
-        align-self: end;
+        margin-top: auto;
+        align-self: flex-end;
     }
 
     #prodNameXprice {
@@ -232,7 +224,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
             <!-- Left: Cart Table -->
             <div class="cart-left">
-
             <table>
                 <thead>
                     <tr>
@@ -266,7 +257,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                         </div>
                                     </div>
                                 </td>
-                                <td>€<?php echo number_format($product['price'], 2); ?></td>
+                                <td><?php echo number_format($product['price'], 2); ?>€</td>
                                 <td>
                                     <div class="quantity-controls">
                                         <input 
@@ -281,8 +272,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     </div>
                                 </td>
                                 <input type="hidden" name="price[]" value="<?php echo $total; ?>">
-
-                                <!-- Qita me qit te cart-right edhe me bo si kupon fiskal per produktin e caktun: cmini * sasia -->
                                 
                                 <td>
                                     <button class="remove-btn" type="submit" name="remove" value="<?php echo $product['product_id']; ?>">&times;</button>
@@ -315,20 +304,20 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                 ?>
                                 <div class="summary-item" data-product-id="<?php echo $product['product_id']; ?>">
                                     <span><?php echo $product['name']; ?></span>
-                                    <span class="total-price">€<?php echo number_format($prc, 2); ?> × <?php echo $qty; ?> = €<?php echo number_format($ttl, 2); ?></span>
+                                    <span class="total-price"><?php echo $qty; ?> x <?php echo number_format($prc, 2); ?>€ = <?php echo number_format($ttl, 2); ?>€</span>
                                 </div>
                             <?php } ?>
                         </div>
                         
-                        <div class="summary-item"><span>Nëntotali:</span> <span>€<?php echo number_format($subtotal, 2); ?></span></div>
-                        <div class="summary-item"><span>TVSH 18%:</span> <span>€<?php echo number_format($subtotal * 0.18, 2); ?></span></div>
-                        <div class="summary-item"><span>Zbritje:</span> <span style="color:red">- <?php echo '€'.'0.00';?></span></div>
+                        <div class="summary-item"><span>Nëntotali:</span> <span><?php echo number_format($subtotal, 2); ?>€</span></div>
+                        <div class="summary-item"><span>TVSH 18%:</span> <span><?php echo number_format($subtotal * 0.18, 2); ?>€</span></div>
+                        <div class="summary-item"><span>Zbritje:</span> <span style="color:red">- <?php echo '0.00'.'€';?></span></div>
 
                     </div>
                     <div>
                         <div class="summary-item total">
                             <span>Total:</span>
-                            <span>€<?php echo number_format($subtotal * 1.18 - 50, 2); ?></span>
+                            <span><?php echo number_format($subtotal * 1.18 - 50, 2); ?>€</span>
                         </div>
                         <!-- Checkout Button -->
                         <button class="checkout-btn" type="submit" name="continue">Vazhdo ne checkout</button>
@@ -349,13 +338,12 @@ if (isLoggedIn($_SESSION['user_id'])) {
                 const price = parseFloat(input.dataset.price);
                 const productId = input.dataset.productId;
                 const quantity = parseInt(input.value) || 1;
-
                 const total = price * quantity;
 
                 // Update the corresponding summary item
                 const summaryItem = document.querySelector(`.summary-item[data-product-id="${productId}"] .total-price`);
                 if (summaryItem) {
-                    summaryItem.textContent = `€${price.toFixed(2)} × ${quantity} = €${total.toFixed(2)}`;
+                    summaryItem.textContent = `${quantity} x ${price.toFixed(2)}€ = ${total.toFixed(2)}€`;
                 }
 
                 updateCartSummary();
@@ -376,11 +364,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
             const finalTotal = subtotal + tvsh - discount;
 
             const summaryItems = document.querySelectorAll('.summary-box .summary-item');
-            summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = '€' + subtotal.toFixed(2);
-            summaryItems[summaryItems.length - 2].querySelector('span:last-child').textContent = '€' + tvsh.toFixed(2);
-            summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = '€' + finalTotal.toFixed(2);
+            summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = subtotal.toFixed(2) + '€';
+            summaryItems[summaryItems.length - 2].querySelector('span:last-child').textContent = tvsh.toFixed(2) + '€';
+            summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = finalTotal.toFixed(2) + '€';
         }
     });
 </script>
-
-<?php } else {    header("Location: homepage.php"); } ?>
+<?php } else { header("Location: homepage.php"); } ?>

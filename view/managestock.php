@@ -1,6 +1,5 @@
 <?php
 // THIS PAGE IS FOR ADDING PRODUCTS INTO products.json TEMPORARILY
-
 session_start();
 
 $file = '../controller/products.json';
@@ -56,20 +55,11 @@ if (file_exists($file)) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-   
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Product Management</title>
-    <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--background-color);
-      color: var(--page-text-color);
-      margin: 0;
-      padding: 0;
-    }
-
+</head>
+<style>
     .body-container {
         width: 70%;
         margin: auto;
@@ -78,6 +68,7 @@ if (file_exists($file)) {
     }
 
     h1, h2 {
+        margin-top: 20px;
         text-align: center;
         color: var(--noir-color);
     }
@@ -161,7 +152,7 @@ if (file_exists($file)) {
         border-collapse: collapse;
         background: var(--modal-bg-color);
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        border-radius: 25px;
+        border-radius: 15px;
         overflow: hidden;
     }
 
@@ -262,8 +253,7 @@ if (file_exists($file)) {
         display:flex;
         justify-content:right;
     }
-    </style>
-</head>
+</style>
 <body>
 
 <?php include "header/header.php"; ?>
@@ -324,7 +314,6 @@ if (file_exists($file)) {
     <table>
         <thead>
             <tr>
-                
                 <th>Image</th>
                 <th>Name</th>
                 <th>Type</th>
@@ -346,7 +335,7 @@ if (file_exists($file)) {
                         </td>
                         <td><?= htmlspecialchars($product['name']) ?></td>
                         <td><?= htmlspecialchars($product['type']) ?></td>
-                        <td><strong>$<?= htmlspecialchars(number_format($product['price'], 2)) ?></strong></td>
+                        <td><strong><?= htmlspecialchars(number_format($product['price'], 2)) ?>€</strong></td>
                         <td><?= htmlspecialchars($product['stock']) ?></td>
                         <td><?= htmlspecialchars($product['api_source']) ?></td>
                         
@@ -368,9 +357,8 @@ if (file_exists($file)) {
             <?php endif; ?>
         </tbody>
     </table>
-
 </div>
-
+</body>
 <script>
 function addDetailField() {
     const container = document.getElementById('detailsContainer');
@@ -407,6 +395,4 @@ window.onclick = function(event) {
     }
 }
 </script>
-
-</body>
 </html>

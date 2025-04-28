@@ -1,7 +1,5 @@
 <?php
-
 include "../model/dbh.inc.php"; 
-
 
 //kontrollon nese inputet jane jo te zbrazeta
 function emptyInputSignUp($first_name, $last_name, $birthday, $email, $password, $password_repeat) {
@@ -60,6 +58,4 @@ function createUser($first_name, $last_name, $birthday, $email, $password) {
         return false;
     }
 }
-
-
 ?>

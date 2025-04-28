@@ -151,4 +151,4 @@
     //         echo "No products found in JSON data.";
     //     }
     // }
-    
+?>

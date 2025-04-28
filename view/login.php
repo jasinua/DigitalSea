@@ -124,7 +124,7 @@ if(!isset($_SESSION['user_id'])) {
         <div class="login-container">
             <h1>Login</h1>
             <form action="" method="post">
-                <input type="email" name="email" placeholder="Email..." required>
+                <input type="email" name="email" placeholder="Email..." autofocus="autofocus" required>
                 <input type="password" name="password" placeholder="Password..." required>
                 <input type="submit" name="submit" value="Log in">
             </form>

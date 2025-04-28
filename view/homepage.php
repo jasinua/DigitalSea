@@ -13,20 +13,6 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <style>
-        :root {
-            --background-color: #f5f5fa;       
-            --text-color: white;
-            --page-text-color: #232a2f;
-            --modal-bg-color: white;            
-            --button-color: #153147;
-            --button-color-hover:rgb(26, 78, 118);
-            --noir-color: #232a2f;
-            --navy-color: #153147;
-            --mist-color: #adb8bb;
-            --almond-color: #edeae4;
-            --ivory-color: #f9f8f7;
-            --footer-items-color: #adb8bb;
-        }
         .page-wrapper {
             flex: 1;
             display: flex;
@@ -34,27 +20,50 @@
         }
         
         body {
-            background-color:var(--background-color);
+            background-color: var(--background-color);
         }
 
         #container {
             display: flex;
             flex: 1;
-            min-height: calc(100vh - 120px); /* Adjust based on header/footer height */
+            min-height: calc(100vh - 120px);
         }
 
         #container #moreItemsText {
-            text-align:center;
+            text-align: center;
         }
 
         #filters {
-            display: flex;
-            flex-direction: column;
+            width: 280px;
             background-color: white;
-            width: 15%;
-            min-height: 100%;
-            border-right: solid 2px var(--navy-color);
-            padding-bottom: 20px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateX(-100%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        #filters.open {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        #filter-toggle {
+            background-color: var(--button-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            margin: 20px 0;
+            display: inline-block;
+        }
+
+        #filter-toggle:hover {
+            background-color: var(--button-color-hover);
         }
 
         .filter {
@@ -63,14 +72,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 10px;
             border-radius: 10px;
             color: var(--page-text-color);
         }
 
         #filtOpts {
             display: flex;
-            margin: 10px;
+            width: auto;
             justify-content: space-between;
         }
 
@@ -79,14 +87,18 @@
             border-radius: 10px;
             font-size: 12px;
             height: 30px;
-            background-color: white;
-            accent-color: var(--navy-color);
-            transition: background-color ease 0.5s;
-            background-color: var(--navy-color);
+            background-color: var(--button-color);
             border: none;
             color: white;
             font-size: 0.9em;
             padding: 5px 10px;
+            margin: 10px;
+            transition: background-color 0.5s;
+        }
+
+        #filtOpts input:hover {
+            background-color: var(--noir-color);
+            cursor: pointer;
         }
 
         #filters ul {
@@ -111,16 +123,17 @@
             background-color: black;
         }
 
-        #filtOpts input:hover {
-            background-color: var(--noir-color);
-            cursor: pointer;
-        }
-
         #items {
             background-color: var(--ivory-color);
-            width: 85%;
-            padding: 20px;
+            width: 100%;
+            padding: 0 20px;
             flex: 1;
+            transform: translateX(-18%);
+            transition: var(--transition);
+        }
+
+        #filters.open + #items {
+            transform: translateX(0);
         }
 
         .itemLine {
@@ -132,13 +145,11 @@
         }
 
         .itemBox {
-            align-items:center;
-            
+            align-items: center;
             display: flex;
-            justify-content:center;
+            justify-content: center;
             flex-wrap: wrap;
             margin: 17px;
-            
         }
 
         .item {
@@ -151,17 +162,17 @@
             align-items: center;
             border-radius: 10px;
             box-shadow: 0 0 5px var(--navy-color);
-            transition: transform 0.3s ease;
+            transition: var(--transition);
         }
 
         .item:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
         }
 
         .item img {
             width: 100%;
             padding: 20px;
-            transition: padding ease 0.5s;
+            transition: var(--transition);
             object-fit: contain;
             height: 180px;
         }
@@ -189,7 +200,7 @@
             overflow: hidden;
             padding: 0 5px 5px 10px;
             text-align: right;
-            font-weight:600;
+            font-weight: 600;
         }
 
         .item:hover {
@@ -201,7 +212,6 @@
             margin-left: 20px;
         }
 
-        /* Scrollbar styling */
         ::-webkit-scrollbar {
             height: 8px;
             width: 8px;
@@ -221,11 +231,9 @@
             background: #555;
         }
 
-
         #topItems {
-            overflow-x:hidden;
+            overflow-x: hidden;
         }
-        
     </style>
 </head>
 <body>
@@ -250,6 +258,7 @@
             </div>
 
             <div id='items'>
+                <button id="filter-toggle">Filters</button>
                 <?php if(!isset($_POST['filter'])) { ?>   
                     <h1 id='topItemsHeader'>Top items</h1>
                     <div class='itemLine' id='topItems'>
@@ -257,19 +266,17 @@
                             <div class='item'>
                                 <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>&euro;</p>
-
+                                <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
                             </div>
                         <?php } ?>
                     </div>
-                    <h1 id="moreItemsText" >More items</h1>
+                    <h1 id="moreItemsText">More items</h1>
                     <div class='itemBox' id='randomItems'>
                         <?php foreach (getData("SELECT * FROM products") as $prod) { ?>
                             <div class='item'>
                                 <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>&euro;</p>
-
+                                <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
                             </div>
                         <?php } ?>
                     </div>
@@ -284,7 +291,7 @@
                                 <div class='item'>
                                     <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                     <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                    <p class='price'><?php echo $prod['price'] ?>&euro;</p>
+                                    <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
                                 </div>
                             <?php } ?>
                         <?php } ?>   
@@ -295,23 +302,33 @@
         <?php include "footer/footer.php" ?>
     </div>
     <script>
+        // Filter toggle functionality
+        const filterToggle = document.getElementById('filter-toggle');
+        const filters = document.getElementById('filters');
+
+        filterToggle.addEventListener('click', () => {
+            filters.classList.toggle('open');
+        });
+
+        // Close filter panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!filters.contains(e.target) && e.target !== filterToggle) {
+                filters.classList.remove('open');
+            }
+        });
+
+        // Infinite scroll for top items
         window.addEventListener('load', () => {
             const container = document.getElementById('topItems');
-
-            // Clone all items for infinite scroll
             const clone = container.innerHTML;
             container.innerHTML += clone;
-
             let scrollSpeed = 1;
 
             function scrollLoop() {
                 container.scrollLeft += scrollSpeed;
-
-                // When scrolled past first full set, reset to start
                 if (container.scrollLeft >= container.scrollWidth / 2) {
                     container.scrollLeft = 0;
                 }
-
                 requestAnimationFrame(scrollLoop);
             }
 

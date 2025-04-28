@@ -1,16 +1,6 @@
-<html lang="en">
-    <?php session_start();
-    ?>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProductNameqtu</title>
-    <link rel="stylesheet" href="product.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<?php include '../controller/home.inc.php'; ?>
 <?php 
+session_start();
+include '../controller/home.inc.php';
 
 $productID = $_GET["product"];
 $data = getProductData($productID);
@@ -20,11 +10,16 @@ if(isset($_POST['addToCart'])){
     addToCart($_SESSION['user_id'],$productID,$_POST['quantity'],$_POST['quantity']*$data['price']);
     header("Location: cart.php");
 }
-
 ?>
 
-<body>
-
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProductNameqtu</title>
+    <link rel="stylesheet" href="product.css">
+    <link rel="stylesheet" href="style.css">
+</head>
 <style>
     #container{
         display: flex;
@@ -151,9 +146,8 @@ if(isset($_POST['addToCart'])){
     -webkit-appearance: none;
     margin: 0;
     }
-
 </style>
-
+<body>
 <?php include 'header/header.php' ?>
     <div id='container'>
         <div id='prodContainer'>

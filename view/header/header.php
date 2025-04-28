@@ -23,6 +23,7 @@
         font-weight: <weight>;
         font-style: normal;
     }
+    
     :root {
         --background-color: #f5f5fa;       
         --text-color: white;
@@ -39,6 +40,9 @@
         --mist-color: #adb8bb;
         --almond-color: #edeae4;
         --ivory-color: #f9f8f7;
+
+        --transition: all 0.5s ease;
+        --transition-faster: all 0.3 ease;
     }
 
     * {
@@ -55,14 +59,11 @@
         background-color: var(--background-color);
         color: var(--text-color);
         line-height: 1.5;
-        /* height: 60vh; */
         min-height: 100vh;
     }
 
     header {
-        
-        background-color:rgba(68, 90, 109, 0.47);
-        /* background-color: var(--noir-color); */
+        background-color: var(--noir-color);
         color: white;
         display: flex;
         justify-content: space-between;
@@ -86,11 +87,11 @@
     }
 
     nav ul li {
-    margin: 0 23px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        margin: 0 23px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
     nav ul li i {
         color: white;
@@ -154,7 +155,7 @@
         color: white;
         text-decoration: none;
         padding: 8px 12px;
-        transition: background 0.3s ease;
+        transition: var(--transition);
     }
 
     .auth-dropdown a:hover {
@@ -169,23 +170,20 @@
     }
 
     .icons {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
-    transition: ease-out 0.2s;
-}
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+        transition: ease-out 0.2s;
+    }
 
-.icons:hover {
-    transform: scale(1.2);
-    transition: ease-out 0.2s;
-}
-
+    .icons:hover {
+        transform: scale(1.2);
+        transition: ease-out 0.2s;
+    }
 </style>
 <body>
-
-
     <header>
         <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "homepage.php"><img class="logo" src="logo2.png" alt="logo e kompanise tone"></a></div>
         <nav>

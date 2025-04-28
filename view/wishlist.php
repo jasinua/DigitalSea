@@ -42,6 +42,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
         text-align: left;
     }
 
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+
     .product-info {
         display: flex;
         align-items: center;

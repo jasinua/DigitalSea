@@ -1,10 +1,8 @@
 <?php 
-
 include_once "../controller/signup.inc.php";
 session_start();
 
 include "header/header.php";
-
 
 if(isset($_POST['submit'])){
     // Storing variables for validation
@@ -20,26 +18,32 @@ if(isset($_POST['submit'])){
         header("Location: signup.php?fields=empty");
         exit();
     }
+
     if(!invalidInputs($first_name, $last_name)) {
         header("Location: signup.php?inputs=invalid");
         exit();
     }
+
     if(!checkEmail($email)) {
         header("Location: signup.php?email=invalid");
         exit();
     }
+
     if(!invalidPasswordFormat($password)){
         header("Location: signup.php?password=invalid");
         exit();
     }
+
     if(!checkPassword($password, $password_repeat)) {
         header("Location: signup.php?passwords=nomatch");
         exit();
     }
+
     if(!checkAge($birthday)) {
         header("Location: signup.php?age=invalid");
         exit();
     }
+
     if(!emailExists($email)) {
         header("Location: signup.php?email=exists");
         exit();
@@ -53,7 +57,6 @@ if(isset($_POST['submit'])){
         exit();
     }
 }
-
 
 if(isset($_SESSION['user_id'])) {
     header("Location: homepage.php");
@@ -149,35 +152,42 @@ if(isset($_SESSION['user_id'])) {
             if (isset($_GET['fields']) && $_GET['fields'] == 'empty') {
                 echo "<div class='error'>Please fill in all fields.</div>";
             }
+
             if (isset($_GET['inputs']) && $_GET['inputs'] == 'invalid') {
                 echo "<div class='error'>Invalid name inputs.</div>";
             }
+            
             if (isset($_GET['email']) && $_GET['email'] == 'invalid') {
                 echo "<div class='error'>Invalid email format.</div>";
             }
+            
             if (isset($_GET['password']) && $_GET['password'] == 'invalid') {
                 echo "<div class='error'>Password format is invalid.</div>";
             }
+            
             if (isset($_GET['passwords']) && $_GET['passwords'] == 'nomatch') {
                 echo "<div class='error'>Passwords do not match.</div>";
             }
+            
             if (isset($_GET['age']) && $_GET['age'] == 'invalid') {
                 echo "<div class='error'>You must be at least 18 years old.</div>";
             }
+            
             if (isset($_GET['email']) && $_GET['email'] == 'exists') {
                 echo "<div class='error'>Email already exists.</div>";
             }
+            
             if (isset($_GET['signup']) && $_GET['signup'] == 'success') {
                 echo "<div class='success'>Sign up successful! Welcome.</div>";
                 header("Location: homepage.php");
                 exit();
             }
+            
             if (isset($_GET['signup']) && $_GET['signup'] == 'error') {
                 echo "<div class='error'>Something went wrong. Please try again.</div>";
             }
             ?>
         </div>
-
     </div>
     
     <?php include "footer/footer.php"; ?>

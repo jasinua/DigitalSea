@@ -1,77 +1,80 @@
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-    </head>
-    <style>
-        .footer {
-            display: flex;
-            justify-content: center;
-            padding: 40px 0;
-            text-align: left;
-            margin:0;
-            background-color: var(--noir-color);
-        }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<style>
+    .footer {
+        display: flex;
+        justify-content: center;
+        padding: 40px 0;
+        text-align: left;
+        margin:0;
+        background-color: var(--noir-color);
+    }
 
-        .footer-column {
-            flex: 1;
-            margin-left:5%;
-        }
+    .footer-column {
+        flex: 1;
+        margin-left:5%;
+    }
 
-        .footer-column h3 {
-            color: var(--text-color);
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
+    .footer-column h3 {
+        color: var(--text-color);
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
 
-        .footer-column a {
-            color: var(--footer-items-color);
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
-        }
+    .footer-column a {
+        color: var(--footer-items-color);
+        text-decoration: none;
+        display: block;
+        margin-bottom: 10px;
+    }
 
-        .footer-column a:hover {
-            text-decoration: underline;
-        }
+    .footer-column a:hover {
+        text-decoration: underline;
+    }
 
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            background-color: var(--noir-color);
-            margin: 0;
-        }
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        background-color: var(--noir-color);
+        margin: 0;
+    }
 
-        .social-icons a {
-            color: var(--footer-items-color);
-            font-size: 25px;
-            margin: 0 25px;
-            margin-bottom: 1%;
-        }
+    .social-icons a {
+        color: var(--footer-items-color);
+        font-size: 25px;
+        margin: 0 25px;
+        margin-bottom: 1%;
+    }
 
-        #facebook:hover {
-            transition:ease-out 0.3s;
-            color:#1877F2;
-        }
-        #twitter:hover {
-            transition:ease-out 0.3s;
-            color:#1DA1F2;
-        }
-        #instagram:hover {
-            transition:ease-out 0.3s;
-            color:#e1306c;
-        }
-        #linkedin:hover {
-            transition:ease-out 0.3s;
-            color:#0a66c2;
-        }
-        #youtube:hover {
-            transition:ease-out 0.3s;
-            color:red;
-        }
-   </style>
-  </head>
+    #facebook:hover {
+        transition:ease-out 0.3s;
+        color:#1877F2;
+    }
+    
+    #twitter:hover {
+        transition:ease-out 0.3s;
+        color:#1DA1F2;
+    }
+    
+    #instagram:hover {
+        transition:ease-out 0.3s;
+        color:#e1306c;
+    }
+    
+    #linkedin:hover {
+        transition:ease-out 0.3s;
+        color:#0a66c2;
+    }
+
+    #youtube:hover {
+        transition:ease-out 0.3s;
+        color:red;
+    }
+</style>
   <body>
    <div class="footer">
     <div class="footer-column">

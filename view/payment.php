@@ -14,17 +14,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Offer Thy Tribute</title>
-  <style>
-
-    
+  <title>Payment</title>
+</head>
+<style>
     h2 {
         margin: 15px;
         text-align:center;
         color: var(--page-text-color);
     }
 
-/* f5f5f0, f2efe9, f4f1ea */
+    /* f5f5f0, f2efe9, f4f1ea */
     form {
       background-color: white;
       color: var(--page-text-color);
@@ -162,10 +161,9 @@
         margin-bottom: 1rem;
     }
 </style>
-</head>
 <body>
     <div class="page-wrapper">
-    <h2>Present Thy Payment</h2>
+    <h2>Make Your Payment</h2>
         <div class="paymentStuff">
             <form action="process.php" method="POST">
                 <label for="name">Name upon the card:</label>
