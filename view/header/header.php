@@ -43,6 +43,10 @@
 
         --transition: all 0.5s ease;
         --transition-faster: all 0.3 ease;
+        --border: 3px solid #153147;
+        --shadow: 0 0 5px #153147;
+
+        --error-color:#F94040
     }
 
     * {

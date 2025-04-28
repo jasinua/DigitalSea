@@ -140,7 +140,7 @@ if(isset($_SESSION['user_id'])) {
         <div class="signup-container">
             <h1>Sign Up</h1>
             <form action="" method="post">
-                <input type="text" name="first_name" placeholder="First name..." required>
+                <input type="text" name="first_name" placeholder="First name..." autofocus="autofocus" required>
                 <input type="text" name="last_name" placeholder="Last name..." required>
                 <input type="email" name="email" placeholder="Email..." required>
                 <input type="date" name="birthday" required>

@@ -163,6 +163,7 @@
             border-radius: 10px;
             box-shadow: 0 0 5px var(--navy-color);
             transition: var(--transition);
+            position: relative;
         }
 
         .item:hover {
@@ -231,8 +232,93 @@
             background: #555;
         }
 
-        #topItems {
-            overflow-x: hidden;
+        /* Wheel Carousel Styles */
+        .wheel-carousel {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            height: 300px;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .wheel-track {
+            display: flex;
+            position: relative;
+            gap: 40px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wheel-item {
+            width: 220px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: transform 1s ease, opacity 1s ease;
+            padding: 15px;
+            position: absolute;
+            flex-shrink: 0;
+        }
+
+        .wheel-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .wheel-item .title {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+            height: 40px;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .wheel-item .price {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .wheel-item.active {
+            transform: scale(1) translateX(0);
+            z-index: 4;
+            opacity: 1;
+            box-shadow: var(--shadow);
+        }
+
+        .wheel-item.left {
+            transform: scale(0.9) translateX(-250px);
+            opacity: 0.7;
+            z-index: 3;
+        }
+
+        .wheel-item.right {
+            transform: scale(0.9) translateX(250px);
+            opacity: 0.7;
+            z-index: 3;
+        }
+
+        .wheel-item.far-left {
+            transform: scale(0.8) translateX(-530px);
+            opacity: 0.5;
+            z-index: 2;
+        }
+
+        .wheel-item.far-right {
+            transform: scale(0.8) translateX(530px);
+            opacity: 0.5;
+            z-index: 2;
+        }
+
+        .wheel-item.hidden {
+            transform: translateX(-600px); /* Changed to move left for disappearing effect */
+            opacity: 0;
+            z-index: 0;
         }
 
         #newItems {
@@ -240,12 +326,11 @@
             display: flex;
             margin: 20px;
             padding-bottom: 20px;
-            overflow-x:hidden;
         }
 
         .new-badge {
             position: absolute;
-            background-color:rgb(9, 180, 238); /* light blue */
+            background-color: rgb(9, 180, 238);
             color: black;
             font-size: 12px;
             font-weight: bold;
@@ -254,11 +339,6 @@
             top: 10px;
             left: 10px;
         }
-        .item {
-            position: relative; /* needed for badge positioning */
-        }
-
-
     </style>
 </head>
 <body>
@@ -285,21 +365,22 @@
             <div id='items'>
                 <button id="filter-toggle">Filters</button>
                 <?php if(!isset($_POST['filter'])) { ?>   
-                    <h1 id='topItemsHeader'>Top items</h1>
-                    <div class='itemLine' id='topItems'>
-                        <?php foreach (getData("SELECT * FROM products WHERE products.price>900") as $prod) { ?>
-                            <div class='item'>
-                                <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
-                                <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
-                            </div>
-                        <?php } ?>
+                    <h1 id='topItemsHeader'>Top Products</h1>
+                    <div class='wheel-carousel'>
+                        <div class='wheel-track' id='topItems'>
+                            <?php foreach (getData("SELECT * FROM products WHERE products.price>900") as $prod) { ?>
+                                <div class='wheel-item'>
+                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
+                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
+                                    <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
+                                </div>
+                            <?php } ?>
+                        </div>
                     </div>
 
                     <h1 id='newItemsHeader'>New Products</h1>
                     <div class='itemLine' id='newItems'>
-                        <?php 
-                        foreach (getData("SELECT * FROM products ORDER BY product_id DESC LIMIT 8") as $prod) { ?>
+                        <?php foreach (getData("SELECT * FROM products ORDER BY product_id DESC LIMIT 8") as $prod) { ?>
                             <div class='item'>
                                 <div class="new-badge">NEW</div>
                                 <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
@@ -309,8 +390,7 @@
                         <?php } ?>
                     </div>
 
-
-                    <h1 id="moreItemsText">More items</h1>
+                    <h1 id="moreItemsText">More Products</h1>
                     <div class='itemBox' id='randomItems'>
                         <?php foreach (getData("SELECT * FROM products") as $prod) { ?>
                             <div class='item'>
@@ -321,7 +401,7 @@
                         <?php } ?>
                     </div>
                 <?php } else { ?>
-                    <h1>Filtered Items</h1>
+                    <h1>Filtered Products</h1>
                     <div class='itemBox' id='randomItems'>
                         <?php foreach($_POST['filter'] as $filter) { ?>
                             <script>
@@ -357,31 +437,71 @@
             }
         });
 
-        // Infinite scroll for top items
-        window.addEventListener('load', () => {
-            const container = document.getElementById('topItems');
-            const clone = container.innerHTML;
-            container.innerHTML += clone;
-            let scrollSpeed = 1;
+        // Wheel carousel functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const track = document.getElementById('topItems');
+            const items = track.querySelectorAll('.wheel-item');
+            const itemCount = items.length;
+            
+            if (itemCount === 0) return;
+            
+            let currentIndex = 0;
 
-            function scrollLoop() {
-                container.scrollLeft += scrollSpeed;
-                if (container.scrollLeft >= container.scrollWidth / 2) {
-                    container.scrollLeft = 0;
-                }
-                requestAnimationFrame(scrollLoop);
+            function updateCarousel() {
+                items.forEach((item, index) => {
+                    item.classList.remove('active', 'left', 'right', 'far-left', 'far-right', 'hidden');
+                    
+                    const relativePos = (index - currentIndex + itemCount) % itemCount;
+                    
+                    if (relativePos === 0) {
+                        item.classList.add('active');
+                    } else if (relativePos === itemCount - 1) {
+                        item.classList.add('left');
+                    } else if (relativePos === 1) {
+                        item.classList.add('right');
+                    } else if (relativePos === itemCount - 2) {
+                        item.classList.add('far-left');
+                    } else if (relativePos === 2) {
+                        item.classList.add('far-right');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
             }
-
-            scrollLoop();
+            
+            // Initialize carousel
+            updateCarousel();
+            
+            // Auto-rotate every 3 seconds
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % itemCount;
+                updateCarousel();
+            }, 3000);
+            
+            // Manual navigation
+            document.querySelector('.wheel-carousel').addEventListener('click', (e) => {
+                const clickedItem = e.target.closest('.wheel-item');
+                if (!clickedItem) return;
+                
+                if (clickedItem.classList.contains('left')) {
+                    currentIndex = (currentIndex - 1 + itemCount) % itemCount;
+                } else if (clickedItem.classList.contains('right')) {
+                    currentIndex = (currentIndex + 1) % itemCount;
+                } else if (clickedItem.classList.contains('far-left')) {
+                    currentIndex = (currentIndex - 2 + itemCount) % itemCount;
+                } else if (clickedItem.classList.contains('far-right')) {
+                    currentIndex = (currentIndex + 2) % itemCount;
+                }
+                updateCarousel();
+            });
         });
-
         
-       // Infinite scroll for new items (scrolling left)
+        // Infinite scroll for new items
         window.addEventListener('load', () => {
             const container = document.getElementById('newItems');
             const clone = container.innerHTML;
             container.innerHTML += clone;
-            let scrollSpeed = -1; // Negative for leftward scroll
+            let scrollSpeed = -1;
 
             function scrollLoop() {
                 container.scrollLeft += scrollSpeed;
@@ -393,7 +513,6 @@
 
             scrollLoop();
         });
-
     </script>
 </body>
 </html>
