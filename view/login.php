@@ -104,7 +104,7 @@ if(!isset($_SESSION['user_id'])) {
     .login-container .error, .login-container .success {
         text-align: center;
         margin-top: 15px;
-        color: #fff;
+        color: var(--text-color);
         padding: 10px;
         border-radius: 5px;
     }

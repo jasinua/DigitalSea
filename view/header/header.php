@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn-uicons.flaticon.com/uicons-rounded-regular/css/uicons-rounded-regular.css" rel="stylesheet">
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
     <title>DigitalSea</title>
 </head>
 <style>
@@ -116,7 +116,7 @@
     }
 
     nav ul li i:hover {
-        transition:ease-out 0.3s;
+        transition: var(--transition);
         width: 100%;
         color:var(--mist-color);
     }
@@ -172,6 +172,7 @@
     .icons {
         width: 20px;
         height: 20px;
+        font-weight: bold;
         object-fit: contain;
         display: block;
         margin: 0 auto;
