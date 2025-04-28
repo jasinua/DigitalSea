@@ -362,6 +362,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
             summaryTotals.forEach(item => {
                 const match = item.textContent.match(/= ([\d.]+)€/);
                 if (match) subtotal += parseFloat(match[1]);
+                console.log(match[1])
             });
 
             const tvsh = subtotal * 0.18;
