@@ -293,25 +293,25 @@
         }
 
         .wheel-item.left {
-            transform: scale(0.9) translateX(-250px);
+            transform: scale(0.9) translateX(-270px);
             opacity: 0.7;
             z-index: 3;
         }
 
         .wheel-item.right {
-            transform: scale(0.9) translateX(250px);
+            transform: scale(0.9) translateX(270px);
             opacity: 0.7;
             z-index: 3;
         }
 
         .wheel-item.far-left {
-            transform: scale(0.8) translateX(-530px);
+            transform: scale(0.8) translateX(-570px);
             opacity: 0.5;
             z-index: 2;
         }
 
         .wheel-item.far-right {
-            transform: scale(0.8) translateX(530px);
+            transform: scale(0.8) translateX(570px);
             opacity: 0.5;
             z-index: 2;
         }
