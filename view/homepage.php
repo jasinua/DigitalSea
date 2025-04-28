@@ -329,29 +329,34 @@
         opacity: 1;
     }
 
+        .wheel-item.left {
+            transform: scale(0.9) translateX(-270px);
+            opacity: 0.7;
+            z-index: 3;
+        }
     .wheel-item.left {
         transform: translate(-150%, -50%) scale(0.9);
         opacity: 0.8;
         z-index: 3;
     }
 
-    .wheel-item.right {
-        transform: translate(50%, -50%) scale(0.9);
-        opacity: 0.8;
-        z-index: 3;
-    }
+        .wheel-item.right {
+            transform: scale(0.9) translateX(250px);
+            opacity: 0.7;
+            z-index: 3;
+        }
 
-    .wheel-item.far-left {
-        transform: translate(-250%, -50%) scale(0.8);
-        opacity: 0.5;
-        z-index: 2;
-    }
+        .wheel-item.far-left {
+            transform: scale(0.8) translateX(-530px);
+            opacity: 0.5;
+            z-index: 2;
+        }
 
-    .wheel-item.far-right {
-        transform: translate(150%, -50%) scale(0.8);
-        opacity: 0.5;
-        z-index: 2;
-    }
+        .wheel-item.far-right {
+            transform: scale(0.8) translateX(530px);
+            opacity: 0.5;
+            z-index: 2;
+        }
 
     .wheel-item.hidden {
         opacity: 0;

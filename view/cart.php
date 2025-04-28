@@ -322,7 +322,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                     <div>
                         <div class="summary-item total">
                             <span>Total:</span>
-                            <span><?php echo number_format($subtotal * 1.18 - 50, 2); ?>€</span>
+                            <span><?php echo number_format($subtotal+$subtotal*0.18, 2); ?>€</span>
                         </div>
                         <!-- Checkout Button -->
                         <button class="checkout-btn" type="submit" name="continue">Vazhdo ne checkout</button>
@@ -360,18 +360,19 @@ if (isLoggedIn($_SESSION['user_id'])) {
             let subtotal = 0;
 
             summaryTotals.forEach(item => {
-                const match = item.textContent.match(/= €([\d.]+)/);
+                const match = item.textContent.match(/= ([\d.]+)€/);
                 if (match) subtotal += parseFloat(match[1]);
+                console.log(match[1])
             });
 
             const tvsh = subtotal * 0.18;
-            const discount = 50;
-            const finalTotal = subtotal + tvsh - discount;
+            const discount = 0;
+            const finalTotal = subtotal + tvsh;
 
             const summaryItems = document.querySelectorAll('.summary-box .summary-item');
-            summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = subtotal.toFixed(2) + '€';
-            summaryItems[summaryItems.length - 2].querySelector('span:last-child').textContent = tvsh.toFixed(2) + '€';
-            summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = finalTotal.toFixed(2) + '€';
+            summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = subtotal.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
+            summaryItems[summaryItems.length - 2].querySelector('span:last-child').textContent = tvsh.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
+            summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = finalTotal.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
         }
     });
 </script>
