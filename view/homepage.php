@@ -330,15 +330,10 @@
     }
 
         .wheel-item.left {
-            transform: scale(0.9) translateX(-270px);
+            transform: scale(0.9) translateX(-250px);
             opacity: 0.7;
             z-index: 3;
         }
-    .wheel-item.left {
-        transform: translate(-150%, -50%) scale(0.9);
-        opacity: 0.8;
-        z-index: 3;
-    }
 
         .wheel-item.right {
             transform: scale(0.9) translateX(250px);
