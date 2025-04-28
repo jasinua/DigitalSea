@@ -89,6 +89,7 @@ if(!isset($_SESSION['user_id'])) {
         font-size: 16px;
         cursor: pointer;
         border: none;
+        transition: all 0.2s ease-in-out;
     }
 
     .login-container input[type="submit"]:hover {

@@ -211,6 +211,11 @@ if (isLoggedIn($_SESSION['user_id'])) {
         cursor: pointer;
         margin-top: auto;
         align-self: flex-end;
+        transition:ease-out 0.2s;
+    }
+    .checkout-btn:hover {
+        background-color:var(--button-color-hover);
+        transition:ease-out 0.2s;
     }
 
     #prodNameXprice {

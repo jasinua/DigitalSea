@@ -234,6 +234,31 @@
         #topItems {
             overflow-x: hidden;
         }
+
+        #newItems {
+            overflow-x: auto;
+            display: flex;
+            margin: 20px;
+            padding-bottom: 20px;
+            overflow-x:hidden;
+        }
+
+        .new-badge {
+            position: absolute;
+            background-color:rgb(9, 180, 238); /* light blue */
+            color: black;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 5px;
+            top: 10px;
+            left: 10px;
+        }
+        .item {
+            position: relative; /* needed for badge positioning */
+        }
+
+
     </style>
 </head>
 <body>
@@ -270,6 +295,21 @@
                             </div>
                         <?php } ?>
                     </div>
+
+                    <h1 id='newItemsHeader'>New Products</h1>
+                    <div class='itemLine' id='newItems'>
+                        <?php 
+                        foreach (getData("SELECT * FROM products ORDER BY product_id DESC LIMIT 8") as $prod) { ?>
+                            <div class='item'>
+                                <div class="new-badge">NEW</div>
+                                <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
+                                <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
+                                <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
+                            </div>
+                        <?php } ?>
+                    </div>
+
+
                     <h1 id="moreItemsText">More items</h1>
                     <div class='itemBox' id='randomItems'>
                         <?php foreach (getData("SELECT * FROM products") as $prod) { ?>
@@ -334,6 +374,26 @@
 
             scrollLoop();
         });
+
+        
+       // Infinite scroll for new items (scrolling left)
+        window.addEventListener('load', () => {
+            const container = document.getElementById('newItems');
+            const clone = container.innerHTML;
+            container.innerHTML += clone;
+            let scrollSpeed = -1; // Negative for leftward scroll
+
+            function scrollLoop() {
+                container.scrollLeft += scrollSpeed;
+                if (container.scrollLeft <= 0) {
+                    container.scrollLeft = container.scrollWidth / 2;
+                }
+                requestAnimationFrame(scrollLoop);
+            }
+
+            scrollLoop();
+        });
+
     </script>
 </body>
 </html>

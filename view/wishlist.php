@@ -82,7 +82,13 @@ if (isLoggedIn($_SESSION['user_id'])) {
         font-size: 16px;
         border-radius: 4px;
         cursor: pointer;
+        transition:ease-out 0.2s;
         /* text-transform: uppercase; */
+    } 
+
+    .add-to-cart-btn:hover {
+        background-color: var(--button-color-hover);
+        transition:ease-out 0.2s;
     }
 
     .original-price {
@@ -130,7 +136,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                         </a>
                     </td>
                     <td>
-                            €<?php echo number_format($product['price'], 2); ?>
+                           <?php echo number_format($product['price'], 2); ?>€
                     
                     </td>
                     <td><?php if($product['stock'] > 0) { echo "In stock";} else { echo "Out of stock";}?></td>
