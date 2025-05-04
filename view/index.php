@@ -374,7 +374,7 @@
         <?php include "header/header.php" ?>
         <div id='container'>
             <div id='filters'>
-                <form id='filterForm' action="homepage.php" method='post'>
+                <form id='filterForm' action="index.php" method='post'>
                     <div id='filtOpts'>
                         <input type='reset' value='Clear Filters' onclick='window.location.reload()'>
                         <input type='submit' value='Apply Filters'>

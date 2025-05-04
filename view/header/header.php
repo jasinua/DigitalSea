@@ -190,10 +190,10 @@
 </style>
 <body>
     <header>
-        <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "homepage.php"><img class="logo" src="logo2.png" alt="logo e kompanise tone"></a></div>
+        <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "index.php"><img class="logo" src="logo2.png" alt="logo e kompanise tone"></a></div>
         <nav>
             <ul>
-                <li><a href="../view/homepage.php"><img src="home.png" class="icons" alt=""></a></li>
+                <li><a href="../view/index.php"><img src="home.png" class="icons" alt=""></a></li>
                 <?php if(isset($_SESSION['user_id'])) { ?>
                 <li><a href="../view/wishlist.php"><img src="heart.png" class="icons" alt=""></a></li>
                 <li><a href="../view/cart.php"><img src="shopping-cart.png" class="icons" alt=""></a></li>

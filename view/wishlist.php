@@ -163,4 +163,4 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
 <?php include "footer/footer.php"; ?>
 
-<?php } else {    header("Location: homepage.php"); } ?>
+<?php } else {    header("Location: index.php"); } ?>

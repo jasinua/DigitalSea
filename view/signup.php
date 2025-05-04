@@ -59,7 +59,7 @@ if(isset($_POST['submit'])){
 }
 
 if(isset($_SESSION['user_id'])) {
-    header("Location: homepage.php");
+    header("Location: index.php");
 } else {
 ?>
 
@@ -181,7 +181,7 @@ if(isset($_SESSION['user_id'])) {
             
             if (isset($_GET['signup']) && $_GET['signup'] == 'success') {
                 echo "<div class='success'>Sign up successful! Welcome.</div>";
-                header("Location: homepage.php");
+                header("Location: index.php");
                 exit();
             }
             

@@ -17,14 +17,14 @@ if(!isset($_SESSION['user_id'])) {
         $loginResult = login($email, $password); 
   
         if ($loginResult) {
-            header("Location: homepage.php"); 
+            header("Location: index.php"); 
             exit();
         } else {
             header("Location: login.php?input=error"); 
             exit();  }
     }
 } else {
-    header("Location: homepage.php"); 
+    header("Location: index.php"); 
     exit();
 }
 ?>

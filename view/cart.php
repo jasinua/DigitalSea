@@ -376,4 +376,4 @@ if (isLoggedIn($_SESSION['user_id'])) {
         }
     });
 </script>
-<?php } else { header("Location: homepage.php"); } ?>
+<?php } else { header("Location: index.php"); } ?>
