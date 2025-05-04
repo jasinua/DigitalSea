@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../controller/home.inc.php';
+include 'controller/home.inc.php';
 
 $productID = $_GET["product"];
 $data = getProductData($productID);

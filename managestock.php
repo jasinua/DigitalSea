@@ -2,7 +2,7 @@
 // THIS PAGE IS FOR ADDING PRODUCTS INTO products.json TEMPORARILY
 session_start();
 
-$file = '../controller/products.json';
+$file = 'controller/products.json';
 
 // Handle form submission
 if (isset($_POST['submit'])) {

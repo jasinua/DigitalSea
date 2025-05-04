@@ -1,6 +1,6 @@
 <?php
     ob_start(); // Fillon output buffering
-    include_once "../controller/function.php"
+    include_once "controller/function.php"
 ?>
 
 <!DOCTYPE html>
@@ -193,24 +193,24 @@
         <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "index.php"><img class="logo" src="logo2.png" alt="logo e kompanise tone"></a></div>
         <nav>
             <ul>
-                <li><a href="../view/index.php"><img src="home.png" class="icons" alt=""></a></li>
+                <li><a href="index.php"><img src="home.png" class="icons" alt=""></a></li>
                 <?php if(isset($_SESSION['user_id'])) { ?>
-                <li><a href="../view/wishlist.php"><img src="heart.png" class="icons" alt=""></a></li>
-                <li><a href="../view/cart.php"><img src="shopping-cart.png" class="icons" alt=""></a></li>
-                <li><a href="../view/profile.php"><img src="user.png" class="icons" alt=""></a></li>
+                <li><a href="wishlist.php"><img src="heart.png" class="icons" alt=""></a></li>
+                <li><a href="cart.php"><img src="shopping-cart.png" class="icons" alt=""></a></li>
+                <li><a href="profile.php"><img src="user.png" class="icons" alt=""></a></li>
                 <?php } ?>
                 <li>
                     <label class="auth-menu" for="auth-toggle"><img src="menu.png" class="icons" alt=""></label>
                     <input type="checkbox" id="auth-toggle">
                     <div class="auth-dropdown">
                         <?php if(!isset($_SESSION['user_id'])) { ?>
-                            <a href="../view/login.php">Login</a>
-                            <a href="../view/signup.php">Signup</a>
+                            <a href="login.php">Login</a>
+                            <a href="signup.php">Signup</a>
                             <?php } else { ?>
-                                <a href="../view/profile.php">Profile</a>
-                                <a href="../view/logout.php">Log out</a>
+                                <a href="profile.php">Profile</a>
+                                <a href="logout.php">Log out</a>
                                 <?php if(isAdmin($_SESSION['user_id'])) {
-                                    echo "<a href='../view/manageStock.php'>Manage stock</a>";
+                                    echo "<a href='manageStock.php'>Manage stock</a>";
                                 } ?>
                         <?php } ?>
                     </div>

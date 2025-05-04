@@ -1,6 +1,7 @@
 <?php 
     session_start();
-    include '../controller/home.inc.php';
+    include 'model/dbh.inc.php';
+    include 'controller/home.inc.php';
 ?>
 
 <!DOCTYPE html>
@@ -8,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>DigitalSea</title>
     <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
@@ -543,7 +544,6 @@
         }
 
         scrollLoop();
-    });
-    
+    });  
 </script>
 </html>

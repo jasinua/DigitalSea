@@ -1,6 +1,6 @@
 <?php 
-include_once "../model/dbh.inc.php";
-include_once "../controller/function.php";
+include_once "model/dbh.inc.php";
+include_once "controller/function.php";
 session_start();
 
 if (isLoggedIn($_SESSION['user_id'])) {

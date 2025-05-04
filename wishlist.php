@@ -1,6 +1,6 @@
 <?php 
-include_once "../controller/function.php";
-include_once "../controller/home.inc.php";
+include_once "controller/function.php";
+include_once "controller/home.inc.php";
 session_start();
 
 

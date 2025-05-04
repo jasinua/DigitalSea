@@ -1,5 +1,5 @@
 <?php 
-include_once "../controller/signup.inc.php";
+include_once "controller/signup.inc.php";
 session_start();
 
 include "header/header.php";

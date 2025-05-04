@@ -1,6 +1,6 @@
 <?php
-include_once "../controller/function.php";
-include_once "../controller/profile.inc.php";  // This should include the session and user data
+include_once "controller/function.php";
+include_once "controller/profile.inc.php";  // This should include the session and user data
 include "header/header.php";
 
 // Check if user is logged in

@@ -1,6 +1,6 @@
 <?php 
     session_start();
-    include_once "../controller/function.php";
+    include_once "controller/function.php";
     include "header/header.php";
 
     // Check if user is logged in

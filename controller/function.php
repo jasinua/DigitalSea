@@ -16,7 +16,7 @@
     }
 
     function returnWishlist($userid) {
-        include "../model/dbh.inc.php";
+        include "model/dbh.inc.php";
         
         $stmt = $conn->prepare("CALL showWishList(?)");
         $stmt->bind_param("i", $userid);
@@ -26,7 +26,7 @@
     }
 
     function returnCart($userid) {
-        include "../model/dbh.inc.php";
+        include "model/dbh.inc.php";
         
         $stmt = $conn->prepare("CALL showCartList(?)");
         $stmt->bind_param("i", $userid);
@@ -36,7 +36,7 @@
     }
 
     function returnProduct($productId) {
-        include "../model/dbh.inc.php";
+        include "model/dbh.inc.php";
         $stmt = $conn->prepare("CALL showProduct(?)");
         $stmt->bind_param("i",$productId);
         $stmt -> execute();
@@ -45,7 +45,7 @@
     }
 
     function returnProductImage($productId) {
-        include "../model/dbh.inc.php";
+        include "model/dbh.inc.php";
         $stmt = $conn->prepare("CALL returnImages(?)");
         $stmt->bind_param("i",$productId);
         $stmt -> execute();

@@ -1,6 +1,6 @@
 <?php 
-include_once "../controller/login.inc.php"; 
-include_once "../controller/function.php";
+include_once "controller/login.inc.php"; 
+include_once "controller/function.php";
 
 // include "header.php";
 
