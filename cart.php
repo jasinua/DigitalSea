@@ -320,7 +320,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
                     </div>
                     <div>
-                        <div class="summary-item total">
+                        <div class="summary-item">
                             <span>Total:</span>
                             <span><?php echo number_format($subtotal+$subtotal*0.18, 2); ?>€</span>
                         </div>
@@ -350,28 +350,33 @@ if (isLoggedIn($_SESSION['user_id'])) {
                 if (summaryItem) {
                     summaryItem.textContent = `${quantity} x ${price.toFixed(2)}€ = ${total.toFixed(2)}€`;
                 }
-
                 updateCartSummary();
             });
         });
 
         function updateCartSummary() {
             const summaryTotals = document.querySelectorAll('.summary-item .total-price');
+            console.log(summaryTotals);
             let subtotal = 0;
 
             summaryTotals.forEach(item => {
-                const match = item.textContent.match(/= ([\d.]+)€/);
-                if (match) subtotal += parseFloat(match[1]);
-                console.log(match[1])
+                const cleanedText = item.textContent.replace(/,/g, '');
+                const match = cleanedText.match(/= ([\d.]+)/);
+                if (match && match[1]) {
+                    subtotal += parseFloat(match[1]);
+                    console.log(match[1]);
+                }
             });
 
+            console.log(subtotal);
             const tvsh = subtotal * 0.18;
             const discount = 0;
-            const finalTotal = subtotal + tvsh;
+            const finalTotal = subtotal + tvsh; //qitu kem me shtu edhe zbritjen veq ma von
 
-            const summaryItems = document.querySelectorAll('.summary-box .summary-item');
-            summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = subtotal.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
-            summaryItems[summaryItems.length - 2].querySelector('span:last-child').textContent = tvsh.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
+            const summaryItems = document.querySelectorAll('.summary-item');
+            summaryItems[summaryItems.length - 4].querySelector('span:last-child').textContent = subtotal.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
+            summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = tvsh.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
+            // qitu shtohet zbritja tu ndryshu e sene dmth ne qit rresht
             summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = finalTotal.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
         }
     });
