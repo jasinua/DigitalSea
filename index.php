@@ -10,8 +10,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigitalSea</title>
-    <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="style.css"> -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
 </head>
 <style>
@@ -32,14 +32,15 @@
     }
 
     #filters {
-        width: 280px;
-        background-color: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        background: linear-gradient(145deg, #ffffff, #f4f4f4);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         transform: translateX(-100%);
         opacity: 0;
-        transition: var(--transition);
+        transition: 0.5s ease-in-out;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     #filters.open {
@@ -48,16 +49,16 @@
     }
 
     #filter-toggle {
-        background-color: var(--button-color);
+        background: linear-gradient(135deg, var(--button-color), var(--noir-color));
         color: white;
         border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
+        padding: 8px 15px;
+        border-radius: 30px;
         cursor: pointer;
-        font-size: 14px;
-        transition: background-color 0.3s;
-        margin: 20px 0;
-        display: inline-block;
+        font-size: 15px;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        margin-top: 10px;
     }
 
     #filter-toggle:hover {
@@ -65,51 +66,61 @@
     }
 
     .filter {
-        width: fit-content;
-        height: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        background-color: #f9f9f9;
+        padding: 10px 15px;
         border-radius: 10px;
-        color: var(--page-text-color);
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        transition: background-color 0.3s;
+    }
+
+    .filter:hover {
+        background-color: #efefef;
+        cursor: pointer;
+    }
+
+    .filter input[type="checkbox"] {
+        margin-right: 10px;
+        accent-color: var(--navy-color);
+        transform: scale(1.2);
+    }
+
+    .filter label {
+        font-size: 14px;
+        color: #333;
+        font-weight: 500;
     }
 
     #filtOpts {
         display: flex;
-        width: auto;
         justify-content: space-between;
+        margin-bottom: 15px;
     }
 
     #filtOpts input {
-        width: auto;
-        border-radius: 10px;
-        font-size: 12px;
-        height: 30px;
+        border-radius: 20px;
         background-color: var(--button-color);
-        border: none;
         color: white;
-        font-size: 0.9em;
-        padding: 5px 10px;
-        margin: 10px;
-        transition: background-color 0.5s;
+        padding: 8px 15px;
+        border: none;
+        font-weight: bold;
+        transition: background-color 0.3s ease-in-out;
     }
 
     #filtOpts input:hover {
         background-color: var(--noir-color);
-        cursor: pointer;
     }
 
     #filters ul {
-        display: flex;
-        flex-direction: column;
-        list-style-type: none;
+        list-style: none;
         padding: 0;
+        margin: 0;
     }
 
     #filters ul input {
-        width: 50px;
+        width: 25px;
         border-radius: 10px;
-        font-size: 12px;
         height: 30px;
         background-color: white;
         accent-color: var(--navy-color);
@@ -152,8 +163,9 @@
     }
 
     .item {
-        min-width: 225px;
-        width: 225px;
+        min-width: 240px;
+        width: 240px;
+        height: 320px;  
         margin: 10px;
         background-color: white;
         display: flex;
@@ -194,13 +206,12 @@
 
     .item .price {
         color: black;
-        width: 100%;
         height: 30px;
         font-size: 17px;
-        overflow: hidden;
-        padding: 0 5px 5px 10px;
-        text-align: right;
+        align-self: flex-end;
+        text-align: center;
         font-weight: 600;
+        margin: 0 10px 5px 0;
     }
 
     .item:hover {
@@ -294,16 +305,23 @@
 
     .wheel-item {
         width: 300px;
-        height: 400px;
+        height: 410px;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 0 15px #aaa;
         transition: var(--transition);
-        padding: 15px;
+        padding: 0 15px 0 15px;
         position: absolute;
         top: 50px;
         left: 600px;
         opacity: 0;
+    }
+
+    .price {
+        font-weight: bold;
+        font-size: 1.1rem;
+        justify-self: flex-end;
+        margin-top: 12px;
     }
 
     .wheel-item img {
@@ -359,6 +377,23 @@
         padding-bottom: 20px;
     }
 
+    #randomItemsSet {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin: 20px;
+        justify-content: space-between;
+        gap: 30px;
+    }
+
+    #randomItemsText {
+        color: grey;
+        font-size: 13px;
+        text-overflow: ellipsis;
+        white-space: wrap;
+        padding: 0 5px 5px 10px;
+    }
+
     .new-badge {
         position: absolute;
         color: rgb(42, 175, 169);
@@ -400,9 +435,16 @@
                             <?php foreach (getData("SELECT * FROM products WHERE products.price>900") as $prod) { ?>
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>">
                                     <div class='wheel-item'>
-                                        <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
+                                        <img onclick="window.location='product.php?product=<?php echo $prod['product_id'] ?>'" src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
                                         <p class='title'><?php echo $prod['description'] ?>
-                                        <!-- <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p> -->
+                                        <?php if($prod['discount'] > 0){ ?>
+                                            <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%; align-items: center">
+                                                <p class='price' style="margin-top: 0;"><?php echo number_format($prod['price'] - ($prod['price'] * $prod['discount']/100), 0, '.', ',') ?>€</p>
+                                                <p class='price' style="color: red; font-size: 14px; padding-top: 2px"><s><?php echo number_format($prod['price'], 0, '.', ',') ?>€</s></p>
+                                            </div>
+                                        <?php } else {?>
+                                            <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
+                                        <?php } ?>
                                 </div>
                                 </a>
                             <?php } ?>
@@ -414,9 +456,16 @@
                         <?php foreach (getData("SELECT * FROM products ORDER BY product_id DESC LIMIT 8") as $prod) { ?>
                             <div class='item' id="newItemsItem">
                                 <div class="new-badge">NEW</div>
-                                <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
+                                <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
+                                <?php if($prod['discount'] > 0){ ?>
+                                    <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%; align-items: center">
+                                        <p class='price' style="margin-top: 0;"><?php echo number_format($prod['price'] - ($prod['price'] * $prod['discount']/100), 0, '.', ',') ?>€</p>
+                                        <p class='price' style="color: red; font-size: 14px; padding-top: 2px"><s><?php echo number_format($prod['price'], 0, '.', ',') ?>€</s></p>
+                                    </div>
+                                <?php } else {?>
+                                    <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                     </div>
@@ -424,10 +473,21 @@
                     <h1 id="moreItemsText">More Products</h1>
                     <div class='itemBox' id='randomItems'>
                         <?php foreach (getData("SELECT * FROM products") as $prod) { ?>
-                            <div class='item' id="newItems">
-                                <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
-                                <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
+                            <div class='item' id="randomItemsSet">
+                                <div>
+                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
+                                    <div id="randomItemsText">   
+                                        <a  href="product.php?product=<?php echo $prod['product_id'] ?>"><?php echo $prod['description'] ?></a>
+                                    </div>
+                                </div>
+                                <?php if($prod['discount'] > 0){ ?>
+                                    <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%; align-items: center">
+                                        <p class='price' style="margin-top: 0;"><?php echo number_format($prod['price'] - ($prod['price'] * $prod['discount']/100), 0, '.', ',') ?>€</p>
+                                        <p class='price' style="color: red; font-size: 14px; padding-top: 2px"><s><?php echo number_format($prod['price'], 0, '.', ',') ?>€</s></p>
+                                    </div>
+                                <?php } else {?>
+                                    <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                     </div>
@@ -442,7 +502,14 @@
                                 <div class='item'>
                                     <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                     <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                    <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
+                                    <?php if($prod['discount'] > 0){ ?>
+                                        <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%; align-items: center">
+                                            <p class='price' style="margin-top: 0;"><?php echo number_format($prod['price'] - ($prod['price'] * $prod['discount']/100), 0, '.', ',') ?>€</p>
+                                            <p class='price' style="color: red; font-size: 14px; padding-top: 2px"><s><?php echo number_format($prod['price'], 0, '.', ',') ?>€</s></p>
+                                        </div>
+                                    <?php } else {?>
+                                        <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
+                                    <?php } ?>
                                 </div>
                             <?php } ?>
                         <?php } ?>   
