@@ -52,6 +52,8 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
     $res = array_values($mergedCart);
 
+    
+
     include "header/header.php";
 ?>
 
@@ -200,6 +202,20 @@ if (isLoggedIn($_SESSION['user_id'])) {
         font-size: 1.2rem;
     }
 
+    .emri-me-zbritje {
+        display: flex; 
+        justify-content: space-between;
+    }
+
+    .zbritja {
+        margin-left: 20px;
+    }
+
+    .me-zbritje {
+        display: flex;
+        flex-direction: column;
+    }
+
     .checkout-btn {
         background-color: var(--navy-color);
         color: var(--text-color);
@@ -248,6 +264,9 @@ if (isLoggedIn($_SESSION['user_id'])) {
                             foreach ($res as $cart) {
                                 $product_result = returnProduct($cart['product_id']);
                                 $product = $product_result->fetch_assoc();
+                                $discount = $product['discount'];
+                                $price = $product['price'];
+                                $pricedsc = $price - ($price * $discount/100);
                                 $total = $product['price'] * $cart['quantity'];
                                 $subtotal += $total;
                             ?>
@@ -262,7 +281,16 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                         </div>
                                     </div>
                                 </td>
-                                <td><?php echo number_format($product['price'], 2); ?>€</td>
+                                <?php if($discount) {?>
+                                    <td style="flex-direction: column; margin: auto;">
+                                        <p><?php echo number_format($pricedsc, 2); ?>€</p>
+                                        <p style="justify-self: flex-end; color: red; font-size: 15px"><sup><s><?php echo $price ?>€</s></sup></p>
+                                    </td>
+                                <?php } else {?>
+                                    <td style="">
+                                        <p><?php echo number_format($price, 2); ?>€</p>
+                                    </td>
+                                <?php }?>
                                 <td>
                                     <div class="quantity-controls">
                                         <input 
@@ -271,7 +299,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                             class="quantity-input" 
                                             min="1" 
                                             value="<?php echo $cart['quantity']; ?>" 
-                                            data-price="<?php echo $product['price']; ?>" 
+                                            data-price="<?php echo $discount ? $pricedsc : $price; ?>"
                                             data-product-id="<?php echo $product['product_id']; ?>"
                                         >
                                     </div>
@@ -300,29 +328,48 @@ if (isLoggedIn($_SESSION['user_id'])) {
                         <div id="prodNameXprice">
                             <?php 
                                 $subtotal = 0;
+                                $alldiscount = 0;
                                 foreach ($res as $cartItem) {
                                     $product = returnProduct($cartItem['product_id'])->fetch_assoc();
                                     $qty = $cartItem['quantity'];
                                     $prc = $product['price'];
+                                    $discount = $product['discount'];
+                                    $prcwdisc = $prc - ($prc * $discount/100);
+                                    $ttldsc = $qty * $prcwdisc;
+                                    $alldiscount += ($prc * $discount/100) * $qty;
                                     $ttl = $qty * $prc;
                                     $subtotal += $ttl;
                                 ?>
+
                                 <div class="summary-item" data-product-id="<?php echo $product['product_id']; ?>">
-                                    <span><?php echo $product['name']; ?></span>
-                                    <span class="total-price"><?php echo $qty; ?> x <?php echo number_format($prc, 2); ?>€ = <?php echo number_format($ttl, 2); ?>€</span>
-                                </div>
+                                    <div class="emri-me-zbritje">
+                                        <p><?php echo $product['name']; ?> </p>
+                                        <?php if($discount > 0){ ?> 
+                                                <p class="zbritja">/ -<?php echo $discount;?>%</p>
+                                        <?php } ?>
+                                    </div>
+                                    <?php if($discount > 0){?>
+                                        <div class="me-zbritje" style="margin-top: 0">
+                                            <div>
+                                                <p class="total-price"><?php echo $qty; ?> x <?php echo number_format($prcwdisc, 2); ?>€ = <?php echo number_format($ttldsc, 2); ?>€</p>
+                                            </div>
+                                        </div>
+                                    <?php } else {?>
+                                            <p class="total-price"><?php echo $qty; ?> x <?php echo number_format($prc, 2); ?>€ = <?php echo number_format($ttl, 2); ?>€</p>
+                                        <?php } ?>
+                                    </div>
                             <?php } ?>
                         </div>
                         
                         <div class="summary-item"><span>Nëntotali:</span> <span><?php echo number_format($subtotal, 2); ?>€</span></div>
                         <div class="summary-item"><span>TVSH 18%:</span> <span><?php echo number_format($subtotal * 0.18, 2); ?>€</span></div>
-                        <div class="summary-item"><span>Zbritje:</span> <span style="color:red">- <?php echo '0.00'.'€';?></span></div>
-
+                        <div class="summary-item"><span>Zbritje:</span> <span style="color: red">- <?php echo number_format($alldiscount, 2);?>€</span></div>
+                        <input class="input-for-discount" type="hidden" name="discount" value="<?php echo $alldiscount; ?>">
                     </div>
                     <div>
                         <div class="summary-item">
                             <span>Total:</span>
-                            <span><?php echo number_format($subtotal+$subtotal*0.18, 2); ?>€</span>
+                            <span><?php echo number_format($subtotal + $subtotal * 0.18 - $alldiscount, 2); ?>€</span>
                         </div>
                         <!-- Checkout Button -->
                         <button class="checkout-btn" type="submit" name="continue">Vazhdo ne checkout</button>
@@ -356,28 +403,44 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
         function updateCartSummary() {
             const summaryTotals = document.querySelectorAll('.summary-item .total-price');
-            console.log(summaryTotals);
             let subtotal = 0;
+            let totalDiscount = 0;
 
+            // Calculate subtotal
             summaryTotals.forEach(item => {
                 const cleanedText = item.textContent.replace(/,/g, '');
                 const match = cleanedText.match(/= ([\d.]+)/);
                 if (match && match[1]) {
                     subtotal += parseFloat(match[1]);
-                    console.log(match[1]);
                 }
             });
 
-            console.log(subtotal);
-            const tvsh = subtotal * 0.18;
-            const discount = 0;
-            const finalTotal = subtotal + tvsh; //qitu kem me shtu edhe zbritjen veq ma von
+            // Recalculate discount only for products with a discount
+            quantityInputs.forEach(input => {
+                const productId = input.dataset.productId;
+                const quantity = parseInt(input.value) || 1;
+                const priceWithDiscount = parseFloat(input.dataset.price);
+                const summaryItem = document.querySelector(`.summary-item[data-product-id="${productId}"]`);
+                const originalPriceText = summaryItem.querySelector('.zbritja')?.textContent || '';
+                const discountMatch = originalPriceText.match(/\-([\d.]+)%/);
 
+                if (discountMatch && discountMatch[1]) {
+                    const discountPercent = parseFloat(discountMatch[1]);
+                    const originalPrice = priceWithDiscount / (1 - discountPercent / 100);
+                    const discountPerItem = (originalPrice - priceWithDiscount) * quantity;
+                    totalDiscount += discountPerItem;
+                }
+            });
+
+            const tvsh = subtotal * 0.18;
+            const finalTotal = subtotal + tvsh - totalDiscount;
+
+            // Update summary items
             const summaryItems = document.querySelectorAll('.summary-item');
-            summaryItems[summaryItems.length - 4].querySelector('span:last-child').textContent = subtotal.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
-            summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = tvsh.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
-            // qitu shtohet zbritja tu ndryshu e sene dmth ne qit rresht
-            summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = finalTotal.toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "€";
+            summaryItems[summaryItems.length - 4].querySelector('span:last-child').textContent = subtotal.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
+            summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = tvsh.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
+            summaryItems[summaryItems.length - 2].querySelector('span:last-child').textContent = totalDiscount > 0 ? `- ${totalDiscount.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€` : "0.00€";
+            summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = finalTotal.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
         }
     });
 </script>
