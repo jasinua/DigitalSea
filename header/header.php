@@ -11,6 +11,9 @@
     <link href="https://cdn-uicons.flaticon.com/uicons-rounded-regular/css/uicons-rounded-regular.css" rel="stylesheet">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <title>DigitalSea</title>
 </head>
 <style>
@@ -81,6 +84,57 @@
         padding: 0;
         height: 35px;
         width: 35px;
+    }
+
+    .search-container {
+        flex: 1;
+        max-width: 500px;
+        margin: 0 20px;
+        position: relative;
+    }
+
+    .search-container form {
+        display: flex;
+        align-items: center;
+    }
+
+    .search-container input[type="text"] {
+        width: 100%;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 20px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .search-container input[type="text"]::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .search-container input[type="text"]:focus {
+        outline: none;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .search-container button {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-container button:hover {
+        color: var(--mist-color);
     }
 
     nav ul {
@@ -187,10 +241,99 @@
         transform: scale(1.2);
         transition: ease-out 0.2s;
     }
+
+    .ui-autocomplete {
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        z-index: 1000;
+        width: 400px !important;
+    }
+    
+    .ui-menu-item {
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        background: none !important;
+    }
+    
+    .ui-menu-item div {
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .ui-menu-item div:hover {
+        background-color: #f5f5f5;
+    }
+    
+    .search-suggestion-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    
+    .search-suggestion-content {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .search-suggestion-title {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.9em;
+    }
+    
+    .search-suggestion-price {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9em;
+    }
+    
+    .search-suggestion-final-price {
+        color: #333;
+        font-weight: 600;
+    }
+    
+    .search-suggestion-original-price {
+        color: #e44d26;
+        text-decoration: line-through;
+        font-size: 0.85em;
+    }
+    
+    .search-suggestion-discount {
+        background-color: #e44d26;
+        color: white;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-size: 0.8em;
+        font-weight: 600;
+    }
 </style>
 <body>
     <header>
         <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "index.php"><img class="logo" src="logo2.png" alt="logo e kompanise tone"></a></div>
+        <div class="search-container">
+            <form action="index.php" method="GET">
+                <input type="text" name="search" id="search-input" placeholder="Search products..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                <button type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
         <nav>
             <ul>
                 <li><a href="index.php"><img src="home.png" class="icons" alt=""></a></li>
@@ -219,4 +362,67 @@
         </nav>
     </header>
 </body>
+<script>
+$(document).ready(function() {
+    $("#search-input").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "search_suggestions.php",
+                dataType: "json",
+                data: {
+                    term: request.term
+                },
+                success: function(data) {
+                    if (data.error) {
+                        console.error('Search error:', data.error);
+                        response([]);
+                        return;
+                    }
+                    response(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Ajax error:', error);
+                    response([]);
+                }
+            });
+        },
+        focus: function(event, ui) {
+            event.preventDefault();
+            $("#search-input").val(ui.item.value);
+        },
+        select: function(event, ui) {
+            event.preventDefault();
+            window.location.href = 'product.php?product=' + ui.item.id;
+        }
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        let priceHtml = '';
+        if (item.discount > 0) {
+            priceHtml = `
+                <div class="search-suggestion-price">
+                    <span class="search-suggestion-final-price">${item.price}&euro;</span>
+                    <span class="search-suggestion-original-price">${item.originalPrice}&euro;</span>
+                    <span class="search-suggestion-discount">-${item.discount}%</span>
+                </div>
+            `;
+        } else {
+            priceHtml = `
+                <div class="search-suggestion-price">
+                    <span class="search-suggestion-final-price">${item.price}&euro;</span>
+                </div>
+            `;
+        }
+
+        return $("<li>")
+            .append("<div>" +
+                "<img src='" + (item.image || 'placeholder.jpg') + "' class='search-suggestion-image' alt='" + item.value + "'>" +
+                "<div class='search-suggestion-content'>" +
+                    "<div class='search-suggestion-title'>" + item.value + "</div>" +
+                    priceHtml +
+                "</div>" +
+            "</div>")
+            .appendTo(ul);
+    };
+});
+</script>
 </html>
