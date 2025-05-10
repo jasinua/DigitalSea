@@ -51,9 +51,25 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     .wishlist-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(4, minmax(320px, 1fr));
         gap: 25px;
         padding: 10px;
+    }
+
+    @media (max-width: 1400px) {
+        .wishlist-grid {
+            grid-template-columns: repeat(3, minmax(320px, 1fr));
+        }
+    }
+    @media (max-width: 1000px) {
+        .wishlist-grid {
+            grid-template-columns: repeat(2, minmax(320px, 1fr));
+        }
+    }
+    @media (max-width: 700px) {
+        .wishlist-grid {
+            grid-template-columns: 1fr;
+        }
     }
 
     .wishlist-item {
@@ -63,6 +79,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         position: relative;
         border: 1px solid var(--mist-color);
+        max-width: 420px;
     }
 
     .wishlist-item:hover {
