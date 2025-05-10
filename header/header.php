@@ -496,7 +496,7 @@
                 <!-- <li><a href="profile.php"><img src="user.png" class="icons" alt=""></a></li> -->
                 <li><a href="profile.php"><i class="fas fa-user"></i></a></li>
                 <li><a href="controller/logout.php?from=header"><i class="fas fa-sign-out-alt"></i></a></li>
-                <?php if(isAdmin($_SESSION['user_id'])) {echo "<li><a href='manageStock.php'><i class='fas fa-wrench'></i></a></li>";} ?>
+                <?php if(isAdmin($_SESSION['user_id'])) {echo "<li><a href='managestock.php'><i class='fas fa-wrench'></i></a></li>";} ?>
                 <?php }else{ ?>
                 <li><a href="login.php"><i class="fas fa-sign-in-alt"></i></a></li>
                 <li><a href="signup.php"><i class="fas fa-user-plus"></i></a></li>
