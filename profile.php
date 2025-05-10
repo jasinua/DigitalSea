@@ -12,11 +12,48 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id']; // Retrieve user_id from session
 
 // Retrieve data sent via AJAX
-if (isset($_POST['first_name']) || isset($_POST['last_name']) || isset($_POST['email']) || isset($_POST['address'])) {
+if (isset($_POST['first_name']) || isset($_POST['last_name']) || isset($_POST['email']) || isset($_POST['address']) || isset($_POST['current_password'])) {
     $first_name = !empty($_POST['first_name']) ? trim($_POST['first_name']) : $user['first_name'];
     $last_name = !empty($_POST['last_name']) ? trim($_POST['last_name']) : $user['last_name'];
     $email = !empty($_POST['email']) ? trim($_POST['email']) : $user['email'];
     $address = !empty($_POST['address']) ? trim($_POST['address']) : $user['address'];
+
+    // Handle password change if provided
+    if (!empty($_POST['current_password']) && !empty($_POST['new_password']) && !empty($_POST['confirm_password'])) {
+        $current_password = $_POST['current_password'];
+        $new_password = $_POST['new_password'];
+        $confirm_password = $_POST['confirm_password'];
+
+        // Verify current password
+        $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user_data = $result->fetch_assoc();
+
+        if (!password_verify($current_password, $user_data['password'])) {
+            echo "Current password is incorrect.";
+            exit();
+        }
+
+        if ($new_password !== $confirm_password) {
+            echo "New passwords do not match.";
+            exit();
+        }
+
+        if (strlen($new_password) < 8) {
+            echo "New password must be at least 8 characters long.";
+            exit();
+        }
+
+        // Hash new password
+        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+        
+        // Update password
+        $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+        $stmt->bind_param("si", $hashed_password, $user_id);
+        $stmt->execute();
+    }
 
     // Validate email if it was changed
     if (!empty($_POST['email']) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -58,86 +95,118 @@ if (!isLoggedIn($user_id)) {
     .page-wrapper {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start;
         width: 100%;
         min-height: calc(100vh - 120px);
-        background-color: var(--ivory-color);
+        background-color: #f5f6fa;
         padding: 20px;
         overflow: hidden;
     }
 
     .profile {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         width: 100%;
-        max-width: 1000px;
+        max-width: 800px;
         gap: 0;
-        margin: auto;
+        margin: 50px auto;
         position: relative;
         justify-content: center;
         align-items: center;
-        min-height: 500px;
         box-sizing: border-box;
+    }
+
+    .userProfile, .editProfile {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 40px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
     .userProfile {
         display: flex;
-        flex-direction: column;
-        text-align: center;
-        color: var(--noir-color);
-        max-width: 450px;
-        width: 100%;
-        background-color: white;
-        padding: 30px;
-        border-top-left-radius: 16px;
-        border-bottom-left-radius: 16px;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-        transform: translateX(0px);
-        transition: box-shadow 0.3s, opacity 0.3s, filter 0.3s, transform 0.5s;
+        flex-direction: row;
+        text-align: left;
+        color: #2c3e50;
+        transition: all 0.3s ease;
+        animation: fadeIn 0.5s ease-out;
+        gap: 40px;
+        align-items: center;
+        position: relative;
         z-index: 2;
+        margin-top: 70px;
     }
-    .userProfile.editing {
-        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-        filter: brightness(0.97);
-        transform: translateX(0px);
+
+    .userProfile:hover {
+        transform: translateY(-5px);
+    }
+
+    .profile-icon {
+        flex-shrink: 0;
+        width: 160px;
+        height: 160px;
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #e9ecef;
+    }
+
+    .profile-icon i {
+        font-size: 80px;
+        color: #153147;
         transition: transform 0.5s ease;
     }
 
-    .userProfile i {
-        font-size: 70px;
-        color: var(--button-color);
-        margin-bottom: 20px;
-    }
-
-    .userProfile .user_data {
-        margin: 10px 0;
-        font-size: 1.1rem;
-        color: var(--page-text-color);
+    .profile-info {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
 
     .userProfile .user_name_lastname {
-        font-size: 1.8rem;
-        font-weight: 600;
-        margin: 15px 0;
-        color: var(--noir-color);
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0;
+        color: #2c3e50;
+        transition: transform 0.3s ease;
+    }
+
+    .userProfile .user_data {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .userProfile .user_data i {
+        font-size: 1.2rem;
+        color: #153147;
+        width: 24px;
     }
 
     .editXlogout {
         display: flex;
         flex-direction: row;
-        justify-content: center;
-        gap: 20px;
+        justify-content: flex-start;
+        gap: 15px;
         margin-top: 20px;
     }
 
     .userProfile .edit-button, .userProfile .logout-button {
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 500;
+        padding: 12px 25px;
+        border-radius: 12px;
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all var(--transition-speed) ease;
+        border: none;
+        font-size: 1rem;
     }
 
     .userProfile .edit-button {
@@ -147,7 +216,8 @@ if (!isLoggedIn($user_id)) {
 
     .userProfile .edit-button:hover {
         background-color: var(--button-color-hover);
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(21, 49, 71, 0.3);
     }
 
     .userProfile .logout-button {
@@ -157,112 +227,92 @@ if (!isLoggedIn($user_id)) {
 
     .userProfile .logout-button:hover {
         background-color: #eee;
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
 
     .editProfile {
+        position: relative;
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1;
+    }
+
+    .editProfile.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .editProfile h2 {
+        margin-bottom: 30px;
+        color: #2c3e50;
+        font-size: 1.8rem;
+    }
+
+    .editProfile form {
         display: flex;
         flex-direction: column;
-        text-align: center;
-        color: var(--noir-color);
-        max-width: 450px;
+        gap: 20px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(4, auto);
+        gap: 20px 30px;
+        margin-bottom: 30px;
+    }
+
+    .form-grid .input-field {
         width: 100%;
-        background-color: white;
-        padding: 30px;
-        border-top-right-radius: 16px;
-        border-bottom-right-radius: 16px;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-        opacity: 0;
-        pointer-events: none;
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        transform: translateX(0);
-        z-index: 1;
-        transition: opacity 0.4s, transform 0.5s, z-index 0s 0.5s;
-    }
-    .editProfile.active {
-        opacity: 1;
-        pointer-events: auto;
-        position: relative;
-        left: auto;
-        top: auto;
-        height: auto;
-        transform: translateX(0);
-        z-index: 1;
-        transition: opacity 0.4s, transform 0.5s, z-index 0s;
-    }
-    .editProfile.behind {
-        opacity: 0;
-        pointer-events: none;
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        transform: translateX(-230px);
-        transition:  transform 0.5s ease;
-        z-index: 1;
     }
 
-    .input-field {
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 1rem;
-        box-sizing: border-box;
-        transition: all 0.3s ease;
-        background-color: white;
+    .form-grid .label-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
     }
 
-    .input-field:focus {
-        border-color: var(--button-color);
-        box-shadow: 0 0 0 2px rgba(21, 49, 71, 0.1);
-        outline: none;
-    }
-
-    .first_last_name {
-        display: flex;
-        justify-content: space-between;
-        gap: 15px;
+    .form-grid .spacer {
+        grid-column: 2;
+        grid-row: 4;
     }
 
     .submitCancel {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
         gap: 15px;
-        margin-top: 20px;
+        justify-content: center;
+        max-width: 400px;
+        margin: 0 auto;
     }
 
     .submit-btn, .cancel-btn {
-        width: 100%;
+        flex: 1;
         padding: 12px;
-        font-size: 1rem;
-        font-weight: 500;
         border: none;
         border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
     }
 
     .submit-btn {
-        background-color: var(--button-color);
+        background-color: #153147;
         color: white;
     }
 
     .submit-btn:hover {
-        background-color: var(--button-color-hover);
+        background-color: #1a3d5a;
         transform: translateY(-2px);
     }
 
     .cancel-btn {
         background-color: #f8f8f8;
-        color: var(--noir-color);
+        color: #2c3e50;
     }
 
     .cancel-btn:hover {
@@ -270,9 +320,45 @@ if (!isLoggedIn($user_id)) {
         transform: translateY(-2px);
     }
 
-    .emailXaddress p {
-        margin: 10px 0;
-        padding: 0;
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .profile {
+            margin: 20px auto;
+        }
+
+        .userProfile, .editProfile {
+            padding: 20px;
+            border-radius: 16px;
+        }
+
+        .editProfile {
+            margin-top: 16px;
+        }
+
+        .userProfile {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: none;
+            gap: 15px;
+        }
+
+        .spacer {
+            display: none;
+        }
     }
 
     @media (max-width: 950px) {
@@ -281,20 +367,316 @@ if (!isLoggedIn($user_id)) {
             max-width: 95%;
             align-items: center;
             min-height: auto;
+            gap: 20px;
         }
+        
         .userProfile, .editProfile {
             max-width: 100%;
-            border-radius: 16px !important;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-            transform: none !important;
+            border-radius: 20px;
+            margin: 10px 0;
         }
+
         .editProfile {
-            margin-top: 20px;
-            border-radius: 16px !important;
             position: relative !important;
-            left: auto !important;
-            top: auto !important;
-            height: auto !important;
+            transform: none !important;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .editProfile.behind {
+            display: none;
+        }
+
+        .editProfile.active {
+            display: block;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .userProfile {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .profile-icon {
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-info {
+            align-items: center;
+        }
+
+        .userProfile .user_data {
+            justify-content: center;
+        }
+
+        .editXlogout {
+            justify-content: center;
+        }
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .editProfile {
+        background-color: white;
+        padding: 40px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+    }
+
+    .modal-overlay.active .editProfile {
+        transform: translateY(0);
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #666;
+        cursor: pointer;
+        padding: 5px;
+        transition: all 0.3s ease;
+        z-index: 10001;
+    }
+
+    .close-modal:hover {
+        color: #153147;
+        transform: rotate(90deg);
+    }
+
+    .editProfile h2 {
+        margin-bottom: 30px;
+        color: #2c3e50;
+        font-size: 1.8rem;
+        padding-right: 30px;
+    }
+
+    .editProfile form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .first_last_name {
+        display: flex;
+        gap: 20px;
+    }
+
+    .first_last_name .input-field {
+        flex: 1;
+    }
+
+    .password-section {
+        margin-top: 10px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+
+    .password-section h3 {
+        margin-bottom: 15px;
+        color: #2c3e50;
+        font-size: 1.2rem;
+    }
+
+    .password-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .submitCancel {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .submit-btn, .cancel-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn {
+        background-color: #153147;
+        color: white;
+    }
+
+    .submit-btn:hover {
+        background-color: #1a3d5a;
+        transform: translateY(-2px);
+    }
+
+    .cancel-btn {
+        background-color: #f8f8f8;
+        color: #2c3e50;
+    }
+
+    .cancel-btn:hover {
+        background-color: #eee;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .editProfile {
+            padding: 30px;
+            width: 95%;
+        }
+
+        .first_last_name {
+            flex-direction: column;
+            gap: 15px;
+        }
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 15px 20px;
+        margin: 8px 0;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        background-color: white;
+        color: #2c3e50;
+    }
+
+    .input-field:focus {
+        border-color: #153147;
+        box-shadow: 0 0 0 3px rgba(21, 49, 71, 0.1);
+        outline: none;
+        transform: translateY(-2px);
+    }
+
+    .input-field::placeholder {
+        color: #a0a0a0;
+        font-size: 0.95rem;
+    }
+
+    .input-field:hover {
+        border-color: #153147;
+    }
+
+    .password-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #e9ecef;
+    }
+
+    .password-section h3 {
+        margin-bottom: 20px;
+        color: #2c3e50;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .password-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .first_last_name {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 10px;
+    }
+
+    .first_last_name .input-field {
+        flex: 1;
+    }
+
+    .editProfile form {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .submitCancel {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .submit-btn, .cancel-btn {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn {
+        background-color: #153147;
+        color: white;
+    }
+
+    .submit-btn:hover {
+        background-color: #1a3d5a;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(21, 49, 71, 0.2);
+    }
+
+    .cancel-btn {
+        background-color: #f8f8f8;
+        color: #2c3e50;
+        border: 2px solid #e9ecef;
+    }
+
+    .cancel-btn:hover {
+        background-color: #eee;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .input-field {
+            padding: 12px 15px;
+        }
+
+        .first_last_name {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .submit-btn, .cancel-btn {
+            padding: 12px;
         }
     }
 </style>
@@ -302,34 +684,47 @@ if (!isLoggedIn($user_id)) {
     <div class="page-wrapper">
         <div class="profile">
             <div class="userProfile">
-                <!-- <img src="" alt=""> -->
-                <p><i class="fas fa-user"></i></p> <!-- perkohsisht deri sa te implementojme img-->
-                <h2 class="user_name_lastname" id="user_name"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
-                <div class="emailXaddress">
-                    <p class="user_data" id="user_email">Email: <?php echo htmlspecialchars($user['email']); ?></p>
-                    <p class="user_data" id="user_address">Address: <?php echo htmlspecialchars($user['address']); ?> </p>
+                <div class="profile-icon">
+                    <i class="fas fa-user"></i>
                 </div>
-                <div class="editXlogout">
-                    <p class="edit-button" id="edit" onclick="editFunction()">Edito Profilin</p>
-                    <p class="logout-button" onclick="logoutFunction()">Log out</p>
+                <div class="profile-info">
+                    <h2 class="user_name_lastname" id="user_name"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
+                    <div class="user_data" id="user_email">
+                        <i class="fas fa-envelope"></i>
+                        <?php echo htmlspecialchars($user['email']); ?>
+                    </div>
+                    <div class="user_data" id="user_address">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <?php echo htmlspecialchars($user['address']); ?>
+                    </div>
+                    <div class="editXlogout">
+                        <p class="edit-button" id="edit" onclick="editFunction()">Edit Profile</p>
+                        <p class="logout-button" onclick="logoutFunction()">Log out</p>
+                    </div>
                 </div>
             </div>
             <div class="editProfile">
-            <form action="" method="post">
-                <div class="first_last_name">
-                    <input type="text" name="first_name" placeholder="<?php echo htmlspecialchars($user['first_name']); ?>" class="input-field">
-                    <input type="text" name="last_name" placeholder="<?php echo htmlspecialchars($user['last_name']); ?>" class="input-field">
-                </div>
-                <input type="email" name="email" placeholder="<?php echo htmlspecialchars($user['email']); ?>" class="input-field">
-                <input type="text" name="address" placeholder="<?php echo htmlspecialchars($user['address']); ?>" class="input-field">
-                <div class="submitCancel">
-                    <button type="submit" class="submit-btn">Save Changes</button>
-                    <button type="button" class="cancel-btn" onclick="cancelEdit()">Cancel</button>
-                </div>
-            </form>
+                <h2>Edit Profile</h2>
+                <form action="" method="post">
+                    <div class="form-grid">
+                        <input type="text" name="first_name" placeholder="<?php echo htmlspecialchars($user['first_name']); ?>" class="input-field">
+                        <input type="password" name="current_password" placeholder="Current Password" class="input-field">
+                        <input type="text" name="last_name" placeholder="<?php echo htmlspecialchars($user['last_name']); ?>" class="input-field">
+                        <input type="password" name="new_password" placeholder="New Password" class="input-field">
+                        <input type="email" name="email" placeholder="<?php echo htmlspecialchars($user['email']); ?>" class="input-field">
+                        <input type="password" name="confirm_password" placeholder="Confirm New Password" class="input-field">
+                        <input type="text" name="address" placeholder="<?php echo htmlspecialchars($user['address']); ?>" class="input-field">
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="submitCancel">
+                        <button type="submit" class="submit-btn">Save Changes</button>
+                        <button type="button" class="cancel-btn" onclick="closeEdit()">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        </div> 
     </div>
+
     <?php include "footer/footer.php"; ?>
 </body>
 <script>
@@ -339,30 +734,52 @@ if (!isLoggedIn($user_id)) {
     let isEditing = false;
 
     function editFunction() {
-        if (!isEditing) {
-            userProfile.classList.add("editing");
-            editProfile.classList.remove("behind");
-            editProfile.classList.add("active");
-            editButton.innerText = "Duke edituar profilin";
-            isEditing = true;
-        } else if(isEditing && editButton.innerText === "Duke edituar profilin") {
-            isEditing = true;
-        } else {
-            submitChanges();
-            isEditing = false;
-        }
+        const editForm = document.querySelector('.editProfile');
+        editForm.classList.add('active');
+        document.querySelector('.edit-button').textContent = 'Editing...';
     }
+
+    function closeEdit() {
+        const editForm = document.querySelector('.editProfile');
+        editForm.classList.remove('active');
+        document.querySelector('.edit-button').textContent = 'Edit Profile';
+    }
+
+    // Prevent form submission (we'll handle it via AJAX)
+    document.querySelector("form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        submitChanges();
+    });
 
     function submitChanges() {
         let first_name = document.querySelector("input[name='first_name']").value.trim();
         let last_name = document.querySelector("input[name='last_name']").value.trim();
         let email = document.querySelector("input[name='email']").value.trim();
         let address = document.querySelector("input[name='address']").value.trim();
+        let current_password = document.querySelector("input[name='current_password']").value.trim();
+        let new_password = document.querySelector("input[name='new_password']").value.trim();
+        let confirm_password = document.querySelector("input[name='confirm_password']").value.trim();
 
         // Validate email if changed
         if (email !== "<?php echo htmlspecialchars($user['email']); ?>" && !validateEmail(email)) {
-            alert("Ju lutem shkruani një email valid!");
+            alert("Please enter a valid email!");
             return;
+        }
+
+        // Validate passwords if any are provided
+        if (current_password || new_password || confirm_password) {
+            if (!current_password || !new_password || !confirm_password) {
+                alert("Please fill in all password fields!");
+                return;
+            }
+            if (new_password !== confirm_password) {
+                alert("New passwords do not match!");
+                return;
+            }
+            if (new_password.length < 8) {
+                alert("New password must be at least 8 characters long!");
+                return;
+            }
         }
 
         let xhr = new XMLHttpRequest();
@@ -371,19 +788,28 @@ if (!isLoggedIn($user_id)) {
 
         xhr.onload = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
+                if (xhr.responseText.includes("successfully")) {
                     // Update UI only if server responded successfully
                     document.getElementById("user_name").innerText = 
-                    (first_name || "<?php echo htmlspecialchars($user['first_name']); ?>") + " " + 
-                    (last_name || "<?php echo htmlspecialchars($user['last_name']); ?>");
+                        (first_name || "<?php echo htmlspecialchars($user['first_name']); ?>") + " " + 
+                        (last_name || "<?php echo htmlspecialchars($user['last_name']); ?>");
                     
-                document.getElementById("user_email").innerText = 
-                    "Email: " + (email || "<?php echo htmlspecialchars($user['email']); ?>");
+                    document.getElementById("user_email").innerText = 
+                        (email || "<?php echo htmlspecialchars($user['email']); ?>");
                     
-                document.getElementById("user_address").innerText = 
-                    "Address: " + (address || "<?php echo htmlspecialchars($user['address']); ?>");
+                    document.getElementById("user_address").innerText = 
+                        (address || "<?php echo htmlspecialchars($user['address']); ?>");
 
-                // Reset edit state
-                cancelEdit();
+                    // Clear password fields
+                    document.querySelector("input[name='current_password']").value = "";
+                    document.querySelector("input[name='new_password']").value = "";
+                    document.querySelector("input[name='confirm_password']").value = "";
+
+                    // Close edit form
+                    closeEdit();
+                } else {
+                    alert(xhr.responseText);
+                }
             } else {
                 console.error("Error updating profile:", xhr.responseText);
             }
@@ -393,28 +819,12 @@ if (!isLoggedIn($user_id)) {
             "first_name=" + encodeURIComponent(first_name) + 
             "&last_name=" + encodeURIComponent(last_name) + 
             "&email=" + encodeURIComponent(email) + 
-            "&address=" + encodeURIComponent(address)
+            "&address=" + encodeURIComponent(address) +
+            "&current_password=" + encodeURIComponent(current_password) +
+            "&new_password=" + encodeURIComponent(new_password) +
+            "&confirm_password=" + encodeURIComponent(confirm_password)
         );
     }
-
-    function cancelEdit() {
-        userProfile.classList.remove("editing");
-        editProfile.classList.remove("active");
-        editProfile.classList.add("behind");
-        editButton.innerText = "Edito Profilin";
-        isEditing = false;
-    }
-
-    // Email validation helper
-    function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
-    // Prevent form submission (we'll handle it via AJAX)
-    document.querySelector("form").addEventListener("submit", function(e) {
-            e.preventDefault();
-            submitChanges();
-    });
 
     function logoutFunction() {
         // Make a call to logout.php
@@ -426,6 +836,12 @@ if (!isLoggedIn($user_id)) {
             .catch(err => {
                 console.error('Logout failed, dear soul:', err);
             });
+    }
+
+    // Email validation helper
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
     }
 
     // On page load, ensure editProfile is behind
