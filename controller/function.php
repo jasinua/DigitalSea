@@ -54,7 +54,7 @@
     }
 
     function getCartCount($userid) {
-        include "model/dbh.inc.php";
+        include "../model/dbh.inc.php";
         $stmt = $conn->prepare("SELECT COUNT(*) as count FROM cart WHERE user_id = ?");
         $stmt->bind_param("i", $userid);
         $stmt->execute();

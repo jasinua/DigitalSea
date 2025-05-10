@@ -89,18 +89,21 @@
     .search-container {
         flex: 1;
         max-width: 500px;
-        margin: 0 20px;
+        margin: auto;
         position: relative;
+        justify-self: center;
     }
 
     .search-container form {
         display: flex;
         align-items: center;
+        position: relative;
     }
 
     .search-container input[type="text"] {
         width: 100%;
-        padding: 10px 15px;
+        min-width: 450px;
+        padding: 10px 35px 10px 15px;
         border: none;
         border-radius: 20px;
         background-color: rgba(255, 255, 255, 0.1);
@@ -118,23 +121,23 @@
         background-color: rgba(255, 255, 255, 0.2);
     }
 
-    .search-container button {
+    .clear-search {
         position: absolute;
         right: 10px;
         top: 50%;
         transform: translateY(-50%);
         background: none;
         border: none;
-        color: white;
+        color: rgba(255, 255, 255, 0.7);
         cursor: pointer;
+        font-size: 18px;
         padding: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: none;
+        z-index: 2;
     }
 
-    .search-container button:hover {
-        color: var(--mist-color);
+    .clear-search:hover {
+        color: white;
     }
 
     nav ul {
@@ -386,11 +389,9 @@
     <header>
         <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "index.php"><img class="logo" src="logo2.png" alt="logo e kompanise tone"></a></div>
         <div class="search-container">
-            <form action="index.php" method="GET">
-                <input type="text" name="search" id="search-input" placeholder="Search products..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-                <button type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
+            <form action="index.php" method="get" class="search-form">
+                <input type="text" name="search" placeholder="Search..." class="search-input" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                <button type="button" class="clear-search" title="Clear search">×</button>
             </form>
         </div>
         <nav>
@@ -404,21 +405,57 @@
                         <?php
                         if(isset($_SESSION['user_id'])) {
                             $cart_items = returnCart($_SESSION['user_id']);
+                            $shown_products = [];
                             $count = 0;
                             if($cart_items) {
-                                while($count < 3 && ($item = $cart_items->fetch_assoc())) {
-                                    $product_result = returnProduct($item['product_id']);
+                                // Collect product quantities
+                                $product_quantities = [];
+                                while($item = $cart_items->fetch_assoc()) {
+                                    $pid = $item['product_id'];
+                                    if (!isset($product_quantities[$pid])) {
+                                        $product_quantities[$pid] = 0;
+                                    }
+                                    $product_quantities[$pid] += $item['quantity'];
+                                }
+                                // Show only the first 3 unique products, but allow scrolling for more
+                                foreach ($product_quantities as $pid => $qty) {
+                                    if ($count >= 3) break;
+                                    $product_result = returnProduct($pid);
                                     if($product_result && $product = $product_result->fetch_assoc()) {
                                         ?>
                                         <div class="cart-preview-item">
                                             <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                                             <div class="cart-preview-item-info">
                                                 <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
-                                                <div class="cart-preview-item-price"><?php echo number_format($product['price'], 2); ?>€</div>
+                                                <div class="cart-preview-item-price">
+                                                    <?php echo number_format($product['price'], 2); ?>€
+                                                    <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
+                                                </div>
                                             </div>
                                         </div>
                                         <?php
                                         $count++;
+                                    }
+                                }
+                                // If there are more than 3 items, show the rest (hidden by default, scrollable)
+                                if ($count >= 3) {
+                                    foreach (array_slice(array_keys($product_quantities), 3) as $pid) {
+                                        $qty = $product_quantities[$pid];
+                                        $product_result = returnProduct($pid);
+                                        if($product_result && $product = $product_result->fetch_assoc()) {
+                                            ?>
+                                            <div class="cart-preview-item">
+                                                <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                                <div class="cart-preview-item-info">
+                                                    <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
+                                                    <div class="cart-preview-item-price">
+                                                        <?php echo number_format($product['price'], 2); ?>€
+                                                        <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php
+                                        }
                                     }
                                 }
                             }
@@ -453,65 +490,52 @@
 </body>
 <script>
 $(document).ready(function() {
-    $("#search-input").autocomplete({
+    $("#search").autocomplete({
+        source: "controller/search_suggestions.php",
         minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "search_suggestions.php",
-                dataType: "json",
-                data: {
-                    term: request.term
-                },
-                success: function(data) {
-                    if (data.error) {
-                        console.error('Search error:', data.error);
-                        response([]);
-                        return;
-                    }
-                    response(data);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Ajax error:', error);
-                    response([]);
-                }
-            });
-        },
-        focus: function(event, ui) {
-            event.preventDefault();
-            $("#search-input").val(ui.item.value);
-        },
         select: function(event, ui) {
-            event.preventDefault();
-            window.location.href = 'product.php?product=' + ui.item.id;
+            window.location.href = "product.php?product=" + ui.item.id;
         }
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        let priceHtml = '';
-        if (item.discount > 0) {
-            priceHtml = `
-                <div class="search-suggestion-price">
-                    <span class="search-suggestion-final-price">${item.price}&euro;</span>
-                    <span class="search-suggestion-original-price">${item.originalPrice}&euro;</span>
-                    <span class="search-suggestion-discount">-${item.discount}%</span>
-                </div>
-            `;
-        } else {
-            priceHtml = `
-                <div class="search-suggestion-price">
-                    <span class="search-suggestion-final-price">${item.price}&euro;</span>
-                </div>
-            `;
-        }
-
+    }).data("ui-autocomplete")._renderItem = function(ul, item) {
         return $("<li>")
-            .append("<div>" +
-                "<img src='" + (item.image || 'placeholder.jpg') + "' class='search-suggestion-image' alt='" + item.value + "'>" +
+            .append("<div class='search-suggestion'>" +
+                "<img src='" + item.image_url + "' class='search-suggestion-image'>" +
                 "<div class='search-suggestion-content'>" +
-                    "<div class='search-suggestion-title'>" + item.value + "</div>" +
-                    priceHtml +
+                "<div class='search-suggestion-title'>" + item.label + "</div>" +
+                "<div class='search-suggestion-price'>" +
+                (item.discount > 0 ? 
+                    "<span class='search-suggestion-original-price'>" + item.price + "€</span>" +
+                    "<span class='search-suggestion-final-price'>" + (item.price * (1 - item.discount/100)).toFixed(0) + "€</span>" +
+                    "<span class='search-suggestion-discount'>-" + item.discount + "%</span>" :
+                    "<span class='search-suggestion-final-price'>" + item.price + "€</span>"
+                ) +
                 "</div>" +
-            "</div>")
+                "</div>" +
+                "</div>")
             .appendTo(ul);
     };
+
+    // Show/hide clear button based on search input
+    $('.search-input').on('input', function() {
+        if ($(this).val().length > 0) {
+            $('.clear-search').show();
+        } else {
+            $('.clear-search').hide();
+        }
+    });
+
+    // Clear search without redirecting
+    $('.clear-search').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('.search-input').val('');
+        $(this).hide();
+    });
+
+    // Initialize clear button visibility
+    if ($('.search-input').val().length > 0) {
+        $('.clear-search').show();
+    }
 });
 </script>
 </html>

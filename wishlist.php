@@ -15,7 +15,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
         }
     }
 ?>
-<link rel="stylesheet" href="style.css">
 <style>
     .wishlist-container {
         min-width: 1100px;
@@ -164,7 +163,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     .original-price {
         text-decoration: line-through;
-        color: var(--mist-color);
+        color: red;
         font-size: 14px;
     }
 
@@ -256,6 +255,15 @@ if (isLoggedIn($_SESSION['user_id'])) {
             transform: scale(1);
         }
     }
+
+    .cart-preview-item {
+        height: 90px;
+    }
+
+    .cart-preview {
+        max-height: 270px; /* 3 * 90px */
+        overflow-y: auto;
+    }
 </style>
 <div class="page-wrapper">
     <div class="wishlist-container">
@@ -315,10 +323,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
                         </div>
                     </div>
 
-                    <form method="post" action="">
+                    <form method="post" action="" class="add-to-cart-form">
                         <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                         <input type="hidden" name="price" value="<?php echo ($discount > 0) ? $discounted_price : $product['price']; ?>">
-                        <button type="submit" name="add" class="add-to-cart-btn" <?php echo ($product['stock'] <= 0) ? 'disabled' : ''; ?>>
+                        <button type="button" class="add-to-cart-btn" data-product-id="<?php echo $product['product_id']; ?>" data-price="<?php echo ($discount > 0) ? $discounted_price : $product['price']; ?>" <?php echo ($product['stock'] <= 0) ? 'disabled' : ''; ?>>
                             Add to Cart
                         </button>
                     </form>
@@ -359,6 +367,63 @@ document.addEventListener('DOMContentLoaded', function() {
     unset($_SESSION['show_cart_notification']);
     ?>
     <?php endif; ?>
+
+    // Handle add to cart button clicks
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const productId = this.dataset.productId;
+            const price = this.dataset.price;
+            
+            // Disable button to prevent double clicks
+            this.disabled = true;
+            this.textContent = 'Adding...';
+            
+            fetch('controller/add_to_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `product_id=${productId}&price=${price}`
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    const cartLink = document.querySelector('a[href="cart.php"]');
+                    const notification = document.createElement('span');
+                    notification.className = 'cart-notification';
+                    cartLink.classList.add('cart-link');
+                    cartLink.appendChild(notification);
+
+                    // Remove notification after 3 seconds
+                    setTimeout(() => {
+                        notification.style.opacity = '0';
+                        notification.style.transform = 'scale(0.5)';
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 300);
+                    }, 3000);
+                } else {
+                    throw new Error(data.message || 'Error adding to cart');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message || 'Error adding to cart. Please try again.');
+            })
+            .finally(() => {
+                // Re-enable button
+                this.disabled = false;
+                this.textContent = 'Add to Cart';
+            });
+        });
+    });
 });
 </script>
 

@@ -25,8 +25,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigitalSea</title>
-    <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -345,6 +343,7 @@
         min-width: 225px;
         width: 225px;
         margin: 10px;
+        padding: 6px;
         background-color: white;
         display: flex;
         flex-direction: column;
@@ -582,8 +581,8 @@
     }
 
     .wheel-item {
-        width: 300px;
-        height: 400px;
+        width: 280px;
+        height: 340px;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -592,76 +591,90 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: all 0.3s;
         opacity: 0;
         display: flex;
         flex-direction: column;
     }
 
+    .wheel-item.active {
+        transform: translate(-50%, -50%) scale(1.08);
+        z-index: 4;
+        opacity: 1;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .wheel-item:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+        z-index: 4;
+        opacity: 1;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+    }
+
     .wheel-item img {
         width: 100%;
-        height: 280px;
+        height: 220px;
         object-fit: contain;
         transition: all 0.3s ease;
         padding: 10px;
     }
 
-    .wheel-item img:hover {
-        transform: scale(1.05);
-    }
-
     .wheel-item .title {
         font-size: 15px;
         text-align: left;
-        margin: 15px 0;
-        min-height: 40px;
+        margin: 10px 0;
+        height: 40px;
         overflow: hidden;
         color: #555;
         padding: 0 5px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.4;
+        margin-bottom: auto;
+    }
+
+    .bottom-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: self-end;
+        width: 100%;
+        margin-top: auto;
+        padding: 0 5px;
+    }
+
+    .wheel-item .wishlist-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        transition: transform 0.2s;
+        z-index: 2;
+    }
+
+    .wheel-item .wishlist-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .wheel-item .wishlist-btn i {
+        font-size: 20px;
+        color: #ccc;
+        transition: color 0.2s;
+    }
+
+    .wheel-item .wishlist-btn.active i {
+        color: #ff0000;
     }
 
     .wheel-item .price {
         text-align: right;
         display: flex;
         align-items: center;
-        justify-content: flex-end;
         gap: 8px;
-        margin-top: auto;
-        padding: 0 5px 5px 10px;
-        width: 100%;
-    }
-
-    .wheel-item .original-price {
-        color: #ff0000;
-        text-decoration: line-through;
-        font-size: 14px;
-        font-weight: normal;
-    }
-
-    .wheel-item .discounted-price {
-        color: black;
-        font-weight: 600;
         font-size: 17px;
-    }
-
-    .wheel-item .discount-badge {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: #ff0000;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: bold;
-        z-index: 1;
-    }
-
-    .wheel-item.active {
-        transform: translate(-50%, -50%) scale(1);
-        z-index: 4;
-        opacity: 1;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        font-weight: 600;
     }
 
     .wheel-item.left {
@@ -710,9 +723,6 @@
     }
 
     .wishlist-btn {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
         background: none;
         border: none;
         cursor: pointer;
@@ -733,6 +743,34 @@
     
     .wishlist-btn.active i {
         color: #ff0000;
+    }
+
+    .search-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-container input[type="text"] {
+        padding-right: 30px; /* Make room for the X button */
+    }
+
+    .clear-search {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 5px;
+        display: none; /* Hidden by default */
+    }
+
+    .clear-search:hover {
+        color: #333;
     }
 </style>
 <body>
@@ -901,16 +939,16 @@
                     <div class='wheel-carousel'>
                         <div class='wheel-track' id='topItems'>
                             <?php foreach (getData("SELECT * FROM products WHERE products.price>900") as $prod) { ?>
-                                <a href="product.php?product=<?php echo $prod['product_id'] ?>">
-                                    <div class='wheel-item'>
-                                        <?php if ($prod['discount'] > 0) { ?>
-                                            <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
-                                        <?php } ?>
+                                <div class='wheel-item'>
+                                    <?php if ($prod['discount'] > 0) { ?>
+                                        <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
+                                    <?php } ?>
+                                    <img src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
+                                    <p class='title'><?php echo $prod['description'] ?></p>
+                                    <div class='bottom-container'>
                                         <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
                                             <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>
                                         </button>
-                                        <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
-                                        <p class='title'><?php echo $prod['description'] ?></p>
                                         <div class='price'>
                                             <?php if ($prod['discount'] > 0) { 
                                                 $originalPrice = $prod['price'];
@@ -922,8 +960,8 @@
                                                 <span class="discounted-price"><?php echo number_format($prod['price'], 0, '.', ',') ?>€</span>
                                             <?php } ?>
                                         </div>
+                                    </div>
                                 </div>
-                                </a>
                             <?php } ?>
                         </div>
                     </div>
@@ -936,21 +974,23 @@
                                 <?php if ($prod['discount'] > 0) { ?>
                                     <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
                                 <?php } ?>
-                                <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
-                                    <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>
-                                </button>
                                 <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <div class='price'>
-                                    <?php if ($prod['discount'] > 0) { 
-                                        $originalPrice = $prod['price'];
-                                        $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
-                                    ?>
-                                        <span class="original-price"><?php echo number_format($originalPrice, 0, '.', ',') ?>€</span>
-                                        <span class="discounted-price"><?php echo number_format($discountedPrice, 0, '.', ',') ?>€</span>
-                                    <?php } else { ?>
-                                        <span class="discounted-price"><?php echo number_format($prod['price'], 0, '.', ',') ?>€</span>
-                                    <?php } ?>
+                                <div class='bottom-container'>
+                                    <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                        <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>
+                                    </button>
+                                    <div class='price'>
+                                        <?php if ($prod['discount'] > 0) { 
+                                            $originalPrice = $prod['price'];
+                                            $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
+                                        ?>
+                                            <span class="original-price"><?php echo number_format($originalPrice, 0, '.', ',') ?>€</span>
+                                            <span class="discounted-price"><?php echo number_format($discountedPrice, 0, '.', ',') ?>€</span>
+                                        <?php } else { ?>
+                                            <span class="discounted-price"><?php echo number_format($prod['price'], 0, '.', ',') ?>€</span>
+                                        <?php } ?>
+                                    </div>
                                 </div>
                             </div>
                         <?php } ?>
@@ -962,36 +1002,24 @@
                             <div class='item'>
                                 <?php if ($prod['discount'] > 0) { ?>
                                     <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
-                            <div class='item' id="randomItemsSet">
-                                <div>
-                                    <img onclick="window.location='product.php?product=<?php echo $prod['product_id'] ?>'" src="<?php echo $prod['image_url'] ?>" alt="">
-                                    <div id="randomItemsText">   
-                                        <a  href="product.php?product=<?php echo $prod['product_id'] ?>"><?php echo $prod['description'] ?></a>
-                                    </div>
-                                </div>
-                                <?php if($prod['discount'] > 0){ ?>
-                                    <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%; align-items: center">
-                                        <p class='price' style="margin-top: 0;"><?php echo number_format($prod['price'] - ($prod['price'] * $prod['discount']/100), 0, '.', ',') ?>€</p>
-                                        <p class='price' style="color: red; font-size: 14px; padding-top: 2px"><s><?php echo number_format($prod['price'], 0, '.', ',') ?>€</s></p>
-                                    </div>
-                                <?php } else {?>
-                                    <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
-                                <?php } ?>
-                                <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
-                                    <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>
-                                </button>
+                                <?php } ?> 
                                 <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
+                                <div class='bottom-container'>
+                                    <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                        <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>
+                                    </button>
                                 <div class='price'>
-                                    <?php if ($prod['discount'] > 0) { 
-                                        $originalPrice = $prod['price'];
-                                        $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
-                                    ?>
-                                        <span class="original-price"><?php echo number_format($originalPrice, 0, '.', ',') ?>€</span>
-                                        <span class="discounted-price"><?php echo number_format($discountedPrice, 0, '.', ',') ?>€</span>
-                                    <?php } else { ?>
-                                        <?php echo number_format($prod['price'], 0, '.', ',') ?>€
-                                    <?php } ?>
+                                        <?php if ($prod['discount'] > 0) { 
+                                            $originalPrice = $prod['price'];
+                                            $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
+                                        ?>
+                                            <span class="original-price"><?php echo number_format($originalPrice, 0, '.', ',') ?>€</span>
+                                            <span class="discounted-price"><?php echo number_format($discountedPrice, 0, '.', ',') ?>€</span>
+                                        <?php } else { ?>
+                                            <span class="discounted-price"><?php echo number_format($prod['price'], 0, '.', ',') ?>€</span>
+                                        <?php } ?>
+                                    </div>
                                 </div>
                             </div>
                         <?php } ?>
@@ -1046,23 +1074,25 @@
                                 <?php if ($prod['discount'] > 0) { ?>
                                     <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
                                 <?php } ?>
+                                <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
+                                <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
+                                <div class='bottom-container'>
                                     <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
                                         <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>
                                     </button>
-                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
-                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <p class='price'>
-                                    <?php if ($prod['discount'] > 0) { 
-                                        $originalPrice = $prod['price'];
-                                        $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
-                                    ?>
-                                        <span class="original-price"><?php echo number_format($originalPrice, 0, '.', ',') ?>€</span>
-                                        <span class="discounted-price"><?php echo number_format($discountedPrice, 0, '.', ',') ?>€</span>
-                                    <?php } else { ?>
-                                        <?php echo number_format($prod['price'], 0, '.', ',') ?>€
-                                    <?php } ?>
-                                </p>
+                                    <div class='price'>
+                                        <?php if ($prod['discount'] > 0) { 
+                                            $originalPrice = $prod['price'];
+                                            $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
+                                        ?>
+                                            <span class="original-price"><?php echo number_format($originalPrice, 0, '.', ',') ?>€</span>
+                                            <span class="discounted-price"><?php echo number_format($discountedPrice, 0, '.', ',') ?>€</span>
+                                        <?php } else { ?>
+                                            <?php echo number_format($prod['price'], 0, '.', ',') ?>€
+                                        <?php } ?>
+                                    </div>
                                 </div>
+                            </div>
                         <?php } ?>   
                     </div>
                 <?php } ?>
@@ -1102,6 +1132,8 @@
         if (itemCount === 0) return;
         
         let currentIndex = 0;
+        let autoRotateInterval;
+        let isHovering = false;
 
         function updateCarousel() {
             items.forEach((item, index) => {
@@ -1125,14 +1157,35 @@
             });
         }
         
+        function startAutoRotate() {
+            if (!isHovering) {
+                autoRotateInterval = setInterval(() => {
+                    currentIndex = (currentIndex + 1) % itemCount;
+                    updateCarousel();
+                }, 3000);
+            }
+        }
+
+        function stopAutoRotate() {
+            clearInterval(autoRotateInterval);
+        }
+        
         // Initialize carousel
         updateCarousel();
+        startAutoRotate();
         
-        // Auto-rotate every 3 seconds
-        setInterval(() => {
-            currentIndex = (currentIndex + 1) % itemCount;
-            updateCarousel();
-        }, 3000);
+        // Add hover event listeners to all wheel items
+        items.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                isHovering = true;
+                stopAutoRotate();
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                isHovering = false;
+                startAutoRotate();
+            });
+        });
         
         // Manual navigation
         document.querySelector('.wheel-carousel').addEventListener('click', (e) => {
@@ -1196,6 +1249,7 @@
     $(document).ready(function() {
         // Function to update all instances of a product's heart button
         function updateAllProductHearts(productId, isActive) {
+            console.log('Updating hearts for product:', productId, 'isActive:', isActive);
             $(`.wishlist-btn[data-product-id="${productId}"]`).each(function() {
                 const button = $(this);
                 if (isActive) {
@@ -1209,14 +1263,19 @@
         // Check initial wishlist status for each product
         $('.wishlist-btn').each(function() {
             const productId = $(this).data('product-id');
+            console.log('Checking initial status for product:', productId);
             $.ajax({
-                url: 'check_wishlist.php',
+                url: 'controller/check_wishlist.php',
                 method: 'POST',
                 data: { product_id: productId },
                 success: function(response) {
+                    console.log('Initial check response for product', productId, ':', response);
                     if (response.trim() === 'true') {
                         updateAllProductHearts(productId, true);
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error checking wishlist status:', error);
                 }
             });
         });
@@ -1228,22 +1287,54 @@
             
             const button = $(this);
             const productId = button.data('product-id');
+            console.log('Wishlist button clicked for product:', productId);
             
             $.ajax({
-                url: 'add_to_wishlist.php',
+                url: 'controller/add_to_wishlist.php',
                 method: 'POST',
                 data: { product_id: productId },
                 success: function(response) {
-                    if (response.trim() === 'added') {
+                    console.log('Wishlist update response:', response);
+                    if (response.trim() === 'not_logged_in') {
+                        window.location.href = 'login.php';
+                    } else if (response.trim() === 'added') {
                         updateAllProductHearts(productId, true);
                     } else if (response.trim() === 'removed') {
                         updateAllProductHearts(productId, false);
+                    } else if (response.trim() === 'error') {
+                        console.error('Error updating wishlist');
+                        alert('There was an error updating your wishlist. Please try again.');
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error('Error updating wishlist:', error);
+                    alert('There was an error updating your wishlist. Please try again.');
                 }
             });
+        });
+
+        // Show/hide clear button based on search input
+        $('.search-input').on('input', function() {
+            if ($(this).val().length > 0) {
+                $('.clear-search').show();
+            } else {
+                $('.clear-search').hide();
+            }
+        });
+
+        // Clear search and redirect to homepage
+        $('.clear-search').click(function() {
+            $('.search-input').val('');
+            $(this).hide();
+            window.location.href = 'index.php';
+        });
+
+        // Handle empty search submission
+        $('.search-form').submit(function(e) {
+            if ($('.search-input').val().trim() === '') {
+                e.preventDefault();
+                window.location.href = 'index.php';
+            }
         });
     });  
 </script>

@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once "function.php";
-include_once "home.inc.php";
+require_once "function.php";
+require_once "home.inc.php";
 
 // Ensure we're sending JSON response
 header('Content-Type: application/json');

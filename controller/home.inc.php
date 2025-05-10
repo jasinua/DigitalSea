@@ -32,7 +32,7 @@ function getProductDetails($id)
 
 function addToCart($userId, $productId, $quantity, $price) 
 {
-    include "model/dbh.inc.php";
+    include "../model/dbh.inc.php";
     
     try {
         // First check if product exists in cart
