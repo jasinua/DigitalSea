@@ -186,6 +186,7 @@
         margin-bottom: 10px;
         cursor: pointer;
         transition: all 0.3s;
+        color: var(--page-text-color);
     }
 
     .category-header:hover {
@@ -1081,7 +1082,7 @@
                         <div class="filter-content">
                             <div class="filter">
                                 <input type="checkbox" name="discounted_only" id="discounted_only" value="1">
-                                <label for="discounted_only">Show only discounted items</label>
+                                <label for="discounted_only">Show only items on sale</label>
                             </div>
                         </div>
                     </div>
