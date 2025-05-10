@@ -219,4 +219,57 @@
         </nav>
     </header>
 </body>
+<script>
+$(document).ready(function() {
+    // Only run autocomplete if the search input exists
+    if ($('.search-input').length) {
+        $('.search-input').autocomplete({
+            source: "controller/search_suggestions.php",
+            minLength: 2,
+            select: function(event, ui) {
+                window.location.href = "product.php?product=" + ui.item.id;
+            }
+        }).data("ui-autocomplete")._renderItem = function(ul, item) {
+            return $("<li>")
+                .append("<div class='search-suggestion'>" +
+                    "<img src='" + item.image_url + "' class='search-suggestion-image'>" +
+                    "<div class='search-suggestion-content'>" +
+                    "<div class='search-suggestion-title'>" + item.label + "</div>" +
+                    "<div class='search-suggestion-price'>" +
+                    (item.discount > 0 ? 
+                        "<span class='search-suggestion-original-price'>" + item.price + "€</span>" +
+                        "<span class='search-suggestion-final-price'>" + (item.price * (1 - item.discount/100)).toFixed(0) + "€</span>" +
+                        "<span class='search-suggestion-discount'>-" + item.discount + "%</span>" :
+                        "<span class='search-suggestion-final-price'>" + item.price + "€</span>"
+                    ) +
+                    "</div>" +
+                    "</div>" +
+                    "</div>")
+                .appendTo(ul);
+        };
+    }
+
+    // Show/hide clear button based on search input
+    $('.search-input').on('input', function() {
+        if ($(this).val().length > 0) {
+            $('.clear-search').show();
+        } else {
+            $('.clear-search').hide();
+        }
+    });
+
+    // Clear search without redirecting
+    $('.clear-search').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('.search-input').val('');
+        $(this).hide();
+    });
+
+    // Initialize clear button visibility
+    if ($('.search-input').val().length > 0) {
+        $('.clear-search').show();
+    }
+});
+</script>
 </html>

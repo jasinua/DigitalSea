@@ -10,9 +10,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigitalSea</title>
-    <!-- <link rel="stylesheet" href="home.css">
+    
+    <!-- Preload critical CSS
+    <link rel="preload" href="style.css" as="style">
     <link rel="stylesheet" href="style.css"> -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    
+    <!-- Load Font Awesome asynchronously -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
+    
+    <!-- Load jQuery UI CSS asynchronously -->
+    <link rel="preload" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"></noscript>
+    
+    <!-- Defer non-critical JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" defer></script>
 </head>
 <style>
     .page-wrapper {
@@ -292,8 +305,8 @@
         width: 100%;
         overflow: hidden;
         position: relative;
-        height: 500px;
-        padding: 0; /* No padding */
+        height: 600px;
+        /* padding: 40px 0; */
         box-sizing: border-box;
     }
 
@@ -304,27 +317,39 @@
     }
 
     .wheel-item {
-        width: 300px;
-        height: 410px;
+        width: 330px;
+        min-width: 300px;
+        height: 400px;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 0 15px #aaa;
         transition: var(--transition);
         padding: 0 15px 0 15px;
         position: absolute;
-        top: 50px;
-        left: 600px;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         opacity: 0;
     }
 
-    .price {
-        font-weight: bold;
-        font-size: 1.1rem;
-        justify-self: flex-end;
-        margin-top: 12px;
+    .wheel-item.active {
+        transform: translate(-50%, -50%) scale(1.03) translateY(15px);
+        z-index: 4;
+        opacity: 1;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .wheel-item:hover {
+        transform: translate(-50%, -50%) scale(1.08);
+        z-index: 4;
+        opacity: 1;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
     }
 
     .wheel-item img {
+        height: 250px;
+        object-fit: contain;
         width: 100%;
         height: 300px;
         object-fit: contain;
@@ -342,25 +367,25 @@
     }
 
     .wheel-item.left {
-        transform: scale(0.9) translateX(-340px);
+        transform: translate(-50%, -50%) scale(0.9) translateX(-375px) translateY(45px);
         opacity: 0.7;
         z-index: 3;
     }
 
     .wheel-item.right {
-        transform: scale(0.9) translateX(340px);
+        transform: translate(-50%, -50%) scale(0.9) translateX(375px) translateY(45px);
         opacity: 0.7;
         z-index: 3;
     }
 
     .wheel-item.far-left {
-        transform: scale(0.8) translateX(-730px) translateY(25px);
+        transform: translate(-50%, -50%) scale(0.8) translateX(-800px) translateY(75px);
         opacity: 0.5;
         z-index: 2;
     }
 
     .wheel-item.far-right {
-        transform: scale(0.8) translateX(730px) translateY(25px);
+        transform: translate(-50%, -50%) scale(0.8) translateX(800px) translateY(75px);
         opacity: 0.5;
         z-index: 2;
     }
@@ -394,7 +419,79 @@
         padding: 0 5px 5px 10px;
     }
 
-    .new-badge {
+    .wheel-item .wishlist-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        transition: transform 0.2s;
+        z-index: 2;
+    }
+
+    .wheel-item .wishlist-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .wheel-item .wishlist-btn i {
+        font-size: 20px;
+        color: #ccc;
+        transition: color 0.2s;
+    }
+
+    .wheel-item .wishlist-btn.active i {
+        color: var(--error-color);
+    }
+
+    #topItemsHeader {
+        text-align: center;
+        margin: 30px 0 0 0;
+        color: var(--noir-color);
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    #newItemsHeader {
+        text-align: center;
+        margin: 20px 0;
+        color: var(--noir-color);
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    .wishlist-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 2;
+        padding: 5px;
+        transition: transform 0.2s;
+    }
+    
+    .wishlist-btn:hover {
+        transform: scale(1.1);
+    }
+    
+    .wishlist-btn i {
+        font-size: 20px;
+        color: #ccc;
+        transition: color 0.2s;
+    }
+    
+    .wishlist-btn.active i {
+        color: var(--error-color);
+    }
+
+    .search-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-container input[type="text"] {
+        padding-right: 30px; /* Make room for the X button */
+    }
+
+    .clear-search {
         position: absolute;
         color: rgb(42, 175, 169);
         font-size: 15px;
@@ -435,16 +532,27 @@
                             <?php foreach (getData("SELECT * FROM products WHERE products.price>900") as $prod) { ?>
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>">
                                     <div class='wheel-item'>
-                                        <img onclick="window.location='product.php?product=<?php echo $prod['product_id'] ?>'" src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
-                                        <p class='title'><?php echo $prod['description'] ?>
-                                        <?php if($prod['discount'] > 0){ ?>
-                                            <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%; align-items: center">
-                                                <p class='price' style="margin-top: 0;"><?php echo number_format($prod['price'] - ($prod['price'] * $prod['discount']/100), 0, '.', ',') ?>€</p>
-                                                <p class='price' style="color: red; font-size: 14px; padding-top: 2px"><s><?php echo number_format($prod['price'], 0, '.', ',') ?>€</s></p>
-                                            </div>
-                                        <?php } else {?>
-                                            <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
-                                        <?php } ?>
+                                    <?php if ($prod['discount'] > 0) { ?>
+                                        <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
+                                    <?php } ?>
+                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
+                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
+                                    <div class='bottom-container'>
+                                        <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                            <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
+                                        </button>
+                                        <div class='price'>
+                                            <?php if ($prod['discount'] > 0) { 
+                                                $originalPrice = $prod['price'];
+                                                $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
+                                            ?>
+                                                <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
+                                                <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
+                                            <?php } else { ?>
+                                                <span class="discounted-price"><?php echo number_format($prod['price'], 2, '.', ',') ?>€</span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
                                 </div>
                                 </a>
                             <?php } ?>
