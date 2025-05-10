@@ -59,151 +59,228 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
 <style>
     .page-wrapper {
+        display: flex;
         justify-content: center;
         align-items: center;
+        width: 100%;
+        min-height: calc(100vh - 120px);
+        background-color: var(--ivory-color);
+        padding: 20px;
     }
 
     .cart-wrapper {
         display: flex;
         width: 100%;
-        max-width: 1200px;
-        gap: 40px;
+        max-width: 1400px;
+        gap: 20px;
+        margin: auto;
     }
 
     .cart-left, .cart-right {
         background-color: white;
         color: var(--page-text-color);
-        border-radius: 50px;
-        box-shadow: 0 0 5px var(--navy-color);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         padding: 20px;
+        min-height: 400px;
     }
 
     .cart-left {
         display: flex;
         flex-direction: column;
-        border-radius: 10px;
-        flex: 1 1 60%;
-        max-height: 500px;
-        justify-content: space-between;
-        /* overflow-y: auto; */
+        flex: 1 1 65%;
+        max-height: 600px;
     }
 
     .itemsTable {
-        max-height: 340px;
+        max-height: 500px;
         overflow-y: auto;
+        margin-bottom: 20px;
     }
 
     .cart-right {
         display: flex;
         flex-direction: column;
-        border-radius: 10px;
-        color: var(--page-text-color);
         flex: 1 1 35%;
-        max-height: 500px;
+        max-height: 600px;
     }
 
     .cart-right h3 {
-        background-color: var(--background-color);
-        padding: 10px;
-        border-bottom: 1px solid var(--mist-color);
+        padding: 15px 0;
+        margin: 0;
+        font-size: 1.2em;
+        color: var(--noir-color);
+        border-bottom: 1px solid #eee;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
+        table-layout: fixed;
     }
 
     thead tr {
-        background-color: var(--background-color);
+        background-color: white;
     }
 
     th, td {
-        padding: 12px;
+        padding: 12px 15px;
         color: var(--page-text-color);
         text-align: center;
-        border-bottom: 1px solid var(--mist-color);
+        vertical-align: middle;
     }
+
+    th {
+        font-weight: 500;
+        color: var(--noir-color);
+    }
+
+    th:nth-child(1) { width: 40%; }
+    th:nth-child(2) { width: 20%; }
+    th:nth-child(3) { width: 20%; }
+    th:nth-child(4) { width: 20%; }
 
     td:first-child {
         text-align: left;
     }
 
-    tbody tr:last-child td {
-        border-bottom: none;
+    tr{
+        border-bottom: 1px solid #eee;
     }
 
     .product-info {
         display: flex;
         align-items: center;
         gap: 15px;
+        width: 100%;
     }
 
     .product-info img {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
         object-fit: contain;
         border-radius: 8px;
+        background-color: white;
+        padding: 5px;
+        flex-shrink: 0;
+    }
+
+    .product-info > div {
+        flex: 1;
+        min-width: 0;
     }
 
     .product-info h4 {
         margin: 0;
         font-size: 0.95rem;
+        color: var(--noir-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .product-info .desc {
-        font-size: 0.8rem;
-        color: var(--navy-color);
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .price-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .price-info .original-price {
+        color: red;
+        font-size: 0.85rem;
+        text-decoration: line-through;
+    }
+
+    .price-info .discounted-price {
+        font-weight: 500;
+        color: var(--noir-color);
     }
 
     .quantity-controls {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 5px;
+        gap: 8px;
+        margin-right: 40px;
     }
 
     .quantity-controls input {
-        width: 40px;
-        height: 30px;
+        width: 45px;
+        height: 32px;
         text-align: center;
-        border: 1px solid var(--ivory-color);
-        border-radius: 4px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        background-color: white;
     }
 
     .remove-btn {
         background: none;
         border: none;
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         color: #888;
         cursor: pointer;
+        transition: color 0.2s;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        margin-right: 50px;
+    }
+
+    .remove-btn:hover {
+        color: #ff4444;
+    }
+
+    td{
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+
+    tr{
+        display: flex;
+        justify-content: space-between;
     }
 
     .summary-box {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        gap: 40px;   
-        flex: 1; 
-    }
-
-    .summary-box h3 {
-        margin-bottom: 15px;
+        gap: 20px;
+        flex: 1;
     }
 
     .summary-item {
         display: flex;
         justify-content: space-between;
-        margin: 10px 0;
+        padding: 8px 0;
         font-size: 0.95rem;
+        color: #555;
     }
 
     .summary-item.total {
-        font-weight: bold;
-        font-size: 1.2rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--noir-color);
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+        margin-top: 5px;
     }
 
     .emri-me-zbritje {
-        display: flex; 
+        display: flex;
         justify-content: space-between;
     }
 
@@ -217,29 +294,99 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
 
     .checkout-btn {
-        background-color: var(--navy-color);
-        color: var(--text-color);
+        background-color: var(--button-color);
+        color: white;
         border: none;
-        padding: 15px;
+        padding: 12px;
         width: 100%;
         font-size: 1rem;
+        font-weight: 500;
         border-radius: 8px;
         cursor: pointer;
         margin-top: auto;
-        align-self: flex-end;
-        transition:ease-out 0.2s;
+        transition: all 0.3s;
     }
+
     .checkout-btn:hover {
-        background-color:var(--button-color-hover);
-        transition:ease-out 0.2s;
+        background-color: var(--button-color-hover);
+        transform: translateY(-2px);
     }
 
     #prodNameXprice {
         overflow-y: auto;
-        max-height: 180px;
+        max-height: 200px;
+    }
+
+    @media (max-width: 1200px) {
+        .cart-wrapper {
+            flex-direction: column;
+            max-width: 800px;
+        }
+
+        .cart-left, .cart-right {
+            width: 100%;
+            max-height: none;
+        }
+
+        .itemsTable {
+            max-height: 400px;
+        }
+    }
+
+    @media (max-width: 850px) {
+        .cart-wrapper {
+            max-width: 95%;
+        }
+    }
+
+    .save-btn {
+        background-color: var(--button-color);
+        color: white;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.3s;
+    }
+
+    .save-btn:hover {
+        background-color: var(--button-color-hover);
+        transform: translateY(-2px);
+    }
+
+    .save-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .save-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        background-color: #4CAF50;
+        color: white;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-100%);
+        opacity: 0;
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
+
+    .save-message.show {
+        transform: translateY(0);
+        opacity: 1;
     }
 </style>
 <div class="page-wrapper">
+    <div class="save-message">Ndryshimet u ruajtën me sukses!</div>
     <form action="" method="post" id="cartForm">
         <div class="cart-wrapper">
 
@@ -271,7 +418,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                 $subtotal += $total;
                             ?>
                             <tr>
-                                <td>
+                                <td style="width: 304px;">
                                     <div class="product-info">
                                         <input type="hidden" name="prod_id[]" value="<?php echo $product['product_id']; ?>">
                                         <img src="<?php echo $product['image_url']; ?>" alt="Product Image">
@@ -281,16 +428,16 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                         </div>
                                     </div>
                                 </td>
-                                <?php if($discount) {?>
-                                    <td style="flex-direction: column; margin: auto;">
-                                        <p><?php echo number_format($pricedsc, 2); ?>€</p>
-                                        <p style="justify-self: flex-end; color: red; font-size: 15px"><sup><s><?php echo $price ?>€</s></sup></p>
-                                    </td>
-                                <?php } else {?>
-                                    <td style="">
-                                        <p><?php echo number_format($price, 2); ?>€</p>
-                                    </td>
-                                <?php }?>
+                                <td>
+                                    <div class="price-info">
+                                        <?php if($discount) { ?>
+                                            <span class="discounted-price"><?php echo number_format($pricedsc, 2); ?>€</span>
+                                            <span class="original-price"><?php echo number_format($price, 2); ?>€</span>
+                                        <?php } else { ?>
+                                            <span class="discounted-price"><?php echo number_format($price, 2); ?>€</span>
+                                        <?php } ?>
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="quantity-controls">
                                         <input 
@@ -316,7 +463,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                 </div>
 
                 <!-- Save Changes Button -->
-                <button type="submit" class="checkout-btn" name="save">Ruaj Ndryshimet</button>
+                <button type="button" class="save-btn" id="saveChanges">Ruaj Ndryshimet</button>
             </div>
 
             <!-- Right: Summary Box -->
@@ -384,6 +531,9 @@ if (isLoggedIn($_SESSION['user_id'])) {
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const quantityInputs = document.querySelectorAll('.quantity-input');
+        const saveBtn = document.getElementById('saveChanges');
+        const saveMessage = document.querySelector('.save-message');
+        let saveTimeout;
 
         quantityInputs.forEach(input => {
             input.addEventListener('input', () => {
@@ -398,6 +548,53 @@ if (isLoggedIn($_SESSION['user_id'])) {
                     summaryItem.textContent = `${quantity} x ${price.toFixed(2)}€ = ${total.toFixed(2)}€`;
                 }
                 updateCartSummary();
+            });
+        });
+
+        saveBtn.addEventListener('click', () => {
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Duke ruajtur...';
+
+            const formData = new FormData();
+            const productIds = [];
+            const quantities = [];
+            const prices = [];
+
+            quantityInputs.forEach(input => {
+                productIds.push(input.dataset.productId);
+                quantities.push(input.value);
+                prices.push(parseFloat(input.dataset.price) * parseInt(input.value));
+            });
+
+            formData.append('prod_id', JSON.stringify(productIds));
+            formData.append('quantity', JSON.stringify(quantities));
+            formData.append('price', JSON.stringify(prices));
+
+            fetch('cart.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(() => {
+                saveBtn.textContent = 'Ruaj Ndryshimet';
+                saveBtn.disabled = false;
+                
+                // Show success message
+                saveMessage.classList.add('show');
+                
+                // Hide message after 3 seconds
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(() => {
+                    saveMessage.classList.remove('show');
+                }, 3000);
+
+                // Update cart summary
+                updateCartSummary();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                saveBtn.textContent = 'Ruaj Ndryshimet';
+                saveBtn.disabled = false;
             });
         });
 

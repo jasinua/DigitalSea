@@ -1,0 +1,901 @@
+{
+    "products": [
+        {
+            "product_id": 19,
+            "name": "MacBook Pro 14\"",
+            "description": "Apple MacBook Pro with M2 Pro chip, 14-inch Liquid Retina XDR display.",
+            "type": "computer",
+            "details": {
+                "RAM": 16,
+                "SSD": 512,
+                "Graphics card": "M2 Pro 16-core GPU",
+                "Processor": "Apple M2 Pro",
+                "OS": "macOS Ventura"
+            },
+            "price": 1999.00,
+            "image_url": {
+                "main_image": "https://www.dxomark.com/wp-content/uploads/medias/post-151153/Apple-MacBook-Pro-14_-2023_featured-image-packshot-review-Recovered-Recovered.jpg",
+                "1": "https://www.dxomark.com/wp-content/uploads/medias/post-151153/Apple-MacBook-Pro-14_-2023_featured-image-packshot-review-Recovered-Recovered.jpg",
+                "2": "https://www.dxomark.com/wp-content/uploads/medias/post-151153/Apple-MacBook-Pro-14_-2023_featured-image-packshot-review-Recovered-Recovered.jpg"
+            },
+            "stock": 45,
+            "api_source": "External"
+        },
+        {
+            "product_id": 20,
+            "name": "Dell XPS 15",
+            "description": "Dell XPS 15 laptop with 15.6\" 4K UHD+ touch display and Intel Core i7 processor.",
+            "type": "computer",
+            "details": {
+                "RAM": 16,
+                "SSD": 1,
+                "Graphics card": "NVIDIA GeForce RTX 3050 Ti",
+                "Processor": "Intel Core i7-11800H",
+                "OS": "Windows 11 Pro"
+            },
+            "price": 1799.99,
+            "image_url": {
+                "main_image": "https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc3/Dell-XPS-15-OLED-laptop.jpg",
+                "1": "https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc3/Dell-XPS-15-OLED-laptop.jpg",
+                "2": "https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc3/Dell-XPS-15-OLED-laptop.jpg"
+            },
+            "stock": 30,
+            "api_source": "External"
+        },
+        {
+            "product_id": 21,
+            "name": "iPhone 15 Pro",
+            "description": "Apple iPhone 15 Pro with A17 Pro chip, Super Retina XDR display, and triple-camera system.",
+            "type": "phone",
+            "details": {
+                "RAM": 8,
+                "Storage": 256,
+                "Screen": "6.1 inch OLED",
+                "Camera": "48MP Main + 12MP Ultra Wide + 12MP Telephoto",
+                "Battery": "3274 mAh"
+            },
+            "price": 999.00,
+            "image_url": {
+                "main_image": "https://gadgets.fzfdevelopers.co.zw/wp-content/uploads/2024/11/W57NO_SQ1_0000000003_NATURAL_SLf.jpg",
+                "1": "https://gadgets.fzfdevelopers.co.zw/wp-content/uploads/2024/11/W57NO_SQ1_0000000003_NATURAL_SLf.jpg",
+                "2": "https://gadgets.fzfdevelopers.co.zw/wp-content/uploads/2024/11/W57NO_SQ1_0000000003_NATURAL_SLf.jpg"
+            },
+            "stock": 120,
+            "api_source": "External"
+        },
+        {
+            "product_id": 22,
+            "name": "Samsung Galaxy S23 Ultra",
+            "description": "Samsung Galaxy S23 Ultra with 200MP camera and S Pen support.",
+            "type": "phone",
+            "details": {
+                "RAM": 12,
+                "Storage": 512,
+                "Screen": "6.8 inch Dynamic AMOLED 2X",
+                "Camera": "200MP Wide + 12MP Ultra Wide + 10MP Telephoto x2",
+                "Battery": "5000 mAh"
+            },
+            "price": 1199.99,
+            "image_url": {
+                "main_image": "https://rptech.qa/cdn/shop/files/s23ultra_2.jpg?v=1719051930",
+                "1": "https://rptech.qa/cdn/shop/files/s23ultra_2.jpg?v=1719051930",
+                "2": "https://rptech.qa/cdn/shop/files/s23ultra_2.jpg?v=1719051930"
+            },
+            "stock": 85,
+            "api_source": "External"
+        },
+        {
+            "product_id": 23,
+            "name": "iPad Pro 12.9\"",
+            "description": "Apple iPad Pro with M2 chip and Liquid Retina XDR display.",
+            "type": "tablet",
+            "details": {
+                "RAM": 8,
+                "Storage": 256,
+                "Screen": "12.9 inch Liquid Retina XDR",
+                "Processor": "Apple M2",
+                "Battery": "Up to 10 hours"
+            },
+            "price": 1099.00,
+            "image_url": {
+                "main_image": "https://istore.co.na/cdn/shop/products/iPad_ProM2_WiFi_Cellular_Silver_Position3_cfbbc3dd-d920-4fd2-9004-72654d2a01ea_1200x.png?v=1667561862",
+                "1": "https://istore.co.na/cdn/shop/products/iPad_ProM2_WiFi_Cellular_Silver_Position3_cfbbc3dd-d920-4fd2-9004-72654d2a01ea_1200x.png?v=1667561862",
+                "2": "https://istore.co.na/cdn/shop/products/iPad_ProM2_WiFi_Cellular_Silver_Position3_cfbbc3dd-d920-4fd2-9004-72654d2a01ea_1200x.png?v=1667561862"
+            },
+            "stock": 60,
+            "api_source": "External"
+        },
+        {
+            "product_id": 24,
+            "name": "Sony WH-1000XM5",
+            "description": "Sony WH-1000XM5 wireless noise-canceling headphones with 30-hour battery life.",
+            "type": "accessory",
+            "details": {
+                "Battery": "30 hours",
+                "Bluetooth Version": "5.2",
+                "Weight": "250g",
+                "Noise Cancellation": "Yes"
+            },
+            "price": 399.99,
+            "image_url": {
+                "main_image": "https://m.media-amazon.com/images/I/51aXvjzcukL.jpg",
+                "1": "https://m.media-amazon.com/images/I/51aXvjzcukL.jpg",
+                "2": "https://m.media-amazon.com/images/I/51aXvjzcukL.jpg"
+            },
+            "stock": 90,
+            "api_source": "External"
+        },
+        {
+            "product_id": 25,
+            "name": "Logitech MX Master 3S",
+            "description": "Advanced wireless mouse with ultra-fast scrolling and ergonomic design.",
+            "type": "accessory",
+            "details": {
+                "Battery": "70 days",
+                "Connectivity": "Bluetooth/Unifying Receiver",
+                "DPI": "8000",
+                "Buttons": "7"
+            },
+            "price": 99.99,
+            "image_url": {
+                "main_image": "https://m.media-amazon.com/images/I/61xKiCADfpL.jpg",
+                "1": "https://m.media-amazon.com/images/I/61xKiCADfpL.jpg",
+                "2": "https://m.media-amazon.com/images/I/61xKiCADfpL.jpg"
+            },
+            "stock": 150,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 26,
+            "name": "Samsung 65\" QN90B Neo QLED TV",
+            "description": "Samsung 65-inch 4K Smart TV with Neo Quantum Processor and Object Tracking Sound.",
+            "type": "electronics",
+            "details": {
+                "Screen Size": "65 inches",
+                "Resolution": "3840x2160",
+                "Smart Features": "Samsung Tizen OS",
+                "HDMI Ports": "4",
+                "HDR": "Quantum HDR 32x"
+            },
+            "price": 1799.99,
+            "image_url": {
+                "main_image": "https://i5.walmartimages.com/asr/74c2eba8-8796-4ea8-b49d-24a4392c13bd.a4b550a9f006b1898c3811524b34d8eb.jpeg?odnHeight=768&odnWidth=768&odnBg=FFFFFF",
+                "1": "https://i5.walmartimages.com/asr/74c2eba8-8796-4ea8-b49d-24a4392c13bd.a4b550a9f006b1898c3811524b34d8eb.jpeg?odnHeight=768&odnWidth=768&odnBg=FFFFFF",
+                "2": "https://i5.walmartimages.com/asr/74c2eba8-8796-4ea8-b49d-24a4392c13bd.a4b550a9f006b1898c3811524b34d8eb.jpeg?odnHeight=768&odnWidth=768&odnBg=FFFFFF"
+            },
+            "stock": 25,
+            "api_source": "External"
+        },
+        {
+            "product_id": 27,
+            "name": "Apple Watch Series 9",
+            "description": "Apple Watch Series 9 with Always-On Retina display and advanced health features.",
+            "type": "wearable",
+            "details": {
+                "Battery": "18 hours",
+                "Water Resistance": "50m",
+                "Screen": "1.9 inch LTPO OLED",
+                "Heart Rate Monitor": true,
+                "ECG": true
+            },
+            "price": 399.00,
+            "image_url": {
+                "main_image": "https://shop.switch.com.my/cdn/shop/files/Apple_Watch_Series_9_LTE_45mm_Pink_Aluminum_Light_Pink_Sport_Band_PDP_Image_Position-1__GBEN.jpg?v=1717694988",
+                "1": "https://shop.switch.com.my/cdn/shop/files/Apple_Watch_Series_9_LTE_45mm_Pink_Aluminum_Light_Pink_Sport_Band_PDP_Image_Position-1__GBEN.jpg?v=1717694988",
+                "2": "https://shop.switch.com.my/cdn/shop/files/Apple_Watch_Series_9_LTE_45mm_Pink_Aluminum_Light_Pink_Sport_Band_PDP_Image_Position-1__GBEN.jpg?v=1717694988"
+            },
+            "stock": 110,
+            "api_source": "External"
+        },
+        {
+            "product_id": 28,
+            "name": "Bose QuietComfort 45",
+            "description": "Bose QuietComfort 45 wireless headphones with world-class noise cancellation.",
+            "type": "accessory",
+            "details": {
+                "Battery": "24 hours",
+                "Bluetooth Version": "5.1",
+                "Weight": "238g",
+                "Noise Cancellation": "Yes"
+            },
+            "price": 329.00,
+            "image_url": {
+                "main_image": "https://m.media-amazon.com/images/I/515b2YziSkL.jpg",
+                "1": "https://m.media-amazon.com/images/I/515b2YziSkL.jpg",
+                "2": "https://m.media-amazon.com/images/I/515b2YziSkL.jpg"
+            },
+            "stock": 75,
+            "api_source": "External"
+        },
+        {
+            "product_id": 29,
+            "name": "HP Spectre x360 14",
+            "description": "HP Spectre x360 14-inch 2-in-1 laptop with OLED display and Intel Evo platform.",
+            "type": "computer",
+            "details": {
+                "RAM": 16,
+                "SSD": 1,
+                "Graphics card": "Intel Iris Xe",
+                "Processor": "Intel Core i7-1260P",
+                "OS": "Windows 11 Home"
+            },
+            "price": 1499.99,
+            "image_url": {
+                "main_image": "https://aroz.com.bd/wp-content/uploads/2025/02/hp-spectre-x360-eu0036nia-laptop.jpg",
+                "1": "https://aroz.com.bd/wp-content/uploads/2025/02/hp-spectre-x360-eu0036nia-laptop.jpg",
+                "2": "https://aroz.com.bd/wp-content/uploads/2025/02/hp-spectre-x360-eu0036nia-laptop.jpg"
+            },
+            "stock": 40,
+            "api_source": "External"
+        },
+        {
+            "product_id": 30,
+            "name": "Google Pixel 7 Pro",
+            "description": "Google Pixel 7 Pro with Tensor G2 chip and advanced computational photography.",
+            "type": "phone",
+            "details": {
+                "RAM": 12,
+                "Storage": 256,
+                "Screen": "6.7 inch LTPO OLED",
+                "Camera": "50MP Wide + 12MP Ultra Wide + 48MP Telephoto",
+                "Battery": "5000 mAh"
+            },
+            "price": 899.00,
+            "image_url": {
+                "main_image": "https://m.media-amazon.com/images/I/61CB-MZkbYL.jpg",
+                "1": "https://m.media-amazon.com/images/I/61CB-MZkbYL.jpg",
+                "2": "https://m.media-amazon.com/images/I/61CB-MZkbYL.jpg"
+            },
+            "stock": 95,
+            "api_source": "External"
+        },
+        {
+            "product_id": 31,
+            "name": "Microsoft Surface Pro 9",
+            "description": "Microsoft Surface Pro 9 with 13-inch PixelSense Flow touch display.",
+            "type": "computer",
+            "details": {
+                "RAM": 16,
+                "SSD": 256,
+                "Graphics card": "Intel Iris Xe",
+                "Processor": "Intel Core i5-1235U",
+                "OS": "Windows 11 Pro"
+            },
+            "price": 1299.99,
+            "image_url": {
+                "main_image": "https://store974.com/cdn/shop/products/NewProject-2023-07-30T162524.616_8f2f656e-5f7c-4070-b0f6-9e7a717a177c-605273.jpg?v=1690778812",
+                "1": "https://store974.com/cdn/shop/products/NewProject-2023-07-30T162524.616_8f2f656e-5f7c-4070-b0f6-9e7a717a177c-605273.jpg?v=1690778812",
+                "2": "https://store974.com/cdn/shop/products/NewProject-2023-07-30T162524.616_8f2f656e-5f7c-4070-b0f6-9e7a717a177c-605273.jpg?v=1690778812"
+            },
+            "stock": 35,
+            "api_source": "External"
+        },
+        {
+            "product_id": 32,
+            "name": "Asus ROG Zephyrus G14",
+            "description": "Asus ROG Zephyrus G14 gaming laptop with AMD Ryzen 9 and NVIDIA RTX 3060.",
+            "type": "computer",
+            "details": {
+                "RAM": 16,
+                "SSD": 1,
+                "Graphics card": "NVIDIA RTX 3060",
+                "Processor": "AMD Ryzen 9 6900HS",
+                "OS": "Windows 11 Home"
+            },
+            "price": 1599.99,
+            "image_url": {
+                "main_image": "https://www.laptopsdirect.co.uk/Images/GA401IU-HE017T_2_supersize.jpg?v=1",
+                "1": "https://www.laptopsdirect.co.uk/Images/GA401IU-HE017T_2_supersize.jpg?v=1",
+                "2": "https://www.laptopsdirect.co.uk/Images/GA401IU-HE017T_2_supersize.jpg?v=1"
+            },
+            "stock": 28,
+            "api_source": "External"
+        },
+        {
+            "product_id": 33,
+            "name": "OnePlus 11 5G",
+            "description": "OnePlus 11 5G with Hasselblad camera and Snapdragon 8 Gen 2.",
+            "type": "phone",
+            "details": {
+                "RAM": 16,
+                "Storage": 256,
+                "Screen": "6.7 inch LTPO3 AMOLED",
+                "Camera": "50MP Main + 48MP Ultra Wide + 32MP Telephoto",
+                "Battery": "5000 mAh"
+            },
+            "price": 799.00,
+            "image_url": {
+                "main_image": "https://www.clove-technology.com/cdn/shop/products/oneplus-11-5g-eternal-green-back_1200x.jpg?v=1675948370",
+                "1": "https://www.clove-technology.com/cdn/shop/products/oneplus-11-5g-eternal-green-back_1200x.jpg?v=1675948370",
+                "2": "https://www.clove-technology.com/cdn/shop/products/oneplus-11-5g-eternal-green-back_1200x.jpg?v=1675948370"
+            },
+            "stock": 65,
+            "api_source": "External"
+        },
+        {
+            "product_id": 34,
+            "name": "LG UltraFine 32UN880-B",
+            "description": "LG 32-inch 4K UHD monitor with ergonomic stand and USB-C connectivity.",
+            "type": "monitor",
+            "details": {
+                "Screen Size": "32 inches",
+                "Resolution": "3840x2160",
+                "Panel Type": "IPS",
+                "Refresh Rate": "60Hz",
+                "Ports": "USB-C, HDMI, DisplayPort"
+            },
+            "price": 699.99,
+            "image_url": {
+                "main_image": "https://www.lg.com/content/dam/channel/wcms/de/images/32un880k-b/gallery/ultrafine-uhd-4k-5k-32un880k-2024-gallery-01-2010.jpg/_jcr_content/renditions/thum-1600x1062.jpg",
+                "1": "https://www.lg.com/content/dam/channel/wcms/de/images/32un880k-b/gallery/ultrafine-uhd-4k-5k-32un880k-2024-gallery-01-2010.jpg/_jcr_content/renditions/thum-1600x1062.jpg",
+                "2": "https://www.lg.com/content/dam/channel/wcms/de/images/32un880k-b/gallery/ultrafine-uhd-4k-5k-32un880k-2024-gallery-01-2010.jpg/_jcr_content/renditions/thum-1600x1062.jpg"
+            },
+            "stock": 42,
+            "api_source": "External"
+        },
+        {
+            "product_id": 35,
+            "name": "Samsung Galaxy Tab S9 Ultra",
+            "description": "Samsung Galaxy Tab S9 Ultra with 14.6-inch Dynamic AMOLED 2X display and S Pen included.",
+            "type": "tablet",
+            "details": {
+                "RAM": 12,
+                "Storage": 512,
+                "Screen": "14.6 inch Dynamic AMOLED 2X",
+                "Processor": "Snapdragon 8 Gen 2",
+                "Battery": "11200 mAh"
+            },
+            "price": 1199.99,
+            "image_url": {
+                "main_image": "https://cellucity.co.za/wp-content/uploads/2023/08/6185-Product-Images-August-2023-National-Samsung-Galaxy-Tab-S9-Ultra-Grey.jpg",
+                "1": "https://cellucity.co.za/wp-content/uploads/2023/08/6185-Product-Images-August-2023-National-Samsung-Galaxy-Tab-S9-Ultra-Grey.jpg",
+                "2": "https://cellucity.co.za/wp-content/uploads/2023/08/6185-Product-Images-August-2023-National-Samsung-Galaxy-Tab-S9-Ultra-Grey.jpg"
+            },
+            "stock": 38,
+            "api_source": "External"
+        },
+        {
+            "product_id": 36,
+            "name": "Dyson V15 Detect Absolute",
+            "description": "Dyson V15 Detect cordless vacuum with laser dust detection and HEPA filtration.",
+            "type": "appliance",
+            "details": {
+                "Battery": "60 minutes",
+                "Filtration": "Whole-machine HEPA",
+                "Dust Bin Capacity": "0.2 gallons",
+                "Weight": "6.8 lbs"
+            },
+            "price": 699.99,
+            "image_url": {
+                "main_image": "https://atlas-content-cdn.pixelsquid.com/assets_v2/277/2772173882767971895/jpeg-600/G03.jpg?modifiedAt=1715414400000",
+                "1": "https://atlas-content-cdn.pixelsquid.com/assets_v2/277/2772173882767971895/jpeg-600/G03.jpg?modifiedAt=1715414400000",
+                "2": "https://atlas-content-cdn.pixelsquid.com/assets_v2/277/2772173882767971895/jpeg-600/G03.jpg?modifiedAt=1715414400000"
+            },
+            "stock": 45,
+            "api_source": "External"
+        },
+        {
+            "product_id": 37,
+            "name": "Razer Blade 15",
+            "description": "Razer Blade 15 gaming laptop with NVIDIA GeForce RTX 3070 Ti and QHD 240Hz display.",
+            "type": "computer",
+            "details": {
+                "RAM": 16,
+                "SSD": 1,
+                "Graphics card": "NVIDIA RTX 3070 Ti",
+                "Processor": "Intel Core i7-12800H",
+                "OS": "Windows 11 Home"
+            },
+            "price": 2499.99,
+            "image_url": {
+                "main_image": "https://m.media-amazon.com/images/I/71kcJxMggRL.jpg",
+                "1": "https://m.media-amazon.com/images/I/71kcJxMggRL.jpg",
+                "2": "https://m.media-amazon.com/images/I/71kcJxMggRL.jpg"
+            },
+            "stock": 22,
+            "api_source": "External"
+        },
+        {
+            "product_id": 38,
+            "name": "Sony PlayStation 5",
+            "description": "Sony PlayStation 5 console with Ultra HD Blu-ray disc drive.",
+            "type": "gaming",
+            "details": {
+                "Storage": "825GB SSD",
+                "GPU": "AMD RDNA 2",
+                "Resolution": "Up to 8K",
+                "Frame Rate": "Up to 120fps"
+            },
+            "price": 499.99,
+            "image_url": {
+                "main_image": "https://www.4gadgets.co.uk/media/catalog/product/cache/58cbd55e1538e34d244f25b251d0ce54/t/u/tumbnail_f16e2a5c-e903-4bf6-b943-329624e34139.jpg",
+                "1": "https://www.4gadgets.co.uk/media/catalog/product/cache/58cbd55e1538e34d244f25b251d0ce54/t/u/tumbnail_f16e2a5c-e903-4bf6-b943-329624e34139.jpg",
+                "2": "https://www.4gadgets.co.uk/media/catalog/product/cache/58cbd55e1538e34d244f25b251d0ce54/t/u/tumbnail_f16e2a5c-e903-4bf6-b943-329624e34139.jpg"
+            },
+            "stock": 18,
+            "api_source": "External"
+        },
+        {
+            "product_id": 39,
+            "name": "Xbox Series X",
+            "description": "Microsoft Xbox Series X 1TB console with 12 teraflops of GPU performance.",
+            "type": "gaming",
+            "details": {
+                "Storage": "1TB SSD",
+                "GPU": "AMD RDNA 2",
+                "Resolution": "Up to 8K",
+                "Frame Rate": "Up to 120fps"
+            },
+            "price": 499.99,
+            "image_url": {
+                "main_image": "https://www.maxgaming.no/bilder/artiklar/zoom/17600_1.jpg?m=1663147719",
+                "1": "https://www.maxgaming.no/bilder/artiklar/zoom/17600_1.jpg?m=1663147719",
+                "2": "https://www.maxgaming.no/bilder/artiklar/zoom/17600_1.jpg?m=1663147719"
+            },
+            "stock": 25,
+            "api_source": "External"
+        },
+        {
+            "product_id": 40,
+            "name": "Nintendo Switch OLED",
+            "description": "Nintendo Switch OLED model with 7-inch OLED screen and enhanced audio.",
+            "type": "gaming",
+            "details": {
+                "Storage": "64GB",
+                "Screen": "7-inch OLED",
+                "Resolution": "720p handheld/1080p docked",
+                "Battery Life": "4.5-9 hours"
+            },
+            "price": 349.99,
+            "image_url": {
+                "main_image": "https://cdn.shopify.com/s/files/1/0733/5867/2170/files/e5582986-7a8c-4055-9dd5-2f27dbd59338.jpg?v=1715367736",
+                "1": "https://cdn.shopify.com/s/files/1/0733/5867/2170/files/e5582986-7a8c-4055-9dd5-2f27dbd59338.jpg?v=1715367736",
+                "2": "https://cdn.shopify.com/s/files/1/0733/5867/2170/files/e5582986-7a8c-4055-9dd5-2f27dbd59338.jpg?v=1715367736"
+            },
+            "stock": 40,
+            "api_source": "External"
+        },
+        {
+            "product_id": 41,
+            "name": "Apple AirPods Pro (2nd Gen)",
+            "description": "Apple AirPods Pro with Active Noise Cancellation and Adaptive Transparency.",
+            "type": "accessory",
+            "details": {
+                "Battery": "6 hours (ANC on)",
+                "Charging": "MagSafe/Wireless",
+                "Water Resistance": "IPX4",
+                "Connectivity": "Bluetooth 5.3"
+            },
+            "price": 249.00,
+            "image_url": {
+                "main_image": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+                "1": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+                "2": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836"
+            },
+            "stock": 150,
+            "api_source": "External"
+        },
+        {
+            "product_id": 42,
+            "name": "Samsung Galaxy Buds2 Pro",
+            "description": "Samsung Galaxy Buds2 Pro with Intelligent ANC and 24-bit Hi-Fi sound.",
+            "type": "accessory",
+            "details": {
+                "Battery": "5 hours (ANC on)",
+                "Charging": "Wireless",
+                "Water Resistance": "IPX7",
+                "Connectivity": "Bluetooth 5.3"
+            },
+            "price": 229.99,
+            "image_url": {
+                "main_image": "https://www.courtsmammouth.mu/clearancecentre/69048-large_default/samsung-galaxy-buds-pro-2-purple.jpg",
+                "1": "https://www.courtsmammouth.mu/clearancecentre/69048-large_default/samsung-galaxy-buds-pro-2-purple.jpg",
+                "2": "https://www.courtsmammouth.mu/clearancecentre/69048-large_default/samsung-galaxy-buds-pro-2-purple.jpg"
+            },
+            "stock": 95,
+            "api_source": "External"
+        },
+        {
+            "product_id": 43,
+            "name": "Meta Quest 3",
+            "description": "Meta Quest 3 VR headset with pancake lenses and mixed reality capabilities.",
+            "type": "gaming",
+            "details": {
+                "Storage": "128GB",
+                "Resolution": "2064x2208 per eye",
+                "Refresh Rate": "90Hz",
+                "Processor": "Snapdragon XR2 Gen 2"
+            },
+            "price": 499.99,
+            "image_url": {
+                "main_image": "https://m.media-amazon.com/images/I/61y8eZ9MgOL.jpg",
+                "1": "https://m.media-amazon.com/images/I/61y8eZ9MgOL.jpg",
+                "2": "https://m.media-amazon.com/images/I/61y8eZ9MgOL.jpg"
+            },
+            "stock": 35,
+            "api_source": "External"
+        },
+        {
+            "product_id": 44,
+            "name": "DJI Mini 3 Pro",
+            "description": "DJI Mini 3 Pro drone with 4K/60fps HDR video and 48MP photos.",
+            "type": "electronics",
+            "details": {
+                "Weight": "Under 249g",
+                "Camera": "1/1.3-inch CMOS",
+                "Max Flight Time": "34 minutes",
+                "Max Transmission Distance": "12km"
+            },
+            "price": 759.00,
+            "image_url": {
+                "main_image": "https://www.flyingeye.fr/wp-content/uploads/2022/05/DJI-Mini-3-Pro.jpg",
+                "1": "https://www.flyingeye.fr/wp-content/uploads/2022/05/DJI-Mini-3-Pro.jpg",
+                "2": "https://www.flyingeye.fr/wp-content/uploads/2022/05/DJI-Mini-3-Pro.jpg"
+            },
+            "stock": 28,
+            "api_source": "External"
+        },
+        {
+            "product_id": 45,
+            "name": "GoPro HERO12 Black",
+            "description": "GoPro HERO12 Black action camera with 5.3K60 video and HyperSmooth 6.0 stabilization.",
+            "type": "electronics",
+            "details": {
+                "Sensor": "1/1.9-inch",
+                "Video": "5.3K60/4K120",
+                "Waterproof": "10m without housing",
+                "Battery": "Enduro battery (longer life)"
+            },
+            "price": 399.99,
+            "image_url": {
+                "main_image": "https://www.glazerscamera.com/cdn/shop/files/96022_Hero_01.png?v=1694024268",
+                "1": "https://www.glazerscamera.com/cdn/shop/files/96022_Hero_01.png?v=1694024268",
+                "2": "https://www.glazerscamera.com/cdn/shop/files/96022_Hero_01.png?v=1694024268"
+            },
+            "stock": 50,
+            "api_source": "External"
+        },
+        {
+            "product_id": 46,
+            "name": "Amazon Echo Show 15",
+            "description": "Amazon Echo Show 15 with 15.6-inch Full HD display and Alexa.",
+            "type": "electronics",
+            "details": {
+                "Screen": "15.6-inch 1080p",
+                "Camera": "5MP",
+                "Storage": "16GB",
+                "Processor": "MediaTek MT8183"
+            },
+            "price": 249.99,
+            "image_url": {
+                "main_image": "https://smartify.pt/cdn/shop/products/Casainteligente-smarthome-domotica-smartify-amazonalexa-echoshow153.png?v=1653664478",
+                "1": "https://smartify.pt/cdn/shop/products/Casainteligente-smarthome-domotica-smartify-amazonalexa-echoshow153.png?v=1653664478",
+                "2": "https://smartify.pt/cdn/shop/products/Casainteligente-smarthome-domotica-smartify-amazonalexa-echoshow153.png?v=1653664478"
+            },
+            "stock": 65,
+            "api_source": "External"
+        },
+        {
+            "product_id": 47,
+            "name": "Google Nest Hub (2nd Gen)",
+            "description": "Google Nest Hub with 7-inch touchscreen and sleep sensing.",
+            "type": "electronics",
+            "details": {
+                "Screen": "7-inch",
+                "Audio": "Full-range speaker",
+                "Microphone": "3 far-field mics",
+                "Processor": "ARM Cortex-A53"
+            },
+            "price": 99.99,
+            "image_url": {
+                "main_image": "https://mobileimages.lowes.com/productimages/13259517-9399-4133-abd0-f1737e245951/42710194.jpg",
+                "1": "https://mobileimages.lowes.com/productimages/13259517-9399-4133-abd0-f1737e245951/42710194.jpg",
+                "2": "https://mobileimages.lowes.com/productimages/13259517-9399-4133-abd0-f1737e245951/42710194.jpg"
+            },
+            "stock": 120,
+            "api_source": "External"
+        },
+        {
+            "product_id": 48,
+            "name": "Fitbit Charge 6",
+            "description": "Fitbit Charge 6 fitness tracker with built-in GPS and 7-day battery life.",
+            "type": "wearable",
+            "details": {
+                "Battery": "Up to 7 days",
+                "Water Resistance": "50m",
+                "Sensors": "Heart rate, SpO2, ECG",
+                "Display": "AMOLED"
+            },
+            "price": 159.95,
+            "image_url": {
+                "main_image": "https://m.media-amazon.com/images/I/61wn2jfhBkL.jpg",
+                "1": "https://m.media-amazon.com/images/I/61wn2jfhBkL.jpg",
+                "2": "https://m.media-amazon.com/images/I/61wn2jfhBkL.jpg"
+            },
+            "stock": 85,
+            "api_source": "External"
+        },
+        {
+            "product_id": 49,
+            "name": "Garmin Venu 3",
+            "description": "Garmin Venu 3 smartwatch with AMOLED display and advanced health monitoring.",
+            "type": "wearable",
+            "details": {
+                "Battery": "Up to 14 days",
+                "Water Resistance": "5ATM",
+                "Sensors": "Heart rate, Pulse Ox, ECG",
+                "Display": "1.4-inch AMOLED"
+            },
+            "price": 449.99,
+            "image_url": {
+                "main_image": "https://assets.kotsovolos.gr/product/291172-b.jpg",
+                "1": "https://assets.kotsovolos.gr/product/291172-b.jpg",
+                "2": "https://assets.kotsovolos.gr/product/291172-b.jpg"
+            },
+            "stock": 45,
+            "api_source": "External"
+        },
+        {
+            "product_id": 50,
+            "name": "Withings ScanWatch Horizon",
+            "description": "Withings hybrid smartwatch with ECG and SpO2 monitoring.",
+            "type": "wearable",
+            "details": {
+                "Battery": "Up to 30 days",
+                "Water Resistance": "10ATM",
+                "Sensors": "ECG, SpO2, Heart rate",
+                "Display": "Analog with sub-dial"
+            },
+            "price": 499.95,
+            "image_url": {
+                "main_image": "https://cigalacycling.be/cdn/shop/products/1._sw_horizon_green_1400x.png?v=1680269827",
+                "1": "https://cigalacycling.be/cdn/shop/products/1._sw_horizon_green_1400x.png?v=1680269827",
+                "2": "https://cigalacycling.be/cdn/shop/products/1._sw_horizon_green_1400x.png?v=1680269827"
+            },
+            "stock": 30,
+            "api_source": "External"
+        },
+        {
+            "product_id": 51,
+            "name": "Anker 737 Power Bank",
+            "description": "Anker 737 PowerCore 24K 24000mAh portable charger with 140W output.",
+            "type": "accessory",
+            "details": {
+                "Capacity": "24000mAh",
+                "Output": "140W max",
+                "Ports": "2 USB-C, 1 USB-A",
+                "Weight": "1.1 lbs"
+            },
+            "price": 179.99,
+            "image_url": {
+                "main_image": "https://products.mpowerpromo.com/HIRSCH/ank-pb1289bk/ANK-PB1289BK/1000_999/ank-pb1289-bk.jpg",
+                "1": "https://products.mpowerpromo.com/HIRSCH/ank-pb1289bk/ANK-PB1289BK/1000_999/ank-pb1289-bk.jpg",
+                "2": "https://products.mpowerpromo.com/HIRSCH/ank-pb1289bk/ANK-PB1289BK/1000_999/ank-pb1289-bk.jpg"
+            },
+            "stock": 60,
+            "api_source": "External"
+        },
+        {
+            "product_id": 52,
+            "name": "Belkin BoostCharge Pro 3-in-1",
+            "description": "Belkin 3-in-1 wireless charger for iPhone, Apple Watch, and AirPods.",
+            "type": "accessory",
+            "details": {
+                "Output": "15W max",
+                "Compatibility": "MagSafe, Apple Watch, AirPods",
+                "Cable Length": "1.5m",
+                "Weight": "1.1 lbs"
+            },
+            "price": 149.99,
+            "image_url": {
+                "main_image": "https://www.belkin.com/dw/image/v2/BGBH_PRD/on/demandware.static/-/Sites-master-product-catalog-blk/default/dw7264f368/images/hi-res/7/135cfdc88f5c66a4_WIZ009-BLK_Hero_WDevice_WEB.jpg?sfrm=png",
+                "1": "https://www.belkin.com/dw/image/v2/BGBH_PRD/on/demandware.static/-/Sites-master-product-catalog-blk/default/dw7264f368/images/hi-res/7/135cfdc88f5c66a4_WIZ009-BLK_Hero_WDevice_WEB.jpg?sfrm=png",
+                "2": "https://www.belkin.com/dw/image/v2/BGBH_PRD/on/demandware.static/-/Sites-master-product-catalog-blk/default/dw7264f368/images/hi-res/7/135cfdc88f5c66a4_WIZ009-BLK_Hero_WDevice_WEB.jpg?sfrm=png"
+            },
+            "stock": 75,
+            "api_source": "External"
+        },
+        {
+            "product_id": 53,
+            "name": "Samsung T7 Shield 2TB",
+            "description": "Samsung T7 Shield portable SSD with rugged, water-resistant design.",
+            "type": "accessory",
+            "details": {
+                "Capacity": "2TB",
+                "Speed": "1050MB/s read",
+                "Durability": "IP65 rated",
+                "Interface": "USB 3.2 Gen 2"
+            },
+            "price": 159.99,
+            "image_url": {
+                "main_image": "https://tonercorp.co.za/wp-content/uploads/2022/08/Hikvision-8.jpg",
+                "1": "https://tonercorp.co.za/wp-content/uploads/2022/08/Hikvision-8.jpg",
+                "2": "https://tonercorp.co.za/wp-content/uploads/2022/08/Hikvision-8.jpg"
+            },
+            "stock": 90,
+            "api_source": "External"
+        },
+        {
+            "product_id": 54,
+            "name": "Logitech MX Keys Mini",
+            "description": "Logitech MX Keys Mini wireless keyboard with smart backlighting.",
+            "type": "accessory",
+            "details": {
+                "Connectivity": "Bluetooth/Unifying",
+                "Battery": "Up to 10 days",
+                "Backlight": "Yes",
+                "Layout": "75% compact"
+            },
+            "price": 99.99,
+            "image_url": {
+                "main_image": "https://www.av-cables.dk/cdn-cgi/image/width=768,format=auto/globalassets/productimages/5605ffc9-c432-408d-b21b-f9bce408d1c6.jpg?ref=D1FEBB67B4",
+                "1": "https://www.av-cables.dk/cdn-cgi/image/width=768,format=auto/globalassets/productimages/5605ffc9-c432-408d-b21b-f9bce408d1c6.jpg?ref=D1FEBB67B4",
+                "2": "https://www.av-cables.dk/cdn-cgi/image/width=768,format=auto/globalassets/productimages/5605ffc9-c432-408d-b21b-f9bce408d1c6.jpg?ref=D1FEBB67B4"
+            },
+            "stock": 110,
+            "api_source": "External"
+        },
+        {
+            "product_id": 55,
+            "name": "Elgato Stream Deck MK.2",
+            "description": "Elgato Stream Deck with 15 customizable LCD keys for content creators.",
+            "type": "accessory",
+            "details": {
+                "Keys": "15 LCD buttons",
+                "Software": "Stream Deck software",
+                "Compatibility": "Windows/macOS",
+                "Connection": "USB"
+            },
+            "price": 149.99,
+            "image_url": {
+                "main_image": "https://m.media-amazon.com/images/I/81xN-mI5KBL.jpg",
+                "1": "https://m.media-amazon.com/images/I/81xN-mI5KBL.jpg",
+                "2": "https://m.media-amazon.com/images/I/81xN-mI5KBL.jpg"
+            },
+            "stock": 45,
+            "api_source": "External"
+        },
+        {
+            "product_id": 56,
+            "name": "Blue Yeti X",
+            "description": "Blue Yeti X USB microphone for streaming, podcasting, and recording.",
+            "type": "accessory",
+            "details": {
+                "Patterns": "4 polar patterns",
+                "Resolution": "24-bit/48kHz",
+                "LED Meter": "11-segment",
+                "Connection": "USB"
+            },
+            "price": 169.99,
+            "image_url": {
+                "main_image": "https://musicredone.com/cdn/shop/products/32_aaa9362a-be3b-4d5f-8e33-613cddc5d70f_500x.jpg?v=1606489340",
+                "1": "https://musicredone.com/cdn/shop/products/32_aaa9362a-be3b-4d5f-8e33-613cddc5d70f_500x.jpg?v=1606489340",
+                "2": "https://musicredone.com/cdn/shop/products/32_aaa9362a-be3b-4d5f-8e33-613cddc5d70f_500x.jpg?v=1606489340"
+            },
+            "stock": 55,
+            "api_source": "External"
+        },
+        {
+            "product_id": 57,
+            "name": "Nanoleaf Lines",
+            "description": "Nanoleaf Lines smart LED wall lighting system with music sync.",
+            "type": "electronics",
+            "details": {
+                "Length": "12.6-inch segments",
+                "Colors": "16 million",
+                "Control": "App/voice",
+                "Connectivity": "Wi-Fi/Bluetooth"
+            },
+            "price": 199.99,
+            "image_url": {
+                "main_image": "https://cdn.mwave.com.au/images/400/nanoleaf_lines_squared_starter_kit_4_pack_ac56398_76254.jpg",
+                "1": "https://cdn.mwave.com.au/images/400/nanoleaf_lines_squared_starter_kit_4_pack_ac56398_76254.jpg",
+                "2": "https://cdn.mwave.com.au/images/400/nanoleaf_lines_squared_starter_kit_4_pack_ac56398_76254.jpg"
+            },
+            "stock": 35,
+            "api_source": "External"
+        },
+        {
+            "product_id": 58,
+            "name": "Philips Hue Gradient Lightstrip",
+            "description": "Philips Hue 75-inch gradient lightstrip for immersive TV lighting.",
+            "type": "electronics",
+            "details": {
+                "Length": "75 inches",
+                "Colors": "16 million",
+                "Control": "Hue app/voice",
+                "Requires": "Hue Bridge"
+            },
+            "price": 199.99,
+            "image_url": {
+                "main_image": "https://www.jbhifi.com.au/cdn/shop/products/535453-Product-0-I-637946024578648305.jpg?v=1658969753",
+                "1": "https://www.jbhifi.com.au/cdn/shop/products/535453-Product-0-I-637946024578648305.jpg?v=1658969753",
+                "2": "https://www.jbhifi.com.au/cdn/shop/products/535453-Product-0-I-637946024578648305.jpg?v=1658969753"
+            },
+            "stock": 40,
+            "api_source": "External"
+        },
+        {
+            "product_id": 59,
+            "name": "Ring Video Doorbell Pro 2",
+            "description": "Ring Video Doorbell Pro 2 with 3D motion detection and 1536p HD video.",
+            "type": "electronics",
+            "details": {
+                "Resolution": "1536p HD",
+                "Field of View": "150° horizontal",
+                "Connectivity": "Wired/Wi-Fi",
+                "Features": "3D motion detection"
+            },
+            "price": 249.99,
+            "image_url": {
+                "main_image": "https://images.ctfassets.net/a3peezndovsu/variant-31961428492377/e8d3f08c98ee484eef46c383b85cb785/variant-31961428492377.jpg",
+                "1": "https://images.ctfassets.net/a3peezndovsu/variant-31961428492377/e8d3f08c98ee484eef46c383b85cb785/variant-31961428492377.jpg",
+                "2": "https://images.ctfassets.net/a3peezndovsu/variant-31961428492377/e8d3f08c98ee484eef46c383b85cb785/variant-31961428492377.jpg"
+            },
+            "stock": 65,
+            "api_source": "External"
+        },
+        {
+            "product_id": 60,
+            "name": "Arlo Pro 4",
+            "description": "Arlo Pro 4 wireless security camera with 2K HDR and color night vision.",
+            "type": "electronics",
+            "details": {
+                "Resolution": "2K HDR",
+                "Field of View": "160° diagonal",
+                "Power": "Rechargeable battery",
+                "Features": "Color night vision"
+            },
+            "price": 199.99,
+            "image_url": {
+                "main_image": "https://i.ebayimg.com/images/g/~iYAAOSwXS1hshez/s-l640.jpg",
+                "1": "https://i.ebayimg.com/images/g/~iYAAOSwXS1hshez/s-l640.jpg",
+                "2": "https://i.ebayimg.com/images/g/~iYAAOSwXS1hshez/s-l640.jpg"
+            },
+            "stock": 50,
+            "api_source": "External"
+        },
+        {
+            "product_id": 61,
+            "name": "Hello Kitty Wireless Headset",
+            "description": "Adorable Hello Kitty-themed wireless headset with crystal-clear audio and soft ear cushions. Perfect for gaming, music, and calls with a touch of kawaii style!",
+            "type": "accessory",
+            "details": {
+                "Connection": "Bluetooth 5.0",
+                "Battery Life": "20 hours",
+                "Microphone": "Built-in, noise-canceling",
+                "Ear Cushions": "Soft memory foam",
+                "Color": "Pink & white",
+                "Special Feature": "LED Hello Kitty bow lights up"
+            },
+            "price": 59.99,
+            "image_url": {
+                "main_image": "https://media.gamestop.com/i/gamestop/11184012",
+                "1": "https://media.gamestop.com/i/gamestop/11184012",
+                "2": "https://media.gamestop.com/i/gamestop/11184012"
+            },
+            "stock": 100,
+            "api_source": "External"
+        },{
+            "product_id": 62,
+            "name": "WALL-E Eco Slave Robot",
+            "description": "A charming, solar-powered robot companion designed for waste collection, recycling assistance, and adorable companionship. Inspired by the beloved WALL-E, with expressive eyes and a friendly personality!",
+            "type": "electronics",
+            "details": {
+                "Power": "Solar panel + rechargeable battery (72hr runtime)",
+                "Sensors": "AI vision, tactile grippers, pollution detector",
+                "Mobility": "All-terrain treads",
+                "Personality": "Expressive LED eyes, playful sound effects",
+                "Ethical Mode": "No forced labor—only happy cleaning!"
+            },
+            "price": 899.99,
+            "image_url": {
+                "main_image": "https://www.hiig.de/wp-content/uploads/2016/04/Wall-e.jpg",
+                "1": "https://www.hiig.de/wp-content/uploads/2016/04/Wall-e.jpg",
+                "2": "https://www.hiig.de/wp-content/uploads/2016/04/Wall-e.jpg"
+            },
+            "stock": 50,
+            "api_source": "External"
+        }
+    ]
+}

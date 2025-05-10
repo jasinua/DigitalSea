@@ -2,7 +2,7 @@
 // KJO FAQE ESHTE PER ME SHTU TE DHENA NE PRODUCTS.JSON
 // DERI SA BOJNA NAJ ZGJIDHJE TJETER
 
-$file = '../controller/products.json';
+$file = '../controller/productsPlus.json';
 
 // Handle form submission
 if (isset($_POST['submit'])) {

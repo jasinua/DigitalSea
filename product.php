@@ -26,91 +26,111 @@ if (isset($_POST['addToCart'])) {
         justify-content: center;
         align-items: center;
         width: 100%;
-        height: calc(100vh - 45px);
+        min-height: calc(100vh - 120px);
         background-color: var(--ivory-color);
-        margin: auto;
+        padding: 15px;
     }
 
     #prodContainer {
-        margin: 20px;
-        width: 1200px;
-        height: 600px;
+        margin: 0;
+        width: 1400px;
+        min-height: 450px;
         background-color: white;
-        border-radius: 20px;
+        border-radius: 12px;
         display: flex;
         overflow: hidden;
-        box-shadow: 0 0 5px var(--navy-color);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         color: var(--page-text-color);
+        position: relative;
     }
 
     #productImg {
-        width: auto;
-        margin: auto;
-        height: inherit;
+        width: 50%;
+        height: 450px;
+        object-fit: contain;
+        padding: 15px;
+        background-color: white;
+        border-right: 1px solid #eee;
     }
 
     #info {
         width: 100%;
         display: flex;
         flex-direction: column;
-        align-items: center;
     }
 
     #name {
         width: 100%;
-        padding: 10px;
-        font-size: 1.5em;
+        padding: 15px 20px 10px;
+        font-size: 1.6em;
+        font-weight: 600;
+        color: var(--noir-color);
+        border-bottom: 1px solid #eee;
     }
 
     #details {
         width: 100%;
-        padding: 10px;
-        border-top: solid 3px var(--navy-color);
-        border-bottom: solid 3px var(--navy-color);
+        padding: 12px 20px;
+        border-bottom: 1px solid #eee;
     }
 
     .detail {
-        font-size: 1.1em;
+        font-size: 0.95em;
         display: flex;
         justify-content: space-between;
+        padding: 6px 0;
+        color: #555;
+    }
+
+    .detail p:first-child {
+        font-weight: 500;
+        color: #333;
     }
 
     #infoSide {
-        width: 40%;
+        width: 50%;
         display: flex;
         flex-direction: column;
-        padding: 20px;
-        padding-right: 25px;
+        padding: 0;
     }
 
     #buyForm {
-        margin: 10px;
+        margin: 0;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         height: 100%;
+        padding: 15px 20px;
     }
 
     #stock {
-        width: auto;
+        width: 45px;
         height: 100%;
-        font-size: 20px;
+        font-size: 15px;
         text-align: center;
-        border: none;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 3px;
+        background-color: white;
     }
 
     #buy {
-        height: 50px;
-        border-radius: 10px;
-        margin-bottom: 20px;
+        height: 40px;
+        border-radius: 6px;
+        margin-top: 12px;
         background-color: var(--button-color);
-        color: var(--text-color);
+        color: white;
         border: none;
-        font-size:18px;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.3s;
+        cursor: pointer;
+        width: 100%;
     }
 
     #buy:hover {
-        cursor: pointer
+        background-color: var(--button-color-hover);
+        transform: translateY(-2px);
     }
 
     #stockWrapper {
@@ -118,37 +138,108 @@ if (isset($_POST['addToCart'])) {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 12px;
     }
 
     #controlStock {
         display: flex;
         width: auto;
         height: 100%;
-        align-self: center;
-
+        align-items: center;
+        gap: 6px;
     }
 
     #controlStock button {
-        min-width: 35px;
-        height: 100%;
-        margin: 0px 3px;
-        border-radius: 8px;
-        font-size: 20px;
-        background-color: var(--navy-color);
-        color: var(--text-color);
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        font-size: 15px;
+        background-color: var(--button-color);
+        color: white;
         border: none;
-    }
-
-    #controlStock button:hover {
+        transition: all 0.2s;
         cursor: pointer;
     }
 
-    /* i vjedha prej google qto per mi hek arrows */
-    /* Chrome, Safari, Edge, Opera */
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+    #controlStock button:hover {
+        background-color: var(--button-color-hover);
+        transform: translateY(-2px);
+    }
+
+    .price-section {
+        margin-top: auto;
+        padding-top: 12px;
+        border-top: 1px solid #eee;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .price-label {
+        font-size: 1em;
+        font-weight: 500;
+        color: var(--noir-color);
+    }
+
+    .price-value {
+        font-size: 1.2em;
+        font-weight: 600;
+        color: var(--noir-color);
+    }
+
+    .wishlist-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 2;
+        padding: 6px;
+        transition: transform 0.2s;
+    }
+    
+    .wishlist-btn:hover {
+        transform: scale(1.1);
+    }
+    
+    .wishlist-btn i {
+        font-size: 20px;
+        color: #ccc;
+        transition: color 0.2s;
+    }
+    
+    .wishlist-btn.active i {
+        color: #ff0000;
+    }
+
+    @media (max-width: 1400px) {
+        #prodContainer {
+            width: 95%;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        #prodContainer {
+            flex-direction: column;
+            width: 95%;
+            max-width: 600px;
+        }
+
+        #productImg {
+            width: 100%;
+            height: 400px;
+            border-right: none;
+            border-bottom: 1px solid #eee;
+        }
+
+        #infoSide {
+            width: 100%;
+        }
     }
 </style>
 
@@ -156,7 +247,10 @@ if (isset($_POST['addToCart'])) {
     <?php include 'header/header.php' ?>
     <div id='container'>
         <div id='prodContainer'>
-            <img id='productImg' src="<?php echo $data['image_url']; ?>" alt="">
+            <button class="wishlist-btn" data-product-id="<?php echo $productID; ?>">
+                <i class="far fa-heart"></i>
+            </button>
+            <img id='productImg' src="<?php echo $data['image_url']; ?>" alt="<?php echo $data['description']; ?>">
             <div id='infoSide'>
                 <div id='info'>
                     <p id='name'><?php echo $data['description'] ?></p>
@@ -170,9 +264,8 @@ if (isset($_POST['addToCart'])) {
                     </div>
                 </div>
                 <form action='product.php?product=<?php echo $productID ?>' id='buyForm' method='post'>
-
                     <div id='stockWrapper'>
-                        <p style="font-weight:bold;font-size:1.3em;" class='detail'>Quantity:</p>
+                        <p class='price-label'>Quantity:</p>
                         <div id='controlStock'>
                             <button type='button' class='stockController' onclick='addToQuantity(-1)'>-</button>
                             <input id='stock' value='1' min='1' max='<?php echo $data['stock']; ?>' name='quantity' type="number" placeholder='1'>
@@ -181,36 +274,71 @@ if (isset($_POST['addToCart'])) {
                     </div>
 
                     <input type="hidden" value='<?php echo $productID ?>' name='prodID'>
-                    <div style='display:flex;flex-direction:column;'>
-                        <div style='display:flex;justify-content:space-between'>
-                            <p style="font-weight:bold;font-size:1.3em;" class='detail'>Price:</p>
-                            <p id='stockPrice' style="font-weight:bold;font-size:1.3em;"><?php echo $data['price'] ?>&euro;</p>
+                    <div class='price-section'>
+                        <div class='price-row'>
+                            <p class='price-label'>Price:</p>
+                            <p id='stockPrice' class='price-value'><?php echo number_format($data['price'], 2) ?>&euro;</p>
                         </div>
                         <input id='buy' type='submit' name='addToCart' value='Add to cart'>
                     </div>
-
                 </form>
             </div>
         </div>
     </div>
     <?php include 'footer/footer.php' ?>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const price = <?php echo $data['price'] ?>.toFixed(2)
-        console.log(price)
+        $(document).ready(function() {
+            // Check initial wishlist status
+            const productId = <?php echo $productID; ?>;
+            $.ajax({
+                url: 'check_wishlist.php',
+                method: 'POST',
+                data: { product_id: productId },
+                success: function(response) {
+                    if (response.trim() === 'true') {
+                        $('.wishlist-btn').addClass('active').find('i').removeClass('far').addClass('fas');
+                    }
+                }
+            });
 
+            // Handle wishlist button click
+            $('.wishlist-btn').click(function(e) {
+                e.preventDefault();
+                const button = $(this);
+                
+                $.ajax({
+                    url: 'add_to_wishlist.php',
+                    method: 'POST',
+                    data: { product_id: productId },
+                    success: function(response) {
+                        if (response.trim() === 'added') {
+                            button.addClass('active').find('i').removeClass('far').addClass('fas');
+                        } else if (response.trim() === 'removed') {
+                            button.removeClass('active').find('i').removeClass('fas').addClass('far');
+                        }
+                    }
+                });
+            });
+        });
+
+        const price = <?php echo $data['price'] ?>;
+        
         function addToQuantity(add) {
             var amount = parseInt(document.getElementById('stock').value);
             if (amount == 1 && add < 0) {
                 document.getElementById('stock').value = 1;
-                document.getElementById('stockPrice').innerHTML = (price*amount).toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "&euro;"
-                
+                updatePrice(1);
             } else if (amount >= 1) {
                 document.getElementById('stock').value = amount + add;
-                document.getElementById('stockPrice').innerHTML = (price*parseInt(document.getElementById('stock').value)).toLocaleString('us', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "&euro;"
+                updatePrice(amount + add);
             }
+        }
+
+        function updatePrice(amount) {
+            const totalPrice = (price * amount).toFixed(2);
+            document.getElementById('stockPrice').innerHTML = totalPrice + "&euro;";
         }
     </script>
 </body>
-
-
 </html>

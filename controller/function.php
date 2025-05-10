@@ -55,7 +55,7 @@
     
     function callJsonFIle() {
         // Firebase URL to fetch data
-        $firebaseUrl = 'https://fondacionifreskia-2feb3-default-rtdb.europe-west1.firebasedatabase.app/.json';
+        $firebaseUrl = 'productsPlus.json';
                 
         // Initialize cURL
         $ch = curl_init();
@@ -83,7 +83,9 @@
 
     function addProductsToDatabase($conn) {
 
-        $products = callJsonFIle();
+        $file = '../controller/productsPlus.json';
+        $json_data = file_get_contents($file);
+        $products = json_decode($json_data, true);
                 
         // Check if 'products' key exists
         if (isset($products['products'])) {
@@ -119,36 +121,38 @@
         }
     }
 
-    // function addDetailsToDatabase($conn) {
-    //     $products = callJsonFIle();
+    function addDetailsToDatabase($conn) {
+        $file = '../controller/productsPlus.json';
+        $json_data = file_get_contents($file);
+        $products = json_decode($json_data, true);
         
-    //     if (isset($products['products'])) {
-    //         foreach ($products['products'] as $product) {
-    //             // Check if the product already exists in the database
-    //             $stmt = $conn->prepare("CALL checkProducts(?)");
-    //             $stmt->bind_param("i", $product['product_id']);
-    //             $stmt->execute();
-    //             $stmt->bind_result($count);
-    //             $stmt->fetch();
-    //             $stmt->close();
+        if (isset($products['products'])) {
+            foreach ($products['products'] as $product) {
+                // Check if the product already exists in the database
+                $stmt = $conn->prepare("CALL checkProducts(?)");
+                $stmt->bind_param("i", $product['product_id']);
+                $stmt->execute();
+                $stmt->bind_result($count);
+                $stmt->fetch();
+                $stmt->close();
 
-    //             foreach($product['details'] as $key => $value) {
+                foreach($product['details'] as $key => $value) {
                     
-    //                 $stmt = $conn->prepare("INSERT INTO product_details (product_id, prod_desc1,prod_desc2) VALUES (?,?,?)");
-    //                 $stmt->bind_param("iss", $product['product_id'], $key,$value);
+                    $stmt = $conn->prepare("INSERT INTO product_details (product_id, prod_desc1,prod_desc2) VALUES (?,?,?)");
+                    $stmt->bind_param("iss", $product['product_id'], $key,$value);
         
-    //                 // Execute the statement
-    //                 if (!$stmt->execute()) {
-    //                     echo "Error inserting product ID ";
-    //                 } else {
-    //                     echo "Product ID";
-    //                 }
-    //                 $stmt->close();
-    //             }
-    //         }
-    //         echo "Products update completed.";
-    //     } else {
-    //         echo "No products found in JSON data.";
-    //     }
-    // }
+                    // Execute the statement
+                    if (!$stmt->execute()) {
+                        echo "Error inserting product ID ";
+                    } else {
+                        echo "Product ID";
+                    }
+                    $stmt->close();
+                }
+            }
+            echo "Products update completed.";
+        } else {
+            echo "No products found in JSON data.";
+        }
+    }
 ?>
