@@ -4,24 +4,25 @@ include_once "controller/function.php";
 
 // include "header.php";
 
+$error = '';
+
 if(!isset($_SESSION['user_id'])) {
     if(isset($_POST['submit'])){
         $email = $_POST['email'];
         $password = $_POST['password'];
 
         if(checkData($email)) {
-            header("Location: login.php?email=doesntexist");
-            exit();
-        }
-  
-        $loginResult = login($email, $password); 
-  
-        if ($loginResult) {
-            header("Location: index.php"); 
-            exit();
+            $error = "Email doesn't exist.";
         } else {
-            header("Location: login.php?input=error"); 
-            exit();  }
+            $loginResult = login($email, $password); 
+      
+            if ($loginResult) {
+                header("Location: index.php"); 
+                exit();
+            } else {
+                $error = "Invalid email or password.";
+            }
+        }
     }
 } else {
     header("Location: index.php"); 
@@ -34,111 +35,145 @@ if(!isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log in</title>
+    <title>Log in - DigitalSea</title>
+    
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Load Font Awesome asynchronously -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
 </head>
 <style>
-    .login-container {
-        background-color: var(--modal-bg-color);
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 0px 5px var(--navy-color);
-        width: 100%;
-        max-width: 400px;
-        margin: auto auto;
+    .page-wrapper {
+        flex: 1;
         display: flex;
         flex-direction: column;
-        /* flex-grow: 1; */
+        min-height: 100vh;
+    }
+
+    #container {
+        background-color: var(--ivory-color);
+        display: flex;
+        flex: 1;
+        min-height: calc(100vh - 120px);
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+    }
+
+    .login-container {
+        background-color: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
     }
 
     .login-container h1 {
         text-align: center;
-        color: #333;
-        margin-bottom: 20px;
+        color: var(--noir-color);
+        margin-bottom: 30px;
+        font-size: 24px;
+        font-weight: 600;
     }
 
     .login-container input {
         width: 100%;
-        padding: 10px;
+        padding: 12px 15px;
         margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 14px;
-    }
-
-    input[type="email"], input[type="password"]{
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0;
-        border: 2px solid var(--mist-color);
+        border: 2px solid var(--ivory-color);
         border-radius: 6px;
-        font-size: 16px;
-        box-sizing: border-box;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        font-size: 15px;
+        transition: all 0.3s ease;
     }
 
-    input[type="email"]:focus, input[type="password"]:focus{
-        border-color: var(--navy-color);
-        box-shadow: 0 0 5px var(--navy-color);
+    .login-container input:focus {
+        border-color: var(--noir-color);
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
         outline: none;
     }
 
     .login-container input[type="submit"] {
-        background-color:var(--button-color);
-        color: var(--text-color);
+        background-color: var(--noir-color);
+        color: white;
         font-size: 16px;
+        font-weight: 500;
         cursor: pointer;
         border: none;
-        transition: all 0.2s ease-in-out;
+        padding: 14px;
+        margin-top: 20px;
+        transition: all 0.3s ease;
     }
 
     .login-container input[type="submit"]:hover {
-        background-color: var(--button-color-hover);
-        transition: all 0.2s ease-in-out;
-    }
-
-    .login-container input:focus {
-        border-color: var(--button-color-hover);
-        outline: none;
-    }
-
-    .login-container .error, .login-container .success {
-        text-align: center;
-        margin-top: 15px;
-        color: var(--text-color);
-        padding: 10px;
-        border-radius: 5px;
+        background-color: var(--button-color);
+        transform: translateY(-2px);
     }
 
     .login-container .error {
-        background-color: var(--error-color);
+        background-color: #ffebee;
+        color: #d32f2f;
+        padding: 12px;
+        border-radius: 6px;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
     }
 
     .login-container .success {
-        background-color: var(--success-color);
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        padding: 12px;
+        border-radius: 6px;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
     }
 
+    .login-container .signup-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: var(--noir-color);
+    }
+
+    .login-container .signup-link a {
+        color: var(--button-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .login-container .signup-link a:hover {
+        text-decoration: underline;
+    }
 </style>
 <body>
     <div class="page-wrapper">
         <?php include "header/header.php"?>
-        <div class="login-container">
-            <h1>Login</h1>
-            <form action="" method="post">
-                <input type="email" name="email" placeholder="Email..." autofocus="autofocus" required>
-                <input type="password" name="password" placeholder="Password..." required>
-                <input type="submit" name="submit" value="Log in">
-            </form>
+        <div id="container">
+            <div class="login-container">
+                <h1>Welcome</h1>
+                <form action="" method="post">
+                    <input type="email" name="email" placeholder="Email address" autofocus="autofocus" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="submit" name="submit" value="Log in">
+                </form>
 
-            <?php 
-            // Displaying error or success messages based on URL parameters
-            if (isset($_GET['input']) && $_GET['input'] == 'error') {
-                echo "<div class='error'>Email does not exist.</div>";
-            }
-            ?>
+                <?php if (!empty($error)): ?>
+                    <div class='error'><?php echo $error; ?></div>
+                <?php endif; ?>
+
+                <div class="signup-link">
+                    Don't have an account? <a href="signup.php">Sign up</a>
+                </div>
+            </div>
         </div>
+        <?php include "footer/footer.php"; ?>
     </div>
-    
-    <?php include "footer/footer.php"; ?>
 </body>
 </html>

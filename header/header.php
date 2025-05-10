@@ -415,11 +415,14 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.php"><img src="home.png" class="icons" alt=""></a></li>
+                <!-- <li><a href="index.php"><img src="home.png" class="icons" alt=""></a></li> -->
+                <li><a href="index.php"><i class="fas fa-home"></i></a></li>
                 <?php if(isset($_SESSION['user_id'])) { ?>
-                <li><a href="wishlist.php"><img src="heart.png" class="icons" alt=""></a></li>
+                <!-- <li><a href="wishlist.php"><img src="heart.png" class="icons" alt=""></a></li> -->
+                <li><a href="wishlist.php"><i class="fas fa-heart"></i></a></li>
                 <li class="cart-link">
-                    <a href="cart.php"><img src="shopping-cart.png" class="icons" alt=""></a>
+                    <!-- <a href="cart.php"><img src="shopping-cart.png" class="icons" alt=""></a> -->
+                    <a href="cart.php"><i class="fas fa-shopping-cart"></i></a>
                     <div class="cart-preview">
                         <?php
                         if(isset($_SESSION['user_id'])) {
@@ -489,24 +492,15 @@
                         ?>
                     </div>
                 </li>
-                <li><a href="profile.php"><img src="user.png" class="icons" alt=""></a></li>
+                
+                <!-- <li><a href="profile.php"><img src="user.png" class="icons" alt=""></a></li> -->
+                <li><a href="profile.php"><i class="fas fa-user"></i></a></li>
+                <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i></a></li>
+                <?php if(isAdmin($_SESSION['user_id'])) {echo "<li><a href='manageStock.php'><i class='fas fa-wrench'></i></a></li>";} ?>
+                <?php }else{ ?>
+                <li><a href="login.php"><i class="fas fa-sign-in-alt"></i></a></li>
+                <li><a href="signup.php"><i class="fas fa-user-plus"></i></a></li>
                 <?php } ?>
-                <li>
-                    <label class="auth-menu" for="auth-toggle"><img src="menu.png" class="icons" alt=""></label>
-                    <input type="checkbox" id="auth-toggle">
-                    <div class="auth-dropdown">
-                        <?php if(!isset($_SESSION['user_id'])) { ?>
-                            <a href="login.php">Login</a>
-                            <a href="signup.php">Signup</a>
-                            <?php } else { ?>
-                                <a href="profile.php">Profile</a>
-                                <a href="logout.php">Log out</a>
-                                <?php if(isAdmin($_SESSION['user_id'])) {
-                                    echo "<a href='manageStock.php'>Manage stock</a>";
-                                } ?>
-                        <?php } ?>
-                    </div>
-                </li>
             </ul>
         </nav>
     </header>
