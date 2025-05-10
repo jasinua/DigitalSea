@@ -682,25 +682,25 @@
     }
 
     .wheel-item.left {
-        transform: translate(-50%, -50%) scale(0.9) translateX(-370px) translateY(25px);
+        transform: translate(-50%, -50%) scale(0.9) translateX(-380px) translateY(25px);
         opacity: 0.7;
         z-index: 3;
     }
 
     .wheel-item.right {
-        transform: translate(-50%, -50%) scale(0.9) translateX(370px) translateY(25px);
+        transform: translate(-50%, -50%) scale(0.9) translateX(380px) translateY(25px);
         opacity: 0.7;
         z-index: 3;
     }
 
     .wheel-item.far-left {
-        transform: translate(-50%, -50%) scale(0.8) translateX(-780px) translateY(55px);
+        transform: translate(-50%, -50%) scale(0.8) translateX(-800px) translateY(55px);
         opacity: 0.5;
         z-index: 2;
     }
 
     .wheel-item.far-right {
-        transform: translate(-50%, -50%) scale(0.8) translateX(780px) translateY(55px);
+        transform: translate(-50%, -50%) scale(0.8) translateX(800px) translateY(55px);
         opacity: 0.5;
         z-index: 2;
     }
@@ -1481,18 +1481,32 @@
 
             // Show/hide clear button based on search input
             $('.search-input').on('input', function() {
+                var $clearBtn = $(this).closest('form').find('.clear-search');
                 if ($(this).val().length > 0) {
-                    $('.clear-search').show();
+                    $clearBtn.show();
                 } else {
-                    $('.clear-search').hide();
+                    $clearBtn.hide();
                 }
             });
 
-            // Clear search and redirect to homepage
-            $('.clear-search').click(function() {
-                $('.search-input').val('');
+            // Clear search without redirecting or reloading
+            $('.clear-search').on('mousedown', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var $input = $(this).closest('form').find('.search-input');
+                $input.val('');
                 $(this).hide();
-                window.location.href = 'index.php';
+                $input.focus();
+            });
+
+            // Initialize clear button visibility for each search bar
+            $('.search-input').each(function() {
+                var $clearBtn = $(this).closest('form').find('.clear-search');
+                if ($(this).val().length > 0) {
+                    $clearBtn.show();
+                } else {
+                    $clearBtn.hide();
+                }
             });
 
             // Handle empty search submission

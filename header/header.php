@@ -533,26 +533,43 @@ $(document).ready(function() {
     };
 
     // Show/hide clear button based on search input
+    // Show/hide clear button based on search input
     $('.search-input').on('input', function() {
-        if ($(this).val().length > 0) {
-            $('.clear-search').show();
-        } else {
-            $('.clear-search').hide();
-        }
-    });
+                var $clearBtn = $(this).closest('form').find('.clear-search');
+                if ($(this).val().length > 0) {
+                    $clearBtn.show();
+                } else {
+                    $clearBtn.hide();
+                }
+            });
 
-    // Clear search without redirecting
-    $('.clear-search').click(function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $('.search-input').val('');
-        $(this).hide();
-    });
+            // Clear search without redirecting or reloading
+            $('.clear-search').on('mousedown', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var $input = $(this).closest('form').find('.search-input');
+                $input.val('');
+                $(this).hide();
+                $input.focus();
+            });
 
-    // Initialize clear button visibility
-    if ($('.search-input').val().length > 0) {
-        $('.clear-search').show();
-    }
-});
+            // Initialize clear button visibility for each search bar
+            $('.search-input').each(function() {
+                var $clearBtn = $(this).closest('form').find('.clear-search');
+                if ($(this).val().length > 0) {
+                    $clearBtn.show();
+                } else {
+                    $clearBtn.hide();
+                }
+            });
+
+            // Handle empty search submission
+            $('.search-form').submit(function(e) {
+                if ($('.search-input').val().trim() === '') {
+                    e.preventDefault();
+                    // window.location.href = 'index.php';
+                }
+            });
+        });  
 </script>
 </html>

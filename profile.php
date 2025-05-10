@@ -682,6 +682,13 @@ if (!isLoggedIn($user_id)) {
 </style>
 <body>
     <div class="page-wrapper">
+        <!-- Search bar copied from header/header.php -->
+        <div class="search-container" style="margin: 30px auto 0 auto; max-width: 500px;">
+            <form action="index.php" method="get" class="search-form">
+                <input type="text" name="search" placeholder="Search..." class="search-input" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                <button type="button" class="clear-search" title="Clear search">×</button>
+            </form>
+        </div>
         <div class="profile">
             <div class="userProfile">
                 <div class="profile-icon">
@@ -847,6 +854,37 @@ if (!isLoggedIn($user_id)) {
     // On page load, ensure editProfile is behind
     window.addEventListener('DOMContentLoaded', function() {
         editProfile.classList.add('behind');
+    });
+
+    // Add clear-search button logic for profile page
+    $(document).ready(function() {
+        // Show/hide clear button based on search input
+        $('.search-input').on('input', function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
+        // Clear search without redirecting or reloading
+        $('.clear-search').on('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $input = $(this).closest('form').find('.search-input');
+            $input.val('');
+            $(this).hide();
+            $input.focus();
+        });
+        // Initialize clear button visibility for each search bar
+        $('.search-input').each(function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
     });
 </script>
 </html>

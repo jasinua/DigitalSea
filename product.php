@@ -20,7 +20,7 @@ if (isset($_POST['addToCart'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProductNameqtu</title>
+    <title><?php echo isset($data['name']) ? htmlspecialchars($data['name']) : 'Product'; ?></title>
     <link rel="stylesheet" href="product.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -365,6 +365,34 @@ if (isset($_POST['addToCart'])) {
                         }
                     }
                 });
+            });
+
+            // Show/hide clear button based on search input
+            $('.search-input').on('input', function() {
+                var $clearBtn = $(this).closest('form').find('.clear-search');
+                if ($(this).val().length > 0) {
+                    $clearBtn.show();
+                } else {
+                    $clearBtn.hide();
+                }
+            });
+            // Clear search without redirecting or reloading
+            $('.clear-search').on('mousedown', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var $input = $(this).closest('form').find('.search-input');
+                $input.val('');
+                $(this).hide();
+                $input.focus();
+            });
+            // Initialize clear button visibility for each search bar
+            $('.search-input').each(function() {
+                var $clearBtn = $(this).closest('form').find('.clear-search');
+                if ($(this).val().length > 0) {
+                    $clearBtn.show();
+                } else {
+                    $clearBtn.hide();
+                }
             });
         });
 
