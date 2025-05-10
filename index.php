@@ -962,6 +962,20 @@
                             <div class='item'>
                                 <?php if ($prod['discount'] > 0) { ?>
                                     <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
+                            <div class='item' id="randomItemsSet">
+                                <div>
+                                    <img onclick="window.location='product.php?product=<?php echo $prod['product_id'] ?>'" src="<?php echo $prod['image_url'] ?>" alt="">
+                                    <div id="randomItemsText">   
+                                        <a  href="product.php?product=<?php echo $prod['product_id'] ?>"><?php echo $prod['description'] ?></a>
+                                    </div>
+                                </div>
+                                <?php if($prod['discount'] > 0){ ?>
+                                    <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%; align-items: center">
+                                        <p class='price' style="margin-top: 0;"><?php echo number_format($prod['price'] - ($prod['price'] * $prod['discount']/100), 0, '.', ',') ?>€</p>
+                                        <p class='price' style="color: red; font-size: 14px; padding-top: 2px"><s><?php echo number_format($prod['price'], 0, '.', ',') ?>€</s></p>
+                                    </div>
+                                <?php } else {?>
+                                    <p class='price'><?php echo number_format($prod['price'], 0, '.', ',') ?>€</p>
                                 <?php } ?>
                                 <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
                                     <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>

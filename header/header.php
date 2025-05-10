@@ -179,6 +179,65 @@
         color:var(--mist-color);
     }
 
+    /* Cart Preview Styles */
+    .cart-preview {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 350px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        padding: 15px;
+        display: none;
+        z-index: 1000;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .cart-preview-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--mist-color);
+    }
+
+    .cart-preview-item:last-child {
+        border-bottom: none;
+    }
+
+    .cart-preview-item img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        margin-right: 10px;
+        border-radius: 4px;
+    }
+
+    .cart-preview-item-info {
+        flex: 1;
+    }
+
+    .cart-preview-item-name {
+        color: var(--page-text-color);
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .cart-preview-item-price {
+        color: var(--button-color);
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .cart-link {
+        position: relative;
+    }
+
+    .cart-link:hover .cart-preview {
+        display: block;
+    }
+
     /* ===== Auth Dropdown ===== */
     .auth-menu {
         cursor: pointer;
@@ -339,7 +398,37 @@
                 <li><a href="index.php"><img src="home.png" class="icons" alt=""></a></li>
                 <?php if(isset($_SESSION['user_id'])) { ?>
                 <li><a href="wishlist.php"><img src="heart.png" class="icons" alt=""></a></li>
-                <li><a href="cart.php"><img src="shopping-cart.png" class="icons" alt=""></a></li>
+                <li class="cart-link">
+                    <a href="cart.php"><img src="shopping-cart.png" class="icons" alt=""></a>
+                    <div class="cart-preview">
+                        <?php
+                        if(isset($_SESSION['user_id'])) {
+                            $cart_items = returnCart($_SESSION['user_id']);
+                            $count = 0;
+                            if($cart_items) {
+                                while($count < 3 && ($item = $cart_items->fetch_assoc())) {
+                                    $product_result = returnProduct($item['product_id']);
+                                    if($product_result && $product = $product_result->fetch_assoc()) {
+                                        ?>
+                                        <div class="cart-preview-item">
+                                            <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                            <div class="cart-preview-item-info">
+                                                <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
+                                                <div class="cart-preview-item-price"><?php echo number_format($product['price'], 2); ?>€</div>
+                                            </div>
+                                        </div>
+                                        <?php
+                                        $count++;
+                                    }
+                                }
+                            }
+                            if($count === 0) {
+                                echo '<div class="cart-preview-item">Your cart is empty</div>';
+                            }
+                        }
+                        ?>
+                    </div>
+                </li>
                 <li><a href="profile.php"><img src="user.png" class="icons" alt=""></a></li>
                 <?php } ?>
                 <li>
