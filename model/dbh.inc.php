@@ -1,14 +1,18 @@
 <?php
+require __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
+$dotenv->load();
+
 if (!class_exists('Database')) {
     class Database {
         private static $instance = null;
         private $conn;
-        
+
         private function __construct() {
-            $servername = "sql7.freesqldatabase.com";
-            $username = "sql7769680"; 
-            $password = "6egMd5J3XE";      
-            $dbname = "sql7769680";  
+            $servername = $_ENV['DatabaseServername'];
+            $username = $_ENV['DatabaseUsername']; 
+            $password = $_ENV['DatabasePassword'];      
+            $dbname = $_ENV['DatabaseName'];  
 
             $this->conn = mysqli_connect($servername, $username, $password, $dbname);
 
