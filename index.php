@@ -475,7 +475,7 @@
                         <?php foreach (getData("SELECT * FROM products") as $prod) { ?>
                             <div class='item' id="randomItemsSet">
                                 <div>
-                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
+                                    <img onclick="window.location='product.php?product=<?php echo $prod['product_id'] ?>'" src="<?php echo $prod['image_url'] ?>" alt="">
                                     <div id="randomItemsText">   
                                         <a  href="product.php?product=<?php echo $prod['product_id'] ?>"><?php echo $prod['description'] ?></a>
                                     </div>

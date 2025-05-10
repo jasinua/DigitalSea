@@ -52,7 +52,17 @@
 
         return $stmt->get_result();
     }
-    
+
+    function getCartCount($userid) {
+        include "model/dbh.inc.php";
+        $stmt = $conn->prepare("SELECT COUNT(*) as count FROM cart WHERE user_id = ?");
+        $stmt->bind_param("i", $userid);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['count'];
+    }
+
     function callJsonFIle() {
         // Firebase URL to fetch data
         $firebaseUrl = 'https://fondacionifreskia-2feb3-default-rtdb.europe-west1.firebasedatabase.app/.json';
