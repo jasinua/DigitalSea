@@ -384,6 +384,25 @@
         font-size: 0.8em;
         font-weight: 600;
     }
+
+    .cart-preview-item {
+        height: 90px;
+    }
+
+    .cart-preview {
+        max-height: 270px; /* 3 * 90px */
+        overflow-y: auto;
+    }
+
+    .cart-preview-item-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+    }
+    .cart-preview-item-link:hover .cart-preview-item {
+        background: #f5f6fa;
+        box-shadow: 0 2px 8px rgba(21,49,71,0.08);
+    }
 </style>
 <body>
     <header>
@@ -423,16 +442,18 @@
                                     $product_result = returnProduct($pid);
                                     if($product_result && $product = $product_result->fetch_assoc()) {
                                         ?>
-                                        <div class="cart-preview-item">
-                                            <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                                            <div class="cart-preview-item-info">
-                                                <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
-                                                <div class="cart-preview-item-price">
-                                                    <?php echo number_format($product['price'], 2); ?>€
-                                                    <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
+                                        <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
+                                            <div class="cart-preview-item">
+                                                <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                                <div class="cart-preview-item-info">
+                                                    <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
+                                                    <div class="cart-preview-item-price">
+                                                        <?php echo number_format($product['price'], 2); ?>€
+                                                        <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                         <?php
                                         $count++;
                                     }
@@ -444,16 +465,18 @@
                                         $product_result = returnProduct($pid);
                                         if($product_result && $product = $product_result->fetch_assoc()) {
                                             ?>
-                                            <div class="cart-preview-item">
-                                                <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                                                <div class="cart-preview-item-info">
-                                                    <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
-                                                    <div class="cart-preview-item-price">
-                                                        <?php echo number_format($product['price'], 2); ?>€
-                                                        <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
+                                            <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
+                                                <div class="cart-preview-item">
+                                                    <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                                    <div class="cart-preview-item-info">
+                                                        <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
+                                                        <div class="cart-preview-item-price">
+                                                            <?php echo number_format($product['price'], 2); ?>€
+                                                            <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </a>
                                             <?php
                                         }
                                     }

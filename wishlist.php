@@ -255,15 +255,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
             transform: scale(1);
         }
     }
-
-    .cart-preview-item {
-        height: 90px;
-    }
-
-    .cart-preview {
-        max-height: 270px; /* 3 * 90px */
-        overflow-y: auto;
-    }
 </style>
 <div class="page-wrapper">
     <div class="wishlist-container">
