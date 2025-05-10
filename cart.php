@@ -260,7 +260,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
         flex-direction: column;
         justify-content: space-between;
         gap: 20px;
-        flex: 1;
+        flex: 1; 
     }
 
     .summary-item {
@@ -281,7 +281,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
 
     .emri-me-zbritje {
-        display: flex;
+        display: flex; 
         justify-content: space-between;
     }
 
@@ -394,42 +394,42 @@ if (isLoggedIn($_SESSION['user_id'])) {
             <!-- Left: Cart Table -->
             <div class="cart-left">
                 <div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Produkti</th>
-                                <th>Çmimi</th>
-                                <th>Sasia</th>
-                                <th>Fshi</th>
-                            </tr>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produkti</th>
+                        <th>Çmimi</th>
+                        <th>Sasia</th>
+                        <th>Fshi</th>
+                    </tr>
 
-                        </thead>
-                    </table>
-                    <div class="itemsTable">
-                        <table>
-                            <tbody>
-                                <?php 
-                                $subtotal = 0;
-                                foreach ($res as $cart) {
-                                    $product_result = returnProduct($cart['product_id']);
-                                    $product = $product_result->fetch_assoc();
-                                    $discount = $product['discount'];
-                                    $price = $product['price'];
-                                    $pricedsc = $price - ($price * $discount/100);
-                                    $total = $product['price'] * $cart['quantity'];
-                                    $subtotal += $total;
-                                ?>
-                                <tr>
+                </thead>
+            </table>
+                <div class="itemsTable" style='max-height: 400px;'>
+                    <table>
+                            <tbody style='overflow:hidden;overflow-y: auto;'>
+                            <?php 
+                            $subtotal = 0;
+                            foreach ($res as $cart) {
+                                $product_result = returnProduct($cart['product_id']);
+                                $product = $product_result->fetch_assoc();
+                                $discount = $product['discount'];
+                                $price = $product['price'];
+                                $pricedsc = $price - ($price * $discount/100);
+                                $total = $product['price'] * $cart['quantity'];
+                                $subtotal += $total;
+                            ?>
+                            <tr>
                                     <td style="width: 304px;">
-                                        <div class="product-info">
-                                            <input type="hidden" name="prod_id[]" value="<?php echo $product['product_id']; ?>">
-                                            <img src="<?php echo $product['image_url']; ?>" alt="Product Image">
-                                            <div>
-                                                <h4><?php echo $product['name']; ?></h4>
-                                                <div class="desc"><?php echo $product['description']; ?></div>
-                                            </div>
+                                    <div class="product-info">
+                                        <input type="hidden" name="prod_id[]" value="<?php echo $product['product_id']; ?>">
+                                        <img src="<?php echo $product['image_url']; ?>" alt="Product Image">
+                                        <div>
+                                            <h4><?php echo $product['name']; ?></h4>
+                                            <div class="desc"><?php echo $product['description']; ?></div>
                                         </div>
-                                    </td>
+                                    </div>
+                                </td>
                                     <td>
                                         <div class="price-info">
                                             <?php if($discount) { ?>
@@ -440,30 +440,30 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                             <?php } ?>
                                         </div>
                                     </td>
-                                    <td>
-                                        <div class="quantity-controls">
-                                            <input 
-                                                type="number" 
-                                                name="quantity[]" 
-                                                class="quantity-input" 
-                                                min="1" 
-                                                value="<?php echo $cart['quantity']; ?>" 
-                                                data-price="<?php echo $discount ? $pricedsc : $price; ?>"
-                                                data-product-id="<?php echo $product['product_id']; ?>"
-                                            >
-                                        </div>
-                                    </td>
-                                    <input type="hidden" name="price[]" value="<?php echo $total; ?>">
-                                    
-                                    <td>
-                                        <button class="remove-btn" type="submit" name="remove" value="<?php echo $product['product_id']; ?>">&times;</button>
-                                    </td>
-                                </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
-                    </div>
+                                <td>
+                                    <div class="quantity-controls">
+                                        <input 
+                                            type="number" 
+                                            name="quantity[]" 
+                                            class="quantity-input" 
+                                            min="1" 
+                                            value="<?php echo $cart['quantity']; ?>" 
+                                            data-price="<?php echo $discount ? $pricedsc : $price; ?>"
+                                            data-product-id="<?php echo $product['product_id']; ?>"
+                                        >
+                                    </div>
+                                </td>
+                                <input type="hidden" name="price[]" value="<?php echo $total; ?>">
+                                
+                                <td>
+                                    <button class="remove-btn" type="submit" name="remove" value="<?php echo $product['product_id']; ?>">&times;</button>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
                 </div>
+            </div>
                 <button type="button" class="save-btn" id="saveChanges">Ruaj Ndryshimet</button>
             </div><!-- Save Changes Button -->
 
