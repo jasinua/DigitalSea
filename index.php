@@ -1,22 +1,14 @@
 <?php 
     session_start();
-    include 'model/dbh.inc.php';
-    include 'controller/home.inc.php';
+    require_once 'model/dbh.inc.php';
+    require_once 'controller/home.inc.php';
 
-    // Function to check if product is in wishlist
-    function isInWishlist($product_id) {
-        global $conn;
-        if (!isset($_SESSION['user_id'])) {
-            return false;
-        }
-        $user_id = $_SESSION['user_id'];
-        $sql = "SELECT * FROM wishlist WHERE user_id = ? AND product_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ii", $user_id, $product_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->num_rows > 0;
-    }
+    // Get current page from URL, default to 1
+    $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $items_per_page = 18;
+    
+    // Get wishlist items in one query
+    $wishlist_items = isset($_SESSION['user_id']) ? getWishlistItems($_SESSION['user_id']) : [];
 ?>
 
 <!DOCTYPE html>
@@ -25,10 +17,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigitalSea</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Load Font Awesome asynchronously -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
+    
+    <!-- Load jQuery UI CSS asynchronously -->
+    <link rel="preload" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"></noscript>
+    
+    <!-- Defer non-critical JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" defer></script>
 </head>
 <style>
     .page-wrapper {
@@ -397,7 +401,7 @@
     }
 
     .original-price {
-        color: #ff0000;
+        color: var(--error-color);
         text-decoration: line-through;
         font-size: 14px;
         font-weight: normal;
@@ -412,7 +416,7 @@
         position: absolute;
         top: 10px;
         right: 10px;
-        background-color: #ff0000;
+        background-color: var(--error-color);
         color: white;
         padding: 4px 8px;
         border-radius: 4px;
@@ -492,7 +496,7 @@
     }       
 
     #newItemsItem .original-price {
-        color: #ff0000;
+        color: var(--error-color);
         text-decoration: line-through;
         font-size: 14px;
         font-weight: normal;
@@ -521,7 +525,7 @@
         position: absolute;
         top: 10px;
         right: 10px;
-        background-color: #ff0000;
+        background-color: var(--error-color);
         color: white;
         padding: 4px 8px;
         border-radius: 4px;
@@ -563,8 +567,8 @@
         width: 100%;
         overflow: hidden;
         position: relative;
-        height: 500px;
-        padding: 20px 0;
+        height: 600px;
+        padding: 40px 0;
         box-sizing: border-box;
         display: flex;
         justify-content: center;
@@ -581,8 +585,9 @@
     }
 
     .wheel-item {
-        width: 280px;
-        height: 340px;
+        width: 330px;
+        min-width: 300px;
+        height: 440px;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -591,10 +596,11 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: all 0.3s;
+        transform: translate(-50%, -50%);
         opacity: 0;
         display: flex;
         flex-direction: column;
+        align-items: center;
     }
 
     .wheel-item.active {
@@ -613,26 +619,105 @@
     }
 
     .wheel-item img {
-        width: 100%;
-        height: 220px;
+        height: 280px;
         object-fit: contain;
-        transition: all 0.3s ease;
+        width: 100%;
         padding: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .wheel-item img:hover {
+        transform: scale(1.05);
     }
 
     .wheel-item .title {
         font-size: 15px;
         text-align: left;
-        margin: 10px 0;
-        height: 40px;
+        margin: 15px 0;
+        min-height: 50px;
         overflow: hidden;
         color: #555;
         padding: 0 5px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        line-height: 1.4;
-        margin-bottom: auto;
+        width: 100%;
+    }
+
+    .wheel-item .price {
+        text-align: right;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: auto;
+        padding: 0 5px 5px 10px;
+        width: 100%;
+        font-size: 17px;
+        font-weight: 600;
+        color: black;
+    }
+
+    .wheel-item .original-price {
+        color: var(--error-color);
+        text-decoration: line-through;
+        font-size: 14px;
+        font-weight: normal;
+    }
+
+    .wheel-item .discounted-price {
+        color: black;
+        font-weight: 600;
+        font-size: 17px;
+    }
+
+    .wheel-item .discount-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: white;
+        color: var(--error-color);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        z-index: 1;
+    }
+
+    .wheel-item.left {
+        transform: translate(-50%, -50%) scale(0.9) translateX(-400px);
+        opacity: 0.7;
+        z-index: 3;
+    }
+
+    .wheel-item.right {
+        transform: translate(-50%, -50%) scale(0.9) translateX(400px);
+        opacity: 0.7;
+        z-index: 3;
+    }
+
+    .wheel-item.far-left {
+        transform: translate(-50%, -50%) scale(0.8) translateX(-800px) translateY(25px);
+        opacity: 0.5;
+        z-index: 2;
+    }
+
+    .wheel-item.far-right {
+        transform: translate(-50%, -50%) scale(0.8) translateX(800px) translateY(25px);
+        opacity: 0.5;
+        z-index: 2;
+    }
+
+    .wheel-item.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .wheel-item .bottom-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: self-end;
+        width: 100%;
+        margin-top: auto;
+        padding: 0 5px;
     }
 
     .bottom-container {
@@ -665,50 +750,12 @@
     }
 
     .wheel-item .wishlist-btn.active i {
-        color: #ff0000;
-    }
-
-    .wheel-item .price {
-        text-align: right;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 17px;
-        font-weight: 600;
-    }
-
-    .wheel-item.left {
-        transform: translate(-50%, -50%) scale(0.9) translateX(-340px);
-        opacity: 0.7;
-        z-index: 3;
-    }
-
-    .wheel-item.right {
-        transform: translate(-50%, -50%) scale(0.9) translateX(340px);
-        opacity: 0.7;
-        z-index: 3;
-    }
-
-    .wheel-item.far-left {
-        transform: translate(-50%, -50%) scale(0.8) translateX(-730px) translateY(25px);
-        opacity: 0.5;
-        z-index: 2;
-    }
-
-    .wheel-item.far-right {
-        transform: translate(-50%, -50%) scale(0.8) translateX(730px) translateY(25px);
-        opacity: 0.5;
-        z-index: 2;
-    }
-
-    .wheel-item.hidden {
-        opacity: 0;
-        pointer-events: none;
+        color: var(--error-color);
     }
 
     #topItemsHeader {
         text-align: center;
-        margin: 20px 0;
+        margin: 40px 0;
         color: var(--noir-color);
         font-size: 24px;
         font-weight: 600;
@@ -742,7 +789,7 @@
     }
     
     .wishlist-btn.active i {
-        color: #ff0000;
+        color: var(--error-color);
     }
 
     .search-container {
@@ -771,6 +818,72 @@
 
     .clear-search:hover {
         color: #333;
+    }
+
+    /* Add pagination styles */
+    .pagination {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 40px 0;
+        padding: 20px 0;
+    }
+
+    .pagination-container {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        background: white;
+        padding: 15px 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: var(--ivory-color);
+        color: var(--noir-color);
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .pagination-btn:hover {
+        background: var(--noir-color);
+        color: white;
+    }
+
+    .page-numbers {
+        display: flex;
+        gap: 10px;
+    }
+
+    .page-number {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--ivory-color);
+        color: var(--noir-color);
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .page-number:hover {
+        background: var(--noir-color);
+        color: white;
+    }
+
+    .page-number.active {
+        background: var(--noir-color);
+        color: white;
     }
 </style>
 <body>
@@ -934,32 +1047,32 @@
             </div>
 
             <div id='items'>
-                <?php if(!isset($_POST['subfilter']) && !isset($_POST['min_price']) && !isset($_POST['max_price']) && !isset($_POST['discounted_only']) && !isset($_GET['search'])) { ?>   
+                <?php if(!isset($_POST['subfilter']) && !isset($_POST['min_price']) && !isset($_POST['max_price']) && !isset($_POST['discounted_only']) && !isset($_GET['search']) && $current_page === 1) { ?>   
                     <h1 id='topItemsHeader'>Top Products</h1>
                     <div class='wheel-carousel'>
                         <div class='wheel-track' id='topItems'>
                             <?php foreach (getData("SELECT * FROM products WHERE products.price>900") as $prod) { ?>
-                                <div class='wheel-item'>
+                                    <div class='wheel-item'>
                                     <?php if ($prod['discount'] > 0) { ?>
                                         <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
                                     <?php } ?>
-                                    <img src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
-                                    <p class='title'><?php echo $prod['description'] ?></p>
+                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
+                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
                                     <div class='bottom-container'>
-                                        <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
-                                            <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>
+                                        <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                            <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
                                         </button>
                                         <div class='price'>
                                             <?php if ($prod['discount'] > 0) { 
                                                 $originalPrice = $prod['price'];
                                                 $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
                                             ?>
-                                                <span class="original-price"><?php echo number_format($originalPrice, 0, '.', ',') ?>€</span>
-                                                <span class="discounted-price"><?php echo number_format($discountedPrice, 0, '.', ',') ?>€</span>
+                                                <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
+                                                <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
                                             <?php } else { ?>
-                                                <span class="discounted-price"><?php echo number_format($prod['price'], 0, '.', ',') ?>€</span>
+                                                <span class="discounted-price"><?php echo number_format($prod['price'], 2, '.', ',') ?>€</span>
                                             <?php } ?>
-                                        </div>
+                                </div>
                                     </div>
                                 </div>
                             <?php } ?>
@@ -977,18 +1090,18 @@
                                 <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
                                 <div class='bottom-container'>
-                                    <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
-                                        <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>
+                                    <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                        <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
                                     </button>
                                     <div class='price'>
                                         <?php if ($prod['discount'] > 0) { 
                                             $originalPrice = $prod['price'];
                                             $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
                                         ?>
-                                            <span class="original-price"><?php echo number_format($originalPrice, 0, '.', ',') ?>€</span>
-                                            <span class="discounted-price"><?php echo number_format($discountedPrice, 0, '.', ',') ?>€</span>
+                                            <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
+                                            <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
                                         <?php } else { ?>
-                                            <span class="discounted-price"><?php echo number_format($prod['price'], 0, '.', ',') ?>€</span>
+                                            <span class="discounted-price"><?php echo number_format($prod['price'], 2, '.', ',') ?>€</span>
                                         <?php } ?>
                                     </div>
                                 </div>
@@ -997,37 +1110,13 @@
                     </div>
 
                     <h1 id="moreItemsText">More Products</h1>
-                    <div class='itemBox' id='randomItems'>
-                        <?php foreach (getData("SELECT * FROM products") as $prod) { ?>
-                            <div class='item'>
-                                <?php if ($prod['discount'] > 0) { ?>
-                                    <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
-                                <?php } ?> 
-                                <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
-                                <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <div class='bottom-container'>
-                                    <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
-                                        <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>
-                                    </button>
-                                <div class='price'>
-                                        <?php if ($prod['discount'] > 0) { 
-                                            $originalPrice = $prod['price'];
-                                            $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
-                                        ?>
-                                            <span class="original-price"><?php echo number_format($originalPrice, 0, '.', ',') ?>€</span>
-                                            <span class="discounted-price"><?php echo number_format($discountedPrice, 0, '.', ',') ?>€</span>
-                                        <?php } else { ?>
-                                            <span class="discounted-price"><?php echo number_format($prod['price'], 0, '.', ',') ?>€</span>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php } ?>
-                    </div>
                 <?php } else { ?>
-                    <h1><?php echo isset($_GET['search']) ? 'Search Results' : 'Filtered Products'; ?></h1>
+                    <h1><?php echo isset($_GET['search']) ? 'Search Results' : 'Products'; ?></h1>
+                <?php } ?>
+
                     <div class='itemBox' id='randomItems'>
-                        <?php 
+                    <?php 
+                    if(isset($_POST['subfilter']) || isset($_POST['min_price']) || isset($_POST['max_price']) || isset($_POST['discounted_only']) || isset($_GET['search'])) {
                         $where_conditions = [];
                         
                         if (!empty($_POST['subfilter'])) {
@@ -1068,59 +1157,94 @@
                         }
                         
                         $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
-                        
-                        foreach (getData("SELECT * FROM products $where_clause") as $prod) { ?>
+                        $products = getData("SELECT * FROM products $where_clause");
+                    } else {
+                        $products = getProducts($current_page, $items_per_page);
+                    }
+                    
+                    foreach ($products as $prod) { ?>
                                 <div class='item'>
-                                <?php if ($prod['discount'] > 0) { ?>
-                                    <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
-                                <?php } ?>
-                                <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
-                                <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <div class='bottom-container'>
-                                    <button class="wishlist-btn <?php echo isInWishlist($prod['product_id']) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
-                                        <i class="<?php echo isInWishlist($prod['product_id']) ? 'fas' : 'far'; ?> fa-heart"></i>
-                                    </button>
-                                    <div class='price'>
-                                        <?php if ($prod['discount'] > 0) { 
-                                            $originalPrice = $prod['price'];
-                                            $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
-                                        ?>
-                                            <span class="original-price"><?php echo number_format($originalPrice, 0, '.', ',') ?>€</span>
-                                            <span class="discounted-price"><?php echo number_format($discountedPrice, 0, '.', ',') ?>€</span>
-                                        <?php } else { ?>
-                                            <?php echo number_format($prod['price'], 0, '.', ',') ?>€
-                                        <?php } ?>
-                                    </div>
+                            <?php if ($prod['discount'] > 0) { ?>
+                                <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
+                            <?php } ?>
+                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
+                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
+                            <div class='bottom-container'>
+                                <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                    <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
+                                </button>
+                                <div class='price'>
+                                    <?php if ($prod['discount'] > 0) { 
+                                        $originalPrice = $prod['price'];
+                                        $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
+                                    ?>
+                                        <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
+                                        <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
+                                    <?php } else { ?>
+                                        <?php echo number_format($prod['price'], 2, '.', ',') ?>€
+                                    <?php } ?>   
                                 </div>
                             </div>
-                        <?php } ?>   
                     </div>
                 <?php } ?>
+                </div>
+
+                <!-- Add pagination controls -->
+                <?php
+                $total_products = getTotalProducts();
+                $total_pages = ceil($total_products / $items_per_page);
+                
+                if ($total_pages > 1): ?>
+                    <div class="pagination">
+                        <div class="pagination-container">
+                            <?php if ($current_page > 1): ?>
+                                <a href="?page=<?php echo $current_page - 1; ?>" class="pagination-btn">
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </a>
+                            <?php endif; ?>
+
+                            <div class="page-numbers">
+                                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                    <a href="?page=<?php echo $i; ?>" 
+                                       class="page-number <?php echo $i === $current_page ? 'active' : ''; ?>">
+                                        <?php echo $i; ?>
+                                    </a>
+                                <?php endfor; ?>
+                            </div>
+
+                            <?php if ($current_page < $total_pages): ?>
+                                <a href="?page=<?php echo $current_page + 1; ?>" class="pagination-btn">
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
         <?php include "footer/footer.php" ?>
     </div>
-</body>
+
 <script>
-    // Filter section toggle
-    document.querySelectorAll('.filter-section h3').forEach(header => {
-        header.addEventListener('click', () => {
-            header.parentElement.classList.toggle('collapsed');
+        // Filter section toggle
+        document.querySelectorAll('.filter-section h3').forEach(header => {
+            header.addEventListener('click', () => {
+                header.parentElement.classList.toggle('collapsed');
+            });
         });
-    });
 
-    // Category header toggle
-    document.querySelectorAll('.category-header').forEach(header => {
-        header.addEventListener('click', () => {
-            header.classList.toggle('collapsed');
-            const content = header.nextElementSibling;
-            content.classList.toggle('active');
+        // Category header toggle
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.classList.toggle('collapsed');
+                const content = header.nextElementSibling;
+                content.classList.toggle('active');
+            });
         });
-    });
 
-    // Initialize all category headers as collapsed
-    document.querySelectorAll('.category-header').forEach(header => {
-        header.classList.add('collapsed');
+        // Initialize all category headers as collapsed
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.classList.add('collapsed');
     });
 
     // Wheel carousel functionality
@@ -1132,8 +1256,8 @@
         if (itemCount === 0) return;
         
         let currentIndex = 0;
-        let autoRotateInterval;
-        let isHovering = false;
+            let autoRotateInterval;
+            let isHovering = false;
 
         function updateCarousel() {
             items.forEach((item, index) => {
@@ -1157,35 +1281,35 @@
             });
         }
         
-        function startAutoRotate() {
-            if (!isHovering) {
-                autoRotateInterval = setInterval(() => {
-                    currentIndex = (currentIndex + 1) % itemCount;
-                    updateCarousel();
-                }, 3000);
+            function startAutoRotate() {
+                if (!isHovering) {
+                    autoRotateInterval = setInterval(() => {
+            currentIndex = (currentIndex + 1) % itemCount;
+            updateCarousel();
+        }, 3000);
+                }
             }
-        }
 
-        function stopAutoRotate() {
-            clearInterval(autoRotateInterval);
-        }
-        
-        // Initialize carousel
-        updateCarousel();
-        startAutoRotate();
-        
-        // Add hover event listeners to all wheel items
-        items.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                isHovering = true;
-                stopAutoRotate();
-            });
+            function stopAutoRotate() {
+                clearInterval(autoRotateInterval);
+            }
             
-            item.addEventListener('mouseleave', () => {
-                isHovering = false;
-                startAutoRotate();
+            // Initialize carousel
+            updateCarousel();
+            startAutoRotate();
+            
+            // Add hover event listeners to all wheel items
+            items.forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    isHovering = true;
+                    stopAutoRotate();
+                });
+                
+                item.addEventListener('mouseleave', () => {
+                    isHovering = false;
+                    startAutoRotate();
+                });
             });
-        });
         
         // Manual navigation
         document.querySelector('.wheel-carousel').addEventListener('click', (e) => {
@@ -1221,121 +1345,159 @@
         }
 
         scrollLoop();
-    });  
+        });  
 
-    // Clear all filters function
-    function clearAllFilters() {
-        // Uncheck all checkboxes
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.checked = false;
-        });
-
-        // Clear price inputs
-        document.querySelectorAll('input[type="number"]').forEach(input => {
-            input.value = '';
-        });
-
-        // Collapse all category headers
-        document.querySelectorAll('.category-header').forEach(header => {
-            header.classList.add('collapsed');
-            const content = header.nextElementSibling;
-            content.classList.remove('active');
-        });
-
-        // Submit the form to refresh the page
-        window.location.href = 'index.php';
-    }
-
-    $(document).ready(function() {
-        // Function to update all instances of a product's heart button
-        function updateAllProductHearts(productId, isActive) {
-            console.log('Updating hearts for product:', productId, 'isActive:', isActive);
-            $(`.wishlist-btn[data-product-id="${productId}"]`).each(function() {
-                const button = $(this);
-                if (isActive) {
-                    button.addClass('active').find('i').removeClass('far').addClass('fas');
-                } else {
-                    button.removeClass('active').find('i').removeClass('fas').addClass('far');
-                }
+        // Clear all filters function
+        function clearAllFilters() {
+            // Uncheck all checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
             });
+
+            // Clear price inputs
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.value = '';
+            });
+
+            // Collapse all category headers
+            document.querySelectorAll('.category-header').forEach(header => {
+                header.classList.add('collapsed');
+                const content = header.nextElementSibling;
+                content.classList.remove('active');
+            });
+
+            // Submit the form to refresh the page
+            window.location.href = 'index.php';
         }
 
-        // Check initial wishlist status for each product
-        $('.wishlist-btn').each(function() {
-            const productId = $(this).data('product-id');
-            console.log('Checking initial status for product:', productId);
-            $.ajax({
-                url: 'controller/check_wishlist.php',
-                method: 'POST',
-                data: { product_id: productId },
-                success: function(response) {
-                    console.log('Initial check response for product', productId, ':', response);
-                    if (response.trim() === 'true') {
-                        updateAllProductHearts(productId, true);
+        $(document).ready(function() {
+            // Function to update all instances of a product's heart button
+            function updateAllProductHearts(productId, isActive) {
+                console.log('Updating hearts for product:', productId, 'isActive:', isActive);
+                $(`.wishlist-btn[data-product-id="${productId}"]`).each(function() {
+                    const button = $(this);
+                    if (isActive) {
+                        button.addClass('active').find('i').removeClass('far').addClass('fas');
+                    } else {
+                        button.removeClass('active').find('i').removeClass('fas').addClass('far');
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error checking wishlist status:', error);
-                }
-            });
-        });
+                });
+            }
 
-        // Handle wishlist button clicks
-        $(document).on('click', '.wishlist-btn', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const button = $(this);
-            const productId = button.data('product-id');
-            console.log('Wishlist button clicked for product:', productId);
-            
-            $.ajax({
-                url: 'controller/add_to_wishlist.php',
-                method: 'POST',
-                data: { product_id: productId },
-                success: function(response) {
-                    console.log('Wishlist update response:', response);
-                    if (response.trim() === 'not_logged_in') {
-                        window.location.href = 'login.php';
-                    } else if (response.trim() === 'added') {
-                        updateAllProductHearts(productId, true);
-                    } else if (response.trim() === 'removed') {
-                        updateAllProductHearts(productId, false);
-                    } else if (response.trim() === 'error') {
-                        console.error('Error updating wishlist');
+            // Check initial wishlist status for each product
+            $('.wishlist-btn').each(function() {
+                const productId = $(this).data('product-id');
+                console.log('Checking initial status for product:', productId);
+                $.ajax({
+                    url: 'controller/check_wishlist.php',
+                    method: 'POST',
+                    data: { product_id: productId },
+                    success: function(response) {
+                        console.log('Initial check response for product', productId, ':', response);
+                        if (response.trim() === 'true') {
+                            updateAllProductHearts(productId, true);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error checking wishlist status:', error);
+                    }
+                });
+            });
+
+            // Handle wishlist button clicks
+            $(document).on('click', '.wishlist-btn', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const button = $(this);
+                const productId = button.data('product-id');
+                console.log('Wishlist button clicked for product:', productId);
+                
+                $.ajax({
+                    url: 'controller/add_to_wishlist.php',
+                    method: 'POST',
+                    data: { product_id: productId },
+                    success: function(response) {
+                        console.log('Wishlist update response:', response);
+                        if (response.trim() === 'not_logged_in') {
+                            window.location.href = 'login.php';
+                        } else if (response.trim() === 'added') {
+                            updateAllProductHearts(productId, true);
+                        } else if (response.trim() === 'removed') {
+                            updateAllProductHearts(productId, false);
+                        } else if (response.trim() === 'error') {
+                            console.error('Error updating wishlist');
+                            alert('There was an error updating your wishlist. Please try again.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error updating wishlist:', error);
                         alert('There was an error updating your wishlist. Please try again.');
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error updating wishlist:', error);
-                    alert('There was an error updating your wishlist. Please try again.');
+                });
+            });
+
+            // Show/hide clear button based on search input
+            $('.search-input').on('input', function() {
+                if ($(this).val().length > 0) {
+                    $('.clear-search').show();
+                } else {
+                    $('.clear-search').hide();
                 }
             });
-        });
 
-        // Show/hide clear button based on search input
-        $('.search-input').on('input', function() {
-            if ($(this).val().length > 0) {
-                $('.clear-search').show();
-            } else {
-                $('.clear-search').hide();
-            }
-        });
-
-        // Clear search and redirect to homepage
-        $('.clear-search').click(function() {
-            $('.search-input').val('');
-            $(this).hide();
-            window.location.href = 'index.php';
-        });
-
-        // Handle empty search submission
-        $('.search-form').submit(function(e) {
-            if ($('.search-input').val().trim() === '') {
-                e.preventDefault();
+            // Clear search and redirect to homepage
+            $('.clear-search').click(function() {
+                $('.search-input').val('');
+                $(this).hide();
                 window.location.href = 'index.php';
-            }
-        });
+            });
+
+            // Handle empty search submission
+            $('.search-form').submit(function(e) {
+                if ($('.search-input').val().trim() === '') {
+                    e.preventDefault();
+                    window.location.href = 'index.php';
+                }
+            });
+        });  
+
+        // Optimize wishlist check
+        function isInWishlist(productId) {
+            return <?php echo json_encode($wishlist_items); ?>.includes(productId);
+        }
+
+        // Add lazy loading for images
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('img[data-src]');
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            images.forEach(img => imageObserver.observe(img));
+        });  
+
+        // Add smooth scroll to top when changing pages
+        document.querySelectorAll('.pagination a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 500);
+            });
     });  
 </script>
+</body>
 </html>

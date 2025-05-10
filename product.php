@@ -6,6 +6,10 @@ $productID = $_GET["product"];
 $data = getProductData($productID);
 $details = getProductDetails($productID);
 
+// Get wishlist items for the current user
+$wishlist_items = isset($_SESSION['user_id']) ? getWishlistItems($_SESSION['user_id']) : [];
+$is_in_wishlist = in_array($productID, $wishlist_items);
+
 if (isset($_POST['addToCart'])) {
     addToCart($_SESSION['user_id'], $productID, $_POST['quantity'], $_POST['quantity'] * $data['price']);
     header("Location: cart.php");
@@ -45,7 +49,7 @@ if (isset($_POST['addToCart'])) {
     }
 
     #productImg {
-        width: 50%;
+        width: 100%;
         height: 450px;
         object-fit: contain;
         padding: 15px;
@@ -214,7 +218,33 @@ if (isset($_POST['addToCart'])) {
     }
     
     .wishlist-btn.active i {
-        color: #ff0000;
+        color: var(--error-color);
+    }
+
+    .discount-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background-color: var(--error-color);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        z-index: 1;
+    }
+
+    .original-price {
+        color: var(--error-color);
+        text-decoration: line-through;
+        font-size: 14px;
+        font-weight: normal;
+    }
+
+    .discounted-price {
+        color: var(--noir-color);
+        font-weight: 600;
+        font-size: 1.2em;
     }
 
     @media (max-width: 1400px) {
@@ -247,10 +277,16 @@ if (isset($_POST['addToCart'])) {
     <?php include 'header/header.php' ?>
     <div id='container'>
         <div id='prodContainer'>
-            <button class="wishlist-btn" data-product-id="<?php echo $productID; ?>">
-                <i class="far fa-heart"></i>
+            
+            <button class="wishlist-btn <?php echo $is_in_wishlist ? 'active' : ''; ?>" data-product-id="<?php echo $productID; ?>">
+                <i class="<?php echo $is_in_wishlist ? 'fas' : 'far'; ?> fa-heart"></i>
             </button>
-            <img id='productImg' src="<?php echo $data['image_url']; ?>" alt="<?php echo $data['description']; ?>">
+            <div style='width:50%;display: flex; justify-content: center; align-items: center; position: relative;'>
+                <img id='productImg' src="<?php echo $data['image_url']; ?>" alt="<?php echo $data['description']; ?>" draggable='false'>
+                <?php if ($data['discount'] > 0) { ?>
+                    <div class="discount-badge">-<?php echo $data['discount'] ?>%</div>
+                <?php } ?>
+            </div>
             <div id='infoSide'>
                 <div id='info'>
                     <p id='name'><?php echo $data['description'] ?></p>
@@ -277,7 +313,17 @@ if (isset($_POST['addToCart'])) {
                     <div class='price-section'>
                         <div class='price-row'>
                             <p class='price-label'>Price:</p>
-                            <p id='stockPrice' class='price-value'><?php echo number_format($data['price'], 2) ?>&euro;</p>
+                            <?php if ($data['discount'] > 0) { 
+                                $originalPrice = $data['price'];
+                                $discountedPrice = $originalPrice * (1 - $data['discount'] / 100);
+                            ?>
+                                <div class='price-value'>
+                                    <span class="original-price"><?php echo number_format($originalPrice, 2) ?>€</span>
+                                    <span class="discounted-price"><?php echo number_format($discountedPrice, 2) ?>€</span>
+                                </div>
+                            <?php } else { ?>
+                                <p class='price-value'><?php echo number_format($data['price'], 2) ?>€</p>
+                            <?php } ?>
                         </div>
                         <input id='buy' type='submit' name='addToCart' value='Add to cart'>
                     </div>
@@ -292,7 +338,7 @@ if (isset($_POST['addToCart'])) {
             // Check initial wishlist status
             const productId = <?php echo $productID; ?>;
             $.ajax({
-                url: 'check_wishlist.php',
+                url: 'controller/check_wishlist.php',
                 method: 'POST',
                 data: { product_id: productId },
                 success: function(response) {
@@ -308,7 +354,7 @@ if (isset($_POST['addToCart'])) {
                 const button = $(this);
                 
                 $.ajax({
-                    url: 'add_to_wishlist.php',
+                    url: 'controller/add_to_wishlist.php',
                     method: 'POST',
                     data: { product_id: productId },
                     success: function(response) {
@@ -323,7 +369,7 @@ if (isset($_POST['addToCart'])) {
         });
 
         const price = <?php echo $data['price'] ?>;
-        
+
         function addToQuantity(add) {
             var amount = parseInt(document.getElementById('stock').value);
             if (amount == 1 && add < 0) {

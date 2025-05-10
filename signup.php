@@ -2,7 +2,8 @@
 include_once "controller/signup.inc.php";
 session_start();
 
-include "header/header.php";
+$error = '';
+$success = '';
 
 if(isset($_POST['submit'])){
     // Storing variables for validation
@@ -15,46 +16,25 @@ if(isset($_POST['submit'])){
 
     // Data validation using methods
     if(emptyInputSignUp($first_name, $last_name, $birthday, $email, $password, $password_repeat)) {
-        header("Location: signup.php?fields=empty");
-        exit();
-    }
-
-    if(!invalidInputs($first_name, $last_name)) {
-        header("Location: signup.php?inputs=invalid");
-        exit();
-    }
-
-    if(!checkEmail($email)) {
-        header("Location: signup.php?email=invalid");
-        exit();
-    }
-
-    if(!invalidPasswordFormat($password)){
-        header("Location: signup.php?password=invalid");
-        exit();
-    }
-
-    if(!checkPassword($password, $password_repeat)) {
-        header("Location: signup.php?passwords=nomatch");
-        exit();
-    }
-
-    if(!checkAge($birthday)) {
-        header("Location: signup.php?age=invalid");
-        exit();
-    }
-
-    if(!emailExists($email)) {
-        header("Location: signup.php?email=exists");
-        exit();
-    }
-
-    if (createUser($first_name, $last_name, $birthday, $email, $password)) {
-        header("Location: signup.php?signup=success");
-        exit();
+        $error = "Please fill in all fields.";
+    } elseif(!invalidInputs($first_name, $last_name)) {
+        $error = "Invalid name inputs.";
+    } elseif(!checkEmail($email)) {
+        $error = "Invalid email format.";
+    } elseif(!invalidPasswordFormat($password)) {
+        $error = "Password must be at least 8 characters long and include numbers and special characters.";
+    } elseif(!checkPassword($password, $password_repeat)) {
+        $error = "Passwords do not match.";
+    } elseif(!checkAge($birthday)) {
+        $error = "You must be at least 18 years old.";
+    } elseif(!emailExists($email)) {
+        $error = "Email already exists.";
     } else {
-        header("Location: signup.php?signup=error");
-        exit();
+        if (createUser($first_name, $last_name, $birthday, $email, $password)) {
+            $success = "Account created successfully! Welcome to DigitalSea.";
+        } else {
+            $error = "Something went wrong. Please try again.";
+        }
     }
 }
 
@@ -68,131 +48,165 @@ if(isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>Sign Up - DigitalSea</title>
+    
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Load Font Awesome asynchronously -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
 </head>
 <style>
+    .page-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    #container {
+        background-color: var(--ivory-color);
+        display: flex;
+        flex: 1;
+        min-height: calc(100vh - 120px);
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+    }
+
     .signup-container {
-        background-color: var(--modal-bg-color);
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 0px 5px var(--navy-color);
+        background-color: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         width: 100%;
         max-width: 400px;
-        margin: 40px auto;
+        margin: 0 auto;
     }
 
     .signup-container h1 {
         text-align: center;
-        color: var(--page-text-color);
-        margin-bottom: 20px;
+        color: var(--noir-color);
+        margin-bottom: 30px;
+        font-size: 24px;
+        font-weight: 600;
     }
 
     .signup-container input {
         width: 100%;
-        padding: 10px;
+        padding: 12px 15px;
         margin: 10px 0;
-        border: 2px solid var(--mist-color);
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 14px;
-    }
-
-    .signup-container input[type="submit"] {
-        background-color:var(--button-color);
-        color: var(--text-color);
-        font-size: 16px;
-        cursor: pointer;
-        border: none;
-        
-        transition: all 0.2s ease-in-out;
-    }
-
-    .signup-container input[type="submit"]:hover {
-        background-color: var(--button-color-hover);
-        transition: all 0.2s ease-in-out;
+        border: 2px solid var(--ivory-color);
+        border-radius: 6px;
+        font-size: 15px;
+        transition: all 0.3s ease;
     }
 
     .signup-container input:focus {
-        border-color: var(--navy-color);
-        box-shadow: 0 0 5px var(--navy-color);
+        border-color: var(--noir-color);
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
         outline: none;
     }
 
-    .signup-container .error, .signup-container .success {
-        text-align: center;
-        margin-top: 15px;
-        color: #fff;
-        padding: 10px;
-        border-radius: 5px;
+    .signup-container input[type="submit"] {
+        background-color: var(--noir-color);
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        padding: 14px;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .signup-container input[type="submit"]:hover {
+        background-color: var(--button-color);
+        transform: translateY(-2px);
     }
 
     .signup-container .error {
-        background-color: var(--error-color);
+        background-color: #ffebee;
+        color: #d32f2f;
+        padding: 12px;
+        border-radius: 6px;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
     }
 
     .signup-container .success {
-        background-color: var(--success-color);
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        padding: 12px;
+        border-radius: 6px;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
     }
 
+    .signup-container .login-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: var(--noir-color);
+    }
+
+    .signup-container .login-link a {
+        color: var(--button-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .signup-container .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .signup-container .form-row {
+        display: flex;
+        gap: 15px;
+    }
+
+    .signup-container .form-row input {
+        flex: 1;
+    }
 </style>
 <body>
     <div class="page-wrapper">
-        <div class="signup-container">
-            <h1>Sign Up</h1>
-            <form action="" method="post">
-                <input type="text" name="first_name" placeholder="First name..." autofocus="autofocus" required>
-                <input type="text" name="last_name" placeholder="Last name..." required>
-                <input type="email" name="email" placeholder="Email..." required>
-                <input type="date" name="birthday" required>
-                <input type="password" name="password" placeholder="Password..." required>
-                <input type="password" name="repeat_password" placeholder="Repeat password..." required>
-                <input type="submit" name="submit" value="Sign Up">
-            </form>
+        <?php include "header/header.php"?>
+        <div id="container">
+            <div class="signup-container">
+                <h1>Create Account</h1>
+                <form action="" method="post">
+                    <div class="form-row">
+                        <input type="text" name="first_name" placeholder="First name" autofocus="autofocus" required>
+                        <input type="text" name="last_name" placeholder="Last name" required>
+                    </div>
+                    <input type="email" name="email" placeholder="Email address" required>
+                    <input type="date" name="birthday" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="repeat_password" placeholder="Confirm password" required>
+                    <input type="submit" name="submit" value="Create Account">
+                </form>
 
-            <?php 
-            // Displaying error or success messages based on URL parameters
-            if (isset($_GET['fields']) && $_GET['fields'] == 'empty') {
-                echo "<div class='error'>Please fill in all fields.</div>";
-            }
+                <?php if (!empty($error)): ?>
+                    <div class='error'><?php echo $error; ?></div>
+                <?php endif; ?>
 
-            if (isset($_GET['inputs']) && $_GET['inputs'] == 'invalid') {
-                echo "<div class='error'>Invalid name inputs.</div>";
-            }
-            
-            if (isset($_GET['email']) && $_GET['email'] == 'invalid') {
-                echo "<div class='error'>Invalid email format.</div>";
-            }
-            
-            if (isset($_GET['password']) && $_GET['password'] == 'invalid') {
-                echo "<div class='error'>Password format is invalid.</div>";
-            }
-            
-            if (isset($_GET['passwords']) && $_GET['passwords'] == 'nomatch') {
-                echo "<div class='error'>Passwords do not match.</div>";
-            }
-            
-            if (isset($_GET['age']) && $_GET['age'] == 'invalid') {
-                echo "<div class='error'>You must be at least 18 years old.</div>";
-            }
-            
-            if (isset($_GET['email']) && $_GET['email'] == 'exists') {
-                echo "<div class='error'>Email already exists.</div>";
-            }
-            
-            if (isset($_GET['signup']) && $_GET['signup'] == 'success') {
-                echo "<div class='success'>Sign up successful! Welcome.</div>";
-                header("Location: index.php");
-                exit();
-            }
-            
-            if (isset($_GET['signup']) && $_GET['signup'] == 'error') {
-                echo "<div class='error'>Something went wrong. Please try again.</div>";
-            }
-            ?>
+                <?php if (!empty($success)): ?>
+                    <div class='success'><?php echo $success; ?></div>
+                <?php endif; ?>
+
+                <div class="login-link">
+                    Already have an account? <a href="login.php">Log in</a>
+                </div>
+            </div>
         </div>
+        <?php include "footer/footer.php"; ?>
     </div>
-    
-    <?php include "footer/footer.php"; ?>
 </body>
 </html>
 <?php } ?>
