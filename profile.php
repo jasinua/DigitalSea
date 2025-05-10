@@ -57,189 +57,246 @@ if (!isLoggedIn($user_id)) {
 <style>
     .page-wrapper {
         display: flex;
-        margin-top: 80px;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        min-height: calc(100vh - 120px);
+        background-color: var(--ivory-color);
+        padding: 20px;
+        overflow: hidden;
     }
 
     .profile {
         display: flex;
         flex-direction: row;
+        width: 100%;
+        max-width: 1000px;
+        gap: 0;
+        margin: auto;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        min-height: 500px;
+        box-sizing: border-box;
     }
 
     .userProfile {
         display: flex;
         flex-direction: column;
         text-align: center;
-        color: var(--page-text-color);
+        color: var(--noir-color);
         max-width: 450px;
-        height: 370px;
         width: 100%;
-        margin: 20px 0 20px 37%;
         background-color: white;
         padding: 30px;
-        opacity: 1;
-        border-radius: 15px;
-        box-shadow: 0 0px 5px #153147;
-        transition: transform 0.3s ease-in-out, opacity 0.5s ease-in;
-        flex-grow: 1;
+        border-top-left-radius: 16px;
+        border-bottom-left-radius: 16px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+        transform: translateX(0px);
+        transition: box-shadow 0.3s, opacity 0.3s, filter 0.3s, transform 0.5s;
         z-index: 2;
+    }
+    .userProfile.editing {
+        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+        filter: brightness(0.97);
+        transform: translateX(0px);
+        transition: transform 0.5s ease;
     }
 
     .userProfile i {
         font-size: 70px;
-        border-radius: 50%;
+        color: var(--button-color);
+        margin-bottom: 20px;
     }
 
     .userProfile .user_data {
-        margin-top: 15px;
-        margin-bottom: 15px;
-        font-size: 20px;
+        margin: 10px 0;
+        font-size: 1.1rem;
+        color: var(--page-text-color);
     }
 
     .userProfile .user_name_lastname {
-        font-size: 34px;
-        margin-top: 15px;
-        margin-bottom: 15px;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin: 15px 0;
+        color: var(--noir-color);
     }
 
     .editXlogout {
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
     }
 
     .userProfile .edit-button, .userProfile .logout-button {
-        padding: 0;
-        margin-top: 15px;
-        margin-left: 0;
-        margin-right: 0;
-    }
-
-    .userProfile .edit-button:hover, .userProfile .logout-button:hover {
-        color: #757575;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
         cursor: pointer;
+        transition: all 0.3s ease;
     }
 
-    /* Hide userProfile when editProfile is active */
-    .userProfile.hidden {
-        margin-left: 30%;
-        transition: margin-left 0.5s ease-in-out;
+    .userProfile .edit-button {
+        background-color: var(--button-color);
+        color: white;
     }
 
-    .userProfile.active {
-        margin-left: 37%;
-        transition: margin-left 0.5s ease-in-out;
+    .userProfile .edit-button:hover {
+        background-color: var(--button-color-hover);
+        transform: translateY(-2px);
+    }
+
+    .userProfile .logout-button {
+        background-color: #f8f8f8;
+        color: var(--noir-color);
+    }
+
+    .userProfile .logout-button:hover {
+        background-color: #eee;
+        transform: translateY(-2px);
     }
 
     .editProfile {
+        display: flex;
         flex-direction: column;
         text-align: center;
-        opacity: 0;
-        color: var(--page-text-color);
-        max-width: 400px;
+        color: var(--noir-color);
+        max-width: 450px;
         width: 100%;
-        margin: 35px -10%;
         background-color: white;
         padding: 30px;
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
+        border-top-right-radius: 16px;
+        border-bottom-right-radius: 16px;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
-        box-shadow: 0 0px 5px var(--navy-color);
-        transition: transform 0.3s ease-in-out, opacity 0.5s ease;
-        flex-grow: 1;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        transform: translateX(0);
+        z-index: 1;
+        transition: opacity 0.4s, transform 0.5s, z-index 0s 0.5s;
     }
-
-    /* When active, slide editProfile into view */
     .editProfile.active {
         opacity: 1;
-        transform: translateX(39%);
+        pointer-events: auto;
+        position: relative;
+        left: auto;
+        top: auto;
+        height: auto;
+        transform: translateX(0);
+        z-index: 1;
+        transition: opacity 0.4s, transform 0.5s, z-index 0s;
     }
-
-    .editProfile.hidden {
+    .editProfile.behind {
         opacity: 0;
-        transform: translateX(-60%);
+        pointer-events: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        transform: translateX(-230px);
+        transition:  transform 0.5s ease;
+        z-index: 1;
     }
 
-    /* Style the inputs */
     .input-field {
         width: 100%;
         padding: 12px;
         margin: 10px 0;
-        border: 2px solid var(--mist-color);
-        border-radius: 6px;
-        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
         box-sizing: border-box;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        transition: all 0.3s ease;
+        background-color: white;
     }
 
     .input-field:focus {
-        border-color: var(--navy-color);
-        box-shadow: 0 0 5px var(--navy-color);
+        border-color: var(--button-color);
+        box-shadow: 0 0 0 2px rgba(21, 49, 71, 0.1);
         outline: none;
     }
 
-    /* Style for first and last name inputs */
     .first_last_name {
         display: flex;
         justify-content: space-between;
-        gap: 10px;
+        gap: 15px;
     }
 
     .submitCancel {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        gap: 10px;
-        margin-top: 10px;
+        gap: 15px;
+        margin-top: 20px;
     }
 
-    /* Style for the submit button */
-    .submit-btn {
+    .submit-btn, .cancel-btn {
         width: 100%;
         padding: 12px;
-        background-color: var(--navy-color);
-        color: white;
-        font-size: 16px;
+        font-size: 1rem;
+        font-weight: 500;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn {
+        background-color: var(--button-color);
+        color: white;
     }
 
     .submit-btn:hover {
         background-color: var(--button-color-hover);
+        transform: translateY(-2px);
     }
 
-    .submit-btn:focus {
-        outline: none;
-    }
-
-    /* Style for the submit button */
     .cancel-btn {
-        width: 100%;
-        padding: 12px;
-        background-color: var(--button-color);
-        color: white;
-        font-size: 16px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
+        background-color: #f8f8f8;
+        color: var(--noir-color);
     }
 
     .cancel-btn:hover {
-        background-color: var(--button-color-hover);
-    }
-
-    .cancel-btn:focus {
-        outline: none;
+        background-color: #eee;
+        transform: translateY(-2px);
     }
 
     .emailXaddress p {
-        margin: 0;
+        margin: 10px 0;
         padding: 0;
     }
 
+    @media (max-width: 950px) {
+        .profile {
+            flex-direction: column;
+            max-width: 95%;
+            align-items: center;
+            min-height: auto;
+        }
+        .userProfile, .editProfile {
+            max-width: 100%;
+            border-radius: 16px !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+            transform: none !important;
+        }
+        .editProfile {
+            margin-top: 20px;
+            border-radius: 16px !important;
+            position: relative !important;
+            left: auto !important;
+            top: auto !important;
+            height: auto !important;
+        }
+    }
 </style>
 <body>
     <div class="page-wrapper">
@@ -283,20 +340,14 @@ if (!isLoggedIn($user_id)) {
 
     function editFunction() {
         if (!isEditing) {
-            // Show edit form
-            userProfile.classList.add("hidden");
-            userProfile.classList.remove("active");
-            setTimeout(() => {
-                editProfile.classList.add("active");
-                editProfile.classList.remove("hidden");
-            }, 300);
-            
+            userProfile.classList.add("editing");
+            editProfile.classList.remove("behind");
+            editProfile.classList.add("active");
             editButton.innerText = "Duke edituar profilin";
             isEditing = true;
         } else if(isEditing && editButton.innerText === "Duke edituar profilin") {
             isEditing = true;
         } else {
-            // Submit changes
             submitChanges();
             isEditing = false;
         }
@@ -347,15 +398,9 @@ if (!isLoggedIn($user_id)) {
     }
 
     function cancelEdit() {
-        // Hide edit form and show profile
-        setTimeout(() => {
-            userProfile.classList.remove("hidden");
-            userProfile.classList.add("active");
-            editProfile.classList.remove("active");
-            editProfile.classList.add("hidden");
-        }, 0);
-
-        // Reset button state
+        userProfile.classList.remove("editing");
+        editProfile.classList.remove("active");
+        editProfile.classList.add("behind");
         editButton.innerText = "Edito Profilin";
         isEditing = false;
     }
@@ -382,5 +427,10 @@ if (!isLoggedIn($user_id)) {
                 console.error('Logout failed, dear soul:', err);
             });
     }
+
+    // On page load, ensure editProfile is behind
+    window.addEventListener('DOMContentLoaded', function() {
+        editProfile.classList.add('behind');
+    });
 </script>
 </html>
