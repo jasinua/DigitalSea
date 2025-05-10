@@ -36,11 +36,6 @@ if(!isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in - DigitalSea</title>
-    
-    <!-- Preload critical CSS -->
-    <link rel="preload" href="style.css" as="style">
-    <link rel="stylesheet" href="style.css">
-    
     <!-- Load Font Awesome asynchronously -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>

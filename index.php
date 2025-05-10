@@ -604,7 +604,7 @@
     }
 
     .wheel-item.active {
-        transform: translate(-50%, -50%) scale(1.03) translateY(-10px);
+        transform: translate(-50%, -50%) scale(1.03);
         z-index: 4;
         opacity: 1;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);

@@ -21,8 +21,6 @@ if (isset($_POST['addToCart'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($data['name']) ? htmlspecialchars($data['name']) : 'Product'; ?></title>
-    <link rel="stylesheet" href="product.css">
-    <link rel="stylesheet" href="style.css">
 </head>
 <style>
     #container {
@@ -227,7 +225,7 @@ if (isset($_POST['addToCart'])) {
         right: 12px;
         background-color: var(--error-color);
         color: white;
-        padding: 4px 8px;
+        padding: 7px 12px;
         border-radius: 4px;
         font-size: 12px;
         font-weight: bold;

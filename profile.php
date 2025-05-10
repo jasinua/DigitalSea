@@ -88,7 +88,6 @@ if (!isLoggedIn($user_id)) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-<link rel="stylesheet" href="style.css"/>
 <title>Profile Page</title>
 </head>
 <style>
@@ -835,7 +834,7 @@ if (!isLoggedIn($user_id)) {
 
     function logoutFunction() {
         // Make a call to logout.php
-        fetch('logout.php')
+        fetch('controller/logout.php')
             .then(() => {
                 // Once session is destroyed, redirect to login
                 window.location.href = 'login.php';
