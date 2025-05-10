@@ -2,6 +2,18 @@
 // THIS PAGE IS FOR ADDING PRODUCTS INTO products.json TEMPORARILY
 session_start();
 
+// --- NEW: Fetch products from database ---
+include_once "controller/function.php"; // for $conn
+include_once "model/dbh.inc.php";
+$products = [];
+$sql = "SELECT * FROM products";
+$result = $conn->query($sql);
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $products[] = $row;
+    }
+}
+
 $file = 'controller/products.json';
 
 // Handle form submission
@@ -41,15 +53,6 @@ if (isset($_POST['submit'])) {
     echo "<script>alert('Product added successfully!'); window.location.href=window.location.href;</script>";
     exit();
 }
-
-$products = [];
-if (file_exists($file)) {
-    $json_data = file_get_contents($file);
-    $data = json_decode($json_data, true);
-    if (isset($data['products'])) {
-        $products = $data['products'];
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -60,199 +63,342 @@ if (file_exists($file)) {
     <title>Product Management</title>
 </head>
 <style>
-    .body-container {
-        width: 70%;
-        margin: auto;
-        display: flex;
-        flex-direction: column;
-    }
 
-    h1, h2 {
-        margin-top: 20px;
-        text-align: center;
-        color: var(--noir-color);
-    }
+/* Header search bar fix */
+header input[type="text"], .header-search input[type="text"] {
+    width: 300px !important;
+    max-width: 90vw;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1.5px solid var(--mist-color);
+    font-size: 1rem;
+    background: #fff;
+    color: var(--noir-color);
+    margin: 0 auto;
+    display: block;
+    box-sizing: border-box;
+}
 
-    /* Modal styles */
-    #modal {
-        display: none;
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background-color: rgba(0,0,0,0.5);
-        z-index: 1000;
-        overflow: auto;
-    }
+header .header-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+}
 
+.body-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 32px 24px;
+}
+
+h1, h2 {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--noir-color);
+}
+
+/* Modal styles */
+#modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    overflow: auto;
+}
+
+.modal-content {
+    background: var(--background-color);
+    padding: 20px 18px 18px 18px;
+    border-radius: 18px;
+    width: 94%;
+    max-width: 450px;
+    margin: 60px auto 30px auto;
+    position: relative;
+    box-shadow: 0 12px 40px rgba(21,49,71,0.18), 0 2px 8px rgba(44,62,80,0.08);
+    border: 1.5px solid #e9ecef;
+    animation: modal-slide-in 0.4s cubic-bezier(.4,1.4,.6,1);
+    overflow: visible;
+}
+
+@keyframes modal-slide-in {
+    from { opacity: 0; transform: translateY(-40px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s;
+    z-index: 2;
+}
+.close-btn:hover {
+    color: #153147;
+}
+
+.modal-content h2, .modal-content h3 {
+    text-align: center;
+    color: #153147;
+    margin-top: 12px;
+    margin-bottom: 24px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.modal-content label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content input[type="url"],
+.modal-content textarea {
+    width: 100%;
+    padding: 7px 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1.2px solid #d1d8e0;
+    background-color: #f8f8f8;
+    color: #2c3e50;
+    font-size: 0.93rem;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+    border-color: #153147;
+    box-shadow: 0 0 0 2px rgba(21,49,71,0.10);
+    outline: none;
+}
+
+.modal-content .btn, .modal-content input[type="submit"] {
+    background: linear-gradient(90deg, #153147 0%, #1a3d5a 100%);
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 0;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(21,49,71,0.10);
+    display: block;
+    width: 100%;
+}
+
+.modal-content .btn:hover, .modal-content input[type="submit"]:hover {
+    background: linear-gradient(90deg, #1a3d5a 0%, #153147 100%);
+    transform: translateY(-2px) scale(1.03);
+}
+
+@media (max-width: 600px) {
     .modal-content {
-        background: var(--modal-bg-color);
-        padding: 20px;
-        border-radius: 10px;
-        width: 80%;
-        max-width: 600px;
-        margin: 50px auto;
-        position: relative;
+        padding: 10px 2vw 10px 2vw;
+        max-width: 98vw;
     }
+}
 
-    .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 25px;
-        border: none;
-        background: none;
-        cursor: pointer;
-        color: var(--button-color);
-    }
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: var(--noir-color);
+}
 
-    form {
-        background: var(--modal-bg-color);
-    }
+input[type="text"],
+input[type="number"],
+input[type="url"],
+textarea {
+    width: 100%;
+    padding: 12px 16px;
+    margin-top: 5px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--mist-color);
+    background-color: var(--ivory-color);
+    color: var(--noir-color);
+    font-size: 1rem;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
 
-    label {
-        display: block;
-        margin-top: 10px;
-        font-weight: bold;
-        color: var(--noir-color);
-    }
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+textarea:focus {
+    border-color: var(--button-color);
+    box-shadow: 0 0 0 2px rgba(21,49,71,0.08);
+    outline: none;
+}
 
-    input[type="text"],
-    input[type="number"],
-    input[type="url"],
-    textarea {
-        width: 100%;
-        padding: 8px;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        border-radius: 6px;
-        border: 1px solid var(--mist-color);
-        background-color: var(--ivory-color);
-        color: var(--noir-color);
-    }
+button, .btn, input[type="submit"] {
+    background-color: var(--button-color);
+    color: var(--text-color);
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(21,49,71,0.06);
+}
 
-    button, .btn, input[type="submit"] {
-        background-color: var(--button-color);
-        color: var(--text-color);
-        padding: 8px 15px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        align-self: center;
-        transition: background-color 0.3s ease;
-    }
+button:hover, .btn:hover, input[type="submit"]:hover {
+    background-color: var(--button-color-hover);
+}
 
-    button:hover, .btn:hover, input[type="submit"]:hover {
-        background-color: var(--button-color-hover);
-    }
+table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background: var(--modal-bg-color);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border-radius: 15px;
+    overflow: hidden;
+}
 
-    table {
-        width: 95%;
-        margin: 30px auto;
-        border-collapse: collapse;
-        background: var(--modal-bg-color);
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        border-radius: 15px;
-        overflow: hidden;
-    }
+th, td {
+    color: var(--page-text-color);
+    padding: 8px;
+    border-bottom: 1px solid var(--mist-color);
+    text-align: left;
+    font-size: 0.97rem;
+}
 
-    th, td {
-        color:var(--page-text-color);
-        padding: 15px;
-        border-bottom: 1px solid var(--mist-color);
-        text-align: left;
-    }
+th {
+    background-color: var(--button-color);
+    color: var(--text-color);
+    font-size: 1.05rem;
+}
 
-    th {
-        background-color: var(--button-color);
-        color: var(--text-color);
-    }
+tr:hover {
+    background-color: var(--almond-color);
+}
 
-    tr:hover {
-        background-color: var(--almond-color);
-    }
+.details-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-    .details-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+.details-list li {
+    margin-bottom: 5px;
+}
 
-    .details-list li {
-        margin-bottom: 5px;
-    }
+.link-button {
+    color: var(--button-color);
+    text-decoration: none;
+}
 
-    .link-button {
-        color: var(--button-color);
-        text-decoration: none;
-    }
+.link-button:hover {
+    text-decoration: underline;
+}
 
-    .link-button:hover {
-        text-decoration: underline;
-    }
+.search-add {
+    display: flex;
+    justify-content: space-center;
+    align-items: center;
+    margin: 20px auto;
+    width: 95%;
+}
 
-    .search-add {
-        display: flex;
-        justify-content: space-center;
-        align-items: center;
-        margin: 20px auto;
-        width: 95%;
-    }
+.search-add input[type="text"] {
+    width: 60%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--mist-color);
+    border-radius: 6px;
+    margin: auto;
+}
 
-    .search-add input[type="text"] {
-        width: 60%;
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid var(--mist-color);
-        border-radius: 6px;
-        margin: auto;
-    }
+.search-add .btn {
+    width: 30%;
+    padding: 12px;
+    margin:auto;
+}
 
-    .search-add .btn {
-        width: 30%;
-        padding: 12px;
-        margin:auto;
-    }
+#detailsContainer div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
 
-    #detailsContainer div {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-    }
+#detailsContainer input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--mist-color);
+    background-color: var(--ivory-color);
+    color: var(--noir-color);
+}
 
-    #detailsContainer input[type="text"] {
-        flex: 1;
-        padding: 8px;
-        margin-right: 10px;
-        border-radius: 6px;
-        border: 1px solid var(--mist-color);
-        background-color: var(--ivory-color);
-        color: var(--noir-color);
-    }
+#detailsContainer button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
 
-    #detailsContainer button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-    }
+#detailsContainer button img {
+    width: 20px;
+    height: 20px;
+}
 
-    #detailsContainer button img {
-        width: 20px;
-        height: 20px;
-    }
+.detail-button {
+    background-color:var(--button-color-hover);
+}
+.detail-button:hover {
+    background-color:var(--navy-color-lighter);
+}
 
-    .detail-button {
-        background-color:var(--button-color-hover);
-    }
-    .detail-button:hover {
-        background-color:var(--navy-color-lighter);
-    }
+.div {
+    display:flex;
+    justify-content:right;
+}
 
-    .div {
-        display:flex;
-        justify-content:right;
+.product-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+
+@media (max-width: 900px) {
+    .body-container {
+        width: 98%;
+        padding: 12px 4px;
     }
+    table, th, td {
+        font-size: 0.95rem;
+    }
+}
 </style>
 <body>
 
@@ -267,6 +413,7 @@ if (file_exists($file)) {
     <!-- Modal -->
     <div id="modal">
         <div class="modal-content">
+            <div class="modal-accent"></div>
             <button class="close-btn" onclick="closeForm()">&times;</button>
             <form method="post" id="productForm">
                 <h2>Add a New Product</h2>
@@ -305,7 +452,7 @@ if (file_exists($file)) {
                 <br><br>
                 <div class="div"><input type="submit" name="submit" value="Insert Product" id="submit-btn" class="btn">
                 </div>
-                  </form>
+            </form>
         </div>
     </div>
 
@@ -316,25 +463,23 @@ if (file_exists($file)) {
             <tr>
                 <th>Image</th>
                 <th>Name</th>
-                <th>Type</th>
+                <th>Description</th>
                 <th>Price</th>
                 <th>Stock</th>
                 <th>API Source</th>
                 <th>Details</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <?php if (!empty($products)): ?>
-                <?php foreach ($products as $product): ?>
-                    <tr>
+                <?php foreach ($products as $index => $product): ?>
+                    <tr data-index="<?= $index ?>">
                     <td>
-                            <img src="<?= htmlspecialchars($product['image_url']['main_image']) ?>" widht="100px" height='100px'alt="">
-                            <!-- <a class="link-button" href="<?= htmlspecialchars($product['image_url']['main_image']) ?>" target="_blank">Main</a> |
-                            <a class="link-button" href="<?= htmlspecialchars($product['image_url']['1']) ?>" target="_blank">1</a> |
-                            <a class="link-button" href="<?= htmlspecialchars($product['image_url']['2']) ?>" target="_blank">2</a> -->
+                            <img src="<?= htmlspecialchars($product['image_url']) ?>" class="product-img" alt="">
                         </td>
                         <td><?= htmlspecialchars($product['name']) ?></td>
-                        <td><?= htmlspecialchars($product['type']) ?></td>
+                        <td><?= htmlspecialchars($product['description']) ?></td>
                         <td><strong><?= htmlspecialchars(number_format($product['price'], 2)) ?>€</strong></td>
                         <td><?= htmlspecialchars($product['stock']) ?></td>
                         <td><?= htmlspecialchars($product['api_source']) ?></td>
@@ -350,10 +495,13 @@ if (file_exists($file)) {
                                 No details
                             <?php endif; ?>
                         </td>
+                        <td>
+                            <button type="button" class="btn edit-btn" onclick="editProduct(<?= $index ?>)">Edit</button>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
-                <tr><td colspan="7" style="text-align:center;">No products available.</td></tr>
+                <tr><td colspan="8" style="text-align:center;">No products available.</td></tr>
             <?php endif; ?>
         </tbody>
     </table>
@@ -393,6 +541,72 @@ window.onclick = function(event) {
     if (event.target === modal) {
         closeForm();
     }
+}
+
+function editProduct(index) {
+    // Get product data from PHP array (rendered as JS object)
+    const products = <?php echo json_encode($products); ?>;
+    const product = products[index];
+    if (!product) return;
+
+    // Open modal
+    toggleForm();
+
+    // Fill modal fields
+    const form = document.getElementById('productForm');
+    form.name.value = product.name;
+    form.description.value = product.description;
+    form.price.value = product.price;
+    form.stock.value = product.stock;
+    form.api_source.value = product.api_source;
+    form.main_image.value = product.image_url.main_image;
+    form.image_1.value = product.image_url[1];
+    form.image_2.value = product.image_url[2];
+
+    // Remove old details fields
+    const detailsContainer = document.getElementById('detailsContainer');
+    detailsContainer.innerHTML = '';
+    if (product.details) {
+        Object.entries(product.details).forEach(([key, value]) => {
+            const div = document.createElement('div');
+            div.style.marginBottom = "10px";
+            div.style.display = "flex";
+            div.style.alignItems = "center";
+            div.innerHTML = `
+                <input type="text" name="details_key[]" placeholder="Key" required style="flex: 1; margin-right: 10px;" value="${key}">
+                <input type="text" name="details_value[]" placeholder="Value" required style="flex: 1; margin-right: 10px;" value="${value}">
+                <button type="button" onclick="this.parentNode.remove()" style="background: none; border: none; cursor: pointer;">
+                    <i class="fa-solid fa-trash" style="color:red; font-size:20px;"></i>
+                </button>
+            `;
+            detailsContainer.appendChild(div);
+        });
+    }
+
+    // Change submit button to Update
+    document.getElementById('submit-btn').value = 'Update Product';
+    // Store index in a hidden field
+    if (!document.getElementById('edit-index')) {
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'edit_index';
+        hidden.id = 'edit-index';
+        form.appendChild(hidden);
+    }
+    document.getElementById('edit-index').value = index;
+}
+
+// On modal close, reset form to add mode
+function closeForm() {
+    document.getElementById('modal').style.display = "none";
+    document.body.style.overflow = "auto";
+    // Reset form
+    const form = document.getElementById('productForm');
+    form.reset();
+    document.getElementById('detailsContainer').innerHTML = '';
+    document.getElementById('submit-btn').value = 'Insert Product';
+    const editIndex = document.getElementById('edit-index');
+    if (editIndex) editIndex.remove();
 }
 </script>
 </html>

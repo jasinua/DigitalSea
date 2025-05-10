@@ -28,7 +28,7 @@
     }
     
     :root {
-        --background-color: #f5f5fa;       
+        --background-color: #f9f8f7;       
         --text-color: white;
         --page-text-color: #232a2f;
 
