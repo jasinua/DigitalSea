@@ -568,7 +568,7 @@
         overflow: hidden;
         position: relative;
         height: 600px;
-        padding: 40px 0;
+        /* padding: 20px 0; */
         box-sizing: border-box;
         display: flex;
         justify-content: center;
@@ -587,7 +587,7 @@
     .wheel-item {
         width: 330px;
         min-width: 300px;
-        height: 440px;
+        height: 400px;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -604,14 +604,14 @@
     }
 
     .wheel-item.active {
-        transform: translate(-50%, -50%) scale(1.08);
+        transform: translate(-50%, -50%) scale(1.03) translateY(-10px);
         z-index: 4;
         opacity: 1;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
     }
 
     .wheel-item:hover {
-        transform: translate(-50%, -50%) scale(1.1);
+        transform: translate(-50%, -50%) scale(1.08);
         z-index: 4;
         opacity: 1;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
@@ -619,7 +619,7 @@
     }
 
     .wheel-item img {
-        height: 280px;
+        height: 250px;
         object-fit: contain;
         width: 100%;
         padding: 10px;
@@ -682,25 +682,25 @@
     }
 
     .wheel-item.left {
-        transform: translate(-50%, -50%) scale(0.9) translateX(-400px);
+        transform: translate(-50%, -50%) scale(0.9) translateX(-370px) translateY(25px);
         opacity: 0.7;
         z-index: 3;
     }
 
     .wheel-item.right {
-        transform: translate(-50%, -50%) scale(0.9) translateX(400px);
+        transform: translate(-50%, -50%) scale(0.9) translateX(370px) translateY(25px);
         opacity: 0.7;
         z-index: 3;
     }
 
     .wheel-item.far-left {
-        transform: translate(-50%, -50%) scale(0.8) translateX(-800px) translateY(25px);
+        transform: translate(-50%, -50%) scale(0.8) translateX(-780px) translateY(55px);
         opacity: 0.5;
         z-index: 2;
     }
 
     .wheel-item.far-right {
-        transform: translate(-50%, -50%) scale(0.8) translateX(800px) translateY(25px);
+        transform: translate(-50%, -50%) scale(0.8) translateX(780px) translateY(55px);
         opacity: 0.5;
         z-index: 2;
     }
@@ -755,18 +755,18 @@
 
     #topItemsHeader {
         text-align: center;
-        margin: 40px 0;
+        margin: 20px 0 0 0;
         color: var(--noir-color);
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 2em;
+        font-weight: bold;
     }
 
     #newItemsHeader {
         text-align: center;
         margin: 20px 0;
         color: var(--noir-color);
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 2em;
+        font-weight: bold;
     }
 
     .wishlist-btn {
@@ -884,6 +884,48 @@
     .page-number.active {
         background: var(--noir-color);
         color: white;
+    }
+
+    .product-listing-row {
+        display: flex;
+        gap: 24px;
+        align-items: stretch; /* Ensures all cards are the same height */
+    }
+
+    .product-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%; /* or a fixed height like 350px */
+        min-height: 320px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+        padding: 18px;
+    }
+
+    .product-card .product-image {
+        width: 100%;
+        height: 160px;
+        object-fit: contain;
+        margin-bottom: 12px;
+    }
+
+    .product-card .product-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        min-height: 40px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .product-card .product-footer {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
     }
 </style>
 <body>
