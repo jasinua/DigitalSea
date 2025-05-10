@@ -9,10 +9,6 @@
     session_destroy();
 
     // Redirect to the login page
-    if (isset($_GET['from']) && $_GET['from'] === 'header') {
-        header("Location: ../login.php");
-    } else {
-        header("Location: login.php");
-    }
+    header("Location: ../login.php");
     exit();
 ?>

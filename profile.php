@@ -454,7 +454,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
 
                 <div class="button-group" style="margin-top: 20px;">
-                    <a href="controller/logout.inc.php" class="btn btn-secondary">Logout</a>
+                    <a href="controller/logout.php" class="btn btn-secondary">Logout</a>
                 </div>
         </div>
         </div> 
