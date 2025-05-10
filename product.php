@@ -62,7 +62,7 @@ if (isset($_POST['addToCart'])) {
     }
 
     #name {
-        width: 100%;
+        width: 98%;
         padding: 15px 20px 10px;
         font-size: 1.6em;
         font-weight: 600;
