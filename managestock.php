@@ -120,8 +120,8 @@ h1, h2 {
     background: var(--background-color);
     padding: 20px 18px 18px 18px;
     border-radius: 18px;
-    width: 94%;
-    max-width: 450px;
+    width: 100%;
+    max-width: 600px;
     margin: 60px auto 30px auto;
     position: relative;
     box-shadow: 0 12px 40px rgba(21,49,71,0.18), 0 2px 8px rgba(44,62,80,0.08);
@@ -148,7 +148,7 @@ h1, h2 {
     z-index: 2;
 }
 .close-btn:hover {
-    color: #153147;
+    color: var(--text-color);
 }
 
 .modal-content h2, .modal-content h3 {

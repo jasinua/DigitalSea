@@ -19,48 +19,54 @@
 <style>
     h2 {
         margin: 15px;
+        font-size: 2.5rem;
         text-align:center;
         color: var(--page-text-color);
     }
 
     /* f5f5f0, f2efe9, f4f1ea */
-    form {
-      background-color: white;
+    .paymentStuff form {
       color: var(--page-text-color);
-      padding: 20px;
-      border-radius: 10px;
-      width: 400px;
+      padding: 40px;
+      border-radius: 18px;
+      width: 520px;
       margin: auto;
       margin-bottom: 40px;
-      box-shadow: 0 0px 5px var(--navy-color);
+      box-shadow: 0 0px 12px var(--navy-color);
+      font-size: 1.2rem;
     }
 
-    input[type="text"], input[type="number"]{
+    .paymentStuff input[type="text"], .paymentStuff input[type="number"]{
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
+      padding: 18px;
+      margin-bottom: 18px;
       background-color: var(--ivory-color);
       color: var(--page-text-color);
-      border-radius: 5px;
-      border: 1px solid var(--navy-color)
+      border-radius: 8px;
+      border: 1.5px solid var(--navy-color);
     }
 
     input[type="submit"] {
       background-color: var(--navy-color);
       cursor: pointer;
-      font-size: 15px;
+      font-size: 1.2rem;
       width: 100%;
-      padding: 10px;
-      margin-top: 10px;
+      padding: 18px;
+      margin-top: 18px;
       border: none;
       color: var(--text-color);
-      border-radius: 5px;
+      border-radius: 8px;
     }
 
     .paymentStuff{
         display: flex;
         flex-direction: row;
-        margin: 10px 300px;
+        justify-content: center;
+        align-items: center;
+        gap: 60px;
+        margin: 40px auto 0 auto;
+        max-width: 1200px;
+        width: 100%;
     }
 
     .backCard {
@@ -75,24 +81,25 @@
     }
 
     .expDate input {
-        width: 170px;
+        width: 220px;
     }
 
     .cvv input {
-        width: 170px;
+        width: 220px;
     }
 
      /* ===== Card Visual ===== */
      .card-container {
         perspective: 1000px;
         width: 100%;
-        max-width: 350px;
+        max-width: 480px;
+        min-width: 350px;
         margin: auto auto;
     }
 
     .card {
         width: 100%;
-        height: 200px;
+        height: 280px;
         position: relative;
         transform-style: preserve-3d;
         transition: transform 0.6s;
@@ -110,9 +117,10 @@
         backface-visibility: hidden;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        padding: 1.5rem;
+        padding: 2.5rem;
         color: #ffffff;
         font-family: 'Courier New', Courier, monospace;
+        font-size: 1.3rem;
     }
 
     .card-front {
@@ -132,31 +140,31 @@
     }
 
     .card-number {
-        font-size: 1.2rem;
+        font-size: 1.6rem;
         letter-spacing: 2px;
     }
 
     .card-details {
         display: flex;
         justify-content: space-between;
-        font-size: 0.9rem;
+        font-size: 1.1rem;
     }
 
     .card-chip {
-        width: 40px;
-        height: 30px;
+        width: 60px;
+        height: 40px;
         background: #d4d4d4;
         border-radius: 4px;
     }
 
     .card-cvc {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         letter-spacing: 2px;
     }
 
     .magnetic-strip {
         width: 100%;
-        height: 30px;
+        height: 40px;
         background: #2d3748;
         margin-bottom: 1rem;
     }
@@ -211,6 +219,7 @@
     <?php include "footer/footer.php"?>
 </body>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     const cardVisual = document.getElementById('card-visual');
 
@@ -248,6 +257,37 @@
     // Update name display
     nameInput.addEventListener('input', () => {
         cardNameDisplay.textContent = nameInput.value || 'Emri Juaj';
+    });
+
+    // Add clear-search button logic for payment page
+    $(document).ready(function() {
+        // Show/hide clear button based on search input
+        $('.search-input').on('input', function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
+        // Clear search without redirecting or reloading
+        $('.clear-search').on('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $input = $(this).closest('form').find('.search-input');
+            $input.val('');
+            $(this).hide();
+            $input.focus();
+        });
+        // Initialize clear button visibility for each search bar
+        $('.search-input').each(function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
     });
 </script>
 </html>

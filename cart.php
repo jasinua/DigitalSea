@@ -56,7 +56,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     include "header/header.php";
 ?>
-
 <style>
     .page-wrapper {
         display: flex;
@@ -529,6 +528,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
 </div>
 
 <?php include "footer/footer.php" ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const quantityInputs = document.querySelectorAll('.quantity-input');
@@ -640,6 +640,37 @@ if (isLoggedIn($_SESSION['user_id'])) {
             summaryItems[summaryItems.length - 2].querySelector('span:last-child').textContent = totalDiscount > 0 ? `- ${totalDiscount.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€` : "0.00€";
             summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = finalTotal.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
         }
+    });
+
+    // Add clear-search button logic for cart page
+    $(document).ready(function() {
+        // Show/hide clear button based on search input
+        $('.search-input').on('input', function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
+        // Clear search without redirecting or reloading
+        $('.clear-search').on('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $input = $(this).closest('form').find('.search-input');
+            $input.val('');
+            $(this).hide();
+            $input.focus();
+        });
+        // Initialize clear button visibility for each search bar
+        $('.search-input').each(function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
     });
 </script>
 <?php } else { header("Location: index.php"); } ?>
