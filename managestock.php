@@ -399,6 +399,38 @@ tr:hover {
         font-size: 0.95rem;
     }
 }
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    z-index: 1000;
+    animation: slideIn 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.notification.success {
+    background-color: #28a745;
+}
+
+.notification.error {
+    background-color: #dc3545;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
 </style>
 <body>
 
@@ -406,6 +438,7 @@ tr:hover {
 
 <div class="body-container">
     <h1>Manage Your Products</h1>
+    <div id="notification" class="notification" style="display: none;"></div>
 
     <div class="search-add">
         <input type="text" placeholder="Search..."> <button type="button" class="btn" onclick="toggleForm()">Add Product</button></div>
@@ -416,6 +449,7 @@ tr:hover {
             <div class="modal-accent"></div>
             <button class="close-btn" onclick="closeForm()">&times;</button>
             <form method="post" id="productForm">
+                <input type="hidden" name="product_id" id="product_id">
                 <h2>Add a New Product</h2>
 
                 <label>Name:</label>
@@ -425,7 +459,7 @@ tr:hover {
                 <textarea name="description" required></textarea>
 
                 <label>Type:</label>
-                <input type="text" name="type" required>
+                <input type="text" name="type">
 
                 <label>Price:</label>
                 <input type="number" name="price" step="0.01" required>
@@ -434,7 +468,7 @@ tr:hover {
                 <input type="number" name="stock" required>
 
                 <label>API Source:</label>
-                <input type="text" name="api_source" required>
+                <input type="text" name="api_source">
 
                 <label>Main Image URL:</label>
                 <input type="url" name="main_image" required>
@@ -543,6 +577,54 @@ window.onclick = function(event) {
     }
 }
 
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.style.display = 'block';
+    
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
+document.getElementById('productForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const isEdit = document.getElementById('edit-index') !== null;
+    
+    // Log form data for debugging
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
+    
+    fetch('controller/update_product.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Server response:', data); // Debug log
+        if (data.success) {
+            showNotification(data.message, 'success');
+            closeForm();
+            location.reload();
+        } else {
+            showNotification(data.message || 'Error updating product', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error updating product: ' + error.message, 'error');
+    });
+});
+
 function editProduct(index) {
     // Get product data from PHP array (rendered as JS object)
     const products = <?php echo json_encode($products); ?>;
@@ -554,14 +636,28 @@ function editProduct(index) {
 
     // Fill modal fields
     const form = document.getElementById('productForm');
+    form.product_id.value = product.product_id;
     form.name.value = product.name;
     form.description.value = product.description;
+    form.type.value = product.type || '';
     form.price.value = product.price;
     form.stock.value = product.stock;
-    form.api_source.value = product.api_source;
-    form.main_image.value = product.image_url.main_image;
-    form.image_1.value = product.image_url[1];
-    form.image_2.value = product.image_url[2];
+    form.api_source.value = product.api_source || '';
+    
+    // --- Fix for main image field ---
+    if (typeof product.image_url === 'string') {
+        form.main_image.value = product.image_url;
+        form.image_1.value = '';
+        form.image_2.value = '';
+    } else if (typeof product.image_url === 'object' && product.image_url !== null) {
+        form.main_image.value = product.image_url.main_image || '';
+        form.image_1.value = product.image_url[1] || '';
+        form.image_2.value = product.image_url[2] || '';
+    } else {
+        form.main_image.value = '';
+        form.image_1.value = '';
+        form.image_2.value = '';
+    }
 
     // Remove old details fields
     const detailsContainer = document.getElementById('detailsContainer');

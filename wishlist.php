@@ -272,8 +272,30 @@ if (isLoggedIn($_SESSION['user_id'])) {
             transform: scale(1);
         }
     }
+
+    .remove-notification {
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        padding: 16px 32px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        z-index: 9999;
+        box-shadow: 0 4px 16px rgba(249, 64, 64, 0.15);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .remove-notification.show {
+        display: block;
+        opacity: 1;
+    }
 </style>
 <div class="page-wrapper">
+    <div class="remove-notification" style="display:none;"></div>
     <div class="wishlist-container">
         <div class="wishlist-header">
             <h2>My Wishlist ✎</h2>
@@ -297,22 +319,20 @@ if (isLoggedIn($_SESSION['user_id'])) {
                     $discount = isset($product['discount']) ? $product['discount'] : 0;
             ?>
                 <div class="wishlist-item">
-                    <form method="post" action="remove_from_wishlist.php" class="remove-form">
+                    <form method="post" action="controller/remove_from_wishlist.php" class="remove-form">
                         <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
-                        <input type="hidden" name="price" value="<?php echo $product['price']; ?>">
                         <button class="remove-btn" type="submit">&times;</button>
                     </form>
 
                     <a href="product.php?product=<?php echo $product['product_id'];?>" class="product-link">
                         <div class="product-info">
-                            <?php if($discount > 0): ?>
-                                <span class="discount-badge">-<?php echo $discount; ?>%</span>
-                            <?php endif; ?>
                             <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                             <div class="name"><?php echo htmlspecialchars($product['name']); ?></div>
                         </div>
                     </a>
-
+                    <!-- <div class="product-details">
+                        
+                    </div> -->
                     <div class="product-details">
                         <div class="stock-status <?php echo ($product['stock'] > 0) ? 'in-stock' : 'out-of-stock'; ?>">
                             <?php echo ($product['stock'] > 0) ? 'In Stock' : 'Out of Stock'; ?>
@@ -325,12 +345,11 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                 ?>
                                 <span class="original-price"><?php echo number_format($original_price, 2); ?>€</span>
                                 <span class="product-price"><?php echo number_format($discounted_price, 2); ?>€</span>
-                            <?php } else { ?>
+                                    <?php } else { ?>
                                 <span class="product-price"><?php echo number_format($product['price'], 2); ?>€</span>
                             <?php } ?>
                         </div>
                     </div>
-
                     <form method="post" action="" class="add-to-cart-form">
                         <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                         <input type="hidden" name="price" value="<?php echo ($discount > 0) ? $discounted_price : $product['price']; ?>">
@@ -463,6 +482,36 @@ $(document).ready(function() {
             $clearBtn.hide();
         }
     });
+
+    $('.wishlist-grid').on('submit', '.remove-form', function(e) {
+        e.preventDefault();
+        var $form = $(this);
+        var $item = $form.closest('.wishlist-item');
+        var productId = $form.find('input[name="product_id"]').val();
+
+        $.ajax({
+            url: 'controller/remove_from_wishlist.php',
+            type: 'POST',
+            data: { product_id: productId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    $item.fadeOut(300, function() {
+                        $(this).remove();
+                        showRemoveNotification('Item removed from wishlist.');
+                    });
+                }
+            }
+        });
+    });
+
+    function showRemoveNotification(message) {
+        var $notif = $('.remove-notification');
+        $notif.text(message).addClass('show').show();
+        setTimeout(function() {
+            $notif.removeClass('show').fadeOut(400);
+        }, 2500);
+    }
 });
 </script>
 
