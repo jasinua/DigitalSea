@@ -1032,10 +1032,10 @@
                                                 <input type="checkbox" name="subfilter[]" id="<?php echo $subcat ?>" value="<?php echo $subcat ?>">
                                                 <label for="<?php echo $subcat ?>"><?php echo $subcat ?></label>
                                             </div>
-                        <?php } ?>
+                                        <?php } ?>
                                     </div>
                                 </div>
-                        <?php } ?>
+                            <?php } ?>
                         </div>
                     </div>
 
@@ -1068,26 +1068,26 @@
                     <div class='wheel-carousel'>
                         <div class='wheel-track' id='topItems'>
                             <?php foreach (getData("SELECT * FROM products WHERE products.price>900") as $prod) { ?>
-                                    <div class='wheel-item'>
-                                        <?php if ($prod['discount'] > 0) { ?>
-                                            <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
-                                        <?php } ?>
-                                        <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
-                                        <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                        <div class='bottom-container'>
-                                            <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
-                                                <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
-                                            </button>
-                                            <div class='price'>
-                                                <?php if ($prod['discount'] > 0) { 
-                                                    $originalPrice = $prod['price'];
-                                                    $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
-                                                ?>
-                                                    <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
-                                                    <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
-                                                <?php } else { ?>
-                                                    <span class="discounted-price"><?php echo number_format($prod['price'], 2, '.', ',') ?>€</span>
-                                                <?php } ?>
+                                <div class='wheel-item'>
+                                    <?php if ($prod['discount'] > 0) { ?>
+                                        <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
+                                    <?php } ?>
+                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
+                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
+                                    <div class='bottom-container'>
+                                        <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                            <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
+                                        </button>
+                                        <div class='price'>
+                                            <?php if ($prod['discount'] > 0) { 
+                                                $originalPrice = $prod['price'];
+                                                $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
+                                            ?>
+                                                <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
+                                                <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
+                                            <?php } else { ?>
+                                                <span class="discounted-price"><?php echo number_format($prod['price'], 2, '.', ',') ?>€</span>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1100,12 +1100,12 @@
                         <?php foreach (getData("SELECT * FROM products ORDER BY product_id DESC LIMIT 8") as $prod) { ?>
                             <div class='item' id="newItemsItem">
                                 <div class="new-badge">NEW</div>
-                                <?php if ($prod['discount'] > 0) { ?>
-                                    <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
-                                <?php } ?>
-                                <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
-                                <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                <div class='bottom-container'>
+                                    <?php if ($prod['discount'] > 0) { ?>
+                                        <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
+                                    <?php } ?>
+                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
+                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
+                                    <div class='bottom-container'>
                                     <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
                                         <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
                                     </button>
@@ -1126,95 +1126,95 @@
                     </div>
 
                     <h1 id="moreItemsText">More Products</h1>
-                <?php } else { ?>
-                    <h1><?php echo isset($_GET['search']) ? 'Search Results' : 'Products'; ?></h1>
-                <?php } ?>
-
+                    <?php } else { ?>
+                        <h1><?php echo isset($_GET['search']) ? 'Search Results' : 'Products'; ?></h1>
+                    <?php } ?>
                     <div class='itemBox' id='randomItems'>
                     <?php 
-                    if(isset($_GET['subfilter']) || isset($_GET['min_price']) || isset($_GET['max_price']) || isset($_GET['discounted_only']) || isset($_GET['search'])) {
-                        $where_conditions = [];
-                        
-                        if (!empty($_GET['subfilter'])) {
-                            $subfilter_conditions = [];
-                            foreach ($_GET['subfilter'] as $subcat) {
-                                // Add the subcategory name itself as a search term
-                                $subfilter_conditions[] = "(LOWER(description) LIKE LOWER('%substr($subcat,0,-1)%') OR LOWER(name) LIKE LOWER('%substr($subcat,0,-1)%'))";
-                                
-                                // Also check the keywords for this subcategory
-                                foreach ($categories as $category => $data) {
-                                    if (isset($data['subcategories'][$subcat])) {
-                                        foreach ($data['subcategories'][$subcat] as $keyword) {
-                                            $subfilter_conditions[] = "(LOWER(description) LIKE LOWER('%$keyword%') OR LOWER(name) LIKE LOWER('%$keyword%'))";
+                        if(isset($_GET['subfilter']) || isset($_GET['min_price']) || isset($_GET['max_price']) || isset($_GET['discounted_only']) || isset($_GET['search'])) {
+                            $where_conditions = [];
+                            
+                            if (!empty($_GET['subfilter'])) {
+                                $subfilter_conditions = [];
+                                foreach ($_GET['subfilter'] as $subcat) {
+                                    // Add the subcategory name itself as a search term
+                                    $subfilter_conditions[] = "(LOWER(description) LIKE LOWER('%substr($subcat,0,-1)%') OR LOWER(name) LIKE LOWER('%substr($subcat,0,-1)%'))";
+                                    
+                                    // Also check the keywords for this subcategory
+                                    foreach ($categories as $category => $data) {
+                                        if (isset($data['subcategories'][$subcat])) {
+                                            foreach ($data['subcategories'][$subcat] as $keyword) {
+                                                $subfilter_conditions[] = "(LOWER(description) LIKE LOWER('%$keyword%') OR LOWER(name) LIKE LOWER('%$keyword%'))";
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            if (!empty($subfilter_conditions)) {
-                                $where_conditions[] = "(" . implode(' OR ', $subfilter_conditions) . ")";
-                            }
-                        }
-                        
-                        if (!empty($_GET['min_price'])) {
-                            $where_conditions[] = "price >= " . floatval($_GET['min_price']);
-                        }
-                        
-                        if (!empty($_GET['max_price'])) {
-                            $where_conditions[] = "price <= " . floatval($_GET['max_price']);
-                        }
 
-                        if (isset($_GET['discounted_only'])) {
-                            $where_conditions[] = "discount > 0";
-                        }
+                                if (!empty($subfilter_conditions)) {
+                                    $where_conditions[] = "(" . implode(' OR ', $subfilter_conditions) . ")";
+                                }
+                            }
+                            
+                            if (!empty($_GET['min_price'])) {
+                                $where_conditions[] = "price >= " . floatval($_GET['min_price']);
+                            }
+                            
+                            if (!empty($_GET['max_price'])) {
+                                $where_conditions[] = "price <= " . floatval($_GET['max_price']);
+                            }
 
-                        if (isset($_GET['search']) && !empty($_GET['search'])) {
-                            $search_term = mysqli_real_escape_string($conn, $_GET['search']);
-                            $where_conditions[] = "(LOWER(description) LIKE LOWER('%$search_term%') OR LOWER(name) LIKE LOWER('%$search_term%'))";
+                            if (isset($_GET['discounted_only'])) {
+                                $where_conditions[] = "discount > 0";
+                            }
+
+                            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                                $search_term = mysqli_real_escape_string($conn, $_GET['search']);
+                                $where_conditions[] = "(LOWER(description) LIKE LOWER('%$search_term%') OR LOWER(name) LIKE LOWER('%$search_term%'))";
+                            }
+                            
+                            $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
+                            
+                            // Get total count of filtered products for pagination
+                            $count_query = "SELECT COUNT(*) as total FROM products $where_clause";
+                            $count_result = $conn->query($count_query);
+                            $total_products = $count_result->fetch_assoc()['total'];
+                            $total_pages = ceil($total_products / $items_per_page);
+                            
+                            // Add pagination to the query
+                            $offset = ($current_page - 1) * $items_per_page;
+                            $products = getData("SELECT * FROM products $where_clause LIMIT $items_per_page OFFSET $offset");
+                        } else {
+                            $products = getProducts($current_page, $items_per_page);
+                            $total_products = getTotalProducts();
+                            $total_pages = ceil($total_products / $items_per_page);
                         }
-                        
-                        $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
-                        
-                        // Get total count of filtered products for pagination
-                        $count_query = "SELECT COUNT(*) as total FROM products $where_clause";
-                        $count_result = $conn->query($count_query);
-                        $total_products = $count_result->fetch_assoc()['total'];
-                        $total_pages = ceil($total_products / $items_per_page);
-                        
-                        // Add pagination to the query
-                        $offset = ($current_page - 1) * $items_per_page;
-                        $products = getData("SELECT * FROM products $where_clause LIMIT $items_per_page OFFSET $offset");
-                    } else {
-                        $products = getProducts($current_page, $items_per_page);
-                        $total_products = getTotalProducts();
-                        $total_pages = ceil($total_products / $items_per_page);
-                    }
                     
-                    foreach ($products as $prod) { ?>
-                                <div class='item'>
-                            <?php if ($prod['discount'] > 0) { ?>
-                                <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
-                            <?php } ?>
-                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
-                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                            <div class='bottom-container'>
-                                <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
-                                    <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
-                                </button>
-                                <div class='price'>
-                                    <?php if ($prod['discount'] > 0) { 
-                                        $originalPrice = $prod['price'];
-                                        $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
-                                    ?>
-                                        <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
-                                        <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
-                                    <?php } else { ?>
-                                        <?php echo number_format($prod['price'], 2, '.', ',') ?>€
-                                    <?php } ?>   
+                        foreach ($products as $prod) { ?>
+                            <div class='item'>
+                                <?php if ($prod['discount'] > 0) { ?>
+                                    <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
+                                <?php } ?>
+                                <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="">
+                                <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
+                                <div class='bottom-container'>
+                                    <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                        <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
+                                    </button>
+                                    <div class='price'>
+                                        <?php if ($prod['discount'] > 0) { 
+                                            $originalPrice = $prod['price'];
+                                            $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
+                                        ?>
+                                            <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
+                                            <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
+                                        <?php } else { ?>
+                                            <?php echo number_format($prod['price'], 2, '.', ',') ?>€
+                                        <?php } ?>   
+                                    </div>
                                 </div>
                             </div>
+                        <?php } ?>
                     </div>
-                <?php } ?>
-                </div>
 
                 <!-- Add pagination controls -->
                 <?php if ($total_pages > 1): ?>
@@ -1277,21 +1277,21 @@
     </div>
 
 <script>
-        // Filter section toggle
-        document.querySelectorAll('.filter-section h3').forEach(header => {
-            header.addEventListener('click', () => {
-                header.parentElement.classList.toggle('collapsed');
-            });
+    // Filter section toggle
+    document.querySelectorAll('.filter-section h3').forEach(header => {
+        header.addEventListener('click', () => {
+            header.parentElement.classList.toggle('collapsed');
         });
+    });
 
-        // Category header toggle
-        document.querySelectorAll('.category-header').forEach(header => {
-            header.addEventListener('click', () => {
-                header.classList.toggle('collapsed');
-                const content = header.nextElementSibling;
-                content.classList.toggle('active');
-            });
+    // Category header toggle
+    document.querySelectorAll('.category-header').forEach(header => {
+        header.addEventListener('click', () => {
+            header.classList.toggle('collapsed');
+            const content = header.nextElementSibling;
+            content.classList.toggle('active');
         });
+    });
 
         // Initialize all category headers as collapsed
         document.querySelectorAll('.category-header').forEach(header => {
@@ -1396,172 +1396,172 @@
         }
 
         scrollLoop();
-        });  
+    });  
 
-        // Clear all filters function
-        function clearAllFilters() {
-            // Uncheck all checkboxes
-            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = false;
+    // Clear all filters function
+    function clearAllFilters() {
+        // Uncheck all checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        // Clear price inputs
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.value = '';
+        });
+
+        // Collapse all category headers
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.classList.add('collapsed');
+            const content = header.nextElementSibling;
+            content.classList.remove('active');
+        });
+
+        // Submit the form to refresh the page
+        window.location.href = 'index.php';
+    }
+
+    $(document).ready(function() {
+        // Function to update all instances of a product's heart button
+        function updateAllProductHearts(productId, isActive) {
+            console.log('Updating hearts for product:', productId, 'isActive:', isActive);
+            $(`.wishlist-btn[data-product-id="${productId}"]`).each(function() {
+                const button = $(this);
+                if (isActive) {
+                    button.addClass('active').find('i').removeClass('far').addClass('fas');
+                } else {
+                    button.removeClass('active').find('i').removeClass('fas').addClass('far');
+                }
             });
-
-            // Clear price inputs
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-                input.value = '';
-            });
-
-            // Collapse all category headers
-            document.querySelectorAll('.category-header').forEach(header => {
-                header.classList.add('collapsed');
-                const content = header.nextElementSibling;
-                content.classList.remove('active');
-            });
-
-            // Submit the form to refresh the page
-            window.location.href = 'index.php';
         }
 
-        $(document).ready(function() {
-            // Function to update all instances of a product's heart button
-            function updateAllProductHearts(productId, isActive) {
-                console.log('Updating hearts for product:', productId, 'isActive:', isActive);
-                $(`.wishlist-btn[data-product-id="${productId}"]`).each(function() {
-                    const button = $(this);
-                    if (isActive) {
-                        button.addClass('active').find('i').removeClass('far').addClass('fas');
-                    } else {
-                        button.removeClass('active').find('i').removeClass('fas').addClass('far');
+        // Check initial wishlist status for each product
+        $('.wishlist-btn').each(function() {
+            const productId = $(this).data('product-id');
+            console.log('Checking initial status for product:', productId);
+            $.ajax({
+                url: 'controller/check_wishlist.php',
+                method: 'POST',
+                data: { product_id: productId },
+                success: function(response) {
+                    console.log('Initial check response for product', productId, ':', response);
+                    if (response.trim() === 'true') {
+                        updateAllProductHearts(productId, true);
                     }
-                });
-            }
-
-            // Check initial wishlist status for each product
-            $('.wishlist-btn').each(function() {
-                const productId = $(this).data('product-id');
-                console.log('Checking initial status for product:', productId);
-                $.ajax({
-                    url: 'controller/check_wishlist.php',
-                    method: 'POST',
-                    data: { product_id: productId },
-                    success: function(response) {
-                        console.log('Initial check response for product', productId, ':', response);
-                        if (response.trim() === 'true') {
-                            updateAllProductHearts(productId, true);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error checking wishlist status:', error);
-                    }
-                });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error checking wishlist status:', error);
+                }
             });
+        });
 
-            // Handle wishlist button clicks
-            $(document).on('click', '.wishlist-btn', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const button = $(this);
-                const productId = button.data('product-id');
-                console.log('Wishlist button clicked for product:', productId);
-                
-                $.ajax({
-                    url: 'controller/add_to_wishlist.php',
-                    method: 'POST',
-                    data: { product_id: productId },
-                    success: function(response) {
-                        console.log('Wishlist update response:', response);
-                        if (response.trim() === 'not_logged_in') {
-                            window.location.href = 'login.php';
-                        } else if (response.trim() === 'added') {
-                            updateAllProductHearts(productId, true);
-                        } else if (response.trim() === 'removed') {
-                            updateAllProductHearts(productId, false);
-                        } else if (response.trim() === 'error') {
-                            console.error('Error updating wishlist');
-                            alert('There was an error updating your wishlist. Please try again.');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error updating wishlist:', error);
+        // Handle wishlist button clicks
+        $(document).on('click', '.wishlist-btn', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const button = $(this);
+            const productId = button.data('product-id');
+            console.log('Wishlist button clicked for product:', productId);
+            
+            $.ajax({
+                url: 'controller/add_to_wishlist.php',
+                method: 'POST',
+                data: { product_id: productId },
+                success: function(response) {
+                    console.log('Wishlist update response:', response);
+                    if (response.trim() === 'not_logged_in') {
+                        window.location.href = 'login.php';
+                    } else if (response.trim() === 'added') {
+                        updateAllProductHearts(productId, true);
+                    } else if (response.trim() === 'removed') {
+                        updateAllProductHearts(productId, false);
+                    } else if (response.trim() === 'error') {
+                        console.error('Error updating wishlist');
                         alert('There was an error updating your wishlist. Please try again.');
                     }
-                });
-            });
-
-            // Show/hide clear button based on search input
-            $('.search-input').on('input', function() {
-                var $clearBtn = $(this).closest('form').find('.clear-search');
-                if ($(this).val().length > 0) {
-                    $clearBtn.show();
-                } else {
-                    $clearBtn.hide();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error updating wishlist:', error);
+                    alert('There was an error updating your wishlist. Please try again.');
                 }
             });
+        });
 
-            // Clear search without redirecting or reloading
-            $('.clear-search').on('mousedown', function(e) {
+        // Show/hide clear button based on search input
+        $('.search-input').on('input', function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
+
+        // Clear search without redirecting or reloading
+        $('.clear-search').on('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $input = $(this).closest('form').find('.search-input');
+            $input.val('');
+            $(this).hide();
+            $input.focus();
+        });
+
+        // Initialize clear button visibility for each search bar
+        $('.search-input').each(function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
+
+        // Handle empty search submission
+        $('.search-form').submit(function(e) {
+            if ($('.search-input').val().trim() === '') {
                 e.preventDefault();
-                e.stopPropagation();
-                var $input = $(this).closest('form').find('.search-input');
-                $input.val('');
-                $(this).hide();
-                $input.focus();
-            });
+                window.location.href = 'index.php';
+            }
+        });
+    });  
 
-            // Initialize clear button visibility for each search bar
-            $('.search-input').each(function() {
-                var $clearBtn = $(this).closest('form').find('.clear-search');
-                if ($(this).val().length > 0) {
-                    $clearBtn.show();
-                } else {
-                    $clearBtn.hide();
+    // Optimize wishlist check
+    function isInWishlist(productId) {
+        return <?php echo json_encode($wishlist_items); ?>.includes(productId);
+    }
+
+    // Add lazy loading for images
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = document.querySelectorAll('img[data-src]');
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    observer.unobserve(img);
                 }
             });
+        });
 
-            // Handle empty search submission
-            $('.search-form').submit(function(e) {
-                if ($('.search-input').val().trim() === '') {
-                    e.preventDefault();
-                    window.location.href = 'index.php';
-                }
+        images.forEach(img => imageObserver.observe(img));
+    });  
+
+    // Add smooth scroll to top when changing pages
+    document.querySelectorAll('.pagination a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const href = this.getAttribute('href');
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
-        });  
-
-        // Optimize wishlist check
-        function isInWishlist(productId) {
-            return <?php echo json_encode($wishlist_items); ?>.includes(productId);
-        }
-
-        // Add lazy loading for images
-        document.addEventListener('DOMContentLoaded', function() {
-            const images = document.querySelectorAll('img[data-src]');
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        img.removeAttribute('data-src');
-                        observer.unobserve(img);
-                    }
-                });
-            });
-
-            images.forEach(img => imageObserver.observe(img));
-        });  
-
-        // Add smooth scroll to top when changing pages
-        document.querySelectorAll('.pagination a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const href = this.getAttribute('href');
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-                setTimeout(() => {
-                    window.location.href = href;
-                }, 500);
-            });
+            setTimeout(() => {
+                window.location.href = href;
+            }, 500);
+        });
     });  
 </script>
 </body>

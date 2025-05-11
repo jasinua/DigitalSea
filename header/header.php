@@ -396,7 +396,7 @@
     }
 
     .cart-preview {
-        max-height: 270px; /* 3 * 90px */
+        max-height: 270px;
         overflow-y: auto;
     }
 
@@ -405,6 +405,7 @@
         text-decoration: none;
         color: inherit;
     }
+
     .cart-preview-item-link:hover .cart-preview-item {
         background: #f5f6fa;
         box-shadow: 0 2px 8px rgba(21,49,71,0.08);
@@ -513,70 +514,70 @@
     </header>
 </body>
 <script>
-$(document).ready(function() {
-    $("#search").autocomplete({
-        source: "controller/search_suggestions.php",
-        minLength: 2,
-        select: function(event, ui) {
-            window.location.href = "product.php?product=" + ui.item.id;
-        }
-    }).data("ui-autocomplete")._renderItem = function(ul, item) {
-        return $("<li>")
-            .append("<div class='search-suggestion'>" +
-                "<img src='" + item.image_url + "' class='search-suggestion-image'>" +
-                "<div class='search-suggestion-content'>" +
-                "<div class='search-suggestion-title'>" + item.label + "</div>" +
-                "<div class='search-suggestion-price'>" +
-                (item.discount > 0 ? 
-                    "<span class='search-suggestion-original-price'>" + item.price + "€</span>" +
-                    "<span class='search-suggestion-final-price'>" + (item.price * (1 - item.discount/100)).toFixed(0) + "€</span>" +
-                    "<span class='search-suggestion-discount'>-" + item.discount + "%</span>" :
-                    "<span class='search-suggestion-final-price'>" + item.price + "€</span>"
-                ) +
-                "</div>" +
-                "</div>" +
-                "</div>")
-            .appendTo(ul);
-    };
+    $(document).ready(function() {
+        $("#search").autocomplete({
+            source: "controller/search_suggestions.php",
+            minLength: 2,
+            select: function(event, ui) {
+                window.location.href = "product.php?product=" + ui.item.id;
+            }
+        }).data("ui-autocomplete")._renderItem = function(ul, item) {
+            return $("<li>")
+                .append("<div class='search-suggestion'>" +
+                    "<img src='" + item.image_url + "' class='search-suggestion-image'>" +
+                    "<div class='search-suggestion-content'>" +
+                    "<div class='search-suggestion-title'>" + item.label + "</div>" +
+                    "<div class='search-suggestion-price'>" +
+                    (item.discount > 0 ? 
+                        "<span class='search-suggestion-original-price'>" + item.price + "€</span>" +
+                        "<span class='search-suggestion-final-price'>" + (item.price * (1 - item.discount/100)).toFixed(0) + "€</span>" +
+                        "<span class='search-suggestion-discount'>-" + item.discount + "%</span>" :
+                        "<span class='search-suggestion-final-price'>" + item.price + "€</span>"
+                    ) +
+                    "</div>" +
+                    "</div>" +
+                    "</div>")
+                .appendTo(ul);
+        };
 
     // Show/hide clear button based on search input
     // Show/hide clear button based on search input
     $('.search-input').on('input', function() {
-                var $clearBtn = $(this).closest('form').find('.clear-search');
-                if ($(this).val().length > 0) {
-                    $clearBtn.show();
-                } else {
-                    $clearBtn.hide();
-                }
-            });
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
 
-            // Clear search without redirecting or reloading
-            $('.clear-search').on('mousedown', function(e) {
+        // Clear search without redirecting or reloading
+        $('.clear-search').on('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $input = $(this).closest('form').find('.search-input');
+            $input.val('');
+            $(this).hide();
+            $input.focus();
+        });
+
+        // Initialize clear button visibility for each search bar
+        $('.search-input').each(function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
+
+        // Handle empty search submission
+        $('.search-form').submit(function(e) {
+            if ($('.search-input').val().trim() === '') {
                 e.preventDefault();
-                e.stopPropagation();
-                var $input = $(this).closest('form').find('.search-input');
-                $input.val('');
-                $(this).hide();
-                $input.focus();
-            });
-
-            // Initialize clear button visibility for each search bar
-            $('.search-input').each(function() {
-                var $clearBtn = $(this).closest('form').find('.clear-search');
-                if ($(this).val().length > 0) {
-                    $clearBtn.show();
-                } else {
-                    $clearBtn.hide();
-                }
-            });
-
-            // Handle empty search submission
-            $('.search-form').submit(function(e) {
-                if ($('.search-input').val().trim() === '') {
-                    e.preventDefault();
-                    // window.location.href = 'index.php';
-                }
-            });
-        });  
+                // window.location.href = 'index.php';
+            }
+        });
+    });  
 </script>
 </html>

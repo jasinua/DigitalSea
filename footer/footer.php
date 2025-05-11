@@ -75,104 +75,55 @@
         color:red;
     }
 </style>
-  <body>
-   <div class="footer">
-    <div class="footer-column">
-     <h3>
-      Products
-     </h3>
-     <a href="#">
-      House Shit
-     </a>
-     <a href="#">
-      Dekstop
-     </a>
-     <a href="#">
-      Phones
-     </a>
-     <a href="#">
-      Laptop
-     </a>
-     <a href="#">
-      Ora
-     </a>
-     <a href="#">
-      TV
-     </a>
+<body>
+    <div class="footer">
+        <div class="footer-column">
+            <h3>Products</h3>
+            <a href="#">House Shit</a>
+            <a href="#">Dekstop</a>
+            <a href="#">Phones</a>
+            <a href="#">Laptop</a>
+            <a href="#">Ora</a>
+            <a href="#">TV</a>
+        </div>
+        <div class="footer-column">
+            <h3>Resources</h3>
+            <a href="#">Contact Us</a>
+            <a href="#">Blog</a>
+            <a href="#">FAQ</a>
+        </div>
+        <div class="footer-column">
+            <h3>Work with DigitalSea</h3>
+            <a href="#">Partners</a>
+            <a href="#">Dealers</a>
+            <a href="#">OEM</a>
+        </div>
+        <div class="footer-column">
+            <h3>About</h3>
+            <a href="#">DigitalSea, Inc.</a>
+            <a href="#">Developers</a>
+            <a href="#">Investors</a>
+            <a href="#">Careers</a>
+            <a href="#">Press</a>
+            <a href="#">Team</a>
+        </div>
     </div>
-    <div class="footer-column">
-     <h3>
-      Resources
-     </h3>
-     <a href="#">
-      Contact Us
-     </a>
-     <a href="#">
-      Blog
-     </a>
-     <a href="#">
-      FAQ
-     </a>
+    <div class="social-icons">
+        <a href="#">
+            <i id="facebook" class="fab fa-facebook-f"></i>
+        </a>
+        <a href="#">
+            <i id="twitter" class="fab fa-twitter"></i>
+        </a>
+        <a href="#">
+            <i id="instagram" class="fab fa-instagram"></i>
+        </a>
+        <a href="#">
+            <i id='linkedin' class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="#">
+            <i id='youtube' class="fab fa-youtube"></i>
+        </a>
     </div>
-    <div class="footer-column">
-     <h3>
-      Work with DigitalSea
-     </h3>
-     <a href="#">
-      Partners
-     </a>
-     <a href="#">
-      Dealers
-     </a>
-     <a href="#">
-      OEM
-     </a>
-    </div>
-    <div class="footer-column">
-     <h3>
-      About
-     </h3>
-     <a href="#">
-      DigitalSea, Inc.
-     </a>
-     <a href="#">
-      Developers
-     </a>
-     <a href="#">
-      Investors
-     </a>
-     <a href="#">
-      Careers
-     </a>
-     <a href="#">
-      Press
-     </a>
-     <a href="#">
-      Team
-     </a>
-    </div>
-   </div>
-   <div class="social-icons">
-    <a href="#">
-     <i id="facebook" class="fab fa-facebook-f">
-     </i>
-    </a>
-    <a href="#">
-     <i id="twitter" class="fab fa-twitter">
-     </i>
-    </a>
-    <a href="#">
-     <i id="instagram" class="fab fa-instagram">
-     </i>
-    </a>
-    <a href="#">
-     <i id='linkedin' class="fab fa-linkedin-in">
-     </i>
-    </a>
-    <a href="#">
-     <i id='youtube' class="fab fa-youtube">
-     </i>
-    </a>
-   </div>
-  </body>
+</body>
 </html>

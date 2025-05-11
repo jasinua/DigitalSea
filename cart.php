@@ -653,4 +653,4 @@ if (isLoggedIn($_SESSION['user_id'])) {
         });
     });
 </script>
-<?php } else { header("Location: index.php"); } ?>
+<?php } else { header("Location: login.php"); } ?>

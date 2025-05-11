@@ -1,33 +1,33 @@
 <?php 
-include_once "controller/login.inc.php"; 
-include_once "controller/function.php";
+    include_once "controller/login.inc.php"; 
+    include_once "controller/function.php";
 
-// include "header.php";
+    // include "header.php";
 
-$error = '';
+    $error = '';
 
-if(!isset($_SESSION['user_id'])) {
-    if(isset($_POST['submit'])){
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+    if(!isset($_SESSION['user_id'])) {
+        if(isset($_POST['submit'])){
+            $email = $_POST['email'];
+            $password = $_POST['password'];
 
-        if(checkData($email)) {
-            $error = "Email doesn't exist.";
-        } else {
-            $loginResult = login($email, $password); 
-      
-            if ($loginResult) {
-                header("Location: index.php"); 
-                exit();
+            if(checkData($email)) {
+                $error = "Email doesn't exist.";
             } else {
-                $error = "Invalid email or password.";
+                $loginResult = login($email, $password); 
+        
+                if ($loginResult) {
+                    header("Location: index.php"); 
+                    exit();
+                } else {
+                    $error = "Invalid email or password.";
+                }
             }
         }
+    } else {
+        header("Location: index.php"); 
+        exit();
     }
-} else {
-    header("Location: index.php"); 
-    exit();
-}
 ?>
 
 <!DOCTYPE html>

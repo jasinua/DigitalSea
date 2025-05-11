@@ -1,46 +1,48 @@
 <?php 
-include_once "controller/signup.inc.php";
-session_start();
+    include_once "controller/signup.inc.php";
+    session_start();
 
-$error = '';
-$success = '';
+    $error = '';
+    $success = '';
 
-if(isset($_POST['submit'])){
-    // Storing variables for validation
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $email = $_POST['email'];
-    $birthday = $_POST['birthday'];
-    $password = $_POST['password'];
-    $password_repeat = $_POST['repeat_password'];
+    if(isset($_POST['submit'])){
+        // Storing variables for validation
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $email = $_POST['email'];
+        $birthday = $_POST['birthday'];
+        $password = $_POST['password'];
+        $password_repeat = $_POST['repeat_password'];
 
-    // Data validation using methods
-    if(emptyInputSignUp($first_name, $last_name, $birthday, $email, $password, $password_repeat)) {
-        $error = "Please fill in all fields.";
-    } elseif(!invalidInputs($first_name, $last_name)) {
-        $error = "Invalid name inputs.";
-    } elseif(!checkEmail($email)) {
-        $error = "Invalid email format.";
-    } elseif(!invalidPasswordFormat($password)) {
-        $error = "Password must be at least 5 characters long.";
-    } elseif(!checkPassword($password, $password_repeat)) {
-        $error = "Passwords do not match.";
-    } elseif(!checkAge($birthday)) {
-        $error = "You must be at least 18 years old.";
-    } elseif(!emailExists($email)) {
-        $error = "Email already exists.";
-    } else {
-        if (createUser($first_name, $last_name, $birthday, $email, $password)) {
-            $success = "Account created successfully! Welcome to DigitalSea.";
+        // Data validation using methods
+        if(emptyInputSignUp($first_name, $last_name, $birthday, $email, $password, $password_repeat)) {
+            $error = "Please fill in all fields.";
+        } elseif(!invalidInputs($first_name, $last_name)) {
+            $error = "Invalid name inputs.";
+        } elseif(!checkEmail($email)) {
+            $error = "Invalid email format.";
+        } elseif(!invalidPasswordFormat($password)) {
+            $error = "Password must be at least 5 characters long.";
+        } elseif(!checkPassword($password, $password_repeat)) {
+            $error = "Passwords do not match.";
+        } elseif(!checkAge($birthday)) {
+            $error = "You must be at least 18 years old.";
+        } elseif(!emailExists($email)) {
+            $error = "Email already exists.";
         } else {
-            $error = "Something went wrong. Please try again.";
+            if (createUser($first_name, $last_name, $birthday, $email, $password)) {
+                $success = "Account created successfully! Welcome to DigitalSea.";
+                header("Location: login.php");
+                exit();
+            } else {
+                $error = "Something went wrong. Please try again.";
+            }
         }
     }
-}
 
-if(isset($_SESSION['user_id'])) {
-    header("Location: index.php");
-} else {
+    if(isset($_SESSION['user_id'])) {
+        header("Location: index.php");
+    } else {
 ?>
 
 <!DOCTYPE html>

@@ -1,19 +1,19 @@
 <?php
-session_start();
-include 'controller/home.inc.php';
+    session_start();
+    include 'controller/home.inc.php';
 
-$productID = $_GET["product"];
-$data = getProductData($productID);
-$details = getProductDetails($productID);
+    $productID = $_GET["product"];
+    $data = getProductData($productID);
+    $details = getProductDetails($productID);
 
-// Get wishlist items for the current user
-$wishlist_items = isset($_SESSION['user_id']) ? getWishlistItems($_SESSION['user_id']) : [];
-$is_in_wishlist = in_array($productID, $wishlist_items);
+    // Get wishlist items for the current user
+    $wishlist_items = isset($_SESSION['user_id']) ? getWishlistItems($_SESSION['user_id']) : [];
+    $is_in_wishlist = in_array($productID, $wishlist_items);
 
-if (isset($_POST['addToCart'])) {
-    addToCart($_SESSION['user_id'], $productID, $_POST['quantity'], $_POST['quantity'] * $data['price']);
-    header("Location: cart.php");
-}
+    if (isset($_POST['addToCart'])) {
+        addToCart($_SESSION['user_id'], $productID, $_POST['quantity'], $_POST['quantity'] * $data['price']);
+        header("Location: cart.php");
+    }
 ?>
 
 <html lang="en">

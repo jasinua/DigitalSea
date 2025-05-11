@@ -519,4 +519,4 @@ $(document).ready(function() {
 
 <?php include "footer/footer.php"; ?>
 
-<?php } else {    header("Location: index.php"); } ?>
+<?php } else { header("Location: login.php"); } ?>
