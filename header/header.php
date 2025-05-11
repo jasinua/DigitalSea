@@ -310,85 +310,20 @@
         transition: ease-out 0.2s;
     }
 
-    .ui-autocomplete {
-        max-height: 300px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        z-index: 1000;
-        width: 400px !important;
-    }
-    
-    .ui-menu-item {
-        padding: 0 !important;
-        margin: 0 !important;
-        border: none !important;
-        background: none !important;
-    }
-    
-    .ui-menu-item div {
-        padding: 8px 12px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-    }
-    
-    .ui-menu-item div:hover {
-        background-color: #f5f5f5;
-    }
-    
-    .search-suggestion-image {
-        width: 40px;
-        height: 40px;
-        object-fit: cover;
-        border-radius: 4px;
-    }
-    
-    .search-suggestion-content {
-        flex: 1;
-        min-width: 0;
-    }
-    
-    .search-suggestion-title {
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-size: 0.9em;
-    }
-    
-    .search-suggestion-price {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.9em;
-    }
-    
-    .search-suggestion-final-price {
-        color: #333;
-        font-weight: 600;
-    }
-    
-    .search-suggestion-original-price {
-        color: #e44d26;
-        text-decoration: line-through;
-        font-size: 0.85em;
-    }
-    
-    .search-suggestion-discount {
-        background-color: #e44d26;
-        color: white;
-        padding: 2px 4px;
-        border-radius: 3px;
-        font-size: 0.8em;
-        font-weight: 600;
+    /* Remove all search suggestion styles */
+    .ui-autocomplete,
+    .ui-menu-item,
+    .search-suggestion-item,
+    .search-suggestion-image,
+    .search-suggestion-content,
+    .search-suggestion-title,
+    .search-suggestion-description,
+    .search-suggestion-price,
+    .search-suggestion-final-price,
+    .search-suggestion-original-price,
+    .search-suggestion-discount,
+    .no-results {
+        display: none;
     }
 
     .cart-preview-item {
@@ -410,6 +345,255 @@
         background: #f5f6fa;
         box-shadow: 0 2px 8px rgba(21,49,71,0.08);
     }
+
+    /* Mobile Menu Styles */
+    .mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 10px;
+    }
+
+    .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 60px;
+        right: 0;
+        width: 250px;
+        background-color: var(--noir-color);
+        box-shadow: -2px 2px 10px rgba(0,0,0,0.2);
+        z-index: 1000;
+        border-radius: 0 0 0 8px;
+        padding: 10px 0;
+    }
+
+    .mobile-menu.active {
+        display: block;
+    }
+
+    .mobile-menu-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .mobile-menu-item:hover {
+        background-color: var(--navy-color);
+    }
+
+    .mobile-menu-item i {
+        width: 24px;
+        margin-right: 12px;
+        font-size: 20px;
+    }
+
+    .mobile-menu-item span {
+        font-size: 16px;
+    }
+
+    @media screen and (max-width: 768px) {
+        .mobile-menu-toggle {
+            display: block;
+        }
+
+        nav ul {
+            display: none;
+        }
+
+        .search-container {
+            width: calc(100% - 100px);
+            left: 50px;
+        }
+
+        .search-container input[type="text"] {
+            min-width: unset;
+            width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        .search-container {
+            width: calc(100% - 80px);
+            left: 40px;
+        }
+    }
+
+    /* Mobile Optimizations */
+    @media screen and (max-width: 768px) {
+        header {
+            padding: 8px 12px;
+            position: relative;
+            height: 60px;
+        }
+
+        .logo {
+            height: 30px;
+            width: 30px;
+            margin: 0;
+        }
+
+        .search-container {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background-color: var(--noir-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .search-container form {
+            max-width: 100%;
+        }
+
+        .search-container input[type="text"] {
+            width: 100%;
+            min-width: unset;
+            padding: 12px 35px 12px 15px;
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+
+        .mobile-menu-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu-toggle.active {
+            transform: rotate(90deg);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 60px;
+            right: 0;
+            width: 100%;
+            max-width: 300px;
+            height: calc(100vh - 60px);
+            background-color: var(--noir-color);
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .mobile-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-menu-item:hover {
+            background-color: var(--navy-color);
+        }
+
+        .mobile-menu-item i {
+            width: 24px;
+            margin-right: 15px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .mobile-menu-item span {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        nav {
+            display: none;
+        }
+
+        /* Cart Preview Mobile Optimization */
+        .cart-preview {
+            position: fixed;
+            top: 60px;
+            right: 0;
+            width: 100%;
+            max-width: 300px;
+            max-height: calc(100vh - 60px);
+            border-radius: 0;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .cart-preview-item {
+            padding: 12px;
+        }
+
+        .cart-preview-item img {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        header {
+            padding: 8px;
+        }
+
+        .logo {
+            height: 25px;
+            width: 25px;
+        }
+
+        .mobile-menu-toggle {
+            width: 35px;
+            height: 35px;
+            font-size: 20px;
+        }
+
+        .search-container {
+            top: 50px;
+        }
+
+        .search-container input[type="text"] {
+            padding: 10px 30px 10px 12px;
+        }
+    }
+
+    /* Safe Area Insets for Modern Mobile Devices */
+    @supports (padding: max(0px)) {
+        @media screen and (max-width: 768px) {
+            header {
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+            }
+
+            .mobile-menu {
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+    }
 </style>
 <body>
     <header>
@@ -420,6 +604,9 @@
                 <button type="button" class="clear-search" title="Clear search">×</button>
             </form>
         </div>
+        <button class="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
         <nav>
             <ul>
                 <!-- <li><a href="index.php"><img src="home.png" class="icons" alt=""></a></li> -->
@@ -511,73 +698,116 @@
                 <?php } ?>
             </ul>
         </nav>
+        <div class="mobile-menu">
+            <a href="index.php" class="mobile-menu-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <?php if(isset($_SESSION['user_id'])) { ?>
+            <a href="wishlist.php" class="mobile-menu-item">
+                <i class="fas fa-heart"></i>
+                <span>Wishlist</span>
+            </a>
+            <a href="cart.php" class="mobile-menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+            </a>
+            <a href="profile.php" class="mobile-menu-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="controller/logout.php?from=header" class="mobile-menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+            <?php if(isAdmin($_SESSION['user_id'])) { ?>
+            <a href="managestock.php" class="mobile-menu-item">
+                <i class="fas fa-wrench"></i>
+                <span>Manage Stock</span>
+            </a>
+            <?php } ?>
+            <?php } else { ?>
+            <a href="login.php" class="mobile-menu-item">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </a>
+            <a href="signup.php" class="mobile-menu-item">
+                <i class="fas fa-user-plus"></i>
+                <span>Sign Up</span>
+            </a>
+            <?php } ?>
+        </div>
     </header>
 </body>
 <script>
     $(document).ready(function() {
-        $("#search").autocomplete({
-            source: "controller/search_suggestions.php",
-            minLength: 2,
-            select: function(event, ui) {
-                window.location.href = "product.php?product=" + ui.item.id;
-            }
-        }).data("ui-autocomplete")._renderItem = function(ul, item) {
-            return $("<li>")
-                .append("<div class='search-suggestion'>" +
-                    "<img src='" + item.image_url + "' class='search-suggestion-image'>" +
-                    "<div class='search-suggestion-content'>" +
-                    "<div class='search-suggestion-title'>" + item.label + "</div>" +
-                    "<div class='search-suggestion-price'>" +
-                    (item.discount > 0 ? 
-                        "<span class='search-suggestion-original-price'>" + item.price + "€</span>" +
-                        "<span class='search-suggestion-final-price'>" + (item.price * (1 - item.discount/100)).toFixed(0) + "€</span>" +
-                        "<span class='search-suggestion-discount'>-" + item.discount + "%</span>" :
-                        "<span class='search-suggestion-final-price'>" + item.price + "€</span>"
-                    ) +
-                    "</div>" +
-                    "</div>" +
-                    "</div>")
-                .appendTo(ul);
-        };
-
-    // Show/hide clear button based on search input
-    // Show/hide clear button based on search input
-    $('.search-input').on('input', function() {
-            var $clearBtn = $(this).closest('form').find('.clear-search');
-            if ($(this).val().length > 0) {
-                $clearBtn.show();
-            } else {
-                $clearBtn.hide();
-            }
-        });
-
-        // Clear search without redirecting or reloading
-        $('.clear-search').on('mousedown', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var $input = $(this).closest('form').find('.search-input');
-            $input.val('');
+        // Clear search functionality
+        const searchInput = $('.search-input');
+        const clearButton = $('.clear-search');
+        
+        clearButton.click(function() {
+            searchInput.val('').focus();
             $(this).hide();
-            $input.focus();
         });
 
-        // Initialize clear button visibility for each search bar
-        $('.search-input').each(function() {
-            var $clearBtn = $(this).closest('form').find('.clear-search');
-            if ($(this).val().length > 0) {
-                $clearBtn.show();
-            } else {
-                $clearBtn.hide();
+        searchInput.on('input', function() {
+            clearButton.toggle($(this).val().length > 0);
+        });
+
+        clearButton.toggle(searchInput.val().length > 0);
+
+        // Mobile menu functionality
+        const mobileMenuToggle = $('.mobile-menu-toggle');
+        const mobileMenu = $('.mobile-menu');
+        const body = $('body');
+
+        mobileMenuToggle.click(function(e) {
+            e.stopPropagation();
+            mobileMenu.toggleClass('active');
+            $(this).toggleClass('active');
+        });
+
+        // Close mobile menu when clicking outside
+        $(document).click(function(e) {
+            if (!$(e.target).closest('.mobile-menu, .mobile-menu-toggle').length) {
+                mobileMenu.removeClass('active');
+                mobileMenuToggle.removeClass('active');
             }
         });
 
-        // Handle empty search submission
-        $('.search-form').submit(function(e) {
-            if ($('.search-input').val().trim() === '') {
-                e.preventDefault();
-                // window.location.href = 'index.php';
-            }
+        // Handle window resize
+        let resizeTimer;
+        $(window).resize(function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (window.innerWidth > 768) {
+                    mobileMenu.removeClass('active');
+                    mobileMenuToggle.removeClass('active');
+                }
+            }, 250);
         });
-    });  
+
+        // Prevent body scroll when mobile menu is open
+        mobileMenuToggle.click(function() {
+            $('body').toggleClass('menu-open');
+        });
+
+        // Close mobile menu when clicking a menu item
+        $('.mobile-menu-item').click(function() {
+            mobileMenu.removeClass('active');
+            mobileMenuToggle.removeClass('active');
+            $('body').removeClass('menu-open');
+        });
+
+        // Handle cart preview on mobile
+        if (window.innerWidth <= 768) {
+            $('.cart-link').click(function(e) {
+                if (!$(e.target).closest('.cart-preview').length) {
+                    e.preventDefault();
+                    $('.cart-preview').toggle();
+                }
+            });
+        }
+    });
 </script>
 </html>
