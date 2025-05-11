@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once 'function.php';
+include_once '../model/dbh.inc.php';
 
 if (!isset($_SESSION['user_id']) || !isset($_POST['product_id'])) {
     echo 'false';

@@ -17,6 +17,18 @@
   <title>Payment</title>
 </head>
 <style>
+    .search-container input[type="text"] {
+        width: 100%;
+        min-width: 450px;
+        padding: 10px 35px 10px 15px;
+        border: none;
+        border-radius: 20px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
     h2 {
         margin: 15px;
         font-size: 2.5rem;

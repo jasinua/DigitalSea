@@ -63,10 +63,11 @@ if(!isset($_SESSION['user_id'])) {
         background-color: white;
         padding: 40px;
         border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow);
         width: 100%;
-        max-width: 400px;
+        max-width: 550px;
         margin: 0 auto;
+        height: 400px;
     }
 
     .login-container h1 {
@@ -81,15 +82,15 @@ if(!isset($_SESSION['user_id'])) {
         width: 100%;
         padding: 12px 15px;
         margin: 10px 0;
-        border: 2px solid var(--ivory-color);
+        border: 1px solid var(--navy-color);
         border-radius: 6px;
         font-size: 15px;
-        transition: all 0.3s ease;
+        transition: all 0.5s ease;
     }
 
     .login-container input:focus {
         border-color: var(--noir-color);
-        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-input);
         outline: none;
     }
 
@@ -152,7 +153,7 @@ if(!isset($_SESSION['user_id'])) {
         <?php include "header/header.php"?>
         <div id="container">
             <div class="login-container">
-                <h1>Welcome</h1>
+                <h1>Welcome to DigitalSea</h1>
                 <form action="" method="post">
                     <input type="email" name="email" placeholder="Email address" autofocus="autofocus" required>
                     <input type="password" name="password" placeholder="Password" required>

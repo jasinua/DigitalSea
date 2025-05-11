@@ -49,11 +49,6 @@ if(isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - DigitalSea</title>
-    
-    <!-- Preload critical CSS -->
-    <link rel="preload" href="style.css" as="style">
-    <link rel="stylesheet" href="style.css">
-    
     <!-- Load Font Awesome asynchronously -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
@@ -81,9 +76,9 @@ if(isset($_SESSION['user_id'])) {
         background-color: white;
         padding: 40px;
         border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow);
         width: 100%;
-        max-width: 400px;
+        max-width: 600px;
         margin: 0 auto;
     }
 
@@ -99,7 +94,7 @@ if(isset($_SESSION['user_id'])) {
         width: 100%;
         padding: 12px 15px;
         margin: 10px 0;
-        border: 2px solid var(--ivory-color);
+        border: 1px solid var(--navy-color);
         border-radius: 6px;
         font-size: 15px;
         transition: all 0.3s ease;
@@ -107,7 +102,7 @@ if(isset($_SESSION['user_id'])) {
 
     .signup-container input:focus {
         border-color: var(--noir-color);
-        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-input);
         outline: none;
     }
 

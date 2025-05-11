@@ -18,10 +18,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigitalSea</title>
     
-    <!-- Preload critical CSS -->
-    <link rel="preload" href="style.css" as="style">
-    <link rel="stylesheet" href="style.css">
-    
     <!-- Load Font Awesome asynchronously -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
@@ -791,34 +787,6 @@
     
     .wishlist-btn.active i {
         color: var(--error-color);
-    }
-
-    .search-container {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .search-container input[type="text"] {
-        padding-right: 30px; /* Make room for the X button */
-    }
-
-    .clear-search {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: #666;
-        cursor: pointer;
-        font-size: 16px;
-        padding: 5px;
-        display: none; /* Hidden by default */
-    }
-
-    .clear-search:hover {
-        color: #333;
     }
 
     /* Add pagination styles */

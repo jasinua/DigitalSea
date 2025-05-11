@@ -106,10 +106,11 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
 
     .cart-right h3 {
-        padding: 15px 0;
+        padding: 10px 0;
         margin: 0;
         font-size: 1.2em;
         color: var(--noir-color);
+        background-color: var(--ivory-color);
         border-bottom: 1px solid #eee;
     }
 
@@ -120,7 +121,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
 
     thead tr {
-        background-color: white;
+        background-color: var(--ivory-color);
     }
 
     th, td {
@@ -406,7 +407,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
             </table>
                 <div class="itemsTable" style='max-height: 400px;'>
                     <table>
-                            <tbody style='overflow:hidden;overflow-y: auto;'>
+                            <tbody style='overflow: hidden; overflow-y: auto;'>
                             <?php 
                             $subtotal = 0;
                             foreach ($res as $cart) {
@@ -543,7 +544,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
                 const quantity = parseInt(input.value) || 1;
                 const total = price * quantity;
 
-                // Update the corresponding summary item
                 const summaryItem = document.querySelector(`.summary-item[data-product-id="${productId}"] .total-price`);
                 if (summaryItem) {
                     summaryItem.textContent = `${quantity} x ${price.toFixed(2)}€ = ${total.toFixed(2)}€`;
@@ -557,19 +557,11 @@ if (isLoggedIn($_SESSION['user_id'])) {
             saveBtn.textContent = 'Duke ruajtur...';
 
             const formData = new FormData();
-            const productIds = [];
-            const quantities = [];
-            const prices = [];
-
             quantityInputs.forEach(input => {
-                productIds.push(input.dataset.productId);
-                quantities.push(input.value);
-                prices.push(parseFloat(input.dataset.price) * parseInt(input.value));
+                formData.append('prod_id[]', input.dataset.productId);
+                formData.append('quantity[]', input.value);
+                formData.append('price[]', parseFloat(input.dataset.price) * parseInt(input.value));
             });
-
-            formData.append('prod_id', JSON.stringify(productIds));
-            formData.append('quantity', JSON.stringify(quantities));
-            formData.append('price', JSON.stringify(prices));
 
             fetch('cart.php', {
                 method: 'POST',
@@ -579,18 +571,13 @@ if (isLoggedIn($_SESSION['user_id'])) {
             .then(() => {
                 saveBtn.textContent = 'Ruaj Ndryshimet';
                 saveBtn.disabled = false;
-                
-                // Show success message
+
                 saveMessage.classList.add('show');
-                
-                // Hide message after 3 seconds
                 clearTimeout(saveTimeout);
                 saveTimeout = setTimeout(() => {
                     saveMessage.classList.remove('show');
+                    // window.location.reload(); 
                 }, 3000);
-
-                // Update cart summary
-                updateCartSummary();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -604,7 +591,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
             let subtotal = 0;
             let totalDiscount = 0;
 
-            // Calculate subtotal
             summaryTotals.forEach(item => {
                 const cleanedText = item.textContent.replace(/,/g, '');
                 const match = cleanedText.match(/= ([\d.]+)/);
@@ -613,7 +599,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
                 }
             });
 
-            // Recalculate discount only for products with a discount
             quantityInputs.forEach(input => {
                 const productId = input.dataset.productId;
                 const quantity = parseInt(input.value) || 1;
@@ -633,18 +618,13 @@ if (isLoggedIn($_SESSION['user_id'])) {
             const tvsh = subtotal * 0.18;
             const finalTotal = subtotal + tvsh - totalDiscount;
 
-            // Update summary items
             const summaryItems = document.querySelectorAll('.summary-item');
             summaryItems[summaryItems.length - 4].querySelector('span:last-child').textContent = subtotal.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
             summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = tvsh.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
             summaryItems[summaryItems.length - 2].querySelector('span:last-child').textContent = totalDiscount > 0 ? `- ${totalDiscount.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€` : "0.00€";
             summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = finalTotal.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
         }
-    });
 
-    // Add clear-search button logic for cart page
-    $(document).ready(function() {
-        // Show/hide clear button based on search input
         $('.search-input').on('input', function() {
             var $clearBtn = $(this).closest('form').find('.clear-search');
             if ($(this).val().length > 0) {
@@ -653,16 +633,16 @@ if (isLoggedIn($_SESSION['user_id'])) {
                 $clearBtn.hide();
             }
         });
-        // Clear search without redirecting or reloading
+
         $('.clear-search').on('mousedown', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            var $input = $(this).closest('form').find('.search-input');
+            var $input = $(this).closest('form').find('.clear-search');
             $input.val('');
             $(this).hide();
             $input.focus();
         });
-        // Initialize clear button visibility for each search bar
+
         $('.search-input').each(function() {
             var $clearBtn = $(this).closest('form').find('.clear-search');
             if ($(this).val().length > 0) {
