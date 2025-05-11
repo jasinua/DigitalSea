@@ -232,14 +232,14 @@ if (isset($_POST['addToCart'])) {
         z-index: 1;
     }
 
-    .original-price {
+    #original-price {
         color: var(--error-color);
         text-decoration: line-through;
         font-size: 14px;
         font-weight: normal;
     }
 
-    .discounted-price {
+    #discounted-price {
         color: var(--noir-color);
         font-weight: 600;
         font-size: 1.2em;
@@ -316,8 +316,8 @@ if (isset($_POST['addToCart'])) {
                                 $discountedPrice = $originalPrice * (1 - $data['discount'] / 100);
                             ?>
                                 <div class='price-value'>
-                                    <span class="original-price"><?php echo number_format($originalPrice, 2) ?>€</span>
-                                    <span class="discounted-price"><?php echo number_format($discountedPrice, 2) ?>€</span>
+                                    <span id="original-price"><?php echo number_format($originalPrice, 2) ?>€</span>
+                                    <span id="discounted-price"><?php echo number_format($discountedPrice, 2) ?>€</span>
                                 </div>
                             <?php } else { ?>
                                 <p class='price-value'><?php echo number_format($data['price'], 2) ?>€</p>
@@ -395,6 +395,7 @@ if (isset($_POST['addToCart'])) {
         });
 
         const price = <?php echo $data['price'] ?>;
+        const discount = <?php echo $data['discount'] ?>;
 
         function addToQuantity(add) {
             var amount = parseInt(document.getElementById('stock').value);
@@ -409,7 +410,13 @@ if (isset($_POST['addToCart'])) {
 
         function updatePrice(amount) {
             const totalPrice = (price * amount).toFixed(2);
-            document.getElementById('stockPrice').innerHTML = totalPrice + "&euro;";
+            <?php if ($data['discount'] > 0) { ?>
+                const discountedPrice = (price * (1 - discount/100) * amount).toFixed(2);
+                document.getElementById('discounted-price').innerHTML = discountedPrice + "&euro;";
+                document.getElementById('original-price').innerHTML = totalPrice + "&euro;";
+            <?php } else { ?>
+                document.querySelector('.price-value').innerHTML = totalPrice + "&euro;";
+            <?php } ?>
         }
     </script>
 </body>

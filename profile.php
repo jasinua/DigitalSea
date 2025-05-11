@@ -73,8 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = "All password fields are required";
         } elseif ($new_password !== $confirm_password) {
             $errors[] = "New passwords do not match";
-        } elseif (strlen($new_password) < 8) {
-            $errors[] = "New password must be at least 8 characters long";
+        } elseif (strlen($new_password) < 5) {
+            $errors[] = "New password must be at least 5 characters long";
         } else {
             // Verify current password
             $stmt = $conn->prepare("SELECT password FROM users WHERE user_id = ?");

@@ -18,7 +18,13 @@ function checkEmail($email) {
 
 //shikon nese passwordi ka format te sakte 
 function invalidPasswordFormat($password) {
-    return preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/", $password);
+    // Check if password is at least 5 characters long
+    if (strlen($password) < 5) {
+        return true;
+    }
+    
+    // Password is valid if it's at least 5 characters long
+    return false;
 }
 
 // shikon nese passworded jane te njejta

@@ -63,7 +63,7 @@ if(!isset($_SESSION['user_id'])) {
         background-color: white;
         padding: 40px;
         border-radius: 10px;
-        box-shadow: var(--shadow);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         width: 100%;
         max-width: 550px;
         margin: 0 auto;
