@@ -934,7 +934,7 @@
         <?php include "header/header.php" ?>
         <div id='container'>
             <div id='filters'>
-                <form id='filterForm' action="index.php" method='post'>
+                <form id='filterForm' action="index.php" method='get'>
                     <div id='filtOpts'>
                         <input type='button' value='Clear Filters' onclick="clearAllFilters()">
                         <input type='submit' value='Apply Filters'>
@@ -1090,7 +1090,7 @@
             </div>
 
             <div id='items'>
-                <?php if(!isset($_POST['subfilter']) && !isset($_POST['min_price']) && !isset($_POST['max_price']) && !isset($_POST['discounted_only']) && !isset($_GET['search']) && $current_page === 1) { ?>   
+                <?php if(!isset($_GET['subfilter']) && !isset($_GET['min_price']) && !isset($_GET['max_price']) && !isset($_GET['discounted_only']) && !isset($_GET['search']) && $current_page === 1) { ?>   
                     <h1 id='topItemsHeader'>Top Products</h1>
                     <div class='wheel-carousel'>
                         <div class='wheel-track' id='topItems'>
@@ -1159,12 +1159,12 @@
 
                     <div class='itemBox' id='randomItems'>
                     <?php 
-                    if(isset($_POST['subfilter']) || isset($_POST['min_price']) || isset($_POST['max_price']) || isset($_POST['discounted_only']) || isset($_GET['search'])) {
+                    if(isset($_GET['subfilter']) || isset($_GET['min_price']) || isset($_GET['max_price']) || isset($_GET['discounted_only']) || isset($_GET['search'])) {
                         $where_conditions = [];
                         
-                        if (!empty($_POST['subfilter'])) {
+                        if (!empty($_GET['subfilter'])) {
                             $subfilter_conditions = [];
-                            foreach ($_POST['subfilter'] as $subcat) {
+                            foreach ($_GET['subfilter'] as $subcat) {
                                 // Add the subcategory name itself as a search term
                                 $subfilter_conditions[] = "(LOWER(description) LIKE LOWER('%substr($subcat,0,-1)%') OR LOWER(name) LIKE LOWER('%substr($subcat,0,-1)%'))";
                                 
@@ -1182,15 +1182,15 @@
                             }
                         }
                         
-                        if (!empty($_POST['min_price'])) {
-                            $where_conditions[] = "price >= " . floatval($_POST['min_price']);
+                        if (!empty($_GET['min_price'])) {
+                            $where_conditions[] = "price >= " . floatval($_GET['min_price']);
                         }
                         
-                        if (!empty($_POST['max_price'])) {
-                            $where_conditions[] = "price <= " . floatval($_POST['max_price']);
+                        if (!empty($_GET['max_price'])) {
+                            $where_conditions[] = "price <= " . floatval($_GET['max_price']);
                         }
 
-                        if (isset($_POST['discounted_only'])) {
+                        if (isset($_GET['discounted_only'])) {
                             $where_conditions[] = "discount > 0";
                         }
 
@@ -1200,9 +1200,20 @@
                         }
                         
                         $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
-                        $products = getData("SELECT * FROM products $where_clause");
+                        
+                        // Get total count of filtered products for pagination
+                        $count_query = "SELECT COUNT(*) as total FROM products $where_clause";
+                        $count_result = $conn->query($count_query);
+                        $total_products = $count_result->fetch_assoc()['total'];
+                        $total_pages = ceil($total_products / $items_per_page);
+                        
+                        // Add pagination to the query
+                        $offset = ($current_page - 1) * $items_per_page;
+                        $products = getData("SELECT * FROM products $where_clause LIMIT $items_per_page OFFSET $offset");
                     } else {
                         $products = getProducts($current_page, $items_per_page);
+                        $total_products = getTotalProducts();
+                        $total_pages = ceil($total_products / $items_per_page);
                     }
                     
                     foreach ($products as $prod) { ?>
@@ -1233,22 +1244,46 @@
                 </div>
 
                 <!-- Add pagination controls -->
-                <?php
-                $total_products = getTotalProducts();
-                $total_pages = ceil($total_products / $items_per_page);
-                
-                if ($total_pages > 1): ?>
+                <?php if ($total_pages > 1): ?>
                     <div class="pagination">
                         <div class="pagination-container">
+                            <?php 
+                            // Build query string for pagination links
+                            $query_params = [];
+                            if (isset($_GET['search'])) {
+                                $query_params['search'] = $_GET['search'];
+                            }
+                            if (isset($_GET['subfilter'])) {
+                                foreach ($_GET['subfilter'] as $filter) {
+                                    $query_params['subfilter'][] = $filter;
+                                }
+                            }
+                            if (isset($_GET['min_price'])) {
+                                $query_params['min_price'] = $_GET['min_price'];
+                            }
+                            if (isset($_GET['max_price'])) {
+                                $query_params['max_price'] = $_GET['max_price'];
+                            }
+                            if (isset($_GET['discounted_only'])) {
+                                $query_params['discounted_only'] = $_GET['discounted_only'];
+                            }
+                            
+                            // Function to build query string
+                            function buildQueryString($page, $params) {
+                                $params['page'] = $page;
+                                return '?' . http_build_query($params);
+                            }
+                            ?>
+                            
                             <?php if ($current_page > 1): ?>
-                                <a href="?page=<?php echo $current_page - 1; ?>" class="pagination-btn">
+                                <a href="<?php echo buildQueryString($current_page - 1, $query_params); ?>" class="pagination-btn">
                                     <i class="fas fa-chevron-left"></i> Previous
                                 </a>
                             <?php endif; ?>
 
                             <div class="page-numbers">
                                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                    <a href="?page=<?php echo $i; ?>" 
+                                    <a href="<?php echo buildQueryString($i, $query_params); ?>" 
                                        class="page-number <?php echo $i === $current_page ? 'active' : ''; ?>">
                                         <?php echo $i; ?>
                                     </a>
@@ -1256,7 +1291,7 @@
                             </div>
 
                             <?php if ($current_page < $total_pages): ?>
-                                <a href="?page=<?php echo $current_page + 1; ?>" class="pagination-btn">
+                                <a href="<?php echo buildQueryString($current_page + 1, $query_params); ?>" class="pagination-btn">
                                     Next <i class="fas fa-chevron-right"></i>
                                 </a>
                             <?php endif; ?>
