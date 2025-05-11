@@ -47,6 +47,7 @@
 
     #container #moreItemsText {
         text-align: center;
+        margin: 40px 0 20px 0;
     }
 
     #filters {
@@ -428,9 +429,17 @@
     #newItems {
         overflow-x: hidden;
         display: flex;
-        margin: 20px;
+        margin: 20px 0;
         padding-bottom: 20px;
         background-color: var(--ivory-color);
+    }
+
+    #newItemsHeader {
+        text-align: center;
+        margin: 40px 0 20px 0;
+        color: var(--noir-color);
+        font-size: 2em;
+        font-weight: bold;
     }
 
     #newItemsItem {
@@ -533,7 +542,6 @@
 
     #container h1 {
         color: var(--noir-color);
-        margin-left: 20px;
     }
 
     ::-webkit-scrollbar {
@@ -560,11 +568,12 @@
         color:var(--page-text-color);
     }
 
+    /* Wheel Carousel starts here*/
     .wheel-carousel {
         width: 100%;
         overflow: hidden;
         position: relative;
-        height: 600px;
+        height: 500px;
         /* padding: 20px 0; */
         box-sizing: border-box;
         display: flex;
@@ -753,14 +762,6 @@
     #topItemsHeader {
         text-align: center;
         margin: 20px 0 0 0;
-        color: var(--noir-color);
-        font-size: 2em;
-        font-weight: bold;
-    }
-
-    #newItemsHeader {
-        text-align: center;
-        margin: 20px 0;
         color: var(--noir-color);
         font-size: 2em;
         font-weight: bold;
@@ -1039,7 +1040,7 @@
                         </div>
                     </div>
 
-                    <div class="filter-section">
+                    <div class="filter-section collapsed">
                         <h3>Price Range</h3>
                         <div class="filter-content">
                             <div class="price-range">
@@ -1050,7 +1051,7 @@
                         </div>
                     </div>
 
-                    <div class="filter-section">
+                    <div class="filter-section collapsed">
                         <h3>Discounts</h3>
                         <div class="filter-content">
                             <div class="filter">
@@ -1554,10 +1555,7 @@
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const href = this.getAttribute('href');
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            
             setTimeout(() => {
                 window.location.href = href;
             }, 500);
