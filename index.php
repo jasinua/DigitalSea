@@ -295,7 +295,7 @@
         padding: 10px;
         border-radius: 6px;
         font-size: 14px;
-        background-color: var(--button-color);
+        background-color: var(--noir-color);
         border: none;
         color: white;
         cursor: pointer;
@@ -303,7 +303,7 @@
     }
 
     #filtOpts input:hover {
-        background-color: var(--noir-color);
+        background-color: var(--navy-color);
         transform: translateY(-2px);
     }
 
