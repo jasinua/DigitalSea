@@ -1069,26 +1069,26 @@
                         <div class='wheel-track' id='topItems'>
                             <?php foreach (getData("SELECT * FROM products WHERE products.price>900") as $prod) { ?>
                                     <div class='wheel-item'>
-                                    <?php if ($prod['discount'] > 0) { ?>
-                                        <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
-                                    <?php } ?>
-                                    <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
-                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
-                                    <div class='bottom-container'>
-                                        <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
-                                            <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
-                                        </button>
-                                        <div class='price'>
-                                            <?php if ($prod['discount'] > 0) { 
-                                                $originalPrice = $prod['price'];
-                                                $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
-                                            ?>
-                                                <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
-                                                <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
-                                            <?php } else { ?>
-                                                <span class="discounted-price"><?php echo number_format($prod['price'], 2, '.', ',') ?>€</span>
-                                            <?php } ?>
-                                </div>
+                                        <?php if ($prod['discount'] > 0) { ?>
+                                            <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
+                                        <?php } ?>
+                                        <img onclick='window.location="product.php?product=<?php echo $prod['product_id'] ?>"' src="<?php echo $prod['image_url'] ?>" alt="<?php echo $prod['description'] ?>">
+                                        <a href="product.php?product=<?php echo $prod['product_id'] ?>" class='title'><?php echo $prod['description'] ?></a>
+                                        <div class='bottom-container'>
+                                            <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                                <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
+                                            </button>
+                                            <div class='price'>
+                                                <?php if ($prod['discount'] > 0) { 
+                                                    $originalPrice = $prod['price'];
+                                                    $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
+                                                ?>
+                                                    <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
+                                                    <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
+                                                <?php } else { ?>
+                                                    <span class="discounted-price"><?php echo number_format($prod['price'], 2, '.', ',') ?>€</span>
+                                                <?php } ?>
+                                        </div>
                                     </div>
                                 </div>
                             <?php } ?>
