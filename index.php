@@ -295,7 +295,7 @@
         padding: 10px;
         border-radius: 6px;
         font-size: 14px;
-        background-color: var(--noir-color);
+        background-color: var(--button-color);
         border: none;
         color: white;
         cursor: pointer;
@@ -303,7 +303,7 @@
     }
 
     #filtOpts input:hover {
-        background-color: var(--navy-color);
+        background-color: var(--button-color-hover);
         transform: translateY(-2px);
     }
 
@@ -846,12 +846,17 @@
     }
 
     .page-number:hover {
-        background: var(--noir-color);
+        background: var(--button-color-hover);
         color: white;
     }
 
     .page-number.active {
-        background: var(--noir-color);
+        background: var(--button-color);
+        color: white;
+    }
+
+    .page-number.active:hover {
+        background: var(--button-color-hover);
         color: white;
     }
 

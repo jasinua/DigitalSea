@@ -34,7 +34,7 @@
 
         --modal-bg-color: white;
                         
-        --button-color: #153147;
+        --button-color: #232a2f;
         --button-color-hover:rgb(26, 78, 118);
 
         --noir-color: #232a2f;
@@ -50,7 +50,10 @@
         --shadow: 0 0 5px #153147;
         --shadow-input: 0 0 8px #153147;
 
-        --error-color:#F94040
+        --logout-color: #FF0000;
+        --logout-color-hover: #C70000;
+
+        --error-color: #F94040;
     }
 
     * {

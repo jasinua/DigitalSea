@@ -59,15 +59,20 @@
     }
 
     input[type="submit"] {
-      background-color: var(--navy-color);
+      background-color: var(--button-color);
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       width: 100%;
       padding: 18px;
       margin-top: 18px;
       border: none;
       color: var(--text-color);
+      transition: var(--transition);
       border-radius: 8px;
+    }
+
+    input[type="submit"]:hover {
+      background-color: var(--button-color-hover);
     }
 
     .paymentStuff{

@@ -39,6 +39,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
         font-size: 28px;
         color: var(--button-color);
         margin: 0;
+        cursor: default;
     }
 
     .wishlist-count {
@@ -47,6 +48,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
         padding: 8px 15px;
         border-radius: 20px;
         font-size: 14px;
+        cursor: default;
     }
 
     .wishlist-grid {

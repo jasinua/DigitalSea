@@ -111,8 +111,8 @@
                 // If product does not exist, insert it
                 if ($count == 0) {
                     // Prepare and bind for insert
-                    $stmt = $conn->prepare("CALL insertProducts(?,?,?,?,?,?)");
-                    $stmt->bind_param("issdsi", $product['product_id'], $product['name'], $product['description'], $product['price'], $product['image_url']['main_image'], $product['stock']);
+                    $stmt = $conn->prepare("CALL insertProducts(?,?,?,?,?,?,?)");
+                    $stmt->bind_param("issdsiis", $product['product_id'], $product['name'], $product['description'], $product['price'], $product['image_url']['main_image'], $product['stock'], $product['discount']);
         
                     // Execute the statement
                     if (!$stmt->execute()) {
@@ -149,7 +149,7 @@
                 foreach($product['details'] as $key => $value) {
                     
                     $stmt = $conn->prepare("INSERT INTO product_details (product_id, prod_desc1,prod_desc2) VALUES (?,?,?)");
-                    $stmt->bind_param("iss", $product['product_id'], $key,$value);
+                    $stmt->bind_param("iss", $product['product_id'], $key, $value);
         
                     // Execute the statement
                     if (!$stmt->execute()) {

@@ -21,6 +21,7 @@ try {
     $stock = (int)$_POST['stock'];
     $api_source = $_POST['api_source'] ?? '';
     $main_image = $_POST['main_image'] ?? '';
+    $discount = (float)$_POST['discount'] ?? 0;
 
     // Log the received data
     error_log("Updating product ID: " . $product_id);
@@ -33,7 +34,8 @@ try {
             price = ?, 
             stock = ?, 
             api_source = ?, 
-            image_url = ? 
+            image_url = ?,
+            discount = ?
             WHERE product_id = ?";
 
     $stmt = $conn->prepare($sql);
@@ -41,7 +43,7 @@ try {
         throw new Exception("Prepare failed: " . $conn->error);
     }
 
-    $stmt->bind_param("ssdissi", $name, $description, $price, $stock, $api_source, $main_image, $product_id);
+    $stmt->bind_param("ssdissii", $name, $description, $price, $stock, $api_source, $main_image, $discount, $product_id);
     
     if (!$stmt->execute()) {
         throw new Exception("Execute failed: " . $stmt->error);

@@ -18,7 +18,8 @@ if (isset($_POST['submit'])) {
             "1" => $_POST['image_1'],
             "2" => $_POST['image_2']
         ],
-        "details" => []
+        "details" => [],
+        "discount" => (float) $_POST['discount']
     ];
 
     foreach ($_POST['details_key'] as $index => $key) {
@@ -187,6 +188,9 @@ if (file_exists($file)) {
         <label>Image 2 URL:</label>
         <input type="url" name="image_2">
 
+        <label>Discount (Optional):</label>
+        <input type="number" name="discount" step="0.01">
+
         <h3>Product Details</h3>
         <div id="detailsContainer"></div>
         <button type="button" onclick="addDetailField()">Add Detail</button>
@@ -218,6 +222,7 @@ if (file_exists($file)) {
                         <td>$<?= htmlspecialchars(number_format($product['price'], 2)) ?></td>
                         <td><?= htmlspecialchars($product['stock']) ?></td>
                         <td><?= htmlspecialchars($product['api_source']) ?></td>
+                        <td><?= htmlspecialchars($product['discount']) ?></td>
                         <td>
                             <a class="link-button" href="<?= htmlspecialchars($product['image_url']['main_image']) ?>" target="_blank">Main</a> |
                             <a class="link-button" href="<?= htmlspecialchars($product['image_url']['1']) ?>" target="_blank">1</a> |

@@ -262,26 +262,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .btn-primary {
-            background: #153147;
-        color: white;
+            background: var(--button-color);
+            color: white;
         }
 
         .btn-primary:hover {
-            background: #1a3d5a;
+            background: var(--button-color-hover);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(21, 49, 71, 0.2);
         }
 
         .btn-secondary {
-            background: #f8f8f8;
-            color: #153147;
+            background: var(--logout-color);
+            color: var(--text-color);
             text-decoration: none;
         }
 
         .btn-secondary:hover {
-            background: #eee;
+            background: var(--logout-color-hover);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .alert {
@@ -453,7 +452,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
 
                 <div class="button-group" style="margin-top: 20px;">
-                    <a href="controller/logout.php" class="btn btn-secondary">Logout</a>
+                    <a href="controller/logout.php" class="btn btn-secondary">Log Out</a>
                 </div>
         </div>
         </div> 

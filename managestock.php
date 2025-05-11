@@ -30,7 +30,8 @@ if (isset($_POST['submit'])) {
             "1" => $_POST['image_1'],
             "2" => $_POST['image_2']
         ],
-        "details" => []
+        "details" => [],
+        "discount" => (float) $_POST['discount']
     ];
 
     foreach ($_POST['details_key'] as $index => $key) {
@@ -192,7 +193,6 @@ h1, h2 {
 }
 
 .modal-content .btn, .modal-content input[type="submit"] {
-    background: linear-gradient(90deg, #153147 0%, #1a3d5a 100%);
     color: #fff;
     padding: 12px 24px;
     border: none;
@@ -209,8 +209,7 @@ h1, h2 {
 }
 
 .modal-content .btn:hover, .modal-content input[type="submit"]:hover {
-    background: linear-gradient(90deg, #1a3d5a 0%, #153147 100%);
-    transform: translateY(-2px) scale(1.03);
+    transform: translateY(-2px);
 }
 
 @media (max-width: 600px) {
@@ -371,10 +370,10 @@ tr:hover {
 }
 
 .detail-button {
-    background-color:var(--button-color-hover);
+    background-color:var(--button-color);
 }
 .detail-button:hover {
-    background-color:var(--navy-color-lighter);
+    background-color:var(--button-color-hover);
 }
 
 .div {
@@ -479,6 +478,9 @@ tr:hover {
                 <label>Image 2 URL:</label>
                 <input type="url" name="image_2">
 
+                <label>Discount (Optional):</label>
+                <input type="number" name="discount" step="0.01">
+
                 <h3>Product Details</h3>
                 <div id="detailsContainer"></div>
                 <button type="button" onclick="addDetailField()" class="detail-button" >Add Detail</button>
@@ -501,6 +503,7 @@ tr:hover {
                 <th>Price</th>
                 <th>Stock</th>
                 <th>API Source</th>
+                <th>Discount</th>
                 <th>Details</th>
                 <th>Actions</th>
             </tr>
@@ -517,7 +520,13 @@ tr:hover {
                         <td><strong><?= htmlspecialchars(number_format($product['price'], 2)) ?>€</strong></td>
                         <td><?= htmlspecialchars($product['stock']) ?></td>
                         <td><?= htmlspecialchars($product['api_source']) ?></td>
-                        
+                        <td>
+                            <?php if (!empty($product['discount'])): ?>
+                                <strong><?= htmlspecialchars($product['discount']) ?>%</strong>
+                            <?php else: ?>
+                                No discount
+                            <?php endif; ?>
+                        </td>
                         <td>
                             <?php if (!empty($product['details'])): ?>
                                 <ul class="details-list">
@@ -639,10 +648,11 @@ function editProduct(index) {
     form.product_id.value = product.product_id;
     form.name.value = product.name;
     form.description.value = product.description;
-    form.type.value = product.type || '';
+    // form.type.value = product.type || '';
     form.price.value = product.price;
     form.stock.value = product.stock;
     form.api_source.value = product.api_source || '';
+    form.discount.value = product.discount;
     
     // --- Fix for main image field ---
     if (typeof product.image_url === 'string') {

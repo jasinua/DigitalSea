@@ -196,7 +196,7 @@ if(isset($_SESSION['user_id'])) {
                 <?php endif; ?>
 
                 <div class="login-link">
-                    Already have an account? <a href="login.php">Log in</a>
+                    Already have an account? <a href="login.php">Log In</a>
                 </div>
             </div>
         </div>

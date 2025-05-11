@@ -165,7 +165,7 @@ if(!isset($_SESSION['user_id'])) {
                 <?php endif; ?>
 
                 <div class="signup-link">
-                    Don't have an account? <a href="signup.php">Sign up</a>
+                    Don't have an account? <a href="signup.php">Sign Up</a>
                 </div>
             </div>
         </div>
