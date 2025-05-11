@@ -634,7 +634,7 @@
         min-height: 50px;
         overflow: hidden;
         color: #555;
-        padding: 0 5px;
+        padding: 0 5px 0 10px;
         width: 100%;
     }
 
