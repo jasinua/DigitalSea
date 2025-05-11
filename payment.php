@@ -30,7 +30,7 @@
     }
 
     h2 {
-        margin: 15px;
+        margin: 50px 0 40px 0;
         font-size: 2.5rem;
         text-align:center;
         color: var(--page-text-color);
