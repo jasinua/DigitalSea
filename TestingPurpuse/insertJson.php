@@ -1,56 +1,56 @@
 <?php
-// KJO FAQE ESHTE PER ME SHTU TE DHENA NE PRODUCTS.JSON
-// DERI SA BOJNA NAJ ZGJIDHJE TJETER
+    // KJO FAQE ESHTE PER ME SHTU TE DHENA NE PRODUCTS.JSON
+    // DERI SA BOJNA NAJ ZGJIDHJE TJETER
 
-$file = '../controller/productsPlus.json';
+    $file = '../controller/productsPlus.json';
 
-// Handle form submission
-if (isset($_POST['submit'])) {
-    $product = [
-        "name" => $_POST['name'],
-        "description" => $_POST['description'],
-        "type" => $_POST['type'],
-        "price" => (float) $_POST['price'],
-        "stock" => (int) $_POST['stock'],
-        "api_source" => $_POST['api_source'],
-        "image_url" => [
-            "main_image" => $_POST['main_image'],
-            "1" => $_POST['image_1'],
-            "2" => $_POST['image_2']
-        ],
-        "details" => [],
-        "discount" => (float) $_POST['discount']
-    ];
+    // Handle form submission
+    if (isset($_POST['submit'])) {
+        $product = [
+            "name" => $_POST['name'],
+            "description" => $_POST['description'],
+            "type" => $_POST['type'],
+            "price" => (float) $_POST['price'],
+            "stock" => (int) $_POST['stock'],
+            "api_source" => $_POST['api_source'],
+            "image_url" => [
+                "main_image" => $_POST['main_image'],
+                "1" => $_POST['image_1'],
+                "2" => $_POST['image_2']
+            ],
+            "details" => [],
+            "discount" => (float) $_POST['discount']
+        ];
 
-    foreach ($_POST['details_key'] as $index => $key) {
-        if (!empty($key) && !empty($_POST['details_value'][$index])) {
-            $product["details"][$key] = $_POST['details_value'][$index];
+        foreach ($_POST['details_key'] as $index => $key) {
+            if (!empty($key) && !empty($_POST['details_value'][$index])) {
+                $product["details"][$key] = $_POST['details_value'][$index];
+            }
         }
+
+        if (file_exists($file)) {
+            $json_data = file_get_contents($file);
+            $data = json_decode($json_data, true);
+        } else {
+            $data = ["products" => []];
+        }
+
+        $data["products"][] = $product;
+
+        file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
+
+        echo "<script>alert('Product added successfully!'); window.location.href=window.location.href;</script>";
+        exit();
     }
 
+    $products = [];
     if (file_exists($file)) {
         $json_data = file_get_contents($file);
         $data = json_decode($json_data, true);
-    } else {
-        $data = ["products" => []];
+        if (isset($data['products'])) {
+            $products = $data['products'];
+        }
     }
-
-    $data["products"][] = $product;
-
-    file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
-
-    echo "<script>alert('Product added successfully!'); window.location.href=window.location.href;</script>";
-    exit();
-}
-
-$products = [];
-if (file_exists($file)) {
-    $json_data = file_get_contents($file);
-    $data = json_decode($json_data, true);
-    if (isset($data['products'])) {
-        $products = $data['products'];
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -64,10 +64,12 @@ if (file_exists($file)) {
             margin: 20px;
             padding: 0;
         }
+
         h1, h2 {
             text-align: center;
             color: #333;
         }
+
         form {
             background: white;
             padding: 20px;
@@ -76,12 +78,14 @@ if (file_exists($file)) {
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border-radius: 10px;
         }
+
         label {
             display: block;
             margin-top: 10px;
             font-weight: bold;
             color: #555;
         }
+
         input[type="text"],
         input[type="number"],
         input[type="url"],
@@ -93,6 +97,7 @@ if (file_exists($file)) {
             border: 1px solid #ccc;
             margin-bottom: 10px;
         }
+
         button, .btn {
             background-color: #007bff;
             color: white;
@@ -104,9 +109,11 @@ if (file_exists($file)) {
             font-size: 14px;
             transition: background-color 0.3s ease;
         }
+
         button:hover, .btn:hover {
             background-color: #0056b3;
         }
+
         table {
             width: 95%;
             margin: 30px auto;
@@ -116,30 +123,37 @@ if (file_exists($file)) {
             border-radius: 10px;
             overflow: hidden;
         }
+
         th, td {
             padding: 15px;
             border-bottom: 1px solid #eee;
             text-align: left;
         }
+
         th {
             background-color: #007bff;
             color: white;
         }
+
         tr:hover {
             background-color: #f1f1f1;
         }
+        
         .details-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
+
         .details-list li {
             margin-bottom: 5px;
         }
+
         .link-button {
             color: #007bff;
             text-decoration: none;
         }
+        
         .link-button:hover {
             text-decoration: underline;
         }

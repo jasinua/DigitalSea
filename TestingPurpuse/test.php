@@ -3,5 +3,4 @@
     // include "../model/dbh.inc.php";
 
     // addDetailsToDatabase($conn);
-
 ?>
