@@ -185,6 +185,129 @@
         background: #2d3748;
         margin-bottom: 1rem;
     }
+    
+    /* Responsive Styles */
+    @media (max-width: 1200px) {
+        .paymentStuff {
+            max-width: 90%;
+            gap: 40px;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .paymentStuff {
+            flex-direction: column-reverse;
+            gap: 30px;
+        }
+        
+        .card-container {
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            margin: 40px 0 30px 0;
+            font-size: 2.2rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .paymentStuff form {
+            width: 100%;
+            max-width: 520px;
+            padding: 30px;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin: 30px 0 25px 0;
+        }
+        
+        .card-container {
+            max-width: 420px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .paymentStuff form {
+            padding: 20px;
+            font-size: 1rem;
+        }
+        
+        .paymentStuff input[type="text"], 
+        .paymentStuff input[type="number"] {
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+        
+        .backCard {
+            flex-direction: column;
+        }
+        
+        .expDate, .cvv {
+            width: 100%;
+        }
+        
+        .expDate input, .cvv input {
+            width: 100%;
+        }
+        
+        input[type="submit"] {
+            padding: 14px;
+            font-size: 1rem;
+        }
+        
+        .card {
+            height: 240px;
+        }
+        
+        .card-front, .card-back {
+            padding: 1.8rem;
+        }
+        
+        .card-number {
+            font-size: 1.4rem;
+        }
+        
+        .card-details {
+            font-size: 0.9rem;
+        }
+        
+        .card-cvc {
+            font-size: 1.2rem;
+        }
+        
+        .card-chip {
+            width: 50px;
+            height: 35px;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            margin: 25px 0 20px 0;
+        }
+    }
+    
+    @media (max-width: 400px) {
+        .card-container {
+            min-width: unset;
+        }
+        
+        .card {
+            height: 200px;
+        }
+        
+        .card-front, .card-back {
+            padding: 1.5rem;
+        }
+        
+        .card-number {
+            font-size: 1.2rem;
+        }
+        
+        .paymentStuff form {
+            padding: 15px;
+        }
+    }
 </style>
 <body>
     <div class="page-wrapper">

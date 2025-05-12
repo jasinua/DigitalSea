@@ -16,7 +16,13 @@
     }
 
     function returnWishlist($userid) {
-        include "model/dbh.inc.php";
+        $rootPath = str_replace('\\', '/', realpath(dirname(__FILE__) . '/../'));
+        include_once $rootPath . "/model/dbh.inc.php";
+        
+        global $conn;
+        if (!$conn) {
+            throw new Exception("Database connection failed");
+        }
         
         $stmt = $conn->prepare("CALL showWishList(?)");
         $stmt->bind_param("i", $userid);
@@ -26,7 +32,13 @@
     }
 
     function returnCart($userid) {
-        include "model/dbh.inc.php";
+        $rootPath = str_replace('\\', '/', realpath(dirname(__FILE__) . '/../'));
+        include_once $rootPath . "/model/dbh.inc.php";
+        
+        global $conn;
+        if (!$conn) {
+            throw new Exception("Database connection failed");
+        }
         
         $stmt = $conn->prepare("CALL showCartList(?)");
         $stmt->bind_param("i", $userid);
@@ -36,7 +48,14 @@
     }
 
     function returnProduct($productId) {
-        include "model/dbh.inc.php";
+        $rootPath = str_replace('\\', '/', realpath(dirname(__FILE__) . '/../'));
+        include_once $rootPath . "/model/dbh.inc.php";
+        
+        global $conn;
+        if (!$conn) {
+            throw new Exception("Database connection failed");
+        }
+        
         $stmt = $conn->prepare("CALL showProduct(?)");
         $stmt->bind_param("i",$productId);
         $stmt -> execute();
@@ -45,7 +64,14 @@
     }
 
     function returnProductImage($productId) {
-        include "model/dbh.inc.php";
+        $rootPath = str_replace('\\', '/', realpath(dirname(__FILE__) . '/../'));
+        include_once $rootPath . "/model/dbh.inc.php";
+        
+        global $conn;
+        if (!$conn) {
+            throw new Exception("Database connection failed");
+        }
+        
         $stmt = $conn->prepare("CALL returnImages(?)");
         $stmt->bind_param("i",$productId);
         $stmt -> execute();
@@ -54,7 +80,14 @@
     }
 
     function getCartCount($userid) {
-        include "../model/dbh.inc.php";
+        $rootPath = str_replace('\\', '/', realpath(dirname(__FILE__) . '/../'));
+        include_once $rootPath . "/model/dbh.inc.php";
+        
+        global $conn;
+        if (!$conn) {
+            throw new Exception("Database connection failed");
+        }
+        
         $stmt = $conn->prepare("SELECT COUNT(*) as count FROM cart WHERE user_id = ?");
         $stmt->bind_param("i", $userid);
         $stmt->execute();

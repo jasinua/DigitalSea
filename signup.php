@@ -217,6 +217,45 @@
         color: #666;
         margin-top: 5px;
     }
+
+    .password-field {
+        position: relative;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 22px;
+        cursor: pointer;
+        color: #777;
+        font-size: 16px;
+        z-index: 10;
+    }
+
+    .password-toggle:hover {
+        color: var(--noir-color);
+    }
+
+    .confirm-password-field {
+        position: relative;
+        width: 100%;
+    }
+
+    .confirm-password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 22px; /* Same positioning as the password field */
+        cursor: pointer;
+        color: #777;
+        font-size: 16px;
+        z-index: 10;
+    }
+
+    .confirm-password-toggle:hover {
+        color: var(--noir-color);
+    }
 </style>
 <body>
     <div class="page-wrapper">
@@ -233,6 +272,9 @@
                     <input type="date" name="birthday" required>
                     <div class="password-field">
                         <input type="password" name="password" id="password" placeholder="Password" required autocomplete="new-password">
+                        <span class="password-toggle" onclick="togglePasswordVisibility()">
+                            <i class="far fa-eye"></i>
+                        </span>
                         <div class="password-strength">
                             <div class="strength-meter"></div>
                         </div>
@@ -241,7 +283,12 @@
                             Password must be at least 5 characters long and can contain letters, numbers, and symbols.
                         </div>
                     </div>
-                    <input type="password" name="repeat_password" placeholder="Confirm password" required>
+                    <div class="confirm-password-field">
+                        <input type="password" name="repeat_password" id="confirm-password" placeholder="Confirm password" required>
+                        <span class="confirm-password-toggle" onclick="toggleConfirmPasswordVisibility()">
+                            <i class="far fa-eye"></i>
+                        </span>
+                    </div>
                     <input type="submit" name="submit" value="Create Account">
                 </form>
 
@@ -262,6 +309,36 @@
     </div>
 
     <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.querySelector('.password-toggle i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        function toggleConfirmPasswordVisibility() {
+            const passwordInput = document.getElementById('confirm-password');
+            const toggleIcon = document.querySelector('.confirm-password-toggle i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
         document.getElementById('password').addEventListener('input', function(e) {
             const password = e.target.value;
             const strengthMeter = document.querySelector('.strength-meter');

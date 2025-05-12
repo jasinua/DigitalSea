@@ -79,7 +79,6 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0px 20px;
         width: 100%;
     }
 
@@ -98,6 +97,7 @@
         justify-self: center;
         align-self: center;
         left: calc(50% - 600px/2);
+        transition: all 0.3s ease;
     }
 
     .search-container form {
@@ -116,6 +116,17 @@
         color: white;
         font-size: 14px;
         transition: all 0.3s ease;
+    }
+
+    .search-icon {
+        display: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 8px;
+        background: none;
+        border: none;
+        margin-right: 15px;
     }
 
     .search-container input[type="text"]::placeholder {
@@ -200,7 +211,7 @@
         padding: 15px;
         display: none;
         z-index: 1000;
-        max-height: 300px;
+        max-height: 400px;
         overflow-y: auto;
     }
 
@@ -237,6 +248,43 @@
         color: var(--button-color);
         font-weight: bold;
         font-size: 14px;
+    }
+
+    .cart-preview-footer {
+        margin-top: 15px;
+        padding-top: 10px;
+        border-top: 1px solid var(--mist-color);
+    }
+
+    .cart-preview-total {
+        color: var(--page-text-color);
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .cart-preview-checkout {
+        display: block;
+        background-color: var(--button-color);
+        color: white;
+        text-align: center;
+        padding: 10px;
+        border-radius: 6px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .cart-preview-checkout:hover {
+        background-color: var(--button-color-hover);
+        transform: translateY(-2px);
+    }
+
+    .empty-cart-message {
+        text-align: center;
+        padding: 20px;
+        color: var(--mist-color);
+        font-style: italic;
     }
 
     .cart-link {
@@ -467,7 +515,6 @@
             width: 40px;
             height: 40px;
             padding: 0;
-            margin-left: auto;
             background: none;
             border: none;
             color: white;
@@ -594,110 +641,310 @@
             }
         }
     }
+
+    /* Tablets and Small Desktops (768px to 1480px) */
+    @media screen and (max-width: 1480px) {
+        .search-container {
+            width: 500px;
+            margin: 0 15px;
+            left: calc(50% - 250px);
+        }
+
+        .search-container input[type="text"] {
+            min-width: 400px;
+            font-size: 13px;
+            padding: 8px 30px 8px 12px;
+        }
+    }
+
+    @media screen and (max-width: 1350px) {
+        .search-container {
+            width: 400px;
+            margin: 0 15px;
+            left: calc(50% - 200px);
+        }
+
+        .search-container input[type="text"] {
+            min-width: 400px;
+            font-size: 13px;
+            padding: 8px 30px 8px 12px;
+        }
+    }
+
+    @media screen and (max-width: 1260px) {
+        .search-container {
+            width: 400px;
+            margin: 0 15px;
+            left: calc(50% - 400px);
+        }
+
+        .search-container input[type="text"] {
+            min-width: 400px;
+            font-size: 13px;
+            padding: 8px 30px 8px 12px;
+        }
+    }
+
+    /* Search icon appears at 960px and below */
+    @media screen and (max-width: 960px) {
+        .search-container {
+            display: none;
+        }
+        
+        .search-icon {
+            display: inline-block;
+        }
+    }
+
+    /* Mobile Devices */
+    @media screen and (max-width: 768px) {
+        .header-icons {
+            display: flex;
+            align-items: center;
+        }
+        
+        .mobile-menu-toggle {
+            display: block;
+            background: none;
+            border: none;
+        }
+        
+        nav ul {
+            display: none;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        header {
+            padding: 8px;
+        }
+    }
+
+    /* Safe Area Insets for Modern Mobile Devices */
+    @supports (padding: max(0px)) {
+        @media screen and (max-width: 767px) {
+            .search-container {
+                padding-left: max(10px, env(safe-area-inset-left));
+                padding-right: max(10px, env(safe-area-inset-right));
+            }
+        }
+    }
+
+    .header-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .left-section {
+        display: flex;
+        align-items: center;
+    }
+
+    .right-section {
+        display: flex;
+        align-items: center;
+    }
+
+    .mobile-search-container {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background-color: var(--noir-color);
+        z-index: 1001;
+    }
+
+    .mobile-search-container.active {
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+    }
+
+    .mobile-search-container form {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        position: relative;
+    }
+
+    .mobile-search-container input[type="text"] {
+        flex: 1;
+        padding: 10px 35px 10px 15px;
+        border: none;
+        border-radius: 20px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 14px;
+    }
+    
+    .mobile-search-container .clear-search {
+        position: absolute;
+        right: 45px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        font-size: 18px;
+        padding: 5px;
+        display: none;
+        z-index: 2;
+    }
+    
+    .mobile-search-container .clear-search:hover {
+        color: white;
+    }
+
+    .mobile-search-container input[type="text"]::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .mobile-search-container input[type="text"]:focus {
+        outline: none;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-search-close {
+        color: white;
+        font-size: 20px;
+        background: none;
+        border: none;
+        padding: 8px;
+        margin-left: 10px;
+        cursor: pointer;
+    }
 </style>
 <body>
     <header>
-        <div class="imazhiYne" style="margin-left: 1%; padding: 0; margin-top: 0; margin-bottom: 0;"><a href = "index.php"><img class="logo" src="logo2.png" alt="logo e kompanise tone"></a></div>
-        <div class="search-container">
-            <form action="index.php" method="get" class="search-form">
-                <input type="text" name="search" placeholder="Search..." class="search-input" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-                <button type="button" class="clear-search" title="Clear search">×</button>
-            </form>
-        </div>
-        <button class="mobile-menu-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
-        <nav>
-            <ul>
-                <!-- <li><a href="index.php"><img src="home.png" class="icons" alt=""></a></li> -->
-                <li><a href="index.php"><i class="fas fa-home"></i></a></li>
-                <?php if(isset($_SESSION['user_id'])) { ?>
-                <!-- <li><a href="wishlist.php"><img src="heart.png" class="icons" alt=""></a></li> -->
-                <li><a href="wishlist.php"><i class="fas fa-heart"></i></a></li>
-                <li class="cart-link">
-                    <!-- <a href="cart.php"><img src="shopping-cart.png" class="icons" alt=""></a> -->
-                    <a href="cart.php"><i class="fas fa-shopping-cart"></i></a>
-                    <div class="cart-preview" <?php echo basename($_SERVER['PHP_SELF']) === 'cart.php' ? 'style="display: none;"' : ''; ?>>
-                        <?php
-                        if (isset($_SESSION['user_id'])) {
-                            $cart_items = returnCart($_SESSION['user_id']);
-                            $product_quantities = [];
-                            $count = 0;
+        <div class="header-wrapper">
+            <div class="left-section">
+                <div class="logo-container" style="margin-right: 15px;">
+                    <a href="index.php">
+                        <img class="logo" src="logo2.png" alt="logo e kompanise tone">
+                    </a>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <form action="index.php" method="get" class="search-form">
+                    <input type="text" name="search" placeholder="Search..." class="search-input" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                    <button type="button" class="clear-search" title="Clear search">×</button>
+                </form>
+            </div>
+            
+            <div class="right-section">
+                <button class="search-icon" title="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+                
+                <nav>
+                    <ul>
+                        <li><a href="index.php"><i class="fas fa-home"></i></a></li>
+                        <?php if(isset($_SESSION['user_id'])) { ?>
+                        <li><a href="wishlist.php"><i class="fas fa-heart"></i></a></li>
+                        <li class="cart-link">
+                            <a href="cart.php"><i class="fas fa-shopping-cart"></i></a>
+                            <div class="cart-preview" <?php echo basename($_SERVER['PHP_SELF']) === 'cart.php' ? 'style="display: none;"' : ''; ?>>
+                                <?php
+                                if (isset($_SESSION['user_id'])) {
+                                    $cart_items = returnCart($_SESSION['user_id']);
+                                    $product_quantities = [];
+                                    $count = 0;
 
-                            // Merge duplicate products by summing quantities
-                            while ($item = $cart_items->fetch_assoc()) {
-                                $pid = $item['product_id'];
-                                if (!isset($product_quantities[$pid])) {
-                                    $product_quantities[$pid] = 0;
-                                }
-                                $product_quantities[$pid] += $item['quantity'];
-                            }
+                                    // Merge duplicate products by summing quantities
+                                    while ($item = $cart_items->fetch_assoc()) {
+                                        $pid = $item['product_id'];
+                                        if (!isset($product_quantities[$pid])) {
+                                            $product_quantities[$pid] = 0;
+                                        }
+                                        $product_quantities[$pid] += $item['quantity'];
+                                    }
 
-                            // Display merged products, limited to 3 initially
-                            foreach ($product_quantities as $pid => $qty) {
-                                if ($count >= 3) break;
-                                $product_result = returnProduct($pid);
-                                if ($product_result && $product = $product_result->fetch_assoc()) {
-                                    ?>
-                                    <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
-                                        <div class="cart-preview-item">
-                                            <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                                            <div class="cart-preview-item-info">
-                                                <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
-                                                <div class="cart-preview-item-price">
-                                                    <?php echo number_format($product['price'], 2); ?>€
-                                                    <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <?php
-                                    $count++;
-                                }
-                            }
-
-                            // Display remaining products if more than 3
-                            if ($count >= 3) {
-                                foreach (array_slice(array_keys($product_quantities), 3) as $pid) {
-                                    $qty = $product_quantities[$pid];
-                                    $product_result = returnProduct($pid);
-                                    if ($product_result && $product = $product_result->fetch_assoc()) {
-                                        ?>
-                                        <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
-                                            <div class="cart-preview-item">
-                                                <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                                                <div class="cart-preview-item-info">
-                                                    <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
-                                                    <div class="cart-preview-item-price">
-                                                        <?php echo number_format($product['price'], 2); ?>€
-                                                        <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
+                                    // Display merged products, limited to 3 initially
+                                    foreach ($product_quantities as $pid => $qty) {
+                                        if ($count >= 3) break;
+                                        $product_result = returnProduct($pid);
+                                        if ($product_result && $product = $product_result->fetch_assoc()) {
+                                            ?>
+                                            <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
+                                                <div class="cart-preview-item">
+                                                    <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                                    <div class="cart-preview-item-info">
+                                                        <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
+                                                        <div class="cart-preview-item-price">
+                                                            <?php echo number_format($product['price'], 2); ?>€
+                                                            <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </a>
-                                        <?php
+                                            </a>
+                                            <?php
+                                            $count++;
+                                        }
+                                    }
+
+                                    // Display remaining products if more than 3
+                                    if ($count >= 3) {
+                                        foreach (array_slice(array_keys($product_quantities), 3) as $pid) {
+                                            $qty = $product_quantities[$pid];
+                                            $product_result = returnProduct($pid);
+                                            if ($product_result && $product = $product_result->fetch_assoc()) {
+                                                ?>
+                                                <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
+                                                    <div class="cart-preview-item">
+                                                        <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                                        <div class="cart-preview-item-info">
+                                                            <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
+                                                            <div class="cart-preview-item-price">
+                                                                <?php echo number_format($product['price'], 2); ?>€
+                                                                <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <?php
+                                            }
+                                        }
+                                    }
+
+                                    if (empty($product_quantities)) {
+                                        echo '<div class="cart-preview-item">Your cart is empty</div>';
                                     }
                                 }
-                            }
-
-                            if (empty($product_quantities)) {
-                                echo '<div class="cart-preview-item">Your cart is empty</div>';
-                            }
-                        }
-                        ?>
-                    </div>
-                </li>
+                                ?>
+                            </div>
+                        </li>
+                        <li><a href="profile.php"><i class="fas fa-user"></i></a></li>
+                        <li><a href="controller/logout.php?from=header"><i class="fas fa-sign-out-alt"></i></a></li>
+                        <?php if(isAdmin($_SESSION['user_id'])) { echo "<li><a href='managestock.php'><i class='fas fa-wrench'></i></a></li>"; } ?>
+                        <?php } else { ?>
+                        <li><a href="login.php"><i class="fas fa-sign-in-alt"></i></a></li>
+                        <li><a href="signup.php"><i class="fas fa-user-plus"></i></a></li>
+                        <?php } ?>
+                    </ul>
+                </nav>
                 
-                <!-- <li><a href="profile.php"><img src="user.png" class="icons" alt=""></a></li> -->
-                <li><a href="profile.php"><i class="fas fa-user"></i></a></li>
-                <li><a href="controller/logout.php?from=header"><i class="fas fa-sign-out-alt"></i></a></li>
-                <?php if(isAdmin($_SESSION['user_id'])) {echo "<li><a href='managestock.php'><i class='fas fa-wrench'></i></a></li>";} ?>
-                <?php }else{ ?>
-                <li><a href="login.php"><i class="fas fa-sign-in-alt"></i></a></li>
-                <li><a href="signup.php"><i class="fas fa-user-plus"></i></a></li>
-                <?php } ?>
-            </ul>
-        </nav>
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="mobile-search-container">
+            <form action="index.php" method="get">
+                <input type="text" name="search" placeholder="Search..." class="mobile-search-input" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                <button type="button" class="clear-search" title="Clear search">×</button>
+                <button type="button" class="mobile-search-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </form>
+        </div>
+        
         <div class="mobile-menu">
             <a href="index.php" class="mobile-menu-item">
                 <i class="fas fa-home"></i>
@@ -741,25 +988,42 @@
 </body>
 <script>
     $(document).ready(function() {
-        // Clear search functionality
+        // Clear search functionality for desktop
         const searchInput = $('.search-input');
         const clearButton = $('.clear-search');
         
         clearButton.click(function() {
-            searchInput.val('').focus();
+            $(this).prev('input').val('').focus();
             $(this).hide();
         });
 
         searchInput.on('input', function() {
-            clearButton.toggle($(this).val().length > 0);
+            $(this).next('.clear-search').toggle($(this).val().length > 0);
         });
 
         clearButton.toggle(searchInput.val().length > 0);
+        
+        // Clear search functionality for mobile
+        const mobileSearchInput = $('.mobile-search-input');
+        const mobileClearButton = $('.mobile-search-container .clear-search');
+        
+        // Fix for mobile clear button
+        mobileClearButton.on('click mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            mobileSearchInput.val('').focus();
+            $(this).hide();
+        });
+        
+        mobileSearchInput.on('input', function() {
+            mobileClearButton.toggle($(this).val().length > 0);
+        });
+        
+        mobileClearButton.toggle(mobileSearchInput.val().length > 0);
 
         // Mobile menu functionality
         const mobileMenuToggle = $('.mobile-menu-toggle');
         const mobileMenu = $('.mobile-menu');
-        const body = $('body');
 
         mobileMenuToggle.click(function(e) {
             e.stopPropagation();
@@ -767,47 +1031,39 @@
             $(this).toggleClass('active');
         });
 
-        // Close mobile menu when clicking outside
+        // Search icon click handler
+        $('.search-icon').click(function(e) {
+            e.stopPropagation();
+            if (window.innerWidth <= 960) {
+                $('.mobile-search-container').addClass('active');
+                $('.mobile-search-container input').focus();
+                
+                // Check if there's text in the input and show/hide clear button
+                mobileClearButton.toggle(mobileSearchInput.val().length > 0);
+            }
+        });
+
+        // Close mobile search
+        $('.mobile-search-close').click(function() {
+            $('.mobile-search-container').removeClass('active');
+        });
+
+        // Close when clicking outside
         $(document).click(function(e) {
-            if (!$(e.target).closest('.mobile-menu, .mobile-menu-toggle').length) {
+            if (!$(e.target).closest('.mobile-menu, .mobile-menu-toggle, .mobile-search-container, .search-icon').length) {
                 mobileMenu.removeClass('active');
                 mobileMenuToggle.removeClass('active');
+                $('.mobile-search-container').removeClass('active');
             }
         });
 
         // Handle window resize
-        let resizeTimer;
         $(window).resize(function() {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function() {
-                if (window.innerWidth > 768) {
-                    mobileMenu.removeClass('active');
-                    mobileMenuToggle.removeClass('active');
-                }
-            }, 250);
+            // Close mobile search on resize
+            if (window.innerWidth > 960) {
+                $('.mobile-search-container').removeClass('active');
+            }
         });
-
-        // Prevent body scroll when mobile menu is open
-        mobileMenuToggle.click(function() {
-            $('body').toggleClass('menu-open');
-        });
-
-        // Close mobile menu when clicking a menu item
-        $('.mobile-menu-item').click(function() {
-            mobileMenu.removeClass('active');
-            mobileMenuToggle.removeClass('active');
-            $('body').removeClass('menu-open');
-        });
-
-        // Handle cart preview on mobile
-        if (window.innerWidth <= 768) {
-            $('.cart-link').click(function(e) {
-                if (!$(e.target).closest('.cart-preview').length) {
-                    e.preventDefault();
-                    $('.cart-preview').toggle();
-                }
-            });
-        }
     });
 </script>
 </html>

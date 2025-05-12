@@ -116,7 +116,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
 <style>
     .profile-container {
-        max-width: 1200px;
+        min-width: 1200px;
         margin: 40px auto;
         padding: 0 20px;
     }
@@ -301,11 +301,15 @@
         border: 1px solid #f5c6cb;
     }
 
-    @media (max-width: 992px) {
+    @media (max-width: 1100px) {
         .profile-info-container {
             grid-template-columns: 1fr;
             text-align: center;
             gap: 20px;
+        }
+
+        .profile-container {
+            min-width: 90%;
         }
 
         .profile-avatar {
@@ -345,6 +349,12 @@
         .btn {
             width: 100%;
             text-align: center;
+        }
+    }
+
+    @media (max-width: 560px) {
+        .info-grid {
+            display: none;
         }
     }
 </style>

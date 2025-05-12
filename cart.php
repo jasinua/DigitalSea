@@ -315,7 +315,8 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     #prodNameXprice {
         overflow-y: auto;
-        max-height: 200px;
+        max-height: 240px;
+        border-bottom: 2px solid #eee;
     }
 
     @media (max-width: 1200px) {
@@ -337,6 +338,141 @@ if (isLoggedIn($_SESSION['user_id'])) {
     @media (max-width: 850px) {
         .cart-wrapper {
             max-width: 95%;
+        }
+        
+        .page-wrapper {
+            padding: 10px;
+        }
+        
+        .cart-left, .cart-right {
+            padding: 15px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .page-wrapper {
+            padding: 10px;
+        }
+        
+        th, td {
+            padding: 8px 10px;
+        }
+        
+        .product-info img {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .product-info h4 {
+            font-size: 0.85rem;
+        }
+        
+        .product-info .desc {
+            font-size: 0.8rem;
+        }
+        
+        .quantity-controls input {
+            width: 40px;
+            height: 28px;
+            font-size: 0.85rem;
+        }
+        
+        .summary-item {
+            font-size: 0.9rem;
+        }
+        
+        .summary-item.total {
+            font-size: 1rem;
+        }
+        
+        .save-btn, .checkout-btn {
+            padding: 10px;
+            font-size: 0.95rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .page-wrapper {
+            padding: 5px;
+        }
+        
+        thead tr {
+            display: none;
+        }
+        
+        tbody tr {
+            flex-direction: column;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        td {
+            width: 100%;
+            justify-content: space-between;
+            padding: 5px 10px;
+            border-bottom: none;
+        }
+        
+        .product-info {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .quantity-controls {
+            margin-right: 0;
+        }
+        
+        .remove-btn {
+            margin-right: 0;
+            align-self: flex-end;
+        }
+        
+        td:nth-child(3), td:nth-child(4) {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        td:nth-child(3)::before {
+            content: "Quantity:";
+            font-weight: 500;
+            color: var(--noir-color);
+        }
+        
+        td:nth-child(4)::before {
+            content: "Remove:";
+            font-weight: 500;
+            color: var(--noir-color);
+        }
+        
+        .cart-left, .cart-right {
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .itemsTable {
+            max-height: none;
+            overflow-y: visible;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .product-info {
+            gap: 10px;
+        }
+        
+        .product-info img {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .save-btn, .checkout-btn {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .summary-item.total {
+            font-size: 0.95rem;
         }
     }
 
@@ -456,7 +592,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                 <input type="hidden" name="price[]" value="<?php echo $total; ?>">
                                 
                                 <td>
-                                    <button class="remove-btn" type="submit" name="remove" value="<?php echo $product['product_id']; ?>">&times;</button>
+                                    <button class="remove-btn" type="button" data-product-id="<?php echo $product['product_id']; ?>">&times;</button>
                                 </td>
                             </tr>
                             <?php } ?>
@@ -536,6 +672,82 @@ if (isLoggedIn($_SESSION['user_id'])) {
         const saveBtn = document.getElementById('saveChanges');
         const saveMessage = document.querySelector('.save-message');
         let saveTimeout;
+
+        // Handle remove buttons
+        const removeButtons = document.querySelectorAll('.remove-btn');
+        removeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.dataset.productId;
+                const row = this.closest('tr');
+                
+                // Show loading state
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                button.disabled = true;
+                
+                // Send AJAX request to remove item
+                $.ajax({
+                    url: 'controller/remove_from_cart.php',
+                    type: 'POST',
+                    data: { product_id: productId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            // Fade out and remove the row
+                            row.style.opacity = '0.5';
+                            setTimeout(() => {
+                                row.remove();
+                                
+                                // Remove the item from the summary
+                                const summaryItem = document.querySelector(`.summary-item[data-product-id="${productId}"]`);
+                                if (summaryItem) {
+                                    summaryItem.remove();
+                                }
+                                
+                                // Update cart summary
+                                updateCartSummary();
+                                
+                                // Update cart count in header if available
+                                if (response.cartCount !== undefined) {
+                                    const cartCount = document.querySelector('.cart-count');
+                                    if (cartCount) {
+                                        cartCount.textContent = response.cartCount;
+                                    }
+                                }
+                                
+                                // Update cart preview
+                                updateCartPreview();
+                                
+                                // Show empty cart message if no items left
+                                const rows = document.querySelectorAll('tbody tr');
+                                if (rows.length === 0) {
+                                    const table = document.querySelector('.itemsTable');
+                                    table.innerHTML = '<div class="empty-cart-message" style="padding: 30px; text-align: center; color: #888;">Your cart is empty</div>';
+                                    document.querySelector('.save-btn').style.display = 'none';
+                                    document.querySelector('.checkout-btn').disabled = true;
+                                }
+                                
+                                // Show success message
+                                saveMessage.textContent = 'Item removed successfully';
+                                saveMessage.classList.add('show');
+                                clearTimeout(saveTimeout);
+                                saveTimeout = setTimeout(() => {
+                                    saveMessage.classList.remove('show');
+                                }, 3000);
+                            }, 300);
+                        } else {
+                            console.error('Failed to remove item:', response.message);
+                            button.innerHTML = '&times;';
+                            button.disabled = false;
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        button.innerHTML = '&times;';
+                        button.disabled = false;
+                    }
+                });
+            });
+        });
 
         quantityInputs.forEach(input => {
             input.addEventListener('input', () => {
@@ -625,6 +837,28 @@ if (isLoggedIn($_SESSION['user_id'])) {
             summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = finalTotal.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
         }
 
+        // Function to update cart preview via AJAX
+        function updateCartPreview() {
+            $.ajax({
+                url: 'controller/get_cart_preview.php',
+                type: 'GET',
+                dataType: 'html',
+                success: function(response) {
+                    // Replace cart preview content in header
+                    $('.cart-preview').html(response);
+                    
+                    // Ensure the parent li has cart-link class
+                    const cartLi = $('a[href="cart.php"]').closest('li');
+                    if (!cartLi.hasClass('cart-link')) {
+                        cartLi.addClass('cart-link');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error updating cart preview:', error);
+                }
+            });
+        }
+
         $('.search-input').on('input', function() {
             var $clearBtn = $(this).closest('form').find('.clear-search');
             if ($(this).val().length > 0) {
@@ -637,13 +871,13 @@ if (isLoggedIn($_SESSION['user_id'])) {
         $('.clear-search').on('mousedown', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            var $input = $(this).closest('form').find('.clear-search');
+            var $input = $(this).closest('form').find('.search-input, .mobile-search-input');
             $input.val('');
             $(this).hide();
             $input.focus();
         });
 
-        $('.search-input').each(function() {
+        $('.search-input, .mobile-search-input').each(function() {
             var $clearBtn = $(this).closest('form').find('.clear-search');
             if ($(this).val().length > 0) {
                 $clearBtn.show();

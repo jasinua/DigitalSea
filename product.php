@@ -251,11 +251,20 @@
         }
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1230px) {
+        #prodContainer {
+            width: 95%;
+        }
+        
+        #infoSide {
+            padding: 0;
+        }
+    }
+    
+    @media (max-width: 1100px) {
         #prodContainer {
             flex-direction: column;
-            width: 95%;
-            max-width: 600px;
+            max-width: 800px;
         }
 
         #productImg {
@@ -267,6 +276,74 @@
 
         #infoSide {
             width: 100%;
+        }
+        
+        #info {
+            width: 100%;
+        }
+        
+        div[style*="width:50%"] {
+            width: 100% !important;
+        }
+        
+        /* Reposition the discount badge and wishlist button */
+        .discount-badge {
+            top: 20px;
+            left: 20px;
+            right: auto;
+        }
+        
+        .wishlist-btn {
+            top: 20px;
+            right: 20px;
+            z-index: 5;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #prodContainer {
+            max-width: 600px;
+        }
+        
+        #name {
+            font-size: 1.4em;
+            padding: 12px 15px 8px;
+        }
+        
+        #details {
+            padding: 10px 15px;
+        }
+        
+        .detail {
+            font-size: 0.9em;
+        }
+        
+        #productImg {
+            height: 350px;
+        }
+        
+        #buyForm {
+            padding: 12px 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        #prodContainer {
+            margin: 0;
+            border-radius: 0;
+            width: 100%;
+        }
+        
+        #container {
+            padding: 0;
+        }
+        
+        #productImg {
+            height: 300px;
+        }
+        
+        .price-label, .price-value {
+            font-size: 0.95em;
         }
     }
 </style>

@@ -147,6 +147,32 @@
     .login-container .signup-link a:hover {
         text-decoration: underline;
     }
+
+    /* Password field with toggle */
+    .password-field {
+        position: relative;
+    }
+
+    .password-field input {
+        width: 100%;
+        padding: 12px 15px;
+        padding-right: 40px; /* Make room for the eye icon */
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #777;
+        font-size: 16px;
+        z-index: 10;
+    }
+
+    .password-toggle:hover {
+        color: var(--noir-color);
+    }
 </style>
 <body>
     <div class="page-wrapper">
@@ -156,7 +182,12 @@
                 <h1>Welcome to DigitalSea</h1>
                 <form action="" method="post">
                     <input type="email" name="email" placeholder="Email address" autofocus="autofocus" required>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <div class="password-field">
+                        <input type="password" name="password" id="password" placeholder="Password" required>
+                        <span class="password-toggle" onclick="togglePasswordVisibility()">
+                            <i class="far fa-eye"></i>
+                        </span>
+                    </div>
                     <input type="submit" name="submit" value="Log in">
                 </form>
 
@@ -171,5 +202,22 @@
         </div>
         <?php include "footer/footer.php"; ?>
     </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.querySelector('.password-toggle i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>

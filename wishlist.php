@@ -8,12 +8,13 @@ if (isLoggedIn($_SESSION['user_id'])) {
     $res = returnWishList($_SESSION['user_id']);
     include "header/header.php";
 
-    if(isset($_POST['add'])) {
-        $result = addToCart($_SESSION['user_id'], $_POST['product_id'], 1, $_POST['price']);
-        if($result) {
-            $_SESSION['show_cart_notification'] = true;
-        }
-    }
+    // We'll remove the PHP form processing for adding to cart since we'll use AJAX
+    // if(isset($_POST['add'])) {
+    //     $result = addToCart($_SESSION['user_id'], $_POST['product_id'], 1, $_POST['price']);
+    //     if($result) {
+    //         $_SESSION['show_cart_notification'] = true;
+    //     }
+    // }
 ?>
 <style>
     .wishlist-container {
@@ -24,6 +25,16 @@ if (isLoggedIn($_SESSION['user_id'])) {
         padding: 30px;
         border-radius: 15px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Fix for cart preview hover functionality */
+    .cart-link:hover .cart-preview {
+        display: block !important;
+    }
+    
+    /* Force display when hovering directly on preview */
+    .cart-preview:hover {
+        display: block !important;
     }
 
     .wishlist-header {
@@ -60,17 +71,174 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     @media (max-width: 1400px) {
         .wishlist-grid {
-            grid-template-columns: repeat(3, minmax(320px, 1fr));
+            grid-template-columns: repeat(3, minmax(300px, 1fr));
         }
     }
     @media (max-width: 1000px) {
         .wishlist-grid {
-            grid-template-columns: repeat(2, minmax(320px, 1fr));
+            grid-template-columns: repeat(4, minmax(300px, 1fr));
+            gap: 25px;
         }
     }
-    @media (max-width: 700px) {
+
+    /* Small Desktops and Large Tablets (1024px to 1439px) */
+    @media screen and (max-width: 1439px) {
+        .wishlist-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 25px;
+        }
+
+        .wishlist-grid {
+            grid-template-columns: repeat(3, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .wishlist-header h2 {
+            font-size: 24px;
+        }
+    }
+
+    /* Tablets (768px to 1023px) */
+    @media screen and (max-width: 1023px) {
+        .wishlist-container {
+            max-width: 100%;
+            margin: 30px 20px;
+            padding: 20px;
+            min-width: unset;
+        }
+
+        .wishlist-grid {
+            grid-template-columns: repeat(2, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .wishlist-header {
+            gap: 15px;
+            text-align: center;
+        }
+
+        .wishlist-header h2 {
+            font-size: 22px;
+        }
+    }
+
+    /* Large Phones (480px to 767px) */
+    @media screen and (max-width: 767px) {
+        .wishlist-container {
+            margin: 20px 15px;
+            padding: 15px;
+        }
+
         .wishlist-grid {
             grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .wishlist-item {
+            max-width: none;
+        }
+
+        .product-info img {
+            width: 120px;
+            height: 120px;
+        }
+
+        .product-info .name {
+            font-size: 15px;
+        }
+
+        .product-price {
+            font-size: 16px;
+        }
+
+        .add-to-cart-btn {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+
+    /* Small Phones (up to 479px) */
+    @media screen and (max-width: 479px) {
+        .wishlist-container {
+            margin: 15px 10px;
+            padding: 12px;
+        }
+
+        .wishlist-header h2 {
+            font-size: 20px;
+        }
+
+        .wishlist-count {
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+
+        .product-info img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .product-info .name {
+            font-size: 14px;
+        }
+
+        .product-price {
+            font-size: 15px;
+        }
+
+        .original-price {
+            font-size: 12px;
+        }
+
+        .stock-status {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+
+        .add-to-cart-btn {
+            padding: 8px;
+            font-size: 13px;
+        }
+    }
+
+    /* Touch Device Optimizations */
+    @media (hover: none) {
+        .wishlist-item:hover {
+            transform: none;
+        }
+
+        .product-info img:hover {
+            transform: none;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: none;
+        }
+
+        .add-to-cart-btn:active {
+            background-color: var(--button-color-hover);
+            transform: scale(0.98);
+        }
+    }
+
+    /* Reduced Motion Preferences */
+    @media (prefers-reduced-motion: reduce) {
+        .wishlist-item,
+        .product-info img,
+        .add-to-cart-btn {
+            transition: none;
+        }
+    }
+
+    /* Safe Area Insets for Modern Mobile Devices */
+    @supports (padding: max(0px)) {
+        @media screen and (max-width: 767px) {
+            .wishlist-container {
+                margin-left: max(15px, env(safe-area-inset-left));
+                margin-right: max(15px, env(safe-area-inset-right));
+                padding-bottom: max(15px, env(safe-area-inset-bottom));
+            }
         }
     }
 
@@ -397,123 +565,201 @@ document.addEventListener('DOMContentLoaded', function() {
     ?>
     <?php endif; ?>
 
-    // Handle add to cart button clicks
-    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const productId = this.dataset.productId;
-            const price = this.dataset.price;
-            
-            // Disable button to prevent double clicks
-            this.disabled = true;
-            this.textContent = 'Adding...';
-            
-            fetch('controller/add_to_cart.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `product_id=${productId}&price=${price}`
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Show success message
-                    const cartLink = document.querySelector('a[href="cart.php"]');
-                    const notification = document.createElement('span');
-                    notification.className = 'cart-notification';
-                    cartLink.classList.add('cart-link');
-                    cartLink.appendChild(notification);
-
-                    // Remove notification after 3 seconds
-                    setTimeout(() => {
-                        notification.style.opacity = '0';
-                        notification.style.transform = 'scale(0.5)';
-                        setTimeout(() => {
-                            notification.remove();
-                        }, 300);
-                    }, 3000);
-                } else {
-                    throw new Error(data.message || 'Error adding to cart');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert(error.message || 'Error adding to cart. Please try again.');
-            })
-            .finally(() => {
-                // Re-enable button
-                this.disabled = false;
-                this.textContent = 'Add to Cart';
-            });
-        });
-    });
-});
-
-// Add clear-search button logic for wishlist page
-$(document).ready(function() {
-    // Show/hide clear button based on search input
-    $('.search-input').on('input', function() {
-        var $clearBtn = $(this).closest('form').find('.clear-search');
-        if ($(this).val().length > 0) {
-            $clearBtn.show();
-        } else {
-            $clearBtn.hide();
-        }
-    });
-    // Clear search without redirecting or reloading
-    $('.clear-search').on('mousedown', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var $input = $(this).closest('form').find('.search-input');
-        $input.val('');
-        $(this).hide();
-        $input.focus();
-    });
-    // Initialize clear button visibility for each search bar
-    $('.search-input').each(function() {
-        var $clearBtn = $(this).closest('form').find('.clear-search');
-        if ($(this).val().length > 0) {
-            $clearBtn.show();
-        } else {
-            $clearBtn.hide();
-        }
-    });
-
-    $('.wishlist-grid').on('submit', '.remove-form', function(e) {
-        e.preventDefault();
-        var $form = $(this);
-        var $item = $form.closest('.wishlist-item');
-        var productId = $form.find('input[name="product_id"]').val();
-
-        $.ajax({
-            url: 'controller/remove_from_wishlist.php',
-            type: 'POST',
-            data: { product_id: productId },
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    $item.fadeOut(300, function() {
-                        $(this).remove();
-                        showRemoveNotification('Item removed from wishlist.');
-                    });
-                }
+    // Add clear-search button logic for wishlist page
+    $(document).ready(function() {
+        // Show/hide clear button based on search input
+        $('.search-input').on('input', function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
             }
         });
-    });
+        
+        // Clear search without redirecting or reloading
+        $('.clear-search').on('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $input = $(this).closest('form').find('.search-input');
+            $input.val('');
+            $(this).hide();
+            $input.focus();
+        });
+        
+        // Initialize clear button visibility for each search bar
+        $('.search-input').each(function() {
+            var $clearBtn = $(this).closest('form').find('.clear-search');
+            if ($(this).val().length > 0) {
+                $clearBtn.show();
+            } else {
+                $clearBtn.hide();
+            }
+        });
 
-    function showRemoveNotification(message) {
-        var $notif = $('.remove-notification');
-        $notif.text(message).addClass('show').show();
-        setTimeout(function() {
-            $notif.removeClass('show').fadeOut(400);
-        }, 2500);
-    }
+        // Handle remove from wishlist
+        $('.wishlist-grid').on('submit', '.remove-form', function(e) {
+            e.preventDefault();
+            var $form = $(this);
+            var $item = $form.closest('.wishlist-item');
+            var productId = $form.find('input[name="product_id"]').val();
+
+            $.ajax({
+                url: 'controller/remove_from_wishlist.php',
+                type: 'POST',
+                data: { product_id: productId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        $item.fadeOut(300, function() {
+                            $(this).remove();
+                            showRemoveNotification('Item removed from wishlist.');
+                        });
+                    }
+                }
+            });
+        });
+
+        function showRemoveNotification(message) {
+            var $notif = $('.remove-notification');
+            $notif.text(message).addClass('show').show();
+            setTimeout(function() {
+                $notif.removeClass('show').fadeOut(400);
+            }, 2500);
+        }
+
+        // Attach AJAX handler to all "Add to Cart" buttons
+        $('.add-to-cart-btn').click(function(e) {
+            e.preventDefault();
+            
+            var productId = $(this).data('product-id');
+            var price = $(this).data('price');
+            var button = $(this);
+            
+            // Change button text/style to indicate loading
+            button.prop('disabled', true);
+            button.html('<i class="fas fa-spinner fa-spin"></i> Adding...');
+            
+            // Send AJAX request to add product to cart
+            $.ajax({
+                url: 'controller/add_to_cart.php',
+                type: 'POST',
+                data: {
+                    product_id: productId,
+                    price: price
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Update cart count in header
+                        if (response.cartCount) {
+                            $('.cart-count').text(response.cartCount);
+                        }
+                        
+                        // Show success message
+                        button.html('<i class="fas fa-check"></i> Added to Cart');
+                        setTimeout(function() {
+                            button.html('Add to Cart');
+                            button.prop('disabled', false);
+                        }, 2000);
+                        
+                        // Update cart preview
+                        updateCartPreview();
+                        
+                        // Add notification dot to cart icon
+                        const cartLink = document.querySelector('a[href="cart.php"]');
+                        if (cartLink && !cartLink.querySelector('.cart-notification')) {
+                            const notification = document.createElement('span');
+                            notification.className = 'cart-notification';
+                            cartLink.classList.add('cart-link');
+                            cartLink.appendChild(notification);
+                            
+                            // Remove notification after a few seconds
+                            setTimeout(() => {
+                                notification.style.opacity = '0';
+                                notification.style.transform = 'scale(0.5)';
+                                setTimeout(() => {
+                                    notification.remove();
+                                }, 300);
+                            }, 3000);
+                        }
+                    } else {
+                        // Show error message
+                        button.html('<i class="fas fa-times"></i> Failed');
+                        console.error(response.message);
+                        setTimeout(function() {
+                            button.html('Add to Cart');
+                            button.prop('disabled', false);
+                        }, 2000);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle AJAX errors
+                    button.html('<i class="fas fa-times"></i> Error');
+                    console.error('AJAX Error: ' + status + ' - ' + error);
+                    setTimeout(function() {
+                        button.html('Add to Cart');
+                        button.prop('disabled', false);
+                    }, 2000);
+                }
+            });
+        });
+        
+        // Function to update cart preview
+        function updateCartPreview() {
+            console.log('Updating cart preview...');
+            
+            $.ajax({
+                url: 'controller/get_cart_preview.php',
+                type: 'GET',
+                dataType: 'html',
+                beforeSend: function() {
+                    console.log('Sending request to get_cart_preview.php...');
+                    // Show loading content in the preview
+                    $('.cart-preview').html('<div style="text-align:center;padding:20px;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
+                    // Don't show the preview
+                },
+                success: function(response) {
+                    console.log('Cart preview response received:', response.length, 'characters');
+                    
+                    if (response.trim() === '') {
+                        console.error('Empty response received from cart preview');
+                        $('.cart-preview').html('<div class="empty-cart-message">Error loading cart preview</div>');
+                        return;
+                    }
+                    
+                    // Replace cart preview content
+                    $('.cart-preview').html(response);
+                    console.log('Cart preview HTML updated');
+                    
+                    // Ensure the parent li has the cart-link class for hover functionality
+                    const cartLi = $('a[href="cart.php"]').closest('li');
+                    if (!cartLi.hasClass('cart-link')) {
+                        cartLi.addClass('cart-link');
+                        console.log('Added cart-link class to parent li');
+                    }
+                    
+                    // Add mouseenter/mouseleave handlers to ensure preview works
+                    cartLi.off('mouseenter mouseleave'); // Remove existing handlers to prevent duplicates
+                    cartLi.on('mouseenter', function() {
+                        console.log('Mouse entered cart link');
+                        $(this).find('.cart-preview').stop().fadeIn(200);
+                    }).on('mouseleave', function() {
+                        console.log('Mouse left cart link');
+                        $(this).find('.cart-preview').stop().fadeOut(200);
+                    });
+                    
+                    // Don't show the cart preview automatically, only on hover
+                    $('.cart-preview').hide();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error updating cart preview:', status, error);
+                    console.log('Response text:', xhr.responseText);
+                    $('.cart-preview').html('<div class="empty-cart-message">Error loading cart preview</div>');
+                }
+            });
+        }
+    });
 });
 </script>
 
