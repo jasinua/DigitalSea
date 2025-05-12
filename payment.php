@@ -91,17 +91,17 @@
     
     .container {
         max-width: 100%;
-        margin: 0 auto;
         padding: 20px;
         font-family: 'Roboto', sans-serif;
     }
 
     .payment-part {
+        margin-top: 40px;
         width: 100%;
         flex: 1;
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: center;
         gap: 50px;
     }
     
@@ -128,6 +128,12 @@
         margin-bottom: 30px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+
+    .payment-crypto {
+        width: 500px;
+        background-color: var(--ivory-color);
+        margin: auto;
+    }
     
     .summary-item {
         display: flex;
@@ -146,9 +152,7 @@
     
     .payment-form {
         background-color: white;
-        border-radius: 10px;
         padding: 30px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     
     .form-row {
@@ -330,7 +334,33 @@
         }
         
         .card {
-            height: 230px;
+            height: 240px;
+        }
+        
+        .card-front, .card-back {
+            padding: 1.8rem;
+        }
+        
+        .card-number {
+            font-size: 1.4rem;
+        }
+        
+        .card-details {
+            font-size: 0.9rem;
+        }
+        
+        .card-cvc {
+            font-size: 1.2rem;
+        }
+        
+        .card-chip {
+            width: 50px;
+            height: 35px;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            /* margin: 25px 0 20px 0; */
         }
     }
     
@@ -382,14 +412,281 @@
             font-size: 1.1rem;
         }
     }
+
+    .pay-with {
+        width: 40%;
+        margin: 10px auto;
+        background-color: #4a5568;
+        /* padding: 20px; */
+        border-radius: 20px;
+        display: flex;
+    
+    }
+
+    .payment-something {
+        width: 50%;
+        text-align: center;
+        padding: 10px;
+        font-size: 1.5rem;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        
+        border-radius: 20px;
+        /* background-color: #4a5568; */
+    }
+
+    .payment-something.active {
+        width: 50%;
+        text-align: center;
+        padding: 10px;
+        font-size: 1.5rem;
+        color: #fff;
+        
+        border-radius: 20px;
+        background-color: var(--navy-color-lighter);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 20px;
+    }
+
+
+
+
+
+
+
+
+
+
+      :root {
+    --success-color: #00c853;
+    --warning-color: #ff9100;
+    --error-color: #ff5252;
+    --border-color: #ddd;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.payment-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+}
+
+.payment-header {
+    padding: 10px;
+    text-align: center;
+    background: var(--navy-color);
+    color: white;
+}
+
+.payment-header h1 {
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.payment-header p {
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: var(--page-text-color);
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    transition: border 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--navy-color);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.btn {
+    background-color: var(--navy-color);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background-color: #1244c4;
+}
+
+.alert {
+    padding: 12px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+}
+
+.alert.error {
+    background-color: #ffebee;
+    color: var(--error-color);
+    border-left: 4px solid var(--error-color);
+}
+
+.payment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.payment-summary {
+    /* background: var(--secondary-color); */
+    padding: 10px;
+    border-radius: var(--border-radius);
+}
+
+.payment-summary h2 {
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: var(--page-text-color);
+}
+
+.detail-value {
+    color: var(--page-text-color);
+}
+
+.status-new {
+    color: var(--warning-color);
+}
+
+.status-pending {
+    color: var(--warning-color);
+}
+
+.status-completed {
+    color: var(--success-color);
+}
+
+.status-failed {
+    color: var(--error-color);
+}
+
+.coinbase-button {
+    display: block;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.coinbase-button img {
+    max-width: 200px;
+}
+
+.small-text {
+    font-size: 14px;
+    color: var(--page-text-color);
+    text-align: center;
+}
+
+.payment-alternatives {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.qr-code {
+width: 220px;
+height: 220px;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border-radius: var(--border-radius);
+    display: inline-block;
+    border: 1px solid var(--border-color);
+}
+
+.payment-footer {
+    padding: 20px;
+    text-align: center;
+    color: var(--page-text-color);
+    font-size: 14px;
+    border-top: 1px solid var(--border-color);
+}
+
+@media (max-width: 480px) {
+    .payment-header {
+        padding: 20px;
+    }
+    
+    .payment-main {
+        padding: 20px;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+}
+
+
+#crypto-payment {margin-bottom:10px;
+}
+
+
 </style>
 <body>
     <div class="page-wrapper">
+
+
         <div class="container">
             <h2>Complete Your Payment</h2>
-            
-            <div class="payment-part">
 
+            <div class="pay-with">
+        <div class="payment-something active" id="cardd">Pay with card</div>
+        <div class="payment-something" id="cryptoo">Pay with crypto</div>
+    </div>
+            
+            <div class="payment-part" id="card-payment">
 
                     <main class="payment-main">
                         <div class="payment-form">
@@ -443,6 +740,185 @@
                     Payment successful! Processing your order...
                 </div>
             </div>
+        </div>
+
+        <!-- end of card payment -->
+
+
+        <!-- CRYPTO PAYMENT -->
+
+
+        
+<?php
+// Configuration 
+require __DIR__ . '/vendor/autoload.php';
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+
+define('COINBASE_API_KEY', $_ENV['COINBASE_API_KEY']);
+define('COINBASE_API_URL', 'https://api.commerce.coinbase.com');
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
+    $description = htmlspecialchars($_POST['description'] ?? '');
+    
+    if ($amount && $amount > 0) {
+        $chargeId = createCharge($amount, $description);
+        if ($chargeId) {
+            header("Location: payment.php?charge_id=" . urlencode($chargeId));
+            exit;
+        }
+    } else {
+        $error = "Please enter a valid amount";
+    }
+}
+
+// Handle charge display
+$chargeData = null;
+if (isset($_GET['charge_id'])) {
+    $chargeData = getCharge($_GET['charge_id']);
+}
+
+function makeCoinbaseRequest($endpoint, $method = 'GET', $data = null) {
+    $url = COINBASE_API_URL . $endpoint;
+    
+    $headers = [
+        'X-CC-Api-Key: ' . COINBASE_API_KEY,
+        'Content-Type: application/json',
+        'Accept: application/json'
+    ];
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+    if ($method === 'POST') {
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    }
+    
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    if ($httpCode === 401) {
+        throw new Exception("Authentication failed. Check your API key.");
+    }
+    
+    return json_decode($response, true);
+}
+
+function createCharge($amount, $description) {
+    $chargeData = [
+        'name' => 'Website Payment',
+        'description' => $description ?: 'Payment for goods/services',
+        'pricing_type' => 'fixed_price',
+        'local_price' => [
+            'amount' => number_format($amount, 2, '.', ''),
+            'currency' => 'EUR'
+        ],
+        'metadata' => [
+            'customer_id' => '12345' // Add your own metadata
+        ]
+    ];
+    
+    try {
+        $response = makeCoinbaseRequest('/charges/', 'POST', $chargeData);
+        return $response['data']['id'];
+    } catch (Exception $e) {
+        error_log("Error creating charge: " . $e->getMessage());
+        return null;
+    }
+}
+
+function getCharge($chargeId) {
+    try {
+        $response = makeCoinbaseRequest('/charges/' . $chargeId);
+        return $response['data'];
+    } catch (Exception $e) {
+        error_log("Error retrieving charge: " . $e->getMessage());
+        return null;
+    }
+}
+?>
+
+
+         <div class="paymentStuff" id="crypto-payment" style="display: none;">
+            <div class="payment-container">
+        <header class="payment-header">
+            <h1>Crypto Payment Gateway</h1>
+            <p>Pay securely with cryptocurrency</p>
+        </header>
+
+        <main class="payment-crypto">
+            <?php if (!$chargeData): ?>
+                <form method="POST" class="payment-form">
+                    <?php if (isset($error)): ?>
+                        <div class="alert error"><?php echo $error; ?></div>
+                    <?php endif; ?>
+
+                    <div class="form-group">
+                        <label for="amount">Amount (USD)</label>
+                        <input type="number" id="amount" name="amount" step="0.01" min="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="3"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Create Payment</button>
+                </form>
+            <?php else: ?>
+                <div class="payment-details">
+                    <div class="payment-summary">
+                        <h2 class="h2">Payment Details</h2>
+                        <div class="detail-row">
+                            <span class="detail-label">Amount:</span>
+                            <span class="detail-value">€<?php echo $chargeData['pricing']['local']['amount']; ?> EUR</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Description:</span>
+                            <span class="detail-value"><?php echo htmlspecialchars($chargeData['description']); ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value status-<?php echo strtolower($chargeData['timeline'][0]['status']); ?>">
+                                <?php echo $chargeData['timeline'][0]['status']; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="payment-action">
+                        <a href="<?php echo $chargeData['hosted_url']; ?>" class="coinbase-button" target="_blank">
+                            <!-- <img src="https://commerce.coinbase.com/buttons/button.png" alt="Pay with Crypto"> -->
+                             <p style="text-decoration:none;">Pay with crypto link</p>
+                        </a>
+                        <p class="small-text">You'll be redirected to Coinbase to complete your payment</p>
+                    </div>
+
+                    <div class="payment-alternatives">
+                        <p class="small-text">Or scan QR code:</p>
+                        <div class="qr-code">
+                            <?php 
+                            if (isset($chargeData['hosted_url'])): 
+                                $qrData = $chargeData['hosted_url'];
+                            ?>
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=<?php echo urlencode($qrData); ?>" alt="Payment QR Code">
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            <?php endif; ?>
+        </main>
+
+        <footer class="payment-footer">
+            <p>Powered by Coinbase Commerce</p>
+        </footer>
+    </div>       
         </div>
     </div>
     
@@ -544,6 +1020,20 @@
                 submitButton.textContent = 'Pay Now <?php echo number_format($totalAmount, 2); ?>€';
             }
         });
-    </script>
+
+        document.getElementById('cardd').addEventListener('click', function() {
+        document.getElementById('card-payment').style.display = 'flex';
+        document.getElementById('crypto-payment').style.display = 'none';
+        document.querySelectorAll('.payment-something').forEach(btn => btn.classList.remove('active'));
+      
+        this.classList.add('active');
+    });
+    document.getElementById('cryptoo').addEventListener('click', function() {
+        document.getElementById('card-payment').style.display = 'none';
+        document.getElementById('crypto-payment').style.display = 'flex';
+        document.querySelectorAll('.payment-something').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+    });
+</script>
 </body>
 </html>
