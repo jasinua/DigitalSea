@@ -290,8 +290,8 @@ if (isLoggedIn($_SESSION['user_id'])) {
                 }
                 
                 // Highlight save button to indicate unsaved changes
-                saveBtn.style.backgroundColor = '#ff6b6b';
-                saveBtn.textContent = 'Ruaj Ndryshimet';
+                // saveBtn.style.backgroundColor = '#ff6b6b';
+                // saveBtn.textContent = 'Ruaj Ndryshimet';
                 
                 updateProductTotal(input);
             });
