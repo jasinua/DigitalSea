@@ -188,15 +188,30 @@
                             <div class="form-grid">
                                 <div class="form-group" style="grid-column: 1 / 2; grid-row: 1;">
                                     <label for="current_password">Current Password</label>
-                                    <input type="password" id="current_password" name="current_password" required>
+                                    <div class="password-field">
+                                        <input type="password" id="current_password" name="current_password" required>
+                                        <span class="password-toggle" onclick="togglePasswordVisibility('current_password')">
+                                            <i class="far fa-eye"></i>
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="form-group" style="grid-column: 1 / 2; grid-row: 2;">
                                     <label for="new_password">New Password</label>
-                                    <input type="password" id="new_password" name="new_password" required>
+                                    <div class="password-field">
+                                        <input type="password" id="new_password" name="new_password" required>
+                                        <span class="password-toggle" onclick="togglePasswordVisibility('new_password')">
+                                            <i class="far fa-eye"></i>
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="form-group" style="grid-column: 2 / 3; grid-row: 2;">
                                     <label for="confirm_password">Confirm New Password</label>
-                                    <input type="password" id="confirm_password" name="confirm_password" required>
+                                    <div class="password-field">
+                                        <input type="password" id="confirm_password" name="confirm_password" required>
+                                        <span class="password-toggle" onclick="togglePasswordVisibility('confirm_password')">
+                                            <i class="far fa-eye"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="button-group">
@@ -227,5 +242,22 @@
         </div> 
     </div>
     <?php include "footer/footer.php"; ?>
+
+    <script>
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = passwordInput.nextElementSibling.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>

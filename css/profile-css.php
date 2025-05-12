@@ -123,6 +123,30 @@
         outline: none;
     }
 
+    .password-field {
+        position: relative;
+        width: 100%;
+    }
+
+    .password-field input {
+        width: 100%;
+        padding-right: 40px;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .password-toggle:hover {
+        color: #153147;
+    }
+
     .password-section {
         margin-top: 0;
         padding-top: 0;
