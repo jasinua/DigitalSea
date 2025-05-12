@@ -25,6 +25,10 @@
         margin-bottom: 10px;
     }
 
+    .footer-links {
+        display: block;
+    }
+
     .footer-column a {
         color: var(--footer-items-color);
         text-decoration: none;
@@ -74,38 +78,316 @@
         transition:ease-out 0.3s;
         color:red;
     }
+
+    /* Media queries for responsive footer */
+    @media screen and (max-width: 992px) {
+        .footer {
+            flex-wrap: wrap;
+            padding: 30px 0;
+        }
+        
+        .footer-column {
+            flex: 0 0 50%;
+            margin-bottom: 25px;
+        }
+    }
+    
+    @media screen and (max-width: 768px) {
+        .footer {
+            padding: 25px 15px;
+        }
+        
+        .footer-column h3 {
+            font-size: 16px;
+        }
+        
+        .footer-column a {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .social-icons a {
+            font-size: 22px;
+            margin: 0 20px;
+        }
+    }
+    
+    @media screen and (max-width: 576px) {
+        .footer {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px 10px;
+        }
+        
+        .footer-column {
+            flex: 0 0 100%;
+            margin-left: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 5px;
+        }
+        
+        .footer-column:last-child {
+            margin-bottom: 5px;
+            border-bottom: none;
+        }
+        
+        .footer-column h3 {
+            position: relative;
+            cursor: pointer;
+            padding: 10px 0;
+            margin-bottom: 0;
+        }
+        
+        .footer-column h3::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .footer-column.active h3::after {
+            transform: rotate(180deg);
+        }
+        
+        .footer-links {
+            display: none;
+            padding: 0 10px 10px 10px;
+        }
+        
+        .footer-column.active .footer-links {
+            display: block;
+        }
+        
+        .social-icons {
+            padding: 10px 0 15px 0;
+        }
+        
+        .social-icons a {
+            font-size: 20px;
+            margin: 0 15px;
+        }
+    }
+    
+    @media screen and (max-width: 400px) {
+        .footer-column h3 {
+            font-size: 15px;
+            padding: 8px 0;
+        }
+        
+        .footer-column a {
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        
+        .social-icons a {
+            font-size: 18px;
+            margin: 0 12px;
+        }
+        
+        .footer {
+            padding: 15px 5px;
+        }
+    }
 </style>
 <body>
     <div class="footer">
         <div class="footer-column">
             <h3>Products</h3>
-            <a href="#">House Shit</a>
-            <a href="#">Dekstop</a>
-            <a href="#">Phones</a>
-            <a href="#">Laptop</a>
-            <a href="#">Ora</a>
-            <a href="#">TV</a>
+            <div class="footer-links">
+                <?php
+                // Use the same categories structure as in index.php
+                $categories = [
+                    'Computers & Laptops' => [
+                        'keywords' => ['computer', 'laptop', 'desktop', 'notebook'],
+                        'subcategories' => [
+                            'Gaming Laptops' => ['gaming laptop', 'gaming notebook'],
+                            'Business Laptops' => ['business laptop', 'professional laptop'],
+                            'All-in-One PCs' => ['all in one', 'aio pc'],
+                            'Desktop Towers' => ['desktop tower', 'pc tower'],
+                            'Workstations' => ['workstation', 'professional desktop']
+                        ]
+                    ],
+                    'Smartphones & Tablets' => [
+                        'keywords' => ['phone', 'smartphone', 'tablet', 'mobile'],
+                        'subcategories' => [
+                            'Flagship Phones' => ['flagship', 'premium phone'],
+                            'Budget Phones' => ['budget phone', 'affordable phone'],
+                            'iPads & Tablets' => ['ipad', 'tablet'],
+                            'Foldable Phones' => ['foldable', 'fold phone'],
+                            'Gaming Phones' => ['gaming phone', 'game phone']
+                        ]
+                    ],
+                    'Audio & Headphones' => [
+                        'keywords' => ['headphone', 'earphone', 'speaker', 'audio'],
+                        'subcategories' => []
+                    ],
+                    'Gaming & Consoles' => [
+                        'keywords' => ['game', 'console', 'gaming', 'controller'],
+                        'subcategories' => []
+                    ],
+                    'Smart Home & IoT' => [
+                        'keywords' => ['smart home', 'iot', 'smart device', 'automation', 'tv', 'television'],
+                        'subcategories' => []
+                    ],
+                    'Wearables & Accessories' => [
+                        'keywords' => ['watch', 'wearable', 'smartwatch', 'fitness tracker'],
+                        'subcategories' => []
+                    ]
+                ];
+                
+                // Footer product links to check against valid categories
+                $footer_products = [
+                    'Desktop' => ['desktop', 'computer', 'pc'],
+                    'Watches' => ['watch', 'watches', 'wearable', 'smart watch'],
+                    'Phones' => ['phone', 'phones', 'smartphone', 'smartphones', 'mobile'],
+                    'Laptop' => ['laptop', 'laptops', 'notebook', 'notebooks'],
+                    'TV' => ['tv', 'television', 'televisions', 'smart tv']
+                ];
+                
+                // Function to check if a product belongs to any category
+                function isValidProduct($product_keywords, $categories) {
+                    foreach ($product_keywords as $prod_keyword) {
+                        // Get singular form for comparison (simple removal of 's' at the end)
+                        $singular_keyword = rtrim($prod_keyword, 's');
+                        
+                        foreach ($categories as $category => $data) {
+                            // Check main category keywords
+                            foreach ($data['keywords'] as $cat_keyword) {
+                                // Get singular form of category keyword
+                                $singular_cat_keyword = rtrim($cat_keyword, 's');
+                                
+                                // Check for partial matches with both singular and plural forms
+                                if (stripos($cat_keyword, $singular_keyword) !== false || 
+                                    stripos($singular_cat_keyword, $singular_keyword) !== false ||
+                                    stripos($prod_keyword, $singular_cat_keyword) !== false) {
+                                    return true;
+                                }
+                            }
+                            
+                            // Check subcategory keywords if they exist
+                            if (isset($data['subcategories'])) {
+                                foreach ($data['subcategories'] as $subcat => $subcat_keywords) {
+                                    foreach ($subcat_keywords as $subcat_keyword) {
+                                        // Get singular form of subcategory keyword
+                                        $singular_subcat_keyword = rtrim($subcat_keyword, 's');
+                                        
+                                        // Check for partial matches with both singular and plural forms
+                                        if (stripos($subcat_keyword, $singular_keyword) !== false || 
+                                            stripos($singular_subcat_keyword, $singular_keyword) !== false ||
+                                            stripos($prod_keyword, $singular_subcat_keyword) !== false) {
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return false;
+                }
+                
+                // Always include these core products regardless of filter matching
+                $core_products = ['Desktop', 'Watches', 'Phones', 'Laptop', 'TV'];
+                
+                // Display product links - always show core products, filter others
+                foreach ($footer_products as $product => $keywords) {
+                    if (in_array($product, $core_products) || isValidProduct($keywords, $categories)) {
+                        // Find the matching category for linking purposes
+                        $category_param = '';
+                        $subcategory_param = '';
+                        
+                        foreach ($categories as $category => $data) {
+                            foreach ($keywords as $keyword) {
+                                if (in_array($keyword, $data['keywords'])) {
+                                    $category_param = $category;
+                                    break 2;
+                                }
+                                
+                                // Also check subcategories
+                                if (isset($data['subcategories'])) {
+                                    foreach ($data['subcategories'] as $subcat => $subcat_keywords) {
+                                        foreach ($subcat_keywords as $subcat_keyword) {
+                                            if (stripos($subcat_keyword, $keyword) !== false || 
+                                                stripos($keyword, $subcat_keyword) !== false) {
+                                                $category_param = $category;
+                                                $subcategory_param = $subcat;
+                                                break 3;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Build link URL with appropriate filters
+                        $link_url = 'index.php';
+                        $params = [];
+                        
+                        if (!empty($subcategory_param)) {
+                            $params[] = 'subfilter[]=' . urlencode($subcategory_param);
+                        } else if (!empty($category_param)) {
+                            // If no specific subcategory, use the product name as search
+                            // Use singular form for searches
+                            $search_term = $product;
+                            
+                            // Use specific search terms for certain products
+                            $custom_search_terms = [
+                                'Watches' => 'watch',
+                                'Phones' => 'phone',
+                                'Laptops' => 'laptop',
+                                'TVs' => 'tv'
+                            ];
+                            
+                            if (isset($custom_search_terms[$product])) {
+                                $search_term = $custom_search_terms[$product];
+                            } else {
+                                // Convert to singular if it ends with 's'
+                                if (substr($search_term, -1) === 's') {
+                                    $search_term = substr($search_term, 0, -1);
+                                }
+                            }
+                            
+                            $params[] = 'search=' . urlencode($search_term);
+                        }
+                        
+                        if (!empty($params)) {
+                            $link_url .= '?' . implode('&', $params);
+                        }
+                        
+                        echo '<a href="' . $link_url . '">' . $product . '</a>';
+                    }
+                }
+                ?>
+            </div>
         </div>
         <div class="footer-column">
             <h3>Resources</h3>
-            <a href="#">Contact Us</a>
-            <a href="#">Blog</a>
-            <a href="#">FAQ</a>
+            <div class="footer-links">
+                <a href="#">Contact Us</a>
+                <a href="#">Blog</a>
+                <a href="#">FAQ</a>
+            </div>
         </div>
         <div class="footer-column">
             <h3>Work with DigitalSea</h3>
-            <a href="#">Partners</a>
-            <a href="#">Dealers</a>
-            <a href="#">OEM</a>
+            <div class="footer-links">
+                <a href="#">Partners</a>
+                <a href="#">Dealers</a>
+                <a href="#">OEM</a>
+            </div>
         </div>
         <div class="footer-column">
             <h3>About</h3>
-            <a href="#">DigitalSea, Inc.</a>
-            <a href="#">Developers</a>
-            <a href="#">Investors</a>
-            <a href="#">Careers</a>
-            <a href="#">Press</a>
-            <a href="#">Team</a>
+            <div class="footer-links">
+                <a href="#">DigitalSea, Inc.</a>
+                <a href="#">Developers</a>
+                <a href="#">Investors</a>
+                <a href="#">Careers</a>
+                <a href="#">Press</a>
+                <a href="#">Team</a>
+            </div>
         </div>
     </div>
     <div class="social-icons">
@@ -125,5 +407,54 @@
             <i id='youtube' class="fab fa-youtube"></i>
         </a>
     </div>
+
+    <script>
+    // Add accordion functionality for mobile footer
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.innerWidth <= 576) {
+            const footerHeadings = document.querySelectorAll('.footer-column h3');
+            
+            footerHeadings.forEach(heading => {
+                heading.addEventListener('click', function() {
+                    const parent = this.parentElement;
+                    parent.classList.toggle('active');
+                });
+            });
+        }
+        
+        // Add resize listener to handle accordion behavior
+        window.addEventListener('resize', function() {
+            const footerColumns = document.querySelectorAll('.footer-column');
+            const footerLinks = document.querySelectorAll('.footer-links');
+            
+            if (window.innerWidth <= 576) {
+                footerColumns.forEach(column => {
+                    const heading = column.querySelector('h3');
+                    if (!heading.hasAttribute('listener')) {
+                        heading.setAttribute('listener', 'true');
+                        heading.addEventListener('click', function() {
+                            column.classList.toggle('active');
+                        });
+                    }
+                });
+                
+                // Hide links by default on mobile
+                footerLinks.forEach(link => {
+                    link.style.display = 'none';
+                });
+            } else {
+                // Show all links on larger screens
+                footerLinks.forEach(link => {
+                    link.style.display = 'block';
+                });
+                
+                // Remove active class from all columns
+                footerColumns.forEach(column => {
+                    column.classList.remove('active');
+                });
+            }
+        });
+    });
+    </script>
 </body>
 </html>

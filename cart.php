@@ -97,9 +97,9 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     <div class="product-info">
                                         <input type="hidden" name="prod_id[]" value="<?php echo $product['product_id']; ?>">
                                         <img src="<?php echo $product['image_url']; ?>" alt="Product Image">
-                                        <div>
+                                        <div class="product-details">
                                             <h4><?php echo $product['name']; ?></h4>
-                                            <div class="desc"><?php echo $product['description']; ?></div>
+                                            <div class="desc mobile-desc"><?php echo $product['description']; ?></div>
                                         </div>
                                     </div>
                                 </td>
@@ -164,7 +164,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
                                 <div class="summary-item" data-product-id="<?php echo $product['product_id']; ?>">
                                     <div class="emri-me-zbritje">
-                                        <p><?php echo $product['name']; ?> </p>
+                                        <p class="product-name"><?php echo $product['name']; ?> </p>
                                         <?php if($discount > 0){ ?> 
                                                 <p class="zbritja">/ -<?php echo $discount;?>%</p>
                                         <?php } ?>
@@ -188,7 +188,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                         <input class="input-for-discount" type="hidden" name="discount" value="<?php echo $alldiscount; ?>">
                     </div>
                     <div>
-                        <div class="summary-item">
+                        <div class="summary-item total">
                             <span>Total:</span>
                             <span><?php echo number_format($subtotal + $subtotal * 0.18 - $alldiscount, 2); ?>€</span>
                         </div>
@@ -251,177 +251,205 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     }
                                 }
                                 
-                                // Update cart preview
-                                updateCartPreview();
-                                
                                 // Show empty cart message if no items left
-                                const rows = document.querySelectorAll('tbody tr');
-                                if (rows.length === 0) {
-                                    const table = document.querySelector('.itemsTable');
-                                    table.innerHTML = '<div class="empty-cart-message" style="padding: 30px; text-align: center; color: #888;">Your cart is empty</div>';
-                                    document.querySelector('.save-btn').style.display = 'none';
-                                    document.querySelector('.checkout-btn').disabled = true;
+                                const remainingItems = document.querySelectorAll('tbody tr');
+                                if (remainingItems.length === 0) {
+                                    const cartTable = document.querySelector('.itemsTable');
+                                    cartTable.innerHTML = '<div class="empty-cart">Karta juaj është bosh. <a href="index.php">Vazhdo blerjet</a></div>';
+                                    
+                                    const summaryBox = document.querySelector('#prodNameXprice');
+                                    summaryBox.innerHTML = '<div class="empty-cart-summary">Nuk ka produkte në kartë.</div>';
+                                    
+                                    // Update totals
+                                    updateCartTotals(0, 0);
                                 }
-                                
-                                // Show success message
-                                saveMessage.textContent = 'Item removed successfully';
-                                saveMessage.classList.add('show');
-                                clearTimeout(saveTimeout);
-                                saveTimeout = setTimeout(() => {
-                                    saveMessage.classList.remove('show');
-                                }, 3000);
                             }, 300);
                         } else {
-                            console.error('Failed to remove item:', response.message);
+                            // Show error
                             button.innerHTML = '&times;';
                             button.disabled = false;
+                            alert('Gabim gjatë fshirjes së produktit. Ju lutem provoni përsëri.');
                         }
                     },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
+                    error: function() {
                         button.innerHTML = '&times;';
                         button.disabled = false;
+                        alert('Gabim gjatë komunikimit me serverin. Ju lutem provoni përsëri.');
                     }
                 });
             });
         });
 
+        // Update quantity inputs
         quantityInputs.forEach(input => {
-            input.addEventListener('input', () => {
-                const price = parseFloat(input.dataset.price);
-                const productId = input.dataset.productId;
-                const quantity = parseInt(input.value) || 1;
-                const total = price * quantity;
-
-                const summaryItem = document.querySelector(`.summary-item[data-product-id="${productId}"] .total-price`);
-                if (summaryItem) {
-                    summaryItem.textContent = `${quantity} x ${price.toFixed(2)}€ = ${total.toFixed(2)}€`;
+            input.addEventListener('change', () => {
+                const min = parseInt(input.getAttribute('min'));
+                const val = parseInt(input.value);
+                if (val < min) {
+                    input.value = min;
                 }
-                updateCartSummary();
+                
+                // Highlight save button to indicate unsaved changes
+                saveBtn.style.backgroundColor = '#ff6b6b';
+                saveBtn.textContent = 'Ruaj Ndryshimet';
+                
+                updateProductTotal(input);
             });
         });
-
+        
+        // Handle save changes button
         saveBtn.addEventListener('click', () => {
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Duke Ruajtur...';
             saveBtn.disabled = true;
-            saveBtn.textContent = 'Duke ruajtur...';
-
-            const formData = new FormData();
-            quantityInputs.forEach(input => {
-                formData.append('prod_id[]', input.dataset.productId);
-                formData.append('quantity[]', input.value);
-                formData.append('price[]', parseFloat(input.dataset.price) * parseInt(input.value));
-            });
-
-            fetch('cart.php', {
+            
+            // Submit the form via AJAX
+            const formData = new FormData(document.getElementById('cartForm'));
+            
+            fetch('', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.text())
-            .then(() => {
-                saveBtn.textContent = 'Ruaj Ndryshimet';
+            .then(response => {
+                saveBtn.innerHTML = 'Ruaj Ndryshimet';
                 saveBtn.disabled = false;
-
+                saveBtn.style.backgroundColor = 'var(--button-color)';
+                
+                // Show save message
                 saveMessage.classList.add('show');
+                
+                // Hide message after 3 seconds
                 clearTimeout(saveTimeout);
                 saveTimeout = setTimeout(() => {
                     saveMessage.classList.remove('show');
-                    // window.location.reload(); 
                 }, 3000);
+                
+                // Update cart totals based on current values
+                updateCartSummary();
             })
             .catch(error => {
-                console.error('Error:', error);
-                saveBtn.textContent = 'Ruaj Ndryshimet';
+                saveBtn.innerHTML = 'Ruaj Ndryshimet';
                 saveBtn.disabled = false;
+                alert('Gabim gjatë ruajtjes së ndryshimeve. Ju lutem provoni përsëri.');
             });
         });
-
+        
+        // Function to update product total in summary
+        function updateProductTotal(input) {
+            const productId = input.dataset.productId;
+            const quantity = parseInt(input.value);
+            const price = parseFloat(input.dataset.price);
+            const total = (quantity * price).toFixed(2);
+            
+            // Update the summary item
+            const summaryItem = document.querySelector(`.summary-item[data-product-id="${productId}"] .total-price`);
+            if (summaryItem) {
+                // Extract the price pattern and keep it the same, just update quantity and total
+                const priceText = summaryItem.textContent;
+                const newText = priceText.replace(/^\d+/, quantity).replace(/\d+\.\d+€$/, total + '€');
+                summaryItem.textContent = newText;
+            }
+        }
+        
+        // Function to update the cart summary totals
         function updateCartSummary() {
-            const summaryTotals = document.querySelectorAll('.summary-item .total-price');
             let subtotal = 0;
             let totalDiscount = 0;
-
-            summaryTotals.forEach(item => {
-                const cleanedText = item.textContent.replace(/,/g, '');
-                const match = cleanedText.match(/= ([\d.]+)/);
-                if (match && match[1]) {
-                    subtotal += parseFloat(match[1]);
-                }
-            });
-
-            quantityInputs.forEach(input => {
+            
+            // Calculate subtotal and discount from current values
+            document.querySelectorAll('.quantity-input').forEach(input => {
                 const productId = input.dataset.productId;
-                const quantity = parseInt(input.value) || 1;
-                const priceWithDiscount = parseFloat(input.dataset.price);
+                const quantity = parseInt(input.value);
+                const price = parseFloat(input.dataset.price);
+                
+                // Find if this product has a discount
                 const summaryItem = document.querySelector(`.summary-item[data-product-id="${productId}"]`);
-                const originalPriceText = summaryItem.querySelector('.zbritja')?.textContent || '';
-                const discountMatch = originalPriceText.match(/\-([\d.]+)%/);
-
-                if (discountMatch && discountMatch[1]) {
-                    const discountPercent = parseFloat(discountMatch[1]);
-                    const originalPrice = priceWithDiscount / (1 - discountPercent / 100);
-                    const discountPerItem = (originalPrice - priceWithDiscount) * quantity;
-                    totalDiscount += discountPerItem;
-                }
-            });
-
-            const tvsh = subtotal * 0.18;
-            const finalTotal = subtotal + tvsh - totalDiscount;
-
-            const summaryItems = document.querySelectorAll('.summary-item');
-            summaryItems[summaryItems.length - 4].querySelector('span:last-child').textContent = subtotal.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
-            summaryItems[summaryItems.length - 3].querySelector('span:last-child').textContent = tvsh.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
-            summaryItems[summaryItems.length - 2].querySelector('span:last-child').textContent = totalDiscount > 0 ? `- ${totalDiscount.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€` : "0.00€";
-            summaryItems[summaryItems.length - 1].querySelector('span:last-child').textContent = finalTotal.toLocaleString('us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "€";
-        }
-
-        // Function to update cart preview via AJAX
-        function updateCartPreview() {
-            $.ajax({
-                url: 'controller/get_cart_preview.php',
-                type: 'GET',
-                dataType: 'html',
-                success: function(response) {
-                    // Replace cart preview content in header
-                    $('.cart-preview').html(response);
-                    
-                    // Ensure the parent li has cart-link class
-                    const cartLi = $('a[href="cart.php"]').closest('li');
-                    if (!cartLi.hasClass('cart-link')) {
-                        cartLi.addClass('cart-link');
+                if (summaryItem) {
+                    const discountText = summaryItem.querySelector('.zbritja');
+                    if (discountText) {
+                        // Extract discount percentage
+                        const discountMatch = discountText.textContent.match(/\d+/);
+                        if (discountMatch) {
+                            const discountPct = parseInt(discountMatch[0]);
+                            // Calculate original price and discount amount
+                            const originalPrice = price / (1 - discountPct/100);
+                            const discountAmount = originalPrice - price;
+                            totalDiscount += discountAmount * quantity;
+                            subtotal += originalPrice * quantity;
+                        } else {
+                            subtotal += price * quantity;
+                        }
+                    } else {
+                        subtotal += price * quantity;
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error updating cart preview:', error);
+                }
+            });
+            
+            updateCartTotals(subtotal, totalDiscount);
+        }
+        
+        // Update the cart totals in the UI
+        function updateCartTotals(subtotal, discount) {
+            const tax = subtotal * 0.18;
+            const total = subtotal + tax - discount;
+            
+            // Update the summary values
+            const summaryItems = document.querySelectorAll('.summary-item:not([data-product-id])');
+            if (summaryItems.length >= 3) {
+                // Subtotal
+                summaryItems[0].querySelector('span:last-child').textContent = subtotal.toFixed(2) + '€';
+                // Tax
+                summaryItems[1].querySelector('span:last-child').textContent = tax.toFixed(2) + '€';
+                // Discount
+                summaryItems[2].querySelector('span:last-child').textContent = '- ' + discount.toFixed(2) + '€';
+                // Total
+                const totalElement = document.querySelector('.summary-item.total span:last-child');
+                if (totalElement) {
+                    totalElement.textContent = total.toFixed(2) + '€';
+                }
+            }
+        }
+        
+        // Initialize responsive elements
+        function initResponsive() {
+            const isMobile = window.innerWidth <= 580;
+            const descriptionElements = document.querySelectorAll('.mobile-desc');
+            
+            descriptionElements.forEach(desc => {
+                if (isMobile) {
+                    // Truncate description on mobile
+                    const fullText = desc.textContent;
+                    if (fullText.length > 40) {
+                        const shortText = fullText.substring(0, 40) + '...';
+                        desc.setAttribute('data-full-text', fullText);
+                        desc.textContent = shortText;
+                        
+                        // Add click handler to expand/collapse
+                        desc.addEventListener('click', function() {
+                            const isExpanded = this.classList.contains('expanded');
+                            if (isExpanded) {
+                                this.textContent = shortText;
+                                this.classList.remove('expanded');
+                            } else {
+                                this.textContent = this.getAttribute('data-full-text');
+                                this.classList.add('expanded');
+                            }
+                        });
+                    }
                 }
             });
         }
-
-        $('.search-input').on('input', function() {
-            var $clearBtn = $(this).closest('form').find('.clear-search');
-            if ($(this).val().length > 0) {
-                $clearBtn.show();
-            } else {
-                $clearBtn.hide();
-            }
-        });
-
-        $('.clear-search').on('mousedown', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var $input = $(this).closest('form').find('.search-input, .mobile-search-input');
-            $input.val('');
-            $(this).hide();
-            $input.focus();
-        });
-
-        $('.search-input, .mobile-search-input').each(function() {
-            var $clearBtn = $(this).closest('form').find('.clear-search');
-            if ($(this).val().length > 0) {
-                $clearBtn.show();
-            } else {
-                $clearBtn.hide();
-            }
-        });
+        
+        // Run on page load
+        initResponsive();
+        
+        // Listen for window resize events
+        window.addEventListener('resize', initResponsive);
     });
 </script>
-<?php } else { header("Location: login.php"); } ?>
+
+<?php
+} else {
+    header("Location: login.php");
+    exit;
+}
+?>

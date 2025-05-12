@@ -372,7 +372,7 @@
         height: 40px;
         font-size: 13px;
         overflow: hidden;
-        padding: 0 15px 5px 5px;
+        padding: 0 20px 5px 5px;
         text-decoration: none;
     }
     
@@ -1172,6 +1172,169 @@
         }
     }
 
+    /* Narrower filters for screens below 500px */
+    @media screen and (max-width: 500px) {
+        #filters {
+            width: 85%;
+            max-width: 300px;
+            padding: 15px;
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        
+        .filter-section {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+        }
+        
+        .filter-section h3 {
+            font-size: 14px;
+            padding: 8px 0;
+            margin-bottom: 8px;
+        }
+        
+        .category-header {
+            padding: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .category-header h4 {
+            font-size: 13px;
+        }
+        
+        .category-content {
+            padding: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .subfilter {
+            margin: 2px 0;
+            padding: 5px;
+        }
+        
+        .subfilter input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            margin-right: 6px;
+        }
+        
+        .subfilter label {
+            font-size: 12px;
+        }
+        
+        .filter {
+            margin: 4px 0;
+            padding: 5px;
+        }
+        
+        .filter input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            margin-right: 8px;
+        }
+        
+        .filter label {
+            font-size: 12px;
+        }
+        
+        #filtOpts {
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        #filtOpts input {
+            padding: 10px;
+            font-size: 13px;
+        }
+        
+        .price-range input[type="number"] {
+            padding: 10px;
+            font-size: 13px;
+        }
+    }
+
+    /* Even narrower filters for very small screens below 400px */
+    @media screen and (max-width: 400px) {
+        #filters {
+            width: 80%;
+            max-width: 260px;
+            padding: 12px;
+            padding-top: 15px;
+            padding-bottom: 30px;
+        }
+        
+        .filter-section {
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+        }
+        
+        .filter-section h3 {
+            font-size: 13px;
+            padding: 6px 0;
+            margin-bottom: 6px;
+        }
+        
+        .category-header {
+            padding: 6px;
+            margin-bottom: 4px;
+        }
+        
+        .category-header h4 {
+            font-size: 12px;
+        }
+        
+        .category-content {
+            padding: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .subfilter {
+            margin: 1px 0;
+            padding: 4px;
+        }
+        
+        .subfilter input[type="checkbox"] {
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+        }
+        
+        .subfilter label {
+            font-size: 11px;
+        }
+        
+        .filter {
+            margin: 2px 0;
+            padding: 4px;
+        }
+        
+        .filter input[type="checkbox"] {
+            width: 12px;
+            height: 12px;
+            margin-right: 6px;
+        }
+        
+        .filter label {
+            font-size: 11px;
+        }
+        
+        #filtOpts {
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        #filtOpts input {
+            padding: 8px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+        
+        .price-range input[type="number"] {
+            padding: 8px;
+            font-size: 12px;
+        }
+    }
+
     /* Safe Area Insets for Modern Mobile Devices */
     @supports (padding: max(0px)) {
         @media screen and (max-width: 768px) {
@@ -1404,6 +1567,11 @@
             visibility: hidden;
             display: none;
         }
+
+        .wheel-item.hidden {
+            display: none;
+            pointer-events: none;
+        }
         
         .wheel-carousel {
             height: 420px;
@@ -1416,11 +1584,11 @@
         }
         
         .wheel-item.active {
-            transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%) scale(0.7);
         }
         
         .wheel-item:hover {
-            transform: translate(-50%, -50%) scale(1.05);
+            transform: translate(-50%, -50%) scale(0.9);
         }
         
         #topItemsHeader {
@@ -1484,21 +1652,6 @@
         }
     }
 
-    /* Safe Area Insets for Modern Mobile Devices */
-    @supports (padding: max(0px)) {
-        @media screen and (max-width: 767px) {
-            #container {
-                padding-left: max(15px, env(safe-area-inset-left));
-                padding-right: max(15px, env(safe-area-inset-right));
-            }
-            
-            .carousel-arrow {
-                margin-left: max(10px, env(safe-area-inset-left));
-                margin-right: max(10px, env(safe-area-inset-right));
-            }
-        }
-    }
-
     /* Loading State Styles */
     @media (prefers-reduced-motion: no-preference) {
         .item, #newItemsItem, .wheel-item {
@@ -1554,6 +1707,98 @@
             top: 15px;
             right: 15px;
             font-size: 22px;
+        }
+    }
+
+    /* Styles for very small screens (less than 400px) */
+    @media screen and (max-width: 400px) {
+
+        #items {
+            overflow-x: hidden;
+        }
+        /* Make new items smaller and show 2 per row */
+        #newItemsItem {
+            width: 150px;
+            min-width: 150px;
+            height: 250px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+
+        #newItems {
+            gap: 10px;
+            max-width: 100%;
+            padding-left: 3px;
+        }
+
+        #newItemsItem img {
+            height: 150px;
+            padding: 5px;
+        }
+
+        #newItemsItem .title {
+            font-size: 12px;
+            margin: 8px 0;
+            min-height: 40px;
+        }
+
+        #newItemsItem .price {
+            font-size: 14px;
+            padding: 0 3px 3px 5px;
+        }
+
+        /* Hide the original strikethrough price on small screens */
+        .original-price, 
+        #newItemsItem .original-price, 
+        .wheel-item .original-price {
+            display: none;
+        }
+
+        #newItemsItem .discounted-price {
+            font-size: 14px;
+        }
+
+        .new-badge, #newItemsItem .discount-badge {
+            font-size: 10px;
+            padding: 3px 6px;
+        }
+
+        /* Change More Products layout to 2 columns */
+        .itemBox {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 10px 5px;
+        }
+
+        .item {
+            width: 100%;
+            min-width: auto;
+            margin: 0;
+        }
+
+        .item img {
+            height: 140px;
+            padding: 10px;
+        }
+
+        .item .title {
+            font-size: 12px;
+            height: 35px;
+        }
+
+        .item .price {
+            font-size: 14px;
+        }
+
+        .discount-badge {
+            font-size: 10px;
+            padding: 3px 6px;
+        }
+
+        #newItemsHeader, #topItemsHeader, #moreItemsText {
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
         }
     }
 </style>

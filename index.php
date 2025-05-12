@@ -220,19 +220,39 @@
             const itemWidth = 330; // Width of one item
             const itemMargin = 20; // Margin between items
             const scrollAmount = itemWidth + itemMargin; // Total scroll amount for one item
-            const visibleNewItems = 4;
-            let currentNewItemsIndex = 0;
+            let visibleNewItems = 4; // Default for larger screens
+            
+            // Adjust visible items based on screen size
+            function updateVisibleItems() {
+                if (window.innerWidth <= 400) {
+                    visibleNewItems = 2;
+                } else if (window.innerWidth <= 768) {
+                    visibleNewItems = 3;
+                } else {
+                    visibleNewItems = 4;
+                }
+                updateNewItemsArrows();
+            }
+            
+            // Initial update and add resize listener
+            updateVisibleItems();
+            window.addEventListener('resize', updateVisibleItems);
 
             function updateNewItemsArrows() {
                 newItemsPrev.disabled = currentNewItemsIndex === 0;
                 newItemsNext.disabled = currentNewItemsIndex >= newItems.children.length - visibleNewItems;
             }
 
+            let currentNewItemsIndex = 0;
+
             newItemsPrev.addEventListener('click', () => {
                 if (currentNewItemsIndex > 0) {
                     currentNewItemsIndex--;
+                    const smallScreen = window.innerWidth <= 400;
+                    const scrollSize = smallScreen ? 160 : scrollAmount; // 150px width + 10px gap for small screens
+                    
                     newItems.scrollBy({
-                        left: -scrollAmount,
+                        left: -scrollSize,
                         behavior: 'smooth'
                     });
                     updateNewItemsArrows();
@@ -242,8 +262,11 @@
             newItemsNext.addEventListener('click', () => {
                 if (currentNewItemsIndex < newItems.children.length - visibleNewItems) {
                     currentNewItemsIndex++;
+                    const smallScreen = window.innerWidth <= 400;
+                    const scrollSize = smallScreen ? 160 : scrollAmount; // 150px width + 10px gap for small screens
+                    
                     newItems.scrollBy({
-                        left: scrollAmount,
+                        left: scrollSize,
                         behavior: 'smooth'
                     });
                     updateNewItemsArrows();
@@ -445,7 +468,7 @@
             </div>
 
             <div id='items'>
-                <button class="filter-toggle-top"><i class="fas fa-filter"></i> Filters</button>
+                <button class="filter-toggle-top"><i class="fas fa-filter"></i></button>
                 <?php if(!isset($_GET['subfilter']) && !isset($_GET['min_price']) && !isset($_GET['max_price']) && !isset($_GET['discounted_only']) && !isset($_GET['search']) && $current_page === 1) { ?>   
                     <h1 id='topItemsHeader'>Top Products</h1>
                     <div class="carousel-container">
@@ -577,8 +600,62 @@
                             }
 
                             if (isset($_GET['search']) && !empty($_GET['search'])) {
-                                $search_term = mysqli_real_escape_string($conn, $_GET['search']);
-                                $where_conditions[] = "(LOWER(description) LIKE LOWER('%$search_term%') OR LOWER(name) LIKE LOWER('%$search_term%'))";
+                                // Function to normalize search terms (handle singular/plural)
+                                function normalizeSearchTerm($term) {
+                                    // Convert term to lowercase
+                                    $term = strtolower(trim($term));
+                                    
+                                    // Common singular/plural mappings
+                                    $mappings = [
+                                        'watches' => 'watch',
+                                        'watch' => 'watch',
+                                        'phones' => 'phone',
+                                        'phone' => 'phone',
+                                        'laptops' => 'laptop',
+                                        'laptop' => 'laptop',
+                                        'computers' => 'computer',
+                                        'computer' => 'computer',
+                                        'televisions' => 'television',
+                                        'television' => 'television',
+                                        'tv' => 'tv',
+                                        'tvs' => 'tv',
+                                        'headphones' => 'headphone',
+                                        'headphone' => 'headphone'
+                                    ];
+                                    
+                                    // Check if term is in mappings
+                                    if (isset($mappings[$term])) {
+                                        return $mappings[$term];
+                                    }
+                                    
+                                    // If not in mappings, try to convert plural to singular
+                                    if (substr($term, -1) === 's') {
+                                        return substr($term, 0, -1);
+                                    }
+                                    
+                                    return $term;
+                                }
+                                
+                                $original_search_term = mysqli_real_escape_string($conn, $_GET['search']);
+                                $normalized_term = normalizeSearchTerm($original_search_term);
+                                
+                                // Build search condition with both original and normalized terms
+                                $search_condition = "(LOWER(description) LIKE LOWER('%$original_search_term%') OR 
+                                                    LOWER(name) LIKE LOWER('%$original_search_term%')";
+                                
+                                // Add normalized term if different from original
+                                if ($normalized_term !== strtolower($original_search_term)) {
+                                    $search_condition .= " OR LOWER(description) LIKE LOWER('%$normalized_term%') OR 
+                                                         LOWER(name) LIKE LOWER('%$normalized_term%')";
+                                }
+                                
+                                // Add singular/plural variation
+                                $plural_term = $normalized_term . 's';
+                                $search_condition .= " OR LOWER(description) LIKE LOWER('%$plural_term%') OR 
+                                                     LOWER(name) LIKE LOWER('%$plural_term%')";
+                                
+                                $search_condition .= ")";
+                                $where_conditions[] = $search_condition;
                             }
                             
                             $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";

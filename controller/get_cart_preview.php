@@ -57,7 +57,7 @@
             $product_result = returnProduct($pid);
             if ($product_result && $product = $product_result->fetch_assoc()) {
                 ?>
-                <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
+                <a class="cart-preview-item-link" href="../product.php?product=<?php echo $product['product_id']; ?>">
                     <div class="cart-preview-item">
                         <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                         <div class="cart-preview-item-info">
@@ -81,7 +81,7 @@
                 $product_result = returnProduct($pid);
                 if ($product_result && $product = $product_result->fetch_assoc()) {
                     ?>
-                    <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
+                    <a class="cart-preview-item-link" href="../product.php?product=<?php echo $product['product_id']; ?>">
                         <div class="cart-preview-item">
                             <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                             <div class="cart-preview-item-info">
