@@ -843,7 +843,7 @@
         const wheelNext = document.getElementById('wheelNext');
         
         // Continue with the existing JavaScript code...
-    });
+    });  
 </script>
 
 <!-- Load jQuery and jQuery UI asynchronously -->

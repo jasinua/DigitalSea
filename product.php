@@ -62,6 +62,8 @@
                     </div>
 
                     <input type="hidden" value='<?php echo $productID ?>' name='prodID'>
+                    <input type="hidden" value='<?php echo $data['price'] ?>' name='price' id='price'>
+                    <input type="hidden" value='<?php echo $data['discount'] ?>' name='discount' id='discount'>
                     <div class='price-section'>
                         <div class='price-row'>
                             <p class='price-label'>Price:</p>
@@ -70,11 +72,11 @@
                                 $discountedPrice = $originalPrice * (1 - $data['discount'] / 100);
                             ?>
                                 <div class='price-value'>
-                                    <span id="original-price"><?php echo number_format($originalPrice, 2) ?>€</span>
-                                    <span id="discounted-price"><?php echo number_format($discountedPrice, 2) ?>€</span>
+                                    <span id="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
+                                    <span id="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
                                 </div>
                             <?php } else { ?>
-                                <p class='price-value'><?php echo number_format($data['price'], 2) ?>€</p>
+                                <p class='price-value'><?php echo number_format($data['price'], 2, '.', ',') ?>€</p>
                             <?php } ?>
                         </div>
                         <input id='buy' type='submit' name='addToCart' value='Add to cart'>
@@ -148,9 +150,6 @@
             });
         });
 
-        const price = <?php echo $data['price'] ?>;
-        const discount = <?php echo $data['discount'] ?>;
-
         function addToQuantity(add) {
             var amount = parseInt(document.getElementById('stock').value);
             if (amount == 1 && add < 0) {
@@ -163,14 +162,25 @@
         }
 
         function updatePrice(amount) {
+            const price = parseFloat(document.getElementById('price').value); 
+            const discount = parseFloat(document.getElementById('discount').value);
+
             const totalPrice = (price * amount).toFixed(2);
-            <?php if ($data['discount'] > 0) { ?>
+            if(discount > 0){
                 const discountedPrice = (price * (1 - discount/100) * amount).toFixed(2);
-                document.getElementById('discounted-price').innerHTML = discountedPrice + "&euro;";
-                document.getElementById('original-price').innerHTML = totalPrice + "&euro;";
-            <?php } else { ?>
-                document.querySelector('.price-value').innerHTML = totalPrice + "&euro;";
-            <?php } ?>
+                document.getElementById('discounted-price').innerHTML = formatPrice(discountedPrice) + "€";
+                document.getElementById('original-price').innerHTML = formatPrice(totalPrice) + "€";
+            } else {
+                document.querySelector('.price-value').innerHTML = formatPrice(totalPrice) + "€";
+            }
+        }
+
+        function formatPrice(price) {
+            // Convert to number and format with thousand separators
+            return parseFloat(price).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
         }
     </script>
 </body>
