@@ -416,11 +416,11 @@
     .pay-with {
         width: 40%;
         margin: 10px auto;
-        background-color: #4a5568;
+        background-color: var(--button-color);
         /* padding: 20px; */
-        border-radius: 20px;
+        border-radius: 10px;
         display: flex;
-    
+        overflow: hidden;
     }
 
     .payment-something {
@@ -431,9 +431,6 @@
         color: #fff;
         cursor: pointer;
         transition: all 0.3s ease;
-        
-        
-        border-radius: 20px;
         /* background-color: #4a5568; */
     }
 
@@ -443,12 +440,10 @@
         padding: 10px;
         font-size: 1.5rem;
         color: #fff;
-        
-        border-radius: 20px;
-        background-color: var(--navy-color-lighter);
+        /* border-radius: 10px; */
+        background-color: var(--button-color-hover);
         cursor: pointer;
         transition: all 0.3s ease;
-        border-radius: 20px;
     }
 
 
@@ -969,6 +964,7 @@ function getCharge($chargeId) {
             submitButton.disabled = true;
             submitButton.textContent = 'Processing...';
 
+            console.log("1");
             try {
                 const {paymentMethod, error} = await stripe.createPaymentMethod({
                     type: 'card',
@@ -979,12 +975,20 @@ function getCharge($chargeId) {
                     }
                 });
 
+            
                 if (error) {
                     const errorElement = document.getElementById('card-errors');
                     errorElement.textContent = error.message;
                     submitButton.disabled = false;
                     submitButton.textContent = 'Pay Now <?php echo number_format($totalAmount, 2); ?>€';
+                    console.log("2");
                 } else {
+                    console.log(JSON.stringify({
+                            payment_method_id: paymentMethod.id,
+                            amount: <?php echo $totalAmount * 100; ?>, // Convert to cents
+                            email: document.getElementById('email').value,
+                            name: document.getElementById('cardholder-name').value
+                        }));
                     // Send payment method ID to your server
                     const response = await fetch('process.php', {
                         method: 'POST',

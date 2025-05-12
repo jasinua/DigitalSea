@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+header('Content-Type: application/json');
 // Start the session
 session_start();
 
@@ -73,18 +77,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Process payment intent data from POST request
             $jsonStr = file_get_contents('php://input');
             $jsonObj = json_decode($jsonStr);
-            
+
+            // Debug: log incoming data
+            file_put_contents('stripe_debug.log', $jsonStr . PHP_EOL, FILE_APPEND);
+
+            $amount = isset($jsonObj->amount) ? intval($jsonObj->amount) : $totalAmount;
+            $email = isset($jsonObj->email) ? $jsonObj->email : null;
+            $name = isset($jsonObj->name) ? $jsonObj->name : null;
+
             if($jsonObj->payment_method_id) {
                 // Create a PaymentIntent with the payment method
                 $paymentIntent = \Stripe\PaymentIntent::create([
-                    'amount' => $totalAmount,
+                    'amount' => $amount,
                     'currency' => STRIPE_CURRENCY,
                     'payment_method' => $jsonObj->payment_method_id,
                     'confirmation_method' => 'manual',
                     'confirm' => true,
                     'description' => 'Order from DigitalSea',
+                    'receipt_email' => $email,
                     'metadata' => [
-                        'user_id' => $userId
+                        'user_id' => $userId,
+                        'customer_name' => $name
                     ]
                 ]);
                 
@@ -148,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // For form submission, redirect to payment page with Stripe elements
-    header("Location: stripe-payment.php");
+    header("Location: payment.php");
     exit;
 }
 
