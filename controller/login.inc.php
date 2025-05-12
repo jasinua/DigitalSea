@@ -29,9 +29,13 @@
         
                 
                 if ($user && password_verify($password, $user['password'])) {
-                    
                     $_SESSION['user_id'] = $user['user_id'];
                     $_SESSION['isAdministrator'] = $user['isAdmin'];
+                    
+                    // Set cookies for 30 days
+                    setcookie('user_email', $email, time() + (86400 * 30), '/');
+                    setcookie('user_password', $user['password'], time() + (86400 * 30), '/');
+                    
                     return true;  // Successfully logged in
                 } else {
                     return false; // Incorrect credentials

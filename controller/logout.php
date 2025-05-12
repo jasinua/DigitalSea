@@ -8,6 +8,10 @@
     // Destroy the session
     session_destroy();
 
+    // Clear authentication cookies
+    setcookie('user_email', '', time() - 3600, '/');
+    setcookie('user_password', '', time() - 3600, '/');
+
     // Redirect to the login page
     header("Location: ../login.php");
     exit();

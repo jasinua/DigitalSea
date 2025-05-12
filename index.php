@@ -448,9 +448,9 @@
                         <h3>Price Range</h3>
                         <div class="filter-content">
                             <div class="price-range">
-                                <input type="number" name="min_price" placeholder="Min €" min="0">
+                                <input type="number" name="min_price" placeholder="Min €" min="0" step="0.01">
                                 <span>-</span>
-                                <input type="number" name="max_price" placeholder="Max €" min="0">
+                                <input type="number" name="max_price" placeholder="Max €" min="0" step="0.01">
                             </div>
                         </div>
                     </div>

@@ -2,6 +2,28 @@
     include_once "controller/login.inc.php"; 
     include_once "controller/function.php";
 
+    // Check for authentication cookies
+    if (!isset($_SESSION['user_id']) && isset($_COOKIE['user_email']) && isset($_COOKIE['user_password'])) {
+        $email = $_COOKIE['user_email'];
+        $hashed_password = $_COOKIE['user_password'];
+        
+        // Verify the stored credentials
+        $stmt = $conn->prepare("CALL checkUserExist(?)");
+        $stmt->bind_param("s", $email);
+        
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            $user = $result->fetch_assoc();
+            
+            if ($user && $user['password'] === $hashed_password) {
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['isAdministrator'] = $user['isAdmin'];
+                header("Location: index.php");
+                exit();
+            }
+        }
+    }
+
     // include "header.php";
 
     $error = '';

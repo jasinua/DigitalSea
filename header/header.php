@@ -830,104 +830,104 @@
                 </div>
             </div>
             
-            <div class="search-container">
-                <form action="index.php" method="get" class="search-form">
-                    <input type="text" name="search" placeholder="Search..." class="search-input" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-                    <button type="button" class="clear-search" title="Clear search">×</button>
-                </form>
-            </div>
+        <div class="search-container">
+            <form action="index.php" method="get" class="search-form">
+                <input type="text" name="search" placeholder="Search..." class="search-input" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                <button type="button" class="clear-search" title="Clear search">×</button>
+            </form>
+        </div>
             
             <div class="right-section">
                 <button class="search-icon" title="Search">
                     <i class="fas fa-search"></i>
                 </button>
                 
-                <nav>
-                    <ul>
-                        <li><a href="index.php"><i class="fas fa-home"></i></a></li>
-                        <?php if(isset($_SESSION['user_id'])) { ?>
-                        <li><a href="wishlist.php"><i class="fas fa-heart"></i></a></li>
-                        <li class="cart-link">
-                            <a href="cart.php"><i class="fas fa-shopping-cart"></i></a>
-                            <div class="cart-preview" <?php echo basename($_SERVER['PHP_SELF']) === 'cart.php' ? 'style="display: none;"' : ''; ?>>
-                                <?php
-                                if (isset($_SESSION['user_id'])) {
-                                    $cart_items = returnCart($_SESSION['user_id']);
-                                    $product_quantities = [];
-                                    $count = 0;
+        <nav>
+            <ul>
+                <li><a href="index.php"><i class="fas fa-home"></i></a></li>
+                <?php if(isset($_SESSION['user_id'])) { ?>
+                <li><a href="wishlist.php"><i class="fas fa-heart"></i></a></li>
+                <li class="cart-link">
+                    <a href="cart.php"><i class="fas fa-shopping-cart"></i></a>
+                    <div class="cart-preview" <?php echo basename($_SERVER['PHP_SELF']) === 'cart.php' ? 'style="display: none;"' : ''; ?>>
+                        <?php
+                        if (isset($_SESSION['user_id'])) {
+                            $cart_items = returnCart($_SESSION['user_id']);
+                            $product_quantities = [];
+                            $count = 0;
 
-                                    // Merge duplicate products by summing quantities
-                                    while ($item = $cart_items->fetch_assoc()) {
-                                        $pid = $item['product_id'];
-                                        if (!isset($product_quantities[$pid])) {
-                                            $product_quantities[$pid] = 0;
-                                        }
-                                        $product_quantities[$pid] += $item['quantity'];
-                                    }
+                            // Merge duplicate products by summing quantities
+                            while ($item = $cart_items->fetch_assoc()) {
+                                $pid = $item['product_id'];
+                                if (!isset($product_quantities[$pid])) {
+                                    $product_quantities[$pid] = 0;
+                                }
+                                $product_quantities[$pid] += $item['quantity'];
+                            }
 
-                                    // Display merged products, limited to 3 initially
-                                    foreach ($product_quantities as $pid => $qty) {
-                                        if ($count >= 3) break;
-                                        $product_result = returnProduct($pid);
-                                        if ($product_result && $product = $product_result->fetch_assoc()) {
-                                            ?>
-                                            <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
-                                                <div class="cart-preview-item">
-                                                    <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                                                    <div class="cart-preview-item-info">
-                                                        <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
-                                                        <div class="cart-preview-item-price">
-                                                            <?php echo number_format($product['price'], 2); ?>€
-                                                            <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
-                                                        </div>
+                            // Display merged products, limited to 3 initially
+                            foreach ($product_quantities as $pid => $qty) {
+                                if ($count >= 3) break;
+                                $product_result = returnProduct($pid);
+                                if ($product_result && $product = $product_result->fetch_assoc()) {
+                                    ?>
+                                    <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
+                                        <div class="cart-preview-item">
+                                            <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                            <div class="cart-preview-item-info">
+                                                <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
+                                                <div class="cart-preview-item-price">
+                                                    <?php echo number_format($product['price'], 2); ?>€
+                                                    <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <?php
+                                    $count++;
+                                }
+                            }
+
+                            // Display remaining products if more than 3
+                            if ($count >= 3) {
+                                foreach (array_slice(array_keys($product_quantities), 3) as $pid) {
+                                    $qty = $product_quantities[$pid];
+                                    $product_result = returnProduct($pid);
+                                    if ($product_result && $product = $product_result->fetch_assoc()) {
+                                        ?>
+                                        <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
+                                            <div class="cart-preview-item">
+                                                <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                                <div class="cart-preview-item-info">
+                                                    <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
+                                                    <div class="cart-preview-item-price">
+                                                        <?php echo number_format($product['price'], 2); ?>€
+                                                        <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
                                                     </div>
                                                 </div>
-                                            </a>
-                                            <?php
-                                            $count++;
-                                        }
-                                    }
-
-                                    // Display remaining products if more than 3
-                                    if ($count >= 3) {
-                                        foreach (array_slice(array_keys($product_quantities), 3) as $pid) {
-                                            $qty = $product_quantities[$pid];
-                                            $product_result = returnProduct($pid);
-                                            if ($product_result && $product = $product_result->fetch_assoc()) {
-                                                ?>
-                                                <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
-                                                    <div class="cart-preview-item">
-                                                        <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                                                        <div class="cart-preview-item-info">
-                                                            <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
-                                                            <div class="cart-preview-item-price">
-                                                                <?php echo number_format($product['price'], 2); ?>€
-                                                                <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                                <?php
-                                            }
-                                        }
-                                    }
-
-                                    if (empty($product_quantities)) {
-                                        echo '<div class="cart-preview-item">Your cart is empty</div>';
+                                            </div>
+                                        </a>
+                                        <?php
                                     }
                                 }
-                                ?>
-                            </div>
-                        </li>
-                        <li><a href="profile.php"><i class="fas fa-user"></i></a></li>
-                        <li><a href="controller/logout.php?from=header"><i class="fas fa-sign-out-alt"></i></a></li>
+                            }
+
+                            if (empty($product_quantities)) {
+                                echo '<div class="cart-preview-item">Your cart is empty</div>';
+                            }
+                        }
+                        ?>
+                    </div>
+                </li>
+                <li><a href="profile.php"><i class="fas fa-user"></i></a></li>
+                <li><a href="controller/logout.php?from=header"><i class="fas fa-sign-out-alt"></i></a></li>
                         <?php if(isAdmin($_SESSION['user_id'])) { echo "<li><a href='managestock.php'><i class='fas fa-wrench'></i></a></li>"; } ?>
                         <?php } else { ?>
-                        <li><a href="login.php"><i class="fas fa-sign-in-alt"></i></a></li>
-                        <li><a href="signup.php"><i class="fas fa-user-plus"></i></a></li>
-                        <?php } ?>
-                    </ul>
-                </nav>
+                <li><a href="login.php"><i class="fas fa-sign-in-alt"></i></a></li>
+                <li><a href="signup.php"><i class="fas fa-user-plus"></i></a></li>
+                <?php } ?>
+            </ul>
+        </nav>
                 
                 <button class="mobile-menu-toggle">
                     <i class="fas fa-bars"></i>
@@ -1064,6 +1064,6 @@
                 $('.mobile-search-container').removeClass('active');
             }
         });
-    });
+    });  
 </script>
 </html>

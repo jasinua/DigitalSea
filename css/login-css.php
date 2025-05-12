@@ -25,7 +25,8 @@
         width: 100%;
         max-width: 550px;
         margin: 0 auto;
-        height: 400px;
+        min-height: 400px;
+        height:auto;
     }
 
     .login-container h1 {
