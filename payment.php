@@ -7,6 +7,8 @@
     if (!isset($_SESSION['user_id'])) {
         var_dump($_SESSION); // Debug: This will output all session variables
         die("Session user_id is not set. Please log in.");
+        header("Location: login.php");
+        exit();
     }
 ?>
 
