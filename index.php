@@ -468,49 +468,51 @@
 
             <div id='items'>
                 <button class="filter-toggle-top"><i class="fas fa-filter"></i></button>
-                <?php if(!isset($_GET['subfilter']) && !isset($_GET['min_price']) && !isset($_GET['max_price']) && !isset($_GET['discounted_only']) && !isset($_GET['search']) && $current_page === 1) { ?>   
-                    <h1 id='topItemsHeader'>Top Products</h1>
-                    <div class="carousel-container">
-                        <button class="carousel-arrow" id="wheelPrev">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                    <div class='wheel-carousel'>
-                        <div class='wheel-track' id='topItems'>
-                                <?php foreach (getData("SELECT * FROM products WHERE products.price>900 LIMIT 8") as $prod) { ?>
-                                <div class='wheel-item'>
-                                    <a href="product.php?product=<?php echo $prod['product_id'] ?>" class="product-link">
-                                    <?php if ($prod['discount'] > 0) { ?>
-                                        <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
-                                    <?php } ?>
-                                        <img src="images/product_<?php echo $prod['product_id'] ?>.png" 
-                                             alt="<?php echo htmlspecialchars($prod['description']); ?>"
-                                             width="225"
-                                             height="180">
-                                        <div class='title'><?php echo htmlspecialchars($prod['description']); ?></div>
-                                    <div class='bottom-container'>
-                                        <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
-                                            <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
-                                        </button>
-                                        <div class='price'>
-                                            <?php if ($prod['discount'] > 0) { 
-                                                $originalPrice = $prod['price'];
-                                                $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
-                                            ?>
-                                                <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
-                                                <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
-                                            <?php } else { ?>
-                                                <span class="discounted-price"><?php echo number_format($prod['price'], 2, '.', ',') ?>€</span>
-                                            <?php } ?>
+                <?php if(!isset($_GET['subfilter']) && !isset($_GET['min_price']) && !isset($_GET['max_price']) && !isset($_GET['discounted_only']) && !isset($_GET['search']) && $current_page === 1) { ?>
+                    <div class="background-gradient">
+                        <h1 id='topItemsHeader'>Top Products</h1>
+                        <div class="carousel-container">
+                            <button class="carousel-arrow" id="wheelPrev">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        <div class='wheel-carousel'>
+                            <div class='wheel-track' id='topItems'>
+                                    <?php foreach (getData("SELECT * FROM products WHERE products.price>900 LIMIT 8") as $prod) { ?>
+                                    <div class='wheel-item'>
+                                        <a href="product.php?product=<?php echo $prod['product_id'] ?>" class="product-link">
+                                        <?php if ($prod['discount'] > 0) { ?>
+                                            <div class="discount-badge">-<?php echo $prod['discount'] ?>%</div>
+                                        <?php } ?>
+                                            <img src="images/product_<?php echo $prod['product_id'] ?>.png" 
+                                                alt="<?php echo htmlspecialchars($prod['description']); ?>"
+                                                width="225"
+                                                height="180">
+                                            <div class='title'><?php echo htmlspecialchars($prod['description']); ?></div>
+                                        <div class='bottom-container'>
+                                            <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                                <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
+                                            </button>
+                                            <div class='price'>
+                                                <?php if ($prod['discount'] > 0) { 
+                                                    $originalPrice = $prod['price'];
+                                                    $discountedPrice = $originalPrice * (1 - $prod['discount'] / 100);
+                                                ?>
+                                                    <span class="original-price"><?php echo number_format($originalPrice, 2, '.', ',') ?>€</span>
+                                                    <span class="discounted-price"><?php echo number_format($discountedPrice, 2, '.', ',') ?>€</span>
+                                                <?php } else { ?>
+                                                    <span class="discounted-price"><?php echo number_format($prod['price'], 2, '.', ',') ?>€</span>
+                                                <?php } ?>
+                                            </div>
                                         </div>
+                                        </a>
                                     </div>
-                                    </a>
-                                </div>
-                            <?php } ?>
+                                <?php } ?>
+                            </div>
+                            </div>
+                            <button class="carousel-arrow" id="wheelNext">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
                         </div>
-                        </div>
-                        <button class="carousel-arrow" id="wheelNext">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
                     </div>
 
                     <h1 id='newItemsHeader'>New Products</h1>

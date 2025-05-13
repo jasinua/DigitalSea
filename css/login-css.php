@@ -19,7 +19,7 @@
     }
 
     #img{
-        background-image: linear-gradient(to bottom right, var(--navy-color),var(--noir-color));
+        background-image:  radial-gradient(ellipse at top, rgb(26, 78, 118), 70%,var(--noir-color));
         height:100vh;
         width:100%;
         display: flex;

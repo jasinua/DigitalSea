@@ -239,7 +239,9 @@
             const imgContent = document.querySelector('#img-content');
             
             loginContainer.style.transform = 'translateX(100%)';
-            signupContainer.style.transform = 'translateX(0)';
+            setTimeout(() => {
+                signupContainer.style.transform = 'translateX(0)';
+            }, 250);
             img.style.transform = 'translateX(50%)';
             imgContent.style.transform = 'translateX(-100%)';
         }
@@ -250,7 +252,9 @@
             const img = document.querySelector('#img');
             const imgContent = document.querySelector('#img-content');
             
-            loginContainer.style.transform = 'translateX(0)';
+            setTimeout(() => {
+                loginContainer.style.transform = 'translateX(0)';
+            }, 250);
             signupContainer.style.transform = 'translateX(-100%)';
             img.style.transform = 'translateX(-50%)';
             imgContent.style.transform = 'translateX(0)';

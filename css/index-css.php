@@ -11,12 +11,13 @@
         display: flex; 
         flex: 1; 
         min-height: calc(100vh - 120px); 
-        position: relative; 
+        position: relative;
     }
 
     #container #moreItemsText {
         text-align: center;
         margin: 40px 0 20px 0;
+        color: var(--noir-color);
     }
 
     .filter-toggle-top {
@@ -313,7 +314,6 @@
     #items {
         background-color: var(--ivory-color);
         flex: 1;
-        padding: 20px;
         overflow-y: auto;
         min-height: calc(100vh - 120px);
     }
@@ -537,10 +537,6 @@
         z-index: 1;
     }       
     
-    #container h1 {
-        color: var(--noir-color);
-    }
-    
     ::-webkit-scrollbar {
         height: 8px;
         width: 8px;
@@ -566,6 +562,16 @@
     }
     
     /* Wheel Carousel starts here*/
+    .background-gradient{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 600px;
+        background: linear-gradient(to bottom, var(--navy-color), var(--noir-color));
+    }
+
     .wheel-carousel {
         width: 100%;
         overflow: hidden;
@@ -574,9 +580,10 @@
         box-sizing: border-box;
         display: flex;
         justify-content: center;
-        background-color: var(--ivory-color);
+        /* background-color: var(--ivory-color); */
         max-width: 1200px; /* Limit the width to show 3 items */
     }
+    
     .wheel-track {
         width: 100%;
         height: 100%;
@@ -756,9 +763,10 @@
     }
     
     #topItemsHeader {
+        width: 100%;
         text-align: center;
         margin: 20px 0 0 0;
-        color: var(--noir-color);
+        color: var(--text-color);
         font-size: 2em;
         font-weight: bold;
     }
