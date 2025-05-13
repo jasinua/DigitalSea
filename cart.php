@@ -70,10 +70,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
             <table>
                 <thead>
                     <tr>
-                        <th>Produkti</th>
-                        <th>Çmimi</th>
-                        <th>Sasia</th>
-                        <th>Fshi</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Remove</th>
                     </tr>
 
                 </thead>
@@ -93,7 +93,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                 $subtotal += $total;
                             ?>
                             <tr>
-                                    <td style="width: 304px;">
+                                    <td style="width: 60%;">
                                     <div class="product-info">
                                         <input type="hidden" name="prod_id[]" value="<?php echo $product['product_id']; ?>">
                                         <img src="<?php echo $product['image_url']; ?>" alt="Product Image">
@@ -103,7 +103,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                         </div>
                                     </div>
                                 </td>
-                                    <td>
+                                    <td style="width: 20%;">
                                         <div class="price-info">
                                             <?php if($discount) { ?>
                                                 <span class="discounted-price"><?php echo number_format($pricedsc, 2); ?>€</span>
@@ -113,7 +113,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                             <?php } ?>
                                         </div>
                                     </td>
-                                <td>
+                                <td style="width: 10%;">
                                     <div class="quantity-controls">
                                         <input 
                                             type="number" 
@@ -128,7 +128,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                 </td>
                                 <input type="hidden" name="price[]" value="<?php echo $total; ?>">
                                 
-                                <td>
+                                <td style="width: 10%;">
                                     <button class="remove-btn" type="button" data-product-id="<?php echo $product['product_id']; ?>">&times;</button>
                                 </td>
                             </tr>
@@ -137,12 +137,12 @@ if (isLoggedIn($_SESSION['user_id'])) {
                     </table>
                 </div>
             </div>
-                <button type="button" class="save-btn" id="saveChanges">Ruaj Ndryshimet</button>
+                <button type="button" class="save-btn" id="saveChanges">Save Changes</button>
             </div><!-- Save Changes Button -->
 
             <!-- Right: Summary Box -->
             <div class="cart-right">
-                <h3>Totali i porosisë:</h3>
+                <h3>Order Total:</h3>
                 
                 <div class="summary-box">
                     <div>
@@ -182,9 +182,9 @@ if (isLoggedIn($_SESSION['user_id'])) {
                             <?php } ?>
                         </div>
                         
-                        <div class="summary-item"><span>Nëntotali:</span> <span><?php echo number_format($subtotal, 2); ?>€</span></div>
-                        <div class="summary-item"><span>TVSH 18%:</span> <span><?php echo number_format($subtotal * 0.18, 2); ?>€</span></div>
-                        <div class="summary-item"><span>Zbritje:</span> <span style="color: red">- <?php echo number_format($alldiscount, 2);?>€</span></div>
+                        <div class="summary-item"><span>Subtotal:</span> <span><?php echo number_format($subtotal, 2); ?>€</span></div>
+                        <div class="summary-item"><span>VAT 18%:</span> <span><?php echo number_format($subtotal * 0.18, 2); ?>€</span></div>
+                        <div class="summary-item"><span>Discount:</span> <span style="color: red">- <?php echo number_format($alldiscount, 2);?>€</span></div>
                         <input class="input-for-discount" type="hidden" name="discount" value="<?php echo $alldiscount; ?>">
                     </div>
                     <div>
@@ -193,7 +193,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                             <span><?php echo number_format($subtotal + $subtotal * 0.18 - $alldiscount, 2); ?>€</span>
                         </div>
                         <!-- Checkout Button -->
-                        <button class="checkout-btn" type="submit" name="continue">Vazhdo ne checkout</button>
+                        <button class="checkout-btn" type="submit" name="continue">Proceed to Checkout</button>
                     </div>
                 </div>
             </div>
@@ -209,6 +209,57 @@ if (isLoggedIn($_SESSION['user_id'])) {
         const saveBtn = document.getElementById('saveChanges');
         const saveMessage = document.querySelector('.save-message');
         let saveTimeout;
+        let hasUnsavedChanges = false;
+        let originalValues = new Map();
+        const checkoutBtn = document.querySelector('.checkout-btn');
+
+        // Store original values when page loads
+        document.querySelectorAll('.quantity-controls input').forEach(input => {
+            originalValues.set(input.dataset.productId, input.value);
+        });
+
+        // Monitor changes in quantity inputs
+        document.querySelectorAll('.quantity-controls input').forEach(input => {
+            input.addEventListener('change', () => {
+                const productId = input.dataset.productId;
+                const originalValue = originalValues.get(productId);
+                const currentValue = input.value;
+                
+                // Only mark as unsaved if the value is different from original
+                hasUnsavedChanges = Array.from(originalValues.entries()).some(([pid, origVal]) => {
+                    const currentInput = document.querySelector(`input[data-product-id="${pid}"]`);
+                    return currentInput && currentInput.value !== origVal;
+                });
+                
+                updateCheckoutButton();
+            });
+        });
+
+        // Monitor changes in remove buttons
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                hasUnsavedChanges = true;
+                updateCheckoutButton();
+            });
+        });
+
+        // Update checkout button state
+        function updateCheckoutButton() {
+            checkoutBtn.disabled = hasUnsavedChanges;
+        }
+
+        // Reset unsaved changes after saving
+        saveBtn.addEventListener('click', () => {
+            // Update original values after saving
+            document.querySelectorAll('.quantity-controls input').forEach(input => {
+                originalValues.set(input.dataset.productId, input.value);
+            });
+            hasUnsavedChanges = false;
+            updateCheckoutButton();
+        });
+
+        // Initial state
+        updateCheckoutButton();
 
         // Handle remove buttons
         const removeButtons = document.querySelectorAll('.remove-btn');
@@ -255,10 +306,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                 const remainingItems = document.querySelectorAll('tbody tr');
                                 if (remainingItems.length === 0) {
                                     const cartTable = document.querySelector('.itemsTable');
-                                    cartTable.innerHTML = '<div class="empty-cart">Karta juaj është bosh. <a href="index.php">Vazhdo blerjet</a></div>';
+                                    cartTable.innerHTML = '<div class="empty-cart">Your cart is empty. <a href="index.php">Continue shopping</a></div>';
                                     
                                     const summaryBox = document.querySelector('#prodNameXprice');
-                                    summaryBox.innerHTML = '<div class="empty-cart-summary">Nuk ka produkte në kartë.</div>';
+                                    summaryBox.innerHTML = '<div class="empty-cart-summary">There are no products in the cart.</div>';
                                     
                                     // Update totals
                                     updateCartTotals(0, 0);
@@ -268,13 +319,13 @@ if (isLoggedIn($_SESSION['user_id'])) {
                             // Show error
                             button.innerHTML = '&times;';
                             button.disabled = false;
-                            alert('Gabim gjatë fshirjes së produktit. Ju lutem provoni përsëri.');
+                            alert('Error deleting product. Please try again.');
                         }
                     },
                     error: function() {
                         button.innerHTML = '&times;';
                         button.disabled = false;
-                        alert('Gabim gjatë komunikimit me serverin. Ju lutem provoni përsëri.');
+                        alert('Error deleting product. Please try again.');
                     }
                 });
             });
@@ -299,7 +350,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
         
         // Handle save changes button
         saveBtn.addEventListener('click', () => {
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Duke Ruajtur...';
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             saveBtn.disabled = true;
             
             // Submit the form via AJAX
@@ -310,7 +361,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                 body: formData
             })
             .then(response => {
-                saveBtn.innerHTML = 'Ruaj Ndryshimet';
+                saveBtn.innerHTML = 'Save Changes';
                 saveBtn.disabled = false;
                 saveBtn.style.backgroundColor = 'var(--button-color)';
                 
@@ -327,9 +378,9 @@ if (isLoggedIn($_SESSION['user_id'])) {
                 updateCartSummary();
             })
             .catch(error => {
-                saveBtn.innerHTML = 'Ruaj Ndryshimet';
+                saveBtn.innerHTML = 'Save Changes';
                 saveBtn.disabled = false;
-                alert('Gabim gjatë ruajtjes së ndryshimeve. Ju lutem provoni përsëri.');
+                alert('Error saving changes. Please try again.');
             });
         });
         
@@ -348,6 +399,8 @@ if (isLoggedIn($_SESSION['user_id'])) {
                 const newText = priceText.replace(/^\d+/, quantity).replace(/\d+\.\d+€$/, total + '€');
                 summaryItem.textContent = newText;
             }
+
+            updateCartSummary();
         }
         
         // Function to update the cart summary totals

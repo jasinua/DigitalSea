@@ -78,7 +78,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                     <form method="post" action="" class="add-to-cart-form">
                         <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                         <input type="hidden" name="price" value="<?php echo ($discount > 0) ? $discounted_price : $product['price']; ?>">
-                        <button type="button" class="add-to-cart-btn" data-product-id="<?php echo $product['product_id']; ?>" data-price="<?php echo ($discount > 0) ? $discounted_price : $product['price']; ?>" <?php echo ($product['stock'] <= 0) ? 'disabled' : ''; ?>>
+                        <button type="button" class="add-to-cart-btn<?php echo ($product['stock'] <= 0) ? ' out-of-stock-btn' : ''; ?>" data-product-id="<?php echo $product['product_id']; ?>" data-price="<?php echo ($discount > 0) ? $discounted_price : $product['price']; ?>">
                             Add to Cart
                         </button>
                     </form>
@@ -187,9 +187,15 @@ document.addEventListener('DOMContentLoaded', function() {
         $('.add-to-cart-btn').click(function(e) {
             e.preventDefault();
             
-            var productId = $(this).data('product-id');
-            var price = $(this).data('price');
             var button = $(this);
+            
+            if (button.hasClass('out-of-stock-btn')) {
+                showRemoveNotification('This product is out of stock');
+                return;
+            }
+            
+            var productId = button.data('product-id');
+            var price = button.data('price');
             
             // Change button text/style to indicate loading
             button.prop('disabled', true);
@@ -206,47 +212,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        // Update cart count in header
-                        if (response.cartCount) {
-                            $('.cart-count').text(response.cartCount);
+                        // Update cart count badge in header
+                        let badge = document.querySelector('.cart-count-badge');
+                        const cartIcon = document.querySelector('a[href="cart.php"] i.fas.fa-shopping-cart');
+
+                        // Get current count from badge if it exists
+                        let currentCount = 0;
+                        if (badge && badge.textContent) {
+                            currentCount = parseInt(badge.textContent.replace('+', '')) || 0;
                         }
+
+                        // Increment the current count since we're adding an item
+                        let newCount = currentCount + 1;
+
+                        if (!badge) {
+                            badge = document.createElement('span');
+                            badge.className = 'cart-count-badge';
+                            cartIcon.parentNode.style.position = 'relative';
+                            cartIcon.parentNode.appendChild(badge);
+                        }
+
+                        // Show red dot for 3 seconds
+                        badge.textContent = "";
+                        badge.style.backgroundColor = 'red';
+                        badge.style.width = '15px';
+                        badge.style.height = '15px';
+
+                        setTimeout(function() {
+                            badge.textContent = newCount > 9 ? "9+" : newCount;
+                            badge.style.backgroundColor = 'var(--noir-color)';
+                            badge.style.width = '15px';
+                            badge.style.height = '15px';
+                        }, 3000);
                         
                         // Show success message
                         button.html('<i class="fas fa-check"></i> Added to Cart');
-                        setTimeout(function() {
-                            button.html('Add to Cart');
-                            button.prop('disabled', false);
-                        }, 2000);
                         
                         // Update cart preview
                         updateCartPreview();
-                        
-                        // Add notification dot to cart icon
-                        const cartLink = document.querySelector('a[href="cart.php"]');
-                        if (cartLink && !cartLink.querySelector('.cart-notification')) {
-                            const notification = document.createElement('span');
-                            notification.className = 'cart-notification';
-                            cartLink.classList.add('cart-link');
-                            cartLink.appendChild(notification);
-                            
-                            // Remove notification after a few seconds
-                            setTimeout(() => {
-                                notification.style.opacity = '0';
-                                notification.style.transform = 'scale(0.5)';
-                                setTimeout(() => {
-                                    notification.remove();
-                                }, 300);
-                            }, 3000);
-                        }
                     } else {
-                        // Show error message
                         button.html('<i class="fas fa-times"></i> Failed');
+                        showRemoveNotification('Failed to add item to cart');
                         console.error(response.message);
-                        setTimeout(function() {
-                            button.html('Add to Cart');
-                            button.prop('disabled', false);
-                        }, 2000);
                     }
+                    
+                    setTimeout(function() {
+                        button.html('Add to Cart');
+                        button.prop('disabled', false);
+                    }, 2000);
                 },
                 error: function(xhr, status, error) {
                     // Handle AJAX errors

@@ -818,6 +818,25 @@
         margin-left: 10px;
         cursor: pointer;
     }
+
+    .cart-count-badge {
+        position: absolute;
+        top: -7px;
+        right: -7px;
+        background: var(--noir-color);
+        color: white;
+        border-radius: 50%;
+        width: 17px;
+        height: 17px;
+        font-size: 11px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        padding: 0 6px;
+        border: 1px solid white;
+    }
 </style>
 <body>
     <header>
@@ -848,7 +867,22 @@
                 <?php if(isset($_SESSION['user_id'])) { ?>
                 <li><a href="wishlist.php"><i class="fas fa-heart"></i></a></li>
                 <li class="cart-link">
-                    <a href="cart.php"><i class="fas fa-shopping-cart"></i></a>
+                    <a href="cart.php" style="position: relative;">
+                        <i class="fas fa-shopping-cart"></i>
+                        <?php
+                        if (isset($_SESSION['user_id'])) {
+                            $cart_items = returnCart($_SESSION['user_id']);
+                            $cart_count = 0;
+                            while ($item = $cart_items->fetch_assoc()) {
+                                $cart_count += $item['quantity'];
+                            }
+                            if ($cart_count > 0 && basename($_SERVER['PHP_SELF']) !== 'cart.php') {
+                                $badge_text = ($cart_count > 9) ? '9+' : $cart_count;
+                                echo '<span class="cart-count-badge">' . $badge_text . '</span>';
+                            }
+                        }
+                        ?>
+                    </a>
                     <div class="cart-preview" <?php echo basename($_SERVER['PHP_SELF']) === 'cart.php' ? 'style="display: none;"' : ''; ?>>
                         <?php
                         if (isset($_SESSION['user_id'])) {
@@ -1064,6 +1098,30 @@
                 $('.mobile-search-container').removeClass('active');
             }
         });
-    });  
+
+    //     // Update cart count badge
+    //     let badge = document.querySelector('.cart-count-badge');
+    //     const cartIcon = document.querySelector('a[href="cart.php"] i.fas.fa-shopping-cart');
+    //     if (!badge) {
+    //         badge = document.createElement('span');
+    //         badge.className = 'cart-count-badge';
+    //         badge.style.width = '15px';
+    //         badge.style.height = '15px';
+    //         badge.style.display = 'flex';
+    //         badge.style.alignItems = 'center';
+    //         badge.style.justifyContent = 'center';
+    //         cartIcon.parentNode.style.position = 'relative';
+    //         cartIcon.parentNode.appendChild(badge);
+    //     }
+
+    //     // Now you can safely use badge
+    //     let current = parseInt(badge.textContent) || 0;
+    //     badge.textContent = current + 1;
+    //     badge.style.width = '15px';
+    //     badge.style.height = '15px';
+    //     badge.style.display = 'flex';
+    //     badge.style.alignItems = 'center';
+    //     badge.style.justifyContent = 'center';
+    // });  
 </script>
 </html>
