@@ -56,7 +56,7 @@
         font-size: 16px;
         font-weight: 500;
         cursor: pointer;
-        border: 1px solid var(--noir-color);
+        border: none;
         border-radius: 6px;
         padding: 10px 20px;
         margin-top: 20px;

@@ -4,10 +4,10 @@
         flex: 1; 
         display: flex; 
         flex-direction: column; 
+
     }
 
     #container { 
-        background-color: var(--ivory-color); 
         display: flex; 
         flex: 1; 
         min-height: calc(100vh - 120px); 
@@ -569,7 +569,7 @@
         align-items: center;
         width: 100%;
         height: 600px;
-        background: linear-gradient(to bottom, var(--navy-color), var(--noir-color));
+        background: linear-gradient(to bottom, var(--noir-color),70%, rgb(26, 78, 118));
     }
 
     .wheel-carousel {
@@ -606,7 +606,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        opacity: 0;
+        opacity: 0px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -716,6 +716,7 @@
     
     .wheel-item.hidden {
         opacity: 0;
+        display: none;
         pointer-events: none;
     }
     

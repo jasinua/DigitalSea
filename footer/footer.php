@@ -189,13 +189,15 @@
         
         .footer {
             padding: 15px 5px;
+            display:flex;
+            flex-direction: column;
         }
     }
 </style>
 <body>
-    <div class="footer" <?php if(strpos($_SERVER['REQUEST_URI'], 'login.php') !== false): ?>style="display: none;"<?php endif; ?>>< class="footer-wrapper">
+    <div class="footer" <?php if(strpos($_SERVER['REQUEST_URI'], 'login.php') !== false): ?>style="display: none;"<?php endif; ?>>
 
-    <div>
+        <div style="display:flex;">
             <div class="footer-column">
                 <h3>Products</h3>
                 <div class="footer-links">
