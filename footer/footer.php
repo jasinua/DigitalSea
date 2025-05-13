@@ -193,221 +193,224 @@
     }
 </style>
 <body>
-    <div class="footer">
-        <div class="footer-column">
-            <h3>Products</h3>
-            <div class="footer-links">
-                <?php
-                // Use the same categories structure as in index.php
-                $categories = [
-                    'Computers & Laptops' => [
-                        'keywords' => ['computer', 'laptop', 'desktop', 'notebook'],
-                        'subcategories' => [
-                            'Gaming Laptops' => ['gaming laptop', 'gaming notebook'],
-                            'Business Laptops' => ['business laptop', 'professional laptop'],
-                            'All-in-One PCs' => ['all in one', 'aio pc'],
-                            'Desktop Towers' => ['desktop tower', 'pc tower'],
-                            'Workstations' => ['workstation', 'professional desktop']
+    <div class="footer" <?php if(strpos($_SERVER['REQUEST_URI'], 'login.php') !== false): ?>style="display: none;"<?php endif; ?>>< class="footer-wrapper">
+
+    <div>
+            <div class="footer-column">
+                <h3>Products</h3>
+                <div class="footer-links">
+                    <?php
+                    // Use the same categories structure as in index.php
+                    $categories = [
+                        'Computers & Laptops' => [
+                            'keywords' => ['computer', 'laptop', 'desktop', 'notebook'],
+                            'subcategories' => [
+                                'Gaming Laptops' => ['gaming laptop', 'gaming notebook'],
+                                'Business Laptops' => ['business laptop', 'professional laptop'],
+                                'All-in-One PCs' => ['all in one', 'aio pc'],
+                                'Desktop Towers' => ['desktop tower', 'pc tower'],
+                                'Workstations' => ['workstation', 'professional desktop']
+                            ]
+                        ],
+                        'Smartphones & Tablets' => [
+                            'keywords' => ['phone', 'smartphone', 'tablet', 'mobile'],
+                            'subcategories' => [
+                                'Flagship Phones' => ['flagship', 'premium phone'],
+                                'Budget Phones' => ['budget phone', 'affordable phone'],
+                                'iPads & Tablets' => ['ipad', 'tablet'],
+                                'Foldable Phones' => ['foldable', 'fold phone'],
+                                'Gaming Phones' => ['gaming phone', 'game phone']
+                            ]
+                        ],
+                        'Audio & Headphones' => [
+                            'keywords' => ['headphone', 'earphone', 'speaker', 'audio'],
+                            'subcategories' => []
+                        ],
+                        'Gaming & Consoles' => [
+                            'keywords' => ['game', 'console', 'gaming', 'controller'],
+                            'subcategories' => []
+                        ],
+                        'Smart Home & IoT' => [
+                            'keywords' => ['smart home', 'iot', 'smart device', 'automation', 'tv', 'television'],
+                            'subcategories' => []
+                        ],
+                        'Wearables & Accessories' => [
+                            'keywords' => ['watch', 'wearable', 'smartwatch', 'fitness tracker'],
+                            'subcategories' => []
                         ]
-                    ],
-                    'Smartphones & Tablets' => [
-                        'keywords' => ['phone', 'smartphone', 'tablet', 'mobile'],
-                        'subcategories' => [
-                            'Flagship Phones' => ['flagship', 'premium phone'],
-                            'Budget Phones' => ['budget phone', 'affordable phone'],
-                            'iPads & Tablets' => ['ipad', 'tablet'],
-                            'Foldable Phones' => ['foldable', 'fold phone'],
-                            'Gaming Phones' => ['gaming phone', 'game phone']
-                        ]
-                    ],
-                    'Audio & Headphones' => [
-                        'keywords' => ['headphone', 'earphone', 'speaker', 'audio'],
-                        'subcategories' => []
-                    ],
-                    'Gaming & Consoles' => [
-                        'keywords' => ['game', 'console', 'gaming', 'controller'],
-                        'subcategories' => []
-                    ],
-                    'Smart Home & IoT' => [
-                        'keywords' => ['smart home', 'iot', 'smart device', 'automation', 'tv', 'television'],
-                        'subcategories' => []
-                    ],
-                    'Wearables & Accessories' => [
-                        'keywords' => ['watch', 'wearable', 'smartwatch', 'fitness tracker'],
-                        'subcategories' => []
-                    ]
-                ];
-                
-                // Footer product links to check against valid categories
-                $footer_products = [
-                    'Desktop' => ['desktop', 'computer', 'pc'],
-                    'Watches' => ['watch', 'watches', 'wearable', 'smart watch'],
-                    'Phones' => ['phone', 'phones', 'smartphone', 'smartphones', 'mobile'],
-                    'Laptop' => ['laptop', 'laptops', 'notebook', 'notebooks'],
-                    'TV' => ['tv', 'television', 'televisions', 'smart tv']
-                ];
-                
-                // Function to check if a product belongs to any category
-                function isValidProduct($product_keywords, $categories) {
-                    foreach ($product_keywords as $prod_keyword) {
-                        // Get singular form for comparison (simple removal of 's' at the end)
-                        $singular_keyword = rtrim($prod_keyword, 's');
-                        
-                        foreach ($categories as $category => $data) {
-                            // Check main category keywords
-                            foreach ($data['keywords'] as $cat_keyword) {
-                                // Get singular form of category keyword
-                                $singular_cat_keyword = rtrim($cat_keyword, 's');
-                                
-                                // Check for partial matches with both singular and plural forms
-                                if (stripos($cat_keyword, $singular_keyword) !== false || 
-                                    stripos($singular_cat_keyword, $singular_keyword) !== false ||
-                                    stripos($prod_keyword, $singular_cat_keyword) !== false) {
-                                    return true;
-                                }
-                            }
+                    ];
+                    
+                    // Footer product links to check against valid categories
+                    $footer_products = [
+                        'Desktop' => ['desktop', 'computer', 'pc'],
+                        'Watches' => ['watch', 'watches', 'wearable', 'smart watch'],
+                        'Phones' => ['phone', 'phones', 'smartphone', 'smartphones', 'mobile'],
+                        'Laptop' => ['laptop', 'laptops', 'notebook', 'notebooks'],
+                        'TV' => ['tv', 'television', 'televisions', 'smart tv']
+                    ];
+                    
+                    // Function to check if a product belongs to any category
+                    function isValidProduct($product_keywords, $categories) {
+                        foreach ($product_keywords as $prod_keyword) {
+                            // Get singular form for comparison (simple removal of 's' at the end)
+                            $singular_keyword = rtrim($prod_keyword, 's');
                             
-                            // Check subcategory keywords if they exist
-                            if (isset($data['subcategories'])) {
-                                foreach ($data['subcategories'] as $subcat => $subcat_keywords) {
-                                    foreach ($subcat_keywords as $subcat_keyword) {
-                                        // Get singular form of subcategory keyword
-                                        $singular_subcat_keyword = rtrim($subcat_keyword, 's');
-                                        
-                                        // Check for partial matches with both singular and plural forms
-                                        if (stripos($subcat_keyword, $singular_keyword) !== false || 
-                                            stripos($singular_subcat_keyword, $singular_keyword) !== false ||
-                                            stripos($prod_keyword, $singular_subcat_keyword) !== false) {
-                                            return true;
-                                        }
+                            foreach ($categories as $category => $data) {
+                                // Check main category keywords
+                                foreach ($data['keywords'] as $cat_keyword) {
+                                    // Get singular form of category keyword
+                                    $singular_cat_keyword = rtrim($cat_keyword, 's');
+                                    
+                                    // Check for partial matches with both singular and plural forms
+                                    if (stripos($cat_keyword, $singular_keyword) !== false || 
+                                        stripos($singular_cat_keyword, $singular_keyword) !== false ||
+                                        stripos($prod_keyword, $singular_cat_keyword) !== false) {
+                                        return true;
                                     }
                                 }
-                            }
-                        }
-                    }
-                    return false;
-                }
-                
-                // Always include these core products regardless of filter matching
-                $core_products = ['Desktop', 'Watches', 'Phones', 'Laptop', 'TV'];
-                
-                // Display product links - always show core products, filter others
-                foreach ($footer_products as $product => $keywords) {
-                    if (in_array($product, $core_products) || isValidProduct($keywords, $categories)) {
-                        // Find the matching category for linking purposes
-                        $category_param = '';
-                        $subcategory_param = '';
-                        
-                        foreach ($categories as $category => $data) {
-                            foreach ($keywords as $keyword) {
-                                if (in_array($keyword, $data['keywords'])) {
-                                    $category_param = $category;
-                                    break 2;
-                                }
                                 
-                                // Also check subcategories
+                                // Check subcategory keywords if they exist
                                 if (isset($data['subcategories'])) {
                                     foreach ($data['subcategories'] as $subcat => $subcat_keywords) {
                                         foreach ($subcat_keywords as $subcat_keyword) {
-                                            if (stripos($subcat_keyword, $keyword) !== false || 
-                                                stripos($keyword, $subcat_keyword) !== false) {
-                                                $category_param = $category;
-                                                $subcategory_param = $subcat;
-                                                break 3;
+                                            // Get singular form of subcategory keyword
+                                            $singular_subcat_keyword = rtrim($subcat_keyword, 's');
+                                            
+                                            // Check for partial matches with both singular and plural forms
+                                            if (stripos($subcat_keyword, $singular_keyword) !== false || 
+                                                stripos($singular_subcat_keyword, $singular_keyword) !== false ||
+                                                stripos($prod_keyword, $singular_subcat_keyword) !== false) {
+                                                return true;
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                        
-                        // Build link URL with appropriate filters
-                        $link_url = 'index.php';
-                        $params = [];
-                        
-                        if (!empty($subcategory_param)) {
-                            $params[] = 'subfilter[]=' . urlencode($subcategory_param);
-                        } else if (!empty($category_param)) {
-                            // If no specific subcategory, use the product name as search
-                            // Use singular form for searches
-                            $search_term = $product;
+                        return false;
+                    }
+                    
+                    // Always include these core products regardless of filter matching
+                    $core_products = ['Desktop', 'Watches', 'Phones', 'Laptop', 'TV'];
+                    
+                    // Display product links - always show core products, filter others
+                    foreach ($footer_products as $product => $keywords) {
+                        if (in_array($product, $core_products) || isValidProduct($keywords, $categories)) {
+                            // Find the matching category for linking purposes
+                            $category_param = '';
+                            $subcategory_param = '';
                             
-                            // Use specific search terms for certain products
-                            $custom_search_terms = [
-                                'Watches' => 'watch',
-                                'Phones' => 'phone',
-                                'Laptops' => 'laptop',
-                                'TVs' => 'tv'
-                            ];
-                            
-                            if (isset($custom_search_terms[$product])) {
-                                $search_term = $custom_search_terms[$product];
-                            } else {
-                                // Convert to singular if it ends with 's'
-                                if (substr($search_term, -1) === 's') {
-                                    $search_term = substr($search_term, 0, -1);
+                            foreach ($categories as $category => $data) {
+                                foreach ($keywords as $keyword) {
+                                    if (in_array($keyword, $data['keywords'])) {
+                                        $category_param = $category;
+                                        break 2;
+                                    }
+                                    
+                                    // Also check subcategories
+                                    if (isset($data['subcategories'])) {
+                                        foreach ($data['subcategories'] as $subcat => $subcat_keywords) {
+                                            foreach ($subcat_keywords as $subcat_keyword) {
+                                                if (stripos($subcat_keyword, $keyword) !== false || 
+                                                    stripos($keyword, $subcat_keyword) !== false) {
+                                                    $category_param = $category;
+                                                    $subcategory_param = $subcat;
+                                                    break 3;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             
-                            $params[] = 'search=' . urlencode($search_term);
+                            // Build link URL with appropriate filters
+                            $link_url = 'index.php';
+                            $params = [];
+                            
+                            if (!empty($subcategory_param)) {
+                                $params[] = 'subfilter[]=' . urlencode($subcategory_param);
+                            } else if (!empty($category_param)) {
+                                // If no specific subcategory, use the product name as search
+                                // Use singular form for searches
+                                $search_term = $product;
+                                
+                                // Use specific search terms for certain products
+                                $custom_search_terms = [
+                                    'Watches' => 'watch',
+                                    'Phones' => 'phone',
+                                    'Laptops' => 'laptop',
+                                    'TVs' => 'tv'
+                                ];
+                                
+                                if (isset($custom_search_terms[$product])) {
+                                    $search_term = $custom_search_terms[$product];
+                                } else {
+                                    // Convert to singular if it ends with 's'
+                                    if (substr($search_term, -1) === 's') {
+                                        $search_term = substr($search_term, 0, -1);
+                                    }
+                                }
+                                
+                                $params[] = 'search=' . urlencode($search_term);
+                            }
+                            
+                            if (!empty($params)) {
+                                $link_url .= '?' . implode('&', $params);
+                            }
+                            
+                            echo '<a href="' . $link_url . '">' . $product . '</a>';
                         }
-                        
-                        if (!empty($params)) {
-                            $link_url .= '?' . implode('&', $params);
-                        }
-                        
-                        echo '<a href="' . $link_url . '">' . $product . '</a>';
                     }
-                }
-                ?>
+                    ?>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <div class="footer-links">
+                    <a href="#">Contact Us</a>
+                    <a href="#">Blog</a>
+                    <a href="#">FAQ</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Work with DigitalSea</h3>
+                <div class="footer-links">
+                    <a href="#">Partners</a>
+                    <a href="#">Dealers</a>
+                    <a href="#">OEM</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>About</h3>
+                <div class="footer-links">
+                    <a href="#">DigitalSea, Inc.</a>
+                    <a href="#">Developers</a>
+                    <a href="#">Investors</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Press</a>
+                    <a href="#">Team</a>
+                </div>
             </div>
         </div>
-        <div class="footer-column">
-            <h3>Resources</h3>
-            <div class="footer-links">
-                <a href="#">Contact Us</a>
-                <a href="#">Blog</a>
-                <a href="#">FAQ</a>
-            </div>
-        </div>
-        <div class="footer-column">
-            <h3>Work with DigitalSea</h3>
-            <div class="footer-links">
-                <a href="#">Partners</a>
-                <a href="#">Dealers</a>
-                <a href="#">OEM</a>
-            </div>
-        </div>
-        <div class="footer-column">
-            <h3>About</h3>
-            <div class="footer-links">
-                <a href="#">DigitalSea, Inc.</a>
-                <a href="#">Developers</a>
-                <a href="#">Investors</a>
-                <a href="#">Careers</a>
-                <a href="#">Press</a>
-                <a href="#">Team</a>
-            </div>
+    
+        <div class="social-icons">
+            <a href="#">
+                <i id="facebook" class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#">
+                <i id="twitter" class="fab fa-twitter"></i>
+            </a>
+            <a href="#">
+                <i id="instagram" class="fab fa-instagram"></i>
+            </a>
+            <a href="#">
+                <i id='linkedin' class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#">
+                <i id='youtube' class="fab fa-youtube"></i>
+            </a>
         </div>
     </div>
-    <div class="social-icons">
-        <a href="#">
-            <i id="facebook" class="fab fa-facebook-f"></i>
-        </a>
-        <a href="#">
-            <i id="twitter" class="fab fa-twitter"></i>
-        </a>
-        <a href="#">
-            <i id="instagram" class="fab fa-instagram"></i>
-        </a>
-        <a href="#">
-            <i id='linkedin' class="fab fa-linkedin-in"></i>
-        </a>
-        <a href="#">
-            <i id='youtube' class="fab fa-youtube"></i>
-        </a>
-    </div>
-
     <script>
     // Add accordion functionality for mobile footer
     document.addEventListener('DOMContentLoaded', function() {

@@ -8,7 +8,7 @@
 
     //shikon nese inputet kane karaktere jo te sakta
     function invalidInputs($first_name, $last_name) {
-        return preg_match("/^[a-zA-Z]*$/", $first_name) || preg_match("/^[a-zA-Z]*$/", $last_name);
+        return preg_match("/^[a-zA-Z]*$/", $first_name) && preg_match("/^[a-zA-Z]*$/", $last_name);
     }
 
     //shikon nese email eshte format valid
@@ -37,7 +37,7 @@
         $dob = new DateTime($date);
         $today = new DateTime();
         $age = $today->diff($dob)->y;
-        return $age >= 16;
+        return $age >= 18;
     }
 
     function emailExists($email) {
@@ -47,7 +47,7 @@
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->num_rows === 0; 
+        return $result->num_rows === 1; 
     }
 
     function createUser($first_name, $last_name, $birthday, $email, $password) {

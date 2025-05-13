@@ -74,9 +74,10 @@
     }
 
     header {
+        display: flex;
+        background-color: var(--navy-color);
         background-color: var(--noir-color);
         color: white;
-        display: flex;
         justify-content: space-between;
         align-items: center;
         width: 100%;
@@ -835,7 +836,7 @@
 </style>
 <body>
     <header>
-        <div class="header-wrapper">
+        <div class="header-wrapper" <?php if(strpos($_SERVER['REQUEST_URI'], 'login.php') !== false): ?>style="display: none;"<?php endif; ?>>
             <div class="left-section">
                 <div class="logo-container" style="margin-right: 15px;">
                     <!-- <a href="index.php"> -->

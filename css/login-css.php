@@ -7,24 +7,67 @@
     }
 
     #container {
-        background-color: var(--ivory-color);
+        /* background-color: var(--ivory-color); */
+        background-color: white;
         display: flex;
-        flex: 1;
         min-height: calc(100vh - 120px);
-        position: relative;
+        max-width: 100%;
         justify-content: center;
         align-items: center;
-        padding: 40px 20px;
+        margin:0px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    #img{
+        background-image: linear-gradient(to bottom right, var(--navy-color),var(--noir-color));
+        height:100vh;
+        width:100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #loginContainer{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 50%;
+    }
+
+    .welcome-text{
+        font-size: 64px;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 10px;
+        
+    }
+
+    .welcome-text.p{
+        font-size: 30px;
+        font-weight: 400;
+        color: white;
+        margin-bottom: 20px;
+    }
+
+    .shop-now-button{
+        background-color: white;
+        color: var(--noir-color);
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid var(--noir-color);
+        border-radius: 6px;
+        padding: 10px 20px;
+        margin-top: 20px;
+        transition: all 0.3s ease;
     }
 
     .login-container {
         background-color: white;
         padding: 40px;
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        width: 100%;
+        width: 50%;
         max-width: 550px;
-        margin: 0 auto;
         min-height: 400px;
         height:auto;
     }
@@ -62,12 +105,14 @@
         border: none;
         padding: 14px;
         margin-top: 20px;
+        transform: translateY(0px);
         transition: all 0.3s ease;
     }
 
     .login-container input[type="submit"]:hover {
         background-color: var(--button-color);
         transform: translateY(-2px);
+        transition: all 0.3s ease;
     }
 
     .login-container .error {
@@ -131,5 +176,9 @@
 
     .password-toggle:hover {
         color: var(--noir-color);
+    }
+    
+    .far {
+        padding-top: 25px;
     }
 </style>
