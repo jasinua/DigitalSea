@@ -427,7 +427,7 @@
 
     .remove-notification {
         position: fixed;
-        top: 30px;
+        top: 50px;
         right: 30px;
         background: #f8d7da;
         color: #721c24;
@@ -441,6 +441,7 @@
         opacity: 0;
         transition: opacity 0.3s;
     }
+
     .remove-notification.show {
         display: block;
         opacity: 1;

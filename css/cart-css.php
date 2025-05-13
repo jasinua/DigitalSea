@@ -88,7 +88,7 @@
     }
 
     th:nth-child(1) { width: 57%; font-weight: bold; }
-    th:nth-child(2) { width: 23%; font-weight: bold; justify-content: right; padding-right: 33px;}
+    th:nth-child(2) { width: 23%; font-weight: bold; justify-content: right; padding-right: 43px;}
     th:nth-child(3) { width: 5%; min-width: 80px; font-weight: bold; padding-left: 20px;}
     th:nth-child(4) { width: 15%; font-weight: bold; }
 
@@ -205,7 +205,7 @@
         align-items: center;
         justify-content: center;
         width: auto;
-        margin-right: 50px;
+        margin: auto;
     }
 
     .remove-btn:hover {
@@ -291,14 +291,14 @@
     .checkout-btn:disabled::after {
         content: "⚠️ Unsaved Changes";
         position: absolute;
-        top: -30px;
+        top: -35px;
         left: 50%;
         transform: translateX(-50%);
         background-color: #ff4444;
         color: white;
         padding: 5px 10px;
         border-radius: 4px;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         white-space: nowrap;
         animation: pulse 2s infinite;
     }

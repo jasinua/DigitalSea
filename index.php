@@ -39,6 +39,75 @@
     <!-- Add lazy loading for images -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Declare variables at the top
+            let currentNewItemsIndex = 0;
+            const newItems = document.getElementById('newItems');
+            const newItemsPrev = document.getElementById('newItemsPrev');
+            const newItemsNext = document.getElementById('newItemsNext');
+            const itemWidth = 330; // Width of one item
+            const itemMargin = 20; // Margin between items
+            const scrollAmount = itemWidth + itemMargin; // Total scroll amount for one item
+            let visibleNewItems = 4; // Default for larger screens
+
+            // Adjust visible items based on screen size
+            function updateVisibleItems() {
+                if (window.innerWidth <= 400) {
+                    visibleNewItems = 2;
+                } else if (window.innerWidth <= 768) {
+                    visibleNewItems = 3;
+                } else {
+                    visibleNewItems = 4;
+                }
+                updateNewItemsArrows();
+            }
+            
+            // Initial update and add resize listener
+            updateVisibleItems();
+            window.addEventListener('resize', updateVisibleItems);
+
+            function updateNewItemsArrows() {
+                newItemsPrev.disabled = currentNewItemsIndex === 0;
+                newItemsNext.disabled = currentNewItemsIndex >= newItems.children.length - visibleNewItems;
+            }
+
+            newItemsPrev.addEventListener('click', () => {
+                if (currentNewItemsIndex > 0) {
+                    currentNewItemsIndex--;
+                    const smallScreen = window.innerWidth <= 400;
+                    const scrollSize = smallScreen ? 160 : scrollAmount; // 150px width + 10px gap for small screens
+                    
+                    newItems.scrollBy({
+                        left: -scrollSize,
+                        behavior: 'smooth'
+                    });
+                    updateNewItemsArrows();
+                }
+            });
+
+            newItemsNext.addEventListener('click', () => {
+                if (currentNewItemsIndex < newItems.children.length - visibleNewItems) {
+                    currentNewItemsIndex++;
+                    const smallScreen = window.innerWidth <= 400;
+                    const scrollSize = smallScreen ? 160 : scrollAmount; // 150px width + 10px gap for small screens
+                    
+                    newItems.scrollBy({
+                        left: scrollSize,
+                        behavior: 'smooth'
+                    });
+                    updateNewItemsArrows();
+                }
+            });
+
+            // Update arrow states on scroll
+            newItems.addEventListener('scroll', () => {
+                const scrollPosition = newItems.scrollLeft;
+                currentNewItemsIndex = Math.round(scrollPosition / scrollAmount);
+                updateNewItemsArrows();
+            });
+
+            // Initial arrow state
+            updateNewItemsArrows();
+
             // Initialize filter functionality
             document.querySelectorAll('.category-header').forEach(function(header) {
                 header.addEventListener('click', function() {
@@ -212,76 +281,6 @@
 
             // Initialize wheel carousel
             updateWheelCarousel();
-
-            // New Items Carousel functionality
-            const newItems = document.getElementById('newItems');
-            const newItemsPrev = document.getElementById('newItemsPrev');
-            const newItemsNext = document.getElementById('newItemsNext');
-            const itemWidth = 330; // Width of one item
-            const itemMargin = 20; // Margin between items
-            const scrollAmount = itemWidth + itemMargin; // Total scroll amount for one item
-            let visibleNewItems = 4; // Default for larger screens
-            
-            // Adjust visible items based on screen size
-            function updateVisibleItems() {
-                if (window.innerWidth <= 400) {
-                    visibleNewItems = 2;
-                } else if (window.innerWidth <= 768) {
-                    visibleNewItems = 3;
-                } else {
-                    visibleNewItems = 4;
-                }
-                updateNewItemsArrows();
-            }
-            
-            // Initial update and add resize listener
-            updateVisibleItems();
-            window.addEventListener('resize', updateVisibleItems);
-
-            function updateNewItemsArrows() {
-                newItemsPrev.disabled = currentNewItemsIndex === 0;
-                newItemsNext.disabled = currentNewItemsIndex >= newItems.children.length - visibleNewItems;
-            }
-
-            let currentNewItemsIndex = 0;
-
-            newItemsPrev.addEventListener('click', () => {
-                if (currentNewItemsIndex > 0) {
-                    currentNewItemsIndex--;
-                    const smallScreen = window.innerWidth <= 400;
-                    const scrollSize = smallScreen ? 160 : scrollAmount; // 150px width + 10px gap for small screens
-                    
-                    newItems.scrollBy({
-                        left: -scrollSize,
-                        behavior: 'smooth'
-                    });
-                    updateNewItemsArrows();
-                }
-            });
-
-            newItemsNext.addEventListener('click', () => {
-                if (currentNewItemsIndex < newItems.children.length - visibleNewItems) {
-                    currentNewItemsIndex++;
-                    const smallScreen = window.innerWidth <= 400;
-                    const scrollSize = smallScreen ? 160 : scrollAmount; // 150px width + 10px gap for small screens
-                    
-                    newItems.scrollBy({
-                        left: scrollSize,
-                        behavior: 'smooth'
-                    });
-                    updateNewItemsArrows();
-                }
-            });
-
-            // Update arrow states on scroll
-            newItems.addEventListener('scroll', () => {
-                const scrollPosition = newItems.scrollLeft;
-                currentNewItemsIndex = Math.round(scrollPosition / scrollAmount);
-                updateNewItemsArrows();
-            });
-
-            // Initial arrow state
-            updateNewItemsArrows();
 
             // Keyboard navigation
             document.addEventListener('keydown', (e) => {

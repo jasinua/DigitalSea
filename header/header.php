@@ -83,7 +83,7 @@
     }
 
     header .logo {
-        margin: 10px;
+        margin: 15px 10px 10px 10px;
         padding: 0;
         height: 35px;
         width: 35px;
@@ -475,7 +475,6 @@
     /* Mobile Optimizations */
     @media screen and (max-width: 768px) {
         header {
-            padding: 8px 12px;
             position: relative;
             height: 60px;
         }
@@ -631,11 +630,6 @@
     /* Safe Area Insets for Modern Mobile Devices */
     @supports (padding: max(0px)) {
         @media screen and (max-width: 768px) {
-            header {
-                padding-left: max(12px, env(safe-area-inset-left));
-                padding-right: max(12px, env(safe-area-inset-right));
-            }
-
             .mobile-menu {
                 padding-bottom: max(20px, env(safe-area-inset-bottom));
             }
@@ -735,6 +729,7 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
+        padding: 0 10px;
     }
 
     .left-section {
@@ -843,9 +838,9 @@
         <div class="header-wrapper">
             <div class="left-section">
                 <div class="logo-container" style="margin-right: 15px;">
-                    <a href="index.php">
-                        <img class="logo" src="logo2.png" alt="logo e kompanise tone">
-                    </a>
+                    <!-- <a href="index.php"> -->
+                        <img class="logo" src="logo2.png" alt="logo e kompanise tone" onclick="window.location.href='index.php'">
+                    <!-- </a> -->
                 </div>
             </div>
             
