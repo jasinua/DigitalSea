@@ -46,7 +46,7 @@
 
     #filters {
         width: 280px;
-        background: linear-gradient(to bottom, #bdbdbd 0%, white 100%);
+        background: white;
         border-radius: 0;
         padding: 20px;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -172,7 +172,7 @@
         align-items: center;
         justify-content: space-between;
         padding: 10px;
-        background-color: white;
+        background-color:rgb(220, 220, 220);
         border-radius: 6px;
         margin-bottom: 10px;
         cursor: pointer;
