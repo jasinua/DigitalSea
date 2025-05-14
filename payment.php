@@ -104,7 +104,7 @@
     <div class="page-wrapper">
         
         <div class="container">
-            <h2 id="payment-header">Payment</h2>
+            <h2 id="payment-header">Complete Payment</h2>
             <?php if ($error_message): ?>
                 <div class="error-message">
                     <?php echo htmlspecialchars($error_message); ?>
@@ -269,15 +269,16 @@
 
          <div class="paymentStuff" id="crypto-payment" style="display: none;">
             <div class="payment-part">
+                
+            <?php if (!$chargeData): ?>
                 <div class="payment-main crypto">
-                    <div class="payment-container">
-                        <header class="payment-header" id="crypto-header">
-                            <h1>Crypto Payment Gateway</h1>
-                            <p>Pay securely with cryptocurrency</p>
-                        </header>
+                        <div class="payment-container">
+                            <header class="payment-header" id="crypto-header">
+                                <h1>Crypto Payment</h1>
+                                <p>Pay securely with cryptocurrency</p>
+                            </header>
 
-                        <main class="payment-crypto">
-                            <?php if (!$chargeData): ?>
+                            <main class="payment-crypto">
                                 <form method="POST" class="payment-form" id="crypto-form">
                                     <?php if (isset($error)): ?>
                                         <div class="alert error"><?php echo $error; ?></div>
@@ -296,7 +297,42 @@
 
                                     <button type="submit" class="btn">Create Payment</button>
                                 </form>
-                            <?php else: ?>
+                            </main>
+                        </div>
+                        <footer class="payment-footer">
+                            <p>Powered by Coinbase Commerce</p>
+                        </footer>
+                    </div>
+                    <div class="payment-summary" id="payment-summary">
+                            <h3>Order Summary</h3>
+                            <div class="summary-item">
+                                <span>Subtotal:</span>
+                                <span><?php echo number_format($subtotal, 2); ?>€</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>VAT (18%):</span>
+                                <span><?php echo number_format($tax, 2); ?>€</span>
+                            </div>
+                            <?php if ($discount > 0): ?>
+                            <div class="summary-item">
+                                <span>Discount:</span>
+                                <span style="color: red">-<?php echo number_format($discount, 2); ?>€</span>
+                            </div>
+                            <?php endif; ?>
+                            <div class="summary-item total">
+                                <span>Total:</span>
+                                <span>€<?php echo number_format($totalAmount, 2); ?></span>
+                            </div>
+                        </div>
+                <?php else: ?>
+                        <div class="payment-main crypto after">
+                            <div class="payment-container after">
+                                <header class="payment-header" id="crypto-header">
+                                    <h1>Crypto Payment Gateway</h1>
+                                    <p>Pay securely with cryptocurrency</p>
+                                </header>
+
+                                <main class="payment-crypto">
                                 <div class="payment-details">
                                     <div class="payment-after crypto">
                                         <h2>Payment Details</h2>
@@ -334,36 +370,22 @@
                                                 <?php endif; ?>
                                             </div>
                                         </div>
+
+                                        <div class="payment-switch" style="margin-top: 20px; text-align: center;">
+                                            <button onclick="switchToCard()" class="switch-button" style="background: none; border: none; color: var(--noir-color); text-decoration: underline; cursor: pointer;">
+                                                Pay with Card Instead
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            <?php endif; ?>
-                        </main>
-
+                            </main>
+                        </div>
                         <footer class="payment-footer">
                             <p>Powered by Coinbase Commerce</p>
                         </footer>
                     </div>
-                </div>
-
-                <div class="payment-summary" id="payment-summary">
-                    <h3>Order Summary</h3>
-                    <div class="summary-item">
-                        <span>Subtotal:</span>
-                        <span><?php echo number_format($subtotal, 2); ?>€</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>VAT (18%):</span>
-                        <span><?php echo number_format($tax, 2); ?>€</span>
-                    </div>
-                    <?php if ($discount > 0): ?>
-                    <div class="summary-item">
-                        <span>Discount:</span>
-                        <span style="color: red">-<?php echo number_format($discount, 2); ?>€</span>
-                    </div>
                     <?php endif; ?>
-                    <div class="summary-item total">
-                        <span>Total:</span>
-                        <span>€<?php echo number_format($totalAmount, 2); ?></span>
+
                     </div>
                 </div>
             </div>
@@ -461,6 +483,17 @@
                 document.getElementById('payment-summary').style.display = 'none';
             }
         });
+
+        function switchToCard() {
+            // Remove charge_id and payment_type from URL
+            const url = new URL(window.location.href);
+            url.searchParams.delete('charge_id');
+            url.searchParams.delete('payment_type');
+            // Reload the page without those parameters
+            window.location.href = url.toString();
+            // Optionally, clear any stored payment state
+            localStorage.removeItem('showCrypto');
+        }
     </script>
 </body>
 </html>

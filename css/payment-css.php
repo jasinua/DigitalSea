@@ -44,14 +44,21 @@
     }
 
     .payment-main {
-        width: 800px;
+        width: 600px;
         border-radius: var(--border-radius);
         margin-bottom: 30px;
         overflow: hidden;
     }
 
     .payment-main.crypto {
-        width: 800px;
+        width: 600px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .payment-main.crypto.after {
+        width: 1000px;
         border-radius: 10px;
         margin-bottom: 30px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -273,11 +280,18 @@
     }
 
     .payment-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+
+    .payment-container.after {
         max-width: 1000px;
         margin: 0 auto;
         background: white;
         border-radius: var(--border-radius);
-        box-shadow: var(--box-shadow);
         overflow: hidden;
     }
 

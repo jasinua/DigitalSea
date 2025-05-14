@@ -78,8 +78,8 @@
 
     header {
         display: flex;
-        background: linear-gradient(to right, rgb(26, 78, 118) 10%, var(--noir-color) 25%, 
-                    var(--noir-color) 72%, rgb(26, 78, 118) 100%);
+        background: linear-gradient(to right, rgb(26, 78, 118) 5%, var(--noir-color) 16%, 
+                    var(--noir-color) 86%, rgb(26, 78, 118) 100%);
         color: white;
         justify-content: space-between;
         align-items: center;

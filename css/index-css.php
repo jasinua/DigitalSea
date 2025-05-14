@@ -22,8 +22,8 @@
 
     .filter-toggle-top {
         display: none;
-        background-color: var(--button-color);
-        color: white;
+        background-color: white;
+        color: var(--noir-color);
         border: none;
         padding: 12px 20px;
         border-radius: 8px;
@@ -126,14 +126,14 @@
     }
     
     .filter-section h3::after {
-        content: '\f107';
+        content: '\f054';
         font-family: 'Font Awesome 5 Free';
         font-weight: 900;
         transition: transform 0.3s;
     }
     
     .filter-section.collapsed h3::after {
-        transform: rotate(-90deg);
+        transform: rotate(90deg);
     }
     
     .filter-section.collapsed .filter-content {
@@ -907,6 +907,15 @@
         margin: 20px 0;
     }
 
+    .new-items-carousel {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        width: 100%;
+        margin: 20px 0;
+    }
+
     .carousel-arrow {
         position: relative;
         background: rgba(255, 255, 255, 0.9);
@@ -934,8 +943,8 @@
     }
 
     .carousel-arrow:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
+        opacity: 0;
+        cursor: default;
     }
 
     /* Add styles for new items navigation */
@@ -973,6 +982,27 @@
     .wishlist-btn {
         position: relative;
         z-index: 2;
+    }
+
+    @media screen and (max-width: 1550px) {
+        #newItems {
+            gap: 10px;
+        }
+        .newItemsItem {
+            transform: scale(0.9);
+            /* margin: 0 5px; */
+        }
+    }
+
+    @media screen and (max-width: 1150px) {
+        #newItems {
+            gap: 0px;
+        }
+
+        .newItemsItem {
+            transform: scale(0.8);
+            margin: 0 5px;
+        }
     }
 
     /* Mobile Optimizations */
@@ -1135,11 +1165,6 @@
         .filter-overlay.active {
             opacity: 1;
             visibility: visible;
-        }
-        
-        /* Adjust item margin to account for filter button */
-        #items {
-            padding-top: 60px;
         }
     }
 
@@ -1353,7 +1378,6 @@
     @media screen and (max-width: 1023px) {
         #container {
             max-width: 100%;
-            padding: 0 20px;
         }
         
         .wheel-carousel {
@@ -1388,10 +1412,6 @@
 
     /* Large Phones (480px to 767px) */
     @media screen and (max-width: 767px) {
-        #container {
-            padding: 0 15px;
-        }
-        
         .wheel-carousel {
             height: 400px;
         }
@@ -1433,10 +1453,6 @@
 
     /* Small Phones (up to 479px) */
     @media screen and (max-width: 479px) {
-        #container {
-            padding: 0 10px;
-        }
-        
         .wheel-carousel {
             height: 350px;
         }
@@ -1458,12 +1474,16 @@
         }
         
         .item {
-            min-width: 140px;
-            width: 140px;
+            min-width: 160px;
+            width: 180px;
         }
         
         .item img {
             height: 140px;
+        }
+
+        .item .original-price {
+            display: none;
         }
         
         .carousel-arrow {
@@ -1559,11 +1579,20 @@
 
     /* Show only 1 item in the top products carousel for screens below 1040px */
     @media screen and (max-width: 1040px) {
-        .wheel-item.left, 
+        .wheel-item.left {
+            transform: translate(-120%, -45%) scale(0.6);
+        }
+
         .wheel-item.right {
-            opacity: 0;
-            visibility: hidden;
-            display: none;
+            transform: translate(20%, -45%) scale(0.6);
+        }
+
+        .wheel-item.left:hover {
+            transform: translate(-120%, -48%) scale(0.65);
+        }
+
+        .wheel-item.right:hover {
+            transform: translate(20%, -48%) scale(0.65);
         }
 
         .wheel-item.hidden {
@@ -1586,7 +1615,7 @@
         }
         
         .wheel-item:hover {
-            transform: translate(-50%, -50%) scale(0.9);
+            transform: translate(-50%, -52%) scale(0.75);
         }
         
         #topItemsHeader {
@@ -1708,8 +1737,21 @@
         }
     }
 
+    @media screen and (max-width: 630px) {
+        .wheel-item.active {
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        .wheel-item.left {
+            display: none;
+        }
+
+        .wheel-item.right {
+            display: none;
+        }
+    }
     /* Styles for very small screens (less than 400px) */
-    @media screen and (max-width: 400px) {
+    @media screen and (max-width: 444px) {
 
         #items {
             overflow-x: hidden;

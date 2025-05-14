@@ -44,40 +44,55 @@
             const newItems = document.getElementById('newItems');
             const newItemsPrev = document.getElementById('newItemsPrev');
             const newItemsNext = document.getElementById('newItemsNext');
-            const itemWidth = 330; // Width of one item
-            const itemMargin = 20; // Margin between items
-            const scrollAmount = itemWidth + itemMargin; // Total scroll amount for one item
+            let itemWidth = 330; // Default width
+            let itemMargin = 20; // Default margin
+            let scrollAmount = itemWidth + itemMargin;
             let visibleNewItems = 4; // Default for larger screens
 
-            // Adjust visible items based on screen size
             function updateVisibleItems() {
-                if (window.innerWidth <= 400) {
-                    visibleNewItems = 2;
-                } else if (window.innerWidth <= 768) {
+                if (window.innerWidth <= 1150) {
                     visibleNewItems = 3;
+                    itemWidth = 220;  // Medium width for tablets
+                    itemMargin = -10;
+                } else if (window.innerWidth <= 1550) {
+                    visibleNewItems = 3;
+                    itemWidth = 330;  // Full width for desktop
+                    itemMargin = 10;
                 } else {
                     visibleNewItems = 4;
+                    itemWidth = 330;  // Full width for desktop
+                    itemMargin = 20;
                 }
+                
+                // Update scroll amount
+                scrollAmount = itemWidth + itemMargin;
+                
+                // Update carousel container width
+                if (newItems) {
+                    newItems.style.width = `${(itemWidth + itemMargin) * visibleNewItems}px`;
+                    
+                    // Update each item's width
+                    const items = newItems.querySelectorAll('.newItemsItem');
+                    items.forEach(item => {
+                        item.style.width = `${itemWidth}px`;
+                        item.style.marginRight = `${itemMargin}px`;
+                    });
+                }
+                
                 updateNewItemsArrows();
             }
             
-            // Initial update and add resize listener
-            updateVisibleItems();
-            window.addEventListener('resize', updateVisibleItems);
-
             function updateNewItemsArrows() {
                 newItemsPrev.disabled = currentNewItemsIndex === 0;
                 newItemsNext.disabled = currentNewItemsIndex >= newItems.children.length - visibleNewItems;
             }
 
+            // Update the scroll handlers to use the dynamic scrollAmount
             newItemsPrev.addEventListener('click', () => {
                 if (currentNewItemsIndex > 0) {
                     currentNewItemsIndex--;
-                    const smallScreen = window.innerWidth <= 400;
-                    const scrollSize = smallScreen ? 160 : scrollAmount; // 150px width + 10px gap for small screens
-                    
                     newItems.scrollBy({
-                        left: -scrollSize,
+                        left: -scrollAmount,
                         behavior: 'smooth'
                     });
                     updateNewItemsArrows();
@@ -87,53 +102,57 @@
             newItemsNext.addEventListener('click', () => {
                 if (currentNewItemsIndex < newItems.children.length - visibleNewItems) {
                     currentNewItemsIndex++;
-                    const smallScreen = window.innerWidth <= 400;
-                    const scrollSize = smallScreen ? 160 : scrollAmount; // 150px width + 10px gap for small screens
-                    
                     newItems.scrollBy({
-                        left: scrollSize,
+                        left: scrollAmount,
                         behavior: 'smooth'
                     });
                     updateNewItemsArrows();
                 }
             });
 
-            // Update arrow states on scroll
+            // Update the scroll event handler
             newItems.addEventListener('scroll', () => {
                 const scrollPosition = newItems.scrollLeft;
                 currentNewItemsIndex = Math.round(scrollPosition / scrollAmount);
                 updateNewItemsArrows();
             });
 
-            // Initial arrow state
-            updateNewItemsArrows();
+            // Make sure to call updateVisibleItems on load and resize
+            window.addEventListener('resize', updateVisibleItems);
+            updateVisibleItems(); // Initial call
 
             // Initialize filter functionality
-            document.querySelectorAll('.category-header').forEach(function(header) {
-                header.addEventListener('click', function() {
-                    const content = this.nextElementSibling;
-                    this.classList.toggle('collapsed');
-                    if (content.style.display === 'block') {
-                        content.style.display = 'none';
-                    } else {
-                        content.style.display = 'block';
-                    }
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            if (categoryHeaders.length > 0) {
+                categoryHeaders.forEach(function(header) {
+                    header.addEventListener('click', function() {
+                        const content = this.nextElementSibling;
+                        this.classList.toggle('collapsed');
+                        if (content.style.display === 'block') {
+                            content.style.display = 'none';
+                        } else {
+                            content.style.display = 'block';
+                        }
+                    });
                 });
-            });
+            }
 
             // Initialize filter sections
-            document.querySelectorAll('.filter-section h3').forEach(function(header) {
-                header.addEventListener('click', function() {
-                    const section = this.parentElement;
-                    const content = this.nextElementSibling;
-                    section.classList.toggle('collapsed');
-                    if (content.style.display === 'block') {
-                        content.style.display = 'none';
-                    } else {
-                        content.style.display = 'block';
-                    }
+            const filterSections = document.querySelectorAll('.filter-section h3');
+            if (filterSections.length > 0) {
+                filterSections.forEach(function(header) {
+                    header.addEventListener('click', function() {
+                        const section = this.parentElement;
+                        const content = this.nextElementSibling;
+                        section.classList.toggle('collapsed');
+                        if (content.style.display === 'block') {
+                            content.style.display = 'none';
+                        } else {
+                            content.style.display = 'block';
+                        }
+                    });
                 });
-            });
+            }
 
             // Clear all filters function
             window.clearAllFilters = function() {
@@ -143,28 +162,67 @@
 
             // Function to update all instances of a product's heart button
             function updateAllProductHearts(productId, isActive) {
-                document.querySelectorAll(`.wishlist-btn[data-product-id="${productId}"]`).forEach(function(btn) {
-                    const icon = btn.querySelector('i');
-                    if (isActive) {
-                        btn.classList.add('active');
-                        icon.classList.remove('far');
-                        icon.classList.add('fas');
-                    } else {
-                        btn.classList.remove('active');
-                        icon.classList.remove('fas');
-                        icon.classList.add('far');
-                    }
-                });
+                const heartButtons = document.querySelectorAll(`.wishlist-btn[data-product-id="${productId}"]`);
+                if (heartButtons.length > 0) {
+                    heartButtons.forEach(function(btn) {
+                        const icon = btn.querySelector('i');
+                        if (icon) {
+                            if (isActive) {
+                                btn.classList.add('active');
+                                icon.classList.remove('far');
+                                icon.classList.add('fas');
+                            } else {
+                                btn.classList.remove('active');
+                                icon.classList.remove('fas');
+                                icon.classList.add('far');
+                            }
+                        }
+                    });
+                }
             }
 
             // Initialize wishlist functionality
-            document.querySelectorAll('.wishlist-btn').forEach(function(btn) {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const productId = this.dataset.productId;
-                    
-                    fetch('controller/add_to_wishlist.php', {
+            const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+            if (wishlistButtons.length > 0) {
+                wishlistButtons.forEach(function(btn) {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const productId = this.dataset.productId;
+                        
+                        fetch('controller/add_to_wishlist.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: 'product_id=' + productId
+                        })
+                        .then(response => response.text())
+                        .then(result => {
+                            if (result.trim() === 'not_logged_in') {
+                                window.location.href = 'login.php';
+                            } else if (result.trim() === 'added') {
+                                updateAllProductHearts(productId, true);
+                            } else if (result.trim() === 'removed') {
+                                updateAllProductHearts(productId, false);
+                            } else if (result.trim() === 'error') {
+                                console.error('Error updating wishlist');
+                                alert('There was an error updating your wishlist. Please try again.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('There was an error updating your wishlist. Please try again.');
+                        });
+                    });
+                });
+            }
+
+            // Check initial wishlist status for each product
+            if (wishlistButtons.length > 0) {
+                wishlistButtons.forEach(function(btn) {
+                    const productId = btn.dataset.productId;
+                    fetch('controller/check_wishlist.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -173,44 +231,15 @@
                     })
                     .then(response => response.text())
                     .then(result => {
-                        if (result.trim() === 'not_logged_in') {
-                            window.location.href = 'login.php';
-                        } else if (result.trim() === 'added') {
+                        if (result.trim() === 'true') {
                             updateAllProductHearts(productId, true);
-                        } else if (result.trim() === 'removed') {
-                            updateAllProductHearts(productId, false);
-                        } else if (result.trim() === 'error') {
-                            console.error('Error updating wishlist');
-                            alert('There was an error updating your wishlist. Please try again.');
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
-                        alert('There was an error updating your wishlist. Please try again.');
+                        console.error('Error checking wishlist status:', error);
                     });
                 });
-            });
-
-            // Check initial wishlist status for each product
-            document.querySelectorAll('.wishlist-btn').forEach(function(btn) {
-                const productId = btn.dataset.productId;
-                fetch('controller/check_wishlist.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.text())
-                .then(result => {
-                    if (result.trim() === 'true') {
-                        updateAllProductHearts(productId, true);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error checking wishlist status:', error);
-                });
-            });
+            }
 
             // Wheel Carousel functionality
             const wheelTrack = document.getElementById('topItems');
@@ -261,8 +290,10 @@
                 });
 
                 // Update arrow states
-                wheelPrev.style.display = currentWheelIndex === 0 ? 'none' : 'flex';
-                wheelNext.style.display = currentWheelIndex >= wheelItems.length - 1 ? 'none' : 'flex';
+                wheelPrev.style.opacity = currentWheelIndex === 0 ? '0' : '1';
+                wheelPrev.style.cursor = currentWheelIndex === 0 ? 'default' : 'pointer';
+                wheelNext.style.opacity = currentWheelIndex >= wheelItems.length - 1 ? '0' : '1';
+                wheelNext.style.cursor = currentWheelIndex >= wheelItems.length - 1 ? 'default' : 'pointer';
             }
 
             wheelPrev.addEventListener('click', () => {
@@ -317,7 +348,7 @@
                         <input type='submit' value='Apply Filters'>
                     </div>
                     
-                    <div class="filter-section">
+                    <div class="filter-section collapsed">
                         <h3>Categories</h3>
                         <div class="filter-content">
                             <?php 
@@ -516,13 +547,13 @@
                     </div>
 
                     <h1 id='newItemsHeader'>New Products</h1>
-                    <div class="carousel-container">
+                    <div class="new-items-carousel">
                         <button class="carousel-arrow" id="newItemsPrev">
                             <i class="fas fa-chevron-left"></i>
                         </button>
                     <div class='itemLine' id='newItems'>
                         <?php foreach (getData("SELECT * FROM products ORDER BY product_id DESC LIMIT 8") as $prod) { ?>
-                            <div class='item' id="newItemsItem">
+                            <div class='item newItemsItem' id="newItemsItem">
                                 <a href="product.php?product=<?php echo $prod['product_id'] ?>" class="product-link">
                                 <div class="new-badge">NEW</div>
                                     <?php if ($prod['discount'] > 0) { ?>
@@ -715,13 +746,13 @@
                             <?php 
                             // Build query string for pagination links
                             $query_params = [];
+                            
+                            // Preserve all filter parameters
                             if (isset($_GET['search'])) {
                                 $query_params['search'] = $_GET['search'];
                             }
                             if (isset($_GET['subfilter'])) {
-                                foreach ($_GET['subfilter'] as $filter) {
-                                    $query_params['subfilter'][] = $filter;
-                                }
+                                $query_params['subfilter'] = $_GET['subfilter'];
                             }
                             if (isset($_GET['min_price'])) {
                                 $query_params['min_price'] = $_GET['min_price'];
@@ -781,8 +812,10 @@
         if (filterToggleTop) {
             filterToggleTop.addEventListener('click', function() {
                 console.log('Filter toggle clicked');
-                filters.classList.add('active');
-                console.log('Filter active class added:', filters.classList.contains('active'));
+                if (filters) {
+                    filters.classList.add('active');
+                    console.log('Filter active class added:', filters.classList.contains('active'));
+                }
                 
                 // Create or show overlay
                 let filterOverlay = document.querySelector('.filter-overlay');
@@ -794,7 +827,9 @@
                     
                     filterOverlay.addEventListener('click', function() {
                         console.log('Filter overlay clicked');
-                        filters.classList.remove('active');
+                        if (filters) {
+                            filters.classList.remove('active');
+                        }
                         this.classList.remove('active');
                         body.style.overflow = '';
                     });
@@ -810,7 +845,9 @@
         if (closeFiltersBtn) {
             closeFiltersBtn.addEventListener('click', function() {
                 console.log('Close filters button clicked');
-                filters.classList.remove('active');
+                if (filters) {
+                    filters.classList.remove('active');
+                }
                 const filterOverlay = document.querySelector('.filter-overlay');
                 if (filterOverlay) {
                     filterOverlay.classList.remove('active');
@@ -839,12 +876,47 @@
 
         // Wheel Carousel functionality
         const wheelTrack = document.getElementById('topItems');
-        const wheelItems = wheelTrack.querySelectorAll('.wheel-item');
-        const wheelPrev = document.getElementById('wheelPrev');
-        const wheelNext = document.getElementById('wheelNext');
-        
-        // Continue with the existing JavaScript code...
+        if (wheelTrack) {
+            const wheelItems = wheelTrack.querySelectorAll('.wheel-item');
+            const wheelPrev = document.getElementById('wheelPrev');
+            const wheelNext = document.getElementById('wheelNext');
+            
+            // Add null checks for wheel navigation
+            if (wheelPrev && wheelNext) {
+                wheelPrev.addEventListener('click', function() {
+                    // Your wheel navigation code
+                });
+                
+                wheelNext.addEventListener('click', function() {
+                    // Your wheel navigation code
+                });
+            }
+        }
+
+        // Call updateNewItemsArrows after DOM is loaded
+        updateNewItemsArrows();
     });  
+
+
+    window.addEventListener('scroll', function() {
+        const filterToggleTop = document.querySelector('.filter-toggle-top');
+        const newItemsHeader = document.getElementById('newItemsHeader');
+        
+        if (newItemsHeader) {
+            const headerPosition = newItemsHeader.getBoundingClientRect().top;
+            const offset = 100; // Change color 100px before reaching the header
+            
+            if (headerPosition > offset) {
+                // Above New Products header (with offset)
+                filterToggleTop.style.backgroundColor = 'white';
+                filterToggleTop.style.color = 'var(--noir-color)';
+            } else {
+                // Below New Products header (with offset)
+                filterToggleTop.style.backgroundColor = 'var(--noir-color)';
+                filterToggleTop.style.color = 'white';
+            }
+        }
+    });
 </script>
 
 <!-- Load jQuery and jQuery UI asynchronously -->
