@@ -53,7 +53,7 @@
         --shadow: 0 0 5px #153147;
         --shadow-input: 0 0 8px #153147;
 
-        --logout-color: #FF0000;
+        --logout-color:rgb(222, 34, 34);
         --logout-color-hover: #C70000;
 
         --error-color: #F94040;
@@ -91,6 +91,7 @@
         padding: 0;
         height: 35px;
         width: 35px;
+        cursor: pointer;
     }
 
     .search-container {
