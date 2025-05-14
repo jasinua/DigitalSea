@@ -37,6 +37,9 @@
         --button-color: #232a2f;
         --button-color-hover:rgb(26, 78, 118);
 
+        --filt-button-color: #153147;
+        --filt-button-color-hover:rgb(26, 78, 118);
+
         --noir-color: #232a2f;
         --navy-color: #153147;
         --navy-color-lighter:rgb(69, 110, 142);
@@ -75,8 +78,8 @@
 
     header {
         display: flex;
-        background-color: var(--navy-color);
-        background-color: var(--noir-color);
+        background: linear-gradient(to right, rgb(26, 78, 118) 10%, var(--noir-color) 25%, 
+                    var(--noir-color) 72%, rgb(26, 78, 118) 100%);
         color: white;
         justify-content: space-between;
         align-items: center;
@@ -637,8 +640,8 @@
         }
     }
 
-    /* Tablets and Small Desktops (768px to 1480px) */
-    @media screen and (max-width: 1480px) {
+    /* Tablets and Small Desktops (768px to 1500px) */
+    @media screen and (max-width: 1500px) {
         .search-container {
             width: 500px;
             margin: 0 15px;
@@ -652,11 +655,11 @@
         }
     }
 
-    @media screen and (max-width: 1350px) {
+    @media screen and (max-width: 1400px) {
         .search-container {
-            width: 400px;
+            width: 500px;
             margin: 0 15px;
-            left: calc(50% - 200px);
+            left: calc(50% - 400px);
         }
 
         .search-container input[type="text"] {
@@ -666,7 +669,21 @@
         }
     }
 
-    @media screen and (max-width: 1260px) {
+    @media screen and (max-width: 1280px) {
+        .search-container {
+            width: 450px;
+            margin: 0 15px;
+            left: calc(50% - 400px);
+        }
+
+        .search-container input[type="text"] {
+            min-width: 400px;
+            font-size: 13px;
+            padding: 8px 30px 8px 12px;
+        }
+    }
+
+    @media screen and (max-width: 980px) {
         .search-container {
             width: 400px;
             margin: 0 15px;
@@ -681,7 +698,7 @@
     }
 
     /* Search icon appears at 960px and below */
-    @media screen and (max-width: 960px) {
+    @media screen and (max-width: 940px) {
         .search-container {
             display: none;
         }

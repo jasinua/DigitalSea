@@ -46,7 +46,7 @@
 
     #filters {
         width: 280px;
-        background-color: white;
+        background: linear-gradient(to bottom, #bdbdbd 0%, white 100%);
         border-radius: 0;
         padding: 20px;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -172,7 +172,7 @@
         align-items: center;
         justify-content: space-between;
         padding: 10px;
-        background-color: #f5f5f5;
+        background-color: white;
         border-radius: 6px;
         margin-bottom: 10px;
         cursor: pointer;
@@ -235,6 +235,7 @@
     
     .subfilter label {
         font-size: 13px;
+        font-weight: 500;
         color: #555;
         cursor: pointer;
     }
@@ -290,7 +291,7 @@
         padding: 10px;
         border-radius: 6px;
         font-size: 14px;
-        background-color: var(--button-color);
+        background-color: var(--filt-button-color);
         border: none;
         color: white;
         cursor: pointer;
@@ -298,7 +299,7 @@
     }
     
     #filtOpts input:hover {
-        background-color: var(--button-color-hover);
+        background-color: var(--filt-button-color-hover);
         transform: translateY(-2px);
     }
     
@@ -433,7 +434,7 @@
     
     #newItemsHeader {
         text-align: center;
-        margin: 40px 0 20px 0;
+        margin: 0 0 20px 0;
         color: var(--noir-color);
         font-size: 2em;
         font-weight: bold;
@@ -568,8 +569,8 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
-        height: 600px;
-        background: linear-gradient(to bottom, var(--noir-color),70%, rgb(26, 78, 118));
+        height: 700px;
+        background: linear-gradient(to bottom, var(--noir-color) 30%, rgb(26, 78, 118) 50%, rgb(69, 110, 142) 65%, var(--ivory-color) 100%);
     }
 
     .wheel-carousel {
@@ -626,6 +627,24 @@
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         cursor: pointer;
     }
+
+    .wheel-item.left {
+        transform: translate(-50%, -50%) scale(0.9) translateX(-410px) translateY(25px);
+        opacity: 0.7;
+        z-index: 3;
+    }
+
+    .wheel-item.right {
+        transform: translate(-50%, -50%) scale(0.9) translateX(410px) translateY(25px);
+        opacity: 0.7;
+        z-index: 3;
+    }
+    
+    .wheel-item.hidden {
+        opacity: 0;
+        display: none;
+        pointer-events: none;
+    }
     
     .wheel-item img {
         height: 250px;
@@ -681,43 +700,13 @@
         position: absolute;
         top: 10px;
         right: 10px;
-        background-color: white;
-        color: var(--error-color);
+        background-color: var(--error-color);
+        color: white;
         padding: 4px 8px;
         border-radius: 4px;
         font-size: 12px;
         font-weight: bold;
         z-index: 1;
-    }
-
-    .wheel-item.left {
-        transform: translate(-50%, -50%) scale(0.9) translateX(-380px) translateY(25px);
-        opacity: 0.7;
-        z-index: 3;
-    }
-
-    .wheel-item.right {
-        transform: translate(-50%, -50%) scale(0.9) translateX(380px) translateY(25px);
-        opacity: 0.7;
-        z-index: 3;
-    }
-    
-    .wheel-item.far-left {
-        transform: translate(-50%, -50%) scale(0.8) translateX(-800px) translateY(55px);
-        opacity: 0.5;
-        z-index: 2;
-    }
-    
-    .wheel-item.far-right {
-        transform: translate(-50%, -50%) scale(0.8) translateX(800px) translateY(55px);
-        opacity: 0.5;
-        z-index: 2;
-    }
-    
-    .wheel-item.hidden {
-        opacity: 0;
-        display: none;
-        pointer-events: none;
     }
     
     .wheel-item .bottom-container {

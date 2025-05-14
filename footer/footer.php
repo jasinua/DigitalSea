@@ -7,7 +7,8 @@
 <style>
     .footer {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        justify-content: space-between;
         padding: 40px 0;
         text-align: left;
         margin:0;

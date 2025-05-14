@@ -237,13 +237,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         badge.style.backgroundColor = 'red';
                         badge.style.width = '15px';
                         badge.style.height = '15px';
+                        badge.style.border = 'none';
 
                         setTimeout(function() {
                             badge.textContent = newCount > 9 ? "9+" : newCount;
                             badge.style.backgroundColor = 'var(--noir-color)';
-                            badge.style.width = '15px';
-                            badge.style.height = '15px';
-                        }, 3000);
+                            badge.style.width = '17px';
+                            badge.style.height = '17px';
+                            badge.style.border = '1px solid white';
+                        }, 2000);
                         
                         // Show success message
                         button.html('<i class="fas fa-check"></i> Added to Cart');

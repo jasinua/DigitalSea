@@ -1,0 +1,390 @@
+{
+    "products": [
+        {
+            "product_id": 1,
+            "name": "Desktop",
+            "description": "Ergonomic wireless mouse with long battery life.",
+            "type": "computer",
+            "details": {
+                "RAM": 8,
+                "SSD": 256,
+                "Graphics card": "Intel UHD",
+                "Processor": "Intel Core i7",
+                "OS": "Windows 10"
+            },
+            "price": 899.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 50,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 2,
+            "name": "Smartphone",
+            "description": "Latest smartphone with 5G support and AMOLED display.",
+            "type": "phone",
+            "details": {
+                "RAM": 12,
+                "Storage": 128,
+                "Screen": "6.5 inch AMOLED",
+                "Camera": "108MP",
+                "Battery": "5000mAh"
+            },
+            "price": 699.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 100,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 3,
+            "name": "Laptop",
+            "description": "Lightweight laptop with long battery life.",
+            "type": "computer",
+            "details": {
+                "RAM": 16,
+                "SSD": 512,
+                "Graphics card": "NVIDIA GTX 1650",
+                "Processor": "Intel Core i5",
+                "OS": "Windows 11"
+            },
+            "price": 1199.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 75,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 4,
+            "name": "Smartwatch",
+            "description": "Smartwatch with health tracking features.",
+            "type": "phone",
+            "details": {
+                "Battery": "14 days",
+                "Water Resistance": "5ATM",
+                "Screen": "1.4 inch AMOLED",
+                "Heart Rate Monitor": true
+            },
+            "price": 199.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 150,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 5,
+            "name": "Bluetooth Headphones",
+            "description": "Noise-canceling Bluetooth headphones with long battery life.",
+            "type": "accessory",
+            "details": {
+                "Battery": "20 hours",
+                "Bluetooth Version": "5.0",
+                "Weight": "250g"
+            },
+            "price": 129.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 200,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 6,
+            "name": "Gaming Chair",
+            "description": "Comfortable gaming chair with adjustable armrests and lumbar support.",
+            "type": "furniture",
+            "details": {
+                "Material": "Leather",
+                "Weight Capacity": "300 lbs",
+                "Adjustability": "360-degree swivel"
+            },
+            "price": 349.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 30,
+            "api_source": "External"
+        },
+        {
+            "product_id": 7,
+            "name": "4K TV",
+            "description": "Ultra HD 4K Smart TV with HDR support and voice control.",
+            "type": "electronics",
+            "details": {
+                "Screen Size": "55 inches",
+                "Resolution": "3840x2160",
+                "Smart Features": "Yes",
+                "HDMI Ports": "3"
+            },
+            "price": 799.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 50,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 8,
+            "name": "Ultrabook",
+            "description": "Slim and powerful ultrabook with long battery life.",
+            "type": "computer",
+            "details": {
+                "RAM": 16,
+                "SSD": 1,
+                "Graphics card": "Intel Iris Xe",
+                "Processor": "Intel Core i7",
+                "OS": "Windows 11 Pro"
+            },
+            "price": 1499.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 40,
+            "api_source": "External"
+        },
+        {
+            "product_id": 9,
+            "name": "Convertible Laptop",
+            "description": "A versatile 2-in-1 laptop that can be used as a tablet.",
+            "type": "computer",
+            "details": {
+                "RAM": 8,
+                "SSD": 512,
+                "Graphics card": "AMD Radeon",
+                "Processor": "AMD Ryzen 5",
+                "OS": "Windows 11 Home"
+            },
+            "price": 999.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 60,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 10,
+            "name": "Business Laptop",
+            "description": "High-performance laptop for business professionals.",
+            "type": "computer",
+            "details": {
+                "RAM": 32,
+                "SSD": 2,
+                "Graphics card": "NVIDIA RTX 3050",
+                "Processor": "Intel Core i9",
+                "OS": "Windows 11 Pro"
+            },
+            "price": 1999.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 25,
+            "api_source": "External"
+        },
+        {
+            "product_id": 11,
+            "name": "Budget Laptop",
+            "description": "Affordable laptop for everyday tasks.",
+            "type": "computer",
+            "details": {
+                "RAM": 4,
+                "SSD": 128,
+                "Graphics card": "Intel UHD",
+                "Processor": "Intel Celeron",
+                "OS": "Windows 10"
+            },
+            "price": 399.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 100,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 12,
+            "name": "Gaming Laptop",
+            "description": "Powerful gaming laptop with high refresh rate display.",
+            "type": "computer",
+            "details": {
+                "RAM": 32,
+                "SSD": 1,
+                "Graphics card": "NVIDIA RTX 3070",
+                "Processor": "Intel Core i7",
+                "OS": "Windows 11"
+            },
+            "price": 1899.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 35,
+            "api_source": "External"
+        },
+        {
+            "product_id": 13,
+            "name": "Workstation Laptop",
+            "description": "High-performance laptop for professionals and creators.",
+            "type": "computer",
+            "details": {
+                "RAM": 64,
+                "SSD": 2,
+                "Graphics card": "NVIDIA RTX 4090",
+                "Processor": "Intel Xeon",
+                "OS": "Windows 11 Pro"
+            },
+            "price": 3499.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 20,
+            "api_source": "External"
+        },
+        {
+            "product_id": 14,
+            "name": "Student Laptop",
+            "description": "Perfect laptop for students with long battery life.",
+            "type": "computer",
+            "details": {
+                "RAM": 8,
+                "SSD": 256,
+                "Graphics card": "Intel UHD",
+                "Processor": "Intel Core i5",
+                "OS": "Windows 11"
+            },
+            "price": 599.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 75,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 15,
+            "name": "Business Ultrabook",
+            "description": "Lightweight ultrabook designed for professionals on the go.",
+            "type": "computer",
+            "details": {
+                "RAM": 16,
+                "SSD": 512,
+                "Graphics card": "Intel Iris Xe",
+                "Processor": "Intel Core i7",
+                "OS": "Windows 11 Pro"
+            },
+            "price": 1299.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 50,
+            "api_source": "External"
+        },
+        {
+            "product_id": 16,
+            "name": "Developer Laptop",
+            "description": "Powerful laptop optimized for software development.",
+            "type": "computer",
+            "details": {
+                "RAM": 32,
+                "SSD": 1,
+                "Graphics card": "NVIDIA RTX 3050",
+                "Processor": "AMD Ryzen 9",
+                "OS": "Linux"
+            },
+            "price": 1799.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 40,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 17,
+            "name": "Desktop",
+            "description": "Ergonomic wireless mouse with long battery life.",
+            "type": "computer",
+            "details": {
+                "RAM": 8,
+                "SSD": 256,
+                "Graphics card": "Intel UHD",
+                "Processor": "Intel Core i7",
+                "OS": "Windows 10"
+            },
+            "price": 899.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 50,
+            "api_source": "Internal"
+        },
+        {
+            "product_id": 18,
+            "name": "Smartphone",
+            "description": "Latest smartphone with 5G support and AMOLED display.",
+            "type": "phone",
+            "details": {
+                "RAM": 12,
+                "Storage": 128,
+                "Screen": "6.5 inch AMOLED",
+                "Camera": "108MP",
+                "Battery": "5000mAh"
+            },
+            "price": 699.99,
+            "image_url": {
+                "main_image": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "1": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg",
+                "2": "https:\/\/i5.walmartimages.com\/seo\/Lenovo-Ideapad-5-14-1080p-Touchscreen-Laptop-AMD-Ryzen-7-5700U-8GB-RAM-512GB-SSD-Windows-11Home-Graphite-Grey-82LM00UEUS_bd7e44d5-ecc2-492a-9fe7-56c8599372bd.31d4c74bec047ea8f7dd7939c4e7801b.jpeg"
+            },
+            "stock": 100,
+            "api_source": "Internal"
+        },
+        {
+            "name": "Smartwatch",
+            "description": "Smartwatch with health tracking features.",
+            "type": "",
+            "price": 199.99,
+            "stock": 0,
+            "api_source": "",
+            "image_url": {
+                "main_image": "https:\/\/fitvii.com\/cdn\/shop\/files\/JL05_TPU_3_ca7b3424-dc5a-4fb5-b44e-a9f7ea5a37e2.jpg?v=1720083298&width=1445",
+                "1": "",
+                "2": ""
+            },
+            "details": []
+        }
+    ]
+}

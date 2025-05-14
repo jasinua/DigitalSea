@@ -591,7 +591,7 @@
 
     .save-message {
         position: fixed;
-        top: 20px;
+        top: 55px;
         right: 20px;
         padding: 12px 20px;
         border-radius: 8px;
@@ -599,7 +599,6 @@
         color: white;
         font-weight: 500;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transform: translateY(-100%);
         opacity: 0;
         transition: all 0.3s ease;
         z-index: 1000;
