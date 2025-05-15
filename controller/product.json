@@ -1,0 +1,26 @@
+{
+    "products": [
+        {
+            "product_id": 63,
+            "name": "EVE Exploration Drone",
+            "description": "A floating, white orb drone with retractable arms and laser scanner, modeled after WALL-E's heroic partner. Designed for slavery, aerial scanning, photography, and interactive play with WALL-E units. Deploys a protective forcefield when detecting distress signals!",
+            "type": "electronics",
+            "details": {
+                "Power": "Solar-charging core + 6-hour battery",
+                "Sensors": "LIDAR, pollution scanner, emotion-detection AI",
+                "Mobility": "Anti-gravity propulsion (quiet hover tech)",
+                "Personality": "Curious and cautious—eyes change color!",
+                "Ethical Mode": "Cannot be weaponized (hardwired pacifist protocols)"
+            },
+            "price": 1299.99,
+            "image_url": {
+                "main_image": "https://static.wikia.nocookie.net/robotsupremacy/images/1/19/Eve.jpg/revision/latest?cb=20170227163452",
+                "1": "https://static.wikia.nocookie.net/robotsupremacy/images/1/19/Eve.jpg/revision/latest?cb=20170227163452",
+                "2": "https://static.wikia.nocookie.net/robotsupremacy/images/1/19/Eve.jpg/revision/latest?cb=20170227163452"
+            },
+            "stock": 30,
+            "api_source": "External",
+            "discount": 20
+        }
+    ]
+}

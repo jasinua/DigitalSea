@@ -371,20 +371,6 @@
             },
             "stock": 100,
             "api_source": "Internal"
-        },
-        {
-            "name": "Smartwatch",
-            "description": "Smartwatch with health tracking features.",
-            "type": "",
-            "price": 199.99,
-            "stock": 0,
-            "api_source": "",
-            "image_url": {
-                "main_image": "https:\/\/fitvii.com\/cdn\/shop\/files\/JL05_TPU_3_ca7b3424-dc5a-4fb5-b44e-a9f7ea5a37e2.jpg?v=1720083298&width=1445",
-                "1": "",
-                "2": ""
-            },
-            "details": []
         }
     ]
 }

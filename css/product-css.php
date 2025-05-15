@@ -65,6 +65,39 @@
         color: #333;
     }
 
+    #rating{
+        width: 100%;
+        padding: 12px 20px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--noir-color);
+        font-weight: 500;
+    }
+
+    #stars{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #rate{
+        background-color: var(--noir-color);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-left: 10px;
+    }
+
+    #rate:hover{
+        background-color: var(--button-color-hover);
+        transform: translateY(-2px);
+    }
+
     #infoSide {
         width: 50%;
         display: flex;

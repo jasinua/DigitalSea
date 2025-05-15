@@ -181,7 +181,7 @@
 
     function addProductsToDatabase($conn) {
 
-        $file = '../controller/productsPlus.json';
+        $file = '../controller/product.json';
         $json_data = file_get_contents($file);
         $products = json_decode($json_data, true);
                 
@@ -199,8 +199,8 @@
                 // If product does not exist, insert it
                 if ($count == 0) {
                     // Prepare and bind for insert
-                    $stmt = $conn->prepare("CALL insertProducts(?,?,?,?,?,?,?)");
-                    $stmt->bind_param("issdsiis", $product['product_id'], $product['name'], $product['description'], $product['price'], $product['image_url']['main_image'], $product['stock'], $product['discount']);
+                    $stmt = $conn->prepare("CALL insertProducts(?,?,?,?,?,?)");
+                    $stmt->bind_param("issdsi", $product['product_id'], $product['name'], $product['description'], $product['price'], $product['image_url']['main_image'], $product['stock']);
         
                     // Execute the statement
                     if (!$stmt->execute()) {
@@ -220,7 +220,7 @@
     }
 
     function addDetailsToDatabase($conn) {
-        $file = '../controller/productsPlus.json';
+        $file = '../controller/product.json';
         $json_data = file_get_contents($file);
         $products = json_decode($json_data, true);
         

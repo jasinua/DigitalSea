@@ -51,6 +51,22 @@
                         <?php } ?>
                     </div>
                 </div>
+                <div id='rating' '>
+                    <p>Rating:</p>
+                    <div id='stars'>
+                        <?php include 'ratingPart.php'; ?>
+                        <button id='rate' onclick="submitRating()">Rate</button>
+                    </div>
+                    <p id="average-rating"><?php 
+                        $rating_sql = "SELECT AVG(rating) as avg_rating FROM product_ratings WHERE product_id = ?";
+                        $rating_stmt = $conn->prepare($rating_sql);
+                        $rating_stmt->bind_param("i", $productID);
+                        $rating_stmt->execute();
+                        $rating_result = $rating_stmt->get_result();
+                        $rating_data = $rating_result->fetch_assoc();
+                        echo number_format($rating_data['avg_rating'] ?? 0, 2);
+                    ?></p>
+                </div>
                 <form action='product.php?product=<?php echo $productID ?>' id='buyForm' method='post'>
                     <div id='stockWrapper'>
                         <p class='price-label'>Quantity:</p>
@@ -148,6 +164,21 @@
                     $clearBtn.hide();
                 }
             });
+
+            // Initialize stars based on user's previous rating
+            <?php
+            if (isset($_SESSION['user_id'])) {
+                $user_rating_sql = "SELECT rating FROM product_ratings WHERE product_id = ? AND user_id = ?";
+                $user_rating_stmt = $conn->prepare($user_rating_sql);
+                $user_rating_stmt->bind_param("ii", $productID, $_SESSION['user_id']);
+                $user_rating_stmt->execute();
+                $user_rating_result = $user_rating_stmt->get_result();
+                if ($user_rating_result->num_rows > 0) {
+                    $user_rating = $user_rating_result->fetch_assoc()['rating'];
+                    echo "initializeStars($user_rating);";
+                }
+            }
+            ?>
         });
 
         function addToQuantity(add) {
@@ -180,6 +211,69 @@
             return parseFloat(price).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
+            });
+        }
+
+        function submitRating() {
+            const stars = document.querySelectorAll(".star");
+            let rating = 0;
+            let under = true;
+            
+            stars.forEach(element => {
+                if (!element.classList.contains("unchecked")) {
+                    rating += 1;
+                }
+            });
+
+            console.log(rating);
+
+            $.ajax({
+                url: 'controller/add_rating.php',
+                method: 'POST',
+                data: {
+                    product_id: <?php echo $productID; ?>,
+                    rating: rating
+                },
+                success: function(response) {
+                    const result = JSON.parse(response);
+                    if (result.status === 'success') {
+                        updateAverageRating();
+                    } else {
+                        alert(result.message);
+                    }
+                },
+                error: function() {
+                    alert('An error occurred while submitting the rating');
+                }
+            });
+        }
+
+        function updateAverageRating() {
+            $.ajax({
+                url: 'controller/get_average_rating.php',
+                method: 'POST',
+                data: {
+                    product_id: <?php echo $productID; ?>
+                },
+                success: function(response) {
+                    const result = JSON.parse(response);
+                    if (result.status === 'success') {
+                        document.getElementById('average-rating').textContent = result.average_rating;
+                    }
+                }
+            });
+        }
+
+        function initializeStars(rating) {
+            const stars = document.querySelectorAll(".star");
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove("unchecked");
+                    star.classList.add("checked");
+                } else {
+                    star.classList.remove("checked");
+                    star.classList.add("unchecked");
+                }
             });
         }
     </script>
