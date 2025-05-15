@@ -78,8 +78,8 @@
 
     header {
         display: flex;
-        background: linear-gradient(to right, rgb(26, 78, 118) 5%, var(--noir-color) 16%, 
-                    var(--noir-color) 86%, rgb(26, 78, 118) 100%);
+        background: linear-gradient(to right, rgb(69, 110, 142) 0%, rgb(26, 78, 118) 6%, var(--noir-color) 16%, 
+                    var(--noir-color) 100%);
         color: white;
         justify-content: space-between;
         align-items: center;
@@ -1055,8 +1055,7 @@
         const mobileSearchInput = $('.mobile-search-input');
         const mobileClearButton = $('.mobile-search-container .clear-search');
         
-        // Fix for mobile clear button
-        mobileClearButton.on('click mousedown', function(e) {
+        mobileClearButton.on('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             mobileSearchInput.val('').focus();
@@ -1072,70 +1071,55 @@
         // Mobile menu functionality
         const mobileMenuToggle = $('.mobile-menu-toggle');
         const mobileMenu = $('.mobile-menu');
+        const searchIcon = $('.search-icon');
+        const mobileSearchContainer = $('.mobile-search-container');
+        const mobileSearchClose = $('.mobile-search-close');
 
-        mobileMenuToggle.click(function(e) {
+        // Toggle mobile menu
+        mobileMenuToggle.on('click', function(e) {
+            e.preventDefault();
             e.stopPropagation();
             mobileMenu.toggleClass('active');
             $(this).toggleClass('active');
+            // Close search if open
+            mobileSearchContainer.removeClass('active');
         });
 
-        // Search icon click handler
-        $('.search-icon').click(function(e) {
+        // Toggle mobile search
+        searchIcon.on('click', function(e) {
+            e.preventDefault();
             e.stopPropagation();
-            if (window.innerWidth <= 960) {
-                $('.mobile-search-container').addClass('active');
-                $('.mobile-search-container input').focus();
-                
-                // Check if there's text in the input and show/hide clear button
-                mobileClearButton.toggle(mobileSearchInput.val().length > 0);
-            }
+            mobileSearchContainer.addClass('active');
+            mobileSearchInput.focus();
+            // Close menu if open
+            mobileMenu.removeClass('active');
+            mobileMenuToggle.removeClass('active');
         });
 
         // Close mobile search
-        $('.mobile-search-close').click(function() {
-            $('.mobile-search-container').removeClass('active');
+        mobileSearchClose.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            mobileSearchContainer.removeClass('active');
         });
 
-        // Close when clicking outside
-        $(document).click(function(e) {
+        // Close both menu and search when clicking outside
+        $(document).on('click', function(e) {
             if (!$(e.target).closest('.mobile-menu, .mobile-menu-toggle, .mobile-search-container, .search-icon').length) {
                 mobileMenu.removeClass('active');
                 mobileMenuToggle.removeClass('active');
-                $('.mobile-search-container').removeClass('active');
+                mobileSearchContainer.removeClass('active');
             }
         });
 
         // Handle window resize
-        $(window).resize(function() {
-            // Close mobile search on resize
+        $(window).on('resize', function() {
             if (window.innerWidth > 960) {
-                $('.mobile-search-container').removeClass('active');
+                mobileMenu.removeClass('active');
+                mobileMenuToggle.removeClass('active');
+                mobileSearchContainer.removeClass('active');
             }
         });
-
-    //     // Update cart count badge
-    //     let badge = document.querySelector('.cart-count-badge');
-    //     const cartIcon = document.querySelector('a[href="cart.php"] i.fas.fa-shopping-cart');
-    //     if (!badge) {
-    //         badge = document.createElement('span');
-    //         badge.className = 'cart-count-badge';
-    //         badge.style.width = '15px';
-    //         badge.style.height = '15px';
-    //         badge.style.display = 'flex';
-    //         badge.style.alignItems = 'center';
-    //         badge.style.justifyContent = 'center';
-    //         cartIcon.parentNode.style.position = 'relative';
-    //         cartIcon.parentNode.appendChild(badge);
-    //     }
-
-    //     // Now you can safely use badge
-    //     let current = parseInt(badge.textContent) || 0;
-    //     badge.textContent = current + 1;
-    //     badge.style.width = '15px';
-    //     badge.style.height = '15px';
-    //     badge.style.display = 'flex';
-    //     badge.style.alignItems = 'center';
-    //     badge.style.justifyContent = 'center';
-    // });  
+    });
 </script>
 </html>

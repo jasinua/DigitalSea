@@ -270,6 +270,7 @@
         display: flex;
         gap: 10px;
         align-items: center;
+        color: var(--page-text-color);
     }
     
     .price-range input[type="number"] {
