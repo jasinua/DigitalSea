@@ -2,6 +2,11 @@
     session_start();
     include 'controller/home.inc.php';
 
+    function getImageSource($product_id, $image_url) {
+        $local_image = "images/product_$product_id.png";
+        return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
+    }
+
     $productID = $_GET["product"];
     $data = getProductData($productID);
     $details = getProductDetails($productID);
@@ -34,7 +39,7 @@
                 <i class="<?php echo $is_in_wishlist ? 'fas' : 'far'; ?> fa-heart"></i>
             </button>
             <div style='width:50%;display: flex; justify-content: center; align-items: center; position: relative;'>
-                <img id='productImg' src="<?php echo $data['image_url']; ?>" alt="<?php echo $data['description']; ?>" draggable='false'>
+                <img id='productImg' src="<?php echo getImageSource($productID, $data['image_url']); ?>" alt="<?php echo $data['description']; ?>" draggable='false'>
                 <?php if ($data['discount'] > 0) { ?>
                     <div class="discount-badge">-<?php echo $data['discount'] ?>%</div>
                 <?php } ?>

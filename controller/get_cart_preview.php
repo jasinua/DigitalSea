@@ -9,6 +9,11 @@
         exit;
     }
 
+    function getImageSource($product_id, $image_url) {
+        $local_image = "images/product_$product_id.png";
+        return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
+    }
+
     // Get absolute path to the root directory
     $rootPath = str_replace('\\', '/', realpath(dirname(__FILE__) . '/../'));
 
@@ -59,7 +64,7 @@
                 ?>
                 <a class="cart-preview-item-link" href="../product.php?product=<?php echo $product['product_id']; ?>">
                     <div class="cart-preview-item">
-                        <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                        <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                         <div class="cart-preview-item-info">
                             <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
                             <div class="cart-preview-item-price">
@@ -83,7 +88,7 @@
                     ?>
                     <a class="cart-preview-item-link" href="../product.php?product=<?php echo $product['product_id']; ?>">
                         <div class="cart-preview-item">
-                            <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                            <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                             <div class="cart-preview-item-info">
                                 <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
                                 <div class="cart-preview-item-price">

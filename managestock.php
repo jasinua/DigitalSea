@@ -17,41 +17,69 @@
 
     // Handle form submission
     if (isset($_POST['submit'])) {
-        $product = [
-            "name" => $_POST['name'],
-            "description" => $_POST['description'],
-            "type" => $_POST['type'],
-            "price" => (float) $_POST['price'],
-            "stock" => (int) $_POST['stock'],
-            "api_source" => $_POST['api_source'],
-            "image_url" => [
-                "main_image" => $_POST['main_image'],
-                "1" => $_POST['image_1'],
-                "2" => $_POST['image_2']
-            ],
-            "details" => [],
-            "discount" => (float) $_POST['discount']
-        ];
-
-        foreach ($_POST['details_key'] as $index => $key) {
-            if (!empty($key) && !empty($_POST['details_value'][$index])) {
-                $product["details"][$key] = $_POST['details_value'][$index];
+        $name = $_POST['name'];
+        $description = $_POST['description'];
+        $type = $_POST['type'];
+        $price = (float) $_POST['price'];
+        $stock = (int) $_POST['stock'];
+        $api_source = $_POST['api_source'];
+        $discount = (float) $_POST['discount'];
+        
+        // Get the next product ID
+        $sql = "SELECT MAX(product_id) as max_id FROM products";
+        $result = $conn->query($sql);
+        $row = $result->fetch_assoc();
+        $next_id = ($row['max_id'] ?? 0) + 1;
+        
+        $image_url = '';
+        
+        // Handle image based on source
+        if ($_POST['image_source'] === 'file' && isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
+            $upload_dir = 'images/';
+            $temp_name = $_FILES['product_image']['tmp_name'];
+            $new_filename = "product_{$next_id}.png";
+            $upload_path = $upload_dir . $new_filename;
+            
+            if (move_uploaded_file($temp_name, $upload_path)) {
+                $image_url = $upload_path;
+            } else {
+                echo "<script>alert('Error uploading image');</script>";
+                exit();
             }
-        }
-
-        if (file_exists($file)) {
-            $json_data = file_get_contents($file);
-            $data = json_decode($json_data, true);
+        } elseif ($_POST['image_source'] === 'url' && !empty($_POST['image_url'])) {
+            $image_url = $_POST['image_url'];
         } else {
-            $data = ["products" => []];
+            echo "<script>alert('Please provide either an image file or URL');</script>";
+            exit();
         }
-
-        $data["products"][] = $product;
-
-        file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
-
-        echo "<script>alert('Product added successfully!'); window.location.href=window.location.href;</script>";
-        exit();
+        
+        // Insert product into database
+        $sql = "INSERT INTO products (name, description, type, price, stock, api_source, discount, image_url) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssdissd", $name, $description, $type, $price, $stock, $api_source, $discount, $image_url);
+        
+        if ($stmt->execute()) {
+            $product_id = $conn->insert_id;
+            
+            // Process product details
+            if (isset($_POST['details_key']) && isset($_POST['details_value'])) {
+                foreach ($_POST['details_key'] as $index => $key) {
+                    if (!empty($key) && !empty($_POST['details_value'][$index])) {
+                        $value = $_POST['details_value'][$index];
+                        $detail_sql = "INSERT INTO product_details (product_id, detail_key, detail_value) VALUES (?, ?, ?)";
+                        $detail_stmt = $conn->prepare($detail_sql);
+                        $detail_stmt->bind_param("iss", $product_id, $key, $value);
+                        $detail_stmt->execute();
+                    }
+                }
+            }
+            
+            echo "<script>alert('Product added successfully!'); window.location.href=window.location.href;</script>";
+            exit();
+        } else {
+            echo "<script>alert('Error adding product: " . $conn->error . "');</script>";
+        }
     }
 ?>
 
@@ -102,14 +130,19 @@
                     <label>API Source:</label>
                     <input type="text" name="api_source">
 
-                    <label>Main Image URL:</label>
-                    <input type="url" name="main_image" required>
-
-                    <label>Image 1 URL:</label>
-                    <input type="url" name="image_1">
-
-                    <label>Image 2 URL:</label>
-                    <input type="url" name="image_2">
+                    <label>Product Image:</label>
+                    <div class="image-input-container">
+                        <div class="image-input-option">
+                            <input type="radio" name="image_source" value="file" id="image_file" checked>
+                            <label for="image_file">Upload File</label>
+                            <input type="file" name="product_image" accept="image/*" id="file_input">
+                        </div>
+                        <div class="image-input-option">
+                            <input type="radio" name="image_source" value="url" id="image_url">
+                            <label for="image_url">Image URL</label>
+                            <input type="url" name="image_url" id="url_input" placeholder="https://example.com/image.jpg" disabled>
+                        </div>
+                    </div>
 
                     <label>Discount (Optional):</label>
                     <input type="number" name="discount" step="0.01">
@@ -146,7 +179,7 @@
                     <?php foreach ($products as $index => $product): ?>
                         <tr data-index="<?= $index ?>">
                         <td>
-                                <img src="<?= htmlspecialchars($product['image_url']) ?>" class="product-img" alt="">
+                                <img src="images/product_<?= htmlspecialchars($product['product_id']) ?>.png" class="product-img" alt="<?= htmlspecialchars($product['name']) ?>">
                             </td>
                             <td><?= htmlspecialchars($product['name']) ?></td>
                             <td><?= htmlspecialchars($product['description']) ?></td>
@@ -347,5 +380,24 @@
         const editIndex = document.getElementById('edit-index');
         if (editIndex) editIndex.remove();
     }
+
+    document.querySelectorAll('input[name="image_source"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const fileInput = document.getElementById('file_input');
+            const urlInput = document.getElementById('url_input');
+            
+            if (this.value === 'file') {
+                fileInput.disabled = false;
+                urlInput.disabled = true;
+                fileInput.required = true;
+                urlInput.required = false;
+            } else {
+                fileInput.disabled = true;
+                urlInput.disabled = false;
+                fileInput.required = false;
+                urlInput.required = true;
+            }
+        });
+    });
 </script>
 </html>

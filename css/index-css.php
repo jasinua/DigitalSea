@@ -12,6 +12,7 @@
         flex: 1; 
         min-height: calc(100vh - 120px); 
         position: relative;
+        background-color: var(--noir-color);
     }
 
     #container #moreItemsText {
@@ -56,8 +57,10 @@
         overflow-y: auto;
         flex-shrink: 0;
         align-self: flex-start;
-        padding-top: 80px; /* Add padding to account for header */
+        padding-top: 65px; /* Add padding to account for header */
         padding-bottom: 60px; /* Add padding to account for footer */
+        border-top-right-radius: 10px;
+        /* border-bottom-right-radius: 20px; */
     }
 
     #filterForm{
@@ -292,7 +295,7 @@
         padding: 10px;
         border-radius: 6px;
         font-size: 14px;
-        background-color: var(--filt-button-color);
+        background: linear-gradient(135deg, var(--filt-button-color-hover) 35%, var(--filt-button-color));
         border: none;
         color: white;
         cursor: pointer;
@@ -562,6 +565,47 @@
         text-decoration:none;
         color:var(--page-text-color);
     }
+
+    /* .discount-circle {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        width: 65px;
+        height: 65px;
+        background-color: #e74c3c;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        transition: var(--transition);
+    }
+
+    .discount-circle:hover {
+        transform: scale(1.1);
+        background-color: #c0392b;
+    }
+
+    .discount-circle i {
+        font-size: 24px;
+    }
+        
+    .discount-circle.active {
+        background-color: #c0392b;
+    }
+
+    .discount-circle.active:hover {
+        background-color: #a93226;
+    }
+
+    @media (max-width: 768px) {
+        .discount-circle {
+            top: 70px;
+        }
+    } */
     
     /* Wheel Carousel starts here*/
     .background-gradient{
@@ -608,10 +652,11 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        opacity: 0px;
+        opacity: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
+        opacity: 1;
     }
     
     .wheel-item.active {
@@ -660,12 +705,12 @@
     }
 
     .wheel-item .title {
-        font-size: 15px;
+        font-size: 17px;
         text-align: left;
         margin: 15px 0;
         min-height: 50px;
         overflow: hidden;
-        color: #555;
+        color: var(--noir-color);
         padding: 0 5px 0 10px;
         width: 100%;
     }
@@ -681,7 +726,7 @@
         width: 100%;
         font-size: 17px;
         font-weight: 600;
-        color: black;
+        color: var(--noir-color);
     }
 
     .wheel-item .original-price {
@@ -692,7 +737,7 @@
     }
 
     .wheel-item .discounted-price {
-        color: black;
+        color: var(--noir-color);
         font-weight: 600;
         font-size: 17px;
     }
@@ -745,7 +790,7 @@
     
     .wheel-item .wishlist-btn i {
         font-size: 20px;
-        color: #ccc;
+        color: #555;
         transition: color 0.2s;
     }
     
@@ -1562,7 +1607,7 @@
         .wheel-item .title {
             font-size: 14px;
             min-height: 45px;
-            margin: 12px 0;
+            /* margin: 12px 0; */
         }
         
         .wheel-item .price {

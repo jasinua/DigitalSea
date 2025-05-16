@@ -1,6 +1,12 @@
 <?php 
 include_once "model/dbh.inc.php";
 include_once "controller/function.php";
+
+function getImageSource($product_id, $image_url) {
+    $local_image = "images/product_$product_id.png";
+    return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
+}
+
 session_start();
 
 if (isLoggedIn($_SESSION['user_id'])) {
@@ -96,7 +102,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     <td style="width: 60%;">
                                     <div class="product-info">
                                         <input type="hidden" name="prod_id[]" value="<?php echo $product['product_id']; ?>">
-                                        <img src="<?php echo $product['image_url']; ?>" alt="Product Image">
+                                        <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" alt="Product Image">
                                         <div class="product-details">
                                             <h4><?php echo $product['name']; ?></h4>
                                             <div class="desc mobile-desc"><?php echo $product['description']; ?></div>

@@ -57,6 +57,7 @@
         --logout-color-hover: #C70000;
 
         --error-color: #F94040;
+        --error-color-hover: #C70000;
     }
 
     * {
