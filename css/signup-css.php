@@ -113,6 +113,12 @@
         flex: 1;
     }
 
+    .signup-container label {
+        font-size: 14px;
+        color: var(--noir-color);
+        margin-bottom: 5px;
+    }
+
     /* Password Strength Meter Styles */
     .password-strength {
         margin-top: 5px;

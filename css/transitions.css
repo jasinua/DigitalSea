@@ -30,7 +30,7 @@
 }
 
 #loginContainer {
-    width: 100%;
+    width: 50%;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -42,7 +42,7 @@
     z-index: 1;
 }
 
-#signupContainer {
+#forgotPasswordContainer {
     width: 50%;
     height: 100vh;
     display: flex;
@@ -50,9 +50,41 @@
     justify-content: center;
     transition: transform 0.7s ease-in-out;
     position: absolute;
+    right: 0;
+    background-color: white;
+    z-index: 1;
+    transform: translateY(100%);
+}
+
+#signupContainer {
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: transform 0.7s ease-in-out;
+    position: absolute;
+    top:0;
     left: 0;
     background-color: white;
     z-index: 1;
+    transform: translateX(-100%);
+}
+
+#confirmationContainer {
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: transform 0.7s ease-in-out;
+    position: absolute;
+    left: 0;
+    background-color: white;
+    z-index: 1;
+    transform: translateY(100%);
 }
 
 .login-container,
@@ -62,6 +94,7 @@
     padding: 2rem;
     background: white;
     border-radius: 8px;
+    transition: transform 0.7s ease-in-out;
 }
 
 /* Initial state for login form */
@@ -70,7 +103,7 @@ body:not(.signup-page) #loginContainer {
 }
 
 /* Initial state for signup form */
-body:not(.signup-page) #signupContainer {
+body:not(.signup-page) #signupPage {
     transform: translateX(-100%);
 }
 

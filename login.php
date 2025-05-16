@@ -1,6 +1,5 @@
 <?php 
-    include_once "controller/login.inc.php"; 
-    include_once "controller/function.php";
+    include_once "model/dbh.inc.php";
 
     // Check for authentication cookies
     if (!isset($_SESSION['user_id']) && isset($_COOKIE['user_email']) && isset($_COOKIE['user_password'])) {
@@ -24,71 +23,23 @@
         }
     }
 
-    include_once "controller/signup.inc.php";
-
-    $error = '';
-    $success = '';
-
-    if(isset($_POST['register'])){
-        // Storing variables for validation
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
-        $email = $_POST['email'];
-        $birthday = $_POST['birthday'];
-        $password = $_POST['password'];
-        $password_repeat = $_POST['repeat_password'];
-
-        // Data validation using methods
-        if(emptyInputSignUp($first_name, $last_name, $birthday, $email, $password, $password_repeat)) {
-            $error = "Please fill in all fields.";
-        } elseif(!invalidInputs($first_name, $last_name)) {
-            $error = "Invalid name inputs.";
-        } elseif(!checkEmail($email)) {
-            $error = "Invalid email format.";
-        } elseif(!invalidPasswordFormat($password)) {
-            $error = "Password must be at least 5 characters long.";
-        } elseif(!checkPassword($password, $password_repeat)) {
-            $error = "Passwords do not match.";
-        } elseif(!checkAge($birthday)) {
-            $error = "You must be at least 18 years old.";
-        } elseif(!emailExists($email)) {
-            $error = "Email already exists.";
-        } else {
-            if (createUser($first_name, $last_name, $birthday, $email, $password)) {
-                $success = "Account created successfully! Welcome to DigitalSea.";
-                header("Location: login.php");
-                exit();
-            } else {
-                $error = "Something went wrong. Please try again.";
-            }
-        }
-    }
-
-    // include "header.php";
-
-    $error = '';
-
-    if(!isset($_SESSION['user_id'])) {
-        if(isset($_POST['submit'])){
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-
-            if(checkData($email)) {
-                $error = "Email doesn't exist.";
-            } else {
-                $loginResult = login($email, $password); 
-        
-                if ($loginResult) {
-                    header("Location: index.php"); 
-                    exit();
-                } else {
-                    $error = "Invalid email or password.";
-                }
-            }
-        }
-    } else {
+    if(isset($_SESSION['user_id'])) {
         header("Location: index.php"); 
         exit();
+    }
+
+    $tokenSet = false;
+    if(isset($_GET['token'])) {
+        $token = $_GET['token'];
+        $stmt = $conn->prepare("SELECT * FROM users WHERE token = ?");
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+
+        if($user) {
+            $tokenSet = true;
+        }
     }
 ?>
 
@@ -151,14 +102,35 @@
                     </div>
                 </div>
             </div>
+
+            <div id="confirmationContainer">
+                <!-- Confirmation Form -->
+                <div class="signup-container">
+                    <h1>Confirm Email</h1>
+                    <form id="confirmationForm" onsubmit="return handleConfirmation(event)">
+                        <label id="confirmationEmailLabel">Enter the confirmation code sent to your email</label>
+                        <div class="confirm-code-field">
+                            <input type="text" name="confirm-code" id="confirm-code" placeholder="Confirmation Code" required>
+                        </div>
+                        <input type="submit" value="Confirm Email">
+                        <div id="confirmationError" class="error" style="display: none;"></div>
+                    </form>
+
+                    <div class="login-link">
+                        <a href="javascript:void(0)" onclick="resendCode()">Resend Code</a> | 
+                        <a href="javascript:void(0)" onclick="showSignupFromConfirmation()">Back to Sign Up</a>
+                    </div>
+                </div>
+            </div>  
             
             <div id='img' style="justify-content:right;">
                 <div id="img-content">
-                    <h1 style="align-self:right;" class="welcome-text">Welcome to DigitalSea</h1>
-                    <p style="align-self:right;" class="welcome-text p">Your one-stop shop for all your digital needs</p>
+                    <h1 style="text-align:center;" class="welcome-text">Welcome to DigitalSea</h1>
+                    <p style="text-align:center;" class="welcome-text p">Your one-stop shop for all your digital needs</p>
                     <button class="shop-now-button" onClick="window.location.href='index.php'">Shop Now</button>
                 </div>
             </div>
+            
             <div id="loginContainer">
              <!-- Login Form -->
              <div class="login-container">
@@ -178,10 +150,74 @@
                     <div class="signup-link">
                         Don't have an account? <a href="javascript:void(0)" onclick="showSignupForm()">Sign Up</a>
                     </div>
+                    <div class="signup-link">
+                        <a href="javascript:void(0)" onclick="showForgotPassword()">Forgot Password?</a>
+                    </div>  
                 </div>
             </div>
 
+            <?php if(!isset($_GET['token'])) { ?>
+            <div id="forgotPasswordContainer">
+                <!-- Forgot Password Form -->
+                <div class="login-container">
+                    <h1>Forgot Password</h1>
+                    <form id="confirmationEmailLabel" onsubmit="return handleForgotPassword(event)" style="color: var(--noir-color)">
+                        <label id="forgotPasswordEmailLabel">Enter your email</label>
+                        <div class="confirm-code-field">
+                            <input type="text" name="forgot-password-email" id="forgot-password-email" placeholder="Email" required>
+                        </div>
+                        <input type="submit" value="Reset Password">
+                        <div id="forgotPasswordError" class="error" style="display: none;"></div>
+                        <div id="forgotPasswordSuccess" class="success" style="display: none;"></div>
+                    </form>
+
+                    <div class="signup-link">
+                        <a href="javascript:void(0)" onclick="showLoginFromForgotPassword()">Back to Log In</a>
+                    </div>
+                    
+                </div>
+            </div> 
+
+
+            <?php }else{ ?>
+                <script>
+                    document.getElementById('loginContainer').style.display = 'none';
+                    document.getElementById('registerContainer').style.display = 'none';
+                    document.getElementById('confirmationContainer').style.display = 'none';
+                </script>
             
+            <div id="forgotPasswordContainer">
+                <!-- Forgot Password Form -->
+                <div class="login-container">
+                    <h1>Reset Password</h1>
+                    <form id="confirmationEmailLabel" onsubmit="return handleForgotPasswordChange(event)" style="color: var(--noir-color)">
+                        <label id="forgotPasswordEmailLabel">Enter your new password</label>
+                        <div class="confirm-code-field">
+
+                            <div class="password-field">
+                                <input type="password" name="password-reset" id="password-reset" placeholder="Password" required>
+                                <span class="password-toggle" onclick="togglePasswordVisibilityReset('password-reset')">
+                                    <i class="far fa-eye"></i>
+                                </span>
+                            </div>
+
+                            <div class="password-field">
+                                <input type="password" name="password-confirm" id="password-confirm" placeholder="Confirm Password" required>
+                                <span class="password-toggle" onclick="togglePasswordVisibilityReset('password-confirm')">
+                                    <i class="far fa-eye"></i>
+                                </span>
+                            </div>
+
+                        </div>
+                        <input type="submit" value="Reset Password">
+                        
+                        <div id="forgotPasswordError" class="error" style="display: none;"></div>
+                        <div id="forgotPasswordSuccess" class="success" style="display: none;"></div>
+
+                    </form>
+                </div>
+            </div> 
+            <?php } ?>
         </div>
         <?php include "footer/footer.php"; ?>
     </div>
@@ -246,6 +282,42 @@
             imgContent.style.transform = 'translateX(-100%)';
         }
 
+        function showSignupConfirmation() {
+            const signupContainer = document.querySelector('#signupContainer');
+            const confirmationContainer = document.querySelector('#confirmationContainer');
+            console.log("yeet")
+
+            signupContainer.style.transform = 'translateY(-100%)';
+            confirmationContainer.style.transform = 'translateY(0)';
+        }
+
+        function showSignupFromConfirmation() {
+            const confirmationContainer = document.querySelector('#confirmationContainer');
+            const signupContainer = document.querySelector('#signupContainer');
+            
+            // Reset the registration form
+            const registerForm = document.getElementById('registerForm');
+            registerForm.reset();
+            
+            // Re-enable the register button
+            const registerButton = registerForm.querySelector('input[type="submit"]');
+            registerButton.disabled = false;
+            registerButton.value = 'Create Account';
+            
+            // Clear any error messages
+            document.getElementById('registerError').style.display = 'none';
+            document.getElementById('confirmationError').style.display = 'none';
+            
+            // Reset password strength meter
+            const strengthMeter = document.querySelector('.strength-meter');
+            const strengthText = document.querySelector('.strength-text');
+            strengthMeter.className = 'strength-meter';
+            strengthText.textContent = '';
+
+            signupContainer.style.transform = 'translateY(0)';
+            confirmationContainer.style.transform = 'translateY(100%)';
+        }
+
         function showLoginForm() {
             const loginContainer = document.querySelector('#loginContainer');
             const signupContainer = document.querySelector('#signupContainer');
@@ -258,6 +330,22 @@
             signupContainer.style.transform = 'translateX(-100%)';
             img.style.transform = 'translateX(-50%)';
             imgContent.style.transform = 'translateX(0)';
+        }
+
+        function showForgotPassword() {
+            const loginContainer = document.querySelector('#loginContainer');
+            const forgotPasswordContainer = document.querySelector('#forgotPasswordContainer');
+            
+            loginContainer.style.transform = 'translateY(-100%)';
+            forgotPasswordContainer.style.transform = 'translateY(0)';
+        }
+
+        function showLoginFromForgotPassword() {
+            const forgotPasswordContainer = document.querySelector('#forgotPasswordContainer');
+            const loginContainer = document.querySelector('#loginContainer');
+            
+            forgotPasswordContainer.style.transform = 'translateY(100%)';
+            loginContainer.style.transform = 'translateY(0)';
         }
 
         // Password strength meter
@@ -347,29 +435,284 @@
         function handleRegister(event) {
             event.preventDefault();
             const form = event.target;
+            const submitButton = form.querySelector('input[type="submit"]');
             const formData = new FormData(form);
-            formData.append('action', 'register');
 
-            fetch('controller/ajax-handler.php', {
+            // Disable submit button
+            submitButton.disabled = true;
+            submitButton.value = 'Creating Account...';
+
+            // Validate passwords match
+            if (formData.get('password') !== formData.get('repeat_password')) {
+                document.getElementById('registerError').textContent = 'Passwords do not match';
+                document.getElementById('registerError').style.display = 'block';
+                submitButton.disabled = false;
+                submitButton.value = 'Create Account';
+                return false;
+            }
+
+            // Store registration data in session
+            $.ajax({
+                url: 'controller/store_registration.php',
                 method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                const errorDiv = document.getElementById('registerError');
-                if (data.success) {
-                    window.location.href = data.redirect;
-                } else {
-                    errorDiv.textContent = data.message;
-                    errorDiv.style.display = 'block';
+                data: {
+                    first_name: formData.get('first_name'),
+                    last_name: formData.get('last_name'),
+                    email: formData.get('email'),
+                    birthday: formData.get('birthday'),
+                    password: formData.get('password')
+                },
+                success: function(response) {
+                    try {
+                        const result = typeof response === 'string' ? JSON.parse(response) : response;
+                        if (result.status === 'success') {
+                            // Send verification email
+                            $.ajax({
+                                url: 'controller/send_verification.php',
+                                method: 'POST',
+                                data: {
+                                    email: formData.get('email'),
+                                    username: formData.get('first_name') + ' ' + formData.get('last_name')
+                                },
+                                success: function(response) {
+                                    try {
+                                        const result = typeof response === 'string' ? JSON.parse(response) : response;
+                                        if (result.status === 'success') {
+                                            document.getElementById('confirmationEmailLabel').textContent = 
+                                                `Enter the confirmation code sent to ${formData.get('email')}`;
+                                            showSignupConfirmation();
+                                        } else {
+                                            document.getElementById('registerError').textContent = result.message;
+                                            document.getElementById('registerError').style.display = 'block';
+                                            submitButton.disabled = false;
+                                            submitButton.value = 'Create Account';
+                                        }
+                                    } catch (e) {
+                                        console.error('Error parsing verification response:', e);
+                                        document.getElementById('registerError').textContent = 'Failed to process verification response';
+                                        document.getElementById('registerError').style.display = 'block';
+                                        submitButton.disabled = false;
+                                        submitButton.value = 'Create Account';
+                                    }
+                                },
+                                error: function() {
+                                    document.getElementById('registerError').textContent = 'Failed to send verification code';
+                                    document.getElementById('registerError').style.display = 'block';
+                                    submitButton.disabled = false;
+                                    submitButton.value = 'Create Account';
+                                }
+                            });
+                        } else {
+                            document.getElementById('registerError').textContent = result.message;
+                            document.getElementById('registerError').style.display = 'block';
+                            submitButton.disabled = false;
+                            submitButton.value = 'Create Account';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing registration response:', e);
+                        document.getElementById('registerError').textContent = 'Failed to process registration response';
+                        document.getElementById('registerError').style.display = 'block';
+                        submitButton.disabled = false;
+                        submitButton.value = 'Create Account';
+                    }
+                },
+                error: function() {
+                    document.getElementById('registerError').textContent = 'Failed to process registration';
+                    document.getElementById('registerError').style.display = 'block';
+                    submitButton.disabled = false;
+                    submitButton.value = 'Create Account';
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
             });
 
             return false;
         }
+
+        function handleConfirmation(event) {
+            event.preventDefault();
+            const form = event.target;
+            const submitButton = form.querySelector('input[type="submit"]');
+            const code = document.getElementById('confirm-code').value;
+
+            // Disable submit button
+            submitButton.disabled = true;
+            submitButton.value = 'Verifying...';
+
+            $.ajax({
+                url: 'controller/verify_code.php',
+                method: 'POST',
+                data: {
+                    code: code
+                },
+                success: function(response) {
+                    try {
+                        const result = typeof response === 'string' ? JSON.parse(response) : response;
+                        if (result.status === 'success') {
+                            window.location.href = 'index.php';
+                } else {
+                            document.getElementById('confirmationError').textContent = result.message;
+                            document.getElementById('confirmationError').style.display = 'block';
+                            submitButton.disabled = false;
+                            submitButton.value = 'Confirm Email';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing confirmation response:', e);
+                        document.getElementById('confirmationError').textContent = 'Failed to process confirmation response';
+                        document.getElementById('confirmationError').style.display = 'block';
+                        submitButton.disabled = false;
+                        submitButton.value = 'Confirm Email';
+                    }
+                },
+                error: function() {
+                    document.getElementById('confirmationError').textContent = 'Failed to verify code';
+                    document.getElementById('confirmationError').style.display = 'block';
+                    submitButton.disabled = false;
+                    submitButton.value = 'Confirm Email';
+                }
+            });
+
+            return false;
+        }
+
+        function resendCode() {
+            const resendLink = document.querySelector('a[onclick="resendCode()"]');
+            resendLink.style.pointerEvents = 'none';
+            resendLink.style.opacity = '0.5';
+            resendLink.textContent = 'Sending...';
+
+            $.ajax({
+                url: 'controller/send_verification.php',
+                method: 'POST',
+                data: {
+                    email: document.querySelector('input[name="email"]').value,
+                    username: document.querySelector('input[name="first_name"]').value + ' ' + 
+                             document.querySelector('input[name="last_name"]').value
+                },
+                success: function(response) {
+                    try {
+                        const result = typeof response === 'string' ? JSON.parse(response) : response;
+                        alert(result.message);
+                    } catch (e) {
+                        alert('Failed to process response');
+                    }
+                    resendLink.style.pointerEvents = 'auto';
+                    resendLink.style.opacity = '1';
+                    resendLink.textContent = 'Resend Code';
+                },
+                error: function() {
+                    alert('Failed to resend verification code');
+                    resendLink.style.pointerEvents = 'auto';
+                    resendLink.style.opacity = '1';
+                    resendLink.textContent = 'Resend Code';
+                }
+            });
+        }
+
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const email = formData.get('forgot-password-email');
+            const submitButton = form.querySelector('input[type="submit"]');
+
+            submitButton.disabled = true;
+            submitButton.value = 'Sending...';
+
+            $.ajax({    
+                url: 'controller/forgot_password.php',
+                method: 'POST',
+                data: {
+                    email: email
+                },
+                success: function(response) {
+                    const result = response;
+                    if (result['status'] === 'success') {
+                        document.getElementById('forgotPasswordSuccess').textContent = result['message'];
+                        document.getElementById('forgotPasswordSuccess').style.display = 'block';
+                    } else {
+                        document.getElementById('forgotPasswordError').textContent = result['message'];
+                        document.getElementById('forgotPasswordError').style.display = 'block';
+                        submitButton.disabled = false;
+                        submitButton.value = 'Reset Password';
+                    }
+                },
+                error: function() {
+                    document.getElementById('forgotPasswordError').textContent = "Failed to reset password";
+                    document.getElementById('forgotPasswordError').style.display = 'block';
+                    submitButton.disabled = false;
+                    submitButton.value = 'Reset Password';
+                }
+            })
+
+        }
+
+        function handleForgotPasswordChange(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const password = formData.get('password-reset');
+            const confirmPassword = formData.get('password-confirm');
+            const submitButton = form.querySelector('input[type="submit"]');
+
+            submitButton.disabled = true;
+            submitButton.value = 'Resetting...';
+
+            if (password !== confirmPassword) {
+                document.getElementById('forgotPasswordError').textContent = "Passwords do not match";
+                document.getElementById('forgotPasswordError').style.display = 'block';
+                submitButton.disabled = false;
+                submitButton.value = 'Reset Password';
+                return;
+            }
+
+            $.ajax({
+                url: 'controller/reset_password.php',
+                method: 'POST',
+                data: {
+                    token: '<?php echo isset($_GET["token"]) ? $_GET["token"] : ""; ?>',
+                    password: password
+                },
+                success: function(response) {
+                    const result = response;
+                    if (result['status'] === 'success') {
+                        document.getElementById('forgotPasswordSuccess').textContent = result['message'];
+                        document.getElementById('forgotPasswordSuccess').style.display = 'block';
+                        setTimeout(() => {
+                            window.location.href = 'login.php';
+                        }, 3000);
+                        submitButton.value = 'Reset Password';
+
+                    } else {
+                        document.getElementById('forgotPasswordError').textContent = result['message'];
+                        document.getElementById('forgotPasswordError').style.display = 'block';
+                        submitButton.disabled = false;
+                        submitButton.value = 'Reset Password';
+                    }
+                },
+                error: function() {
+                    document.getElementById('forgotPasswordError').textContent = "Failed to reset password";
+                    document.getElementById('forgotPasswordError').style.display = 'block';
+                    submitButton.disabled = false;
+                    submitButton.value = 'Reset Password';
+                }
+            });
+        }
+        
+
+        function togglePasswordVisibilityReset(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.querySelector('.password-toggle i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+        
 
         // Add event listeners to hide error messages when user starts typing
         document.querySelectorAll('input').forEach(input => {
@@ -381,6 +724,10 @@
                 }
             });
         });
+
+        <?php if(isset($_GET['token'])) { ?>
+            showForgotPassword();
+        <?php } ?>
     </script>
 </body>
 </html>

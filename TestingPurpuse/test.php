@@ -4,4 +4,5 @@
 
     // addProductsToDatabase($conn);
     // addDetailsToDatabase($conn);
+
 ?>
