@@ -185,7 +185,7 @@
                     <?php foreach ($products as $index => $product): ?>
                         <tr data-index="<?= $index ?>">
                         <td>
-                                <img src="images/product_<?= htmlspecialchars($product['product_id']) ?>.png" class="product-img" alt="<?= htmlspecialchars($product['name']) ?>">
+                                <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" class="product-img" alt="<?= htmlspecialchars($product['name']) ?>">
                             </td>
                             <td><?= htmlspecialchars($product['name']) ?></td>
                             <td><?= htmlspecialchars($product['description']) ?></td>

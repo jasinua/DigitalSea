@@ -10,8 +10,9 @@
     }
 
     function getImageSource($product_id, $image_url) {
-        $local_image = "images/product_$product_id.png";
-        return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
+        global $rootPath;
+        $local_image = $rootPath . "/images/product_$product_id.png";
+        return file_exists($local_image) ? "images/product_$product_id.png" : htmlspecialchars($image_url);
     }
 
     // Get absolute path to the root directory

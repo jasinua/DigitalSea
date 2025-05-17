@@ -2,10 +2,10 @@
 include_once "model/dbh.inc.php";
 include_once "controller/function.php";
 
-function getImageSource($product_id, $image_url) {
-    $local_image = "images/product_$product_id.png";
-    return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
-}
+// function getImageSource($product_id, $image_url) {
+//     $local_image = "images/product_$product_id.png";
+//     return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
+// }
 
 session_start();
 
@@ -49,11 +49,14 @@ if (isLoggedIn($_SESSION['user_id'])) {
     $mergedCart = [];
     
     foreach ($rawCart as $item) {
-        $pid = $item['product_id'];
-        if (isset($mergedCart[$pid])) {
-            $mergedCart[$pid]['quantity'] = $item['quantity'];
-        } else {
-            $mergedCart[$pid] = $item;
+        // Only include items where order_id is null
+        if ($item['order_id'] === null) {
+            $pid = $item['product_id'];
+            if (isset($mergedCart[$pid])) {
+                $mergedCart[$pid]['quantity'] = $item['quantity'];
+            } else {
+                $mergedCart[$pid] = $item;
+            }
         }
     }
     $res = array_values($mergedCart);
