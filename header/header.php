@@ -973,7 +973,6 @@
                         <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 1) { echo "<li><a href='managestock.php'><i class='fas fa-wrench'></i></a></li>"; } ?>
                         <?php } else { ?>
                 <li><a href="login.php"><i class="fas fa-sign-in-alt"></i></a></li>
-                <li><a href="signup.php"><i class="fas fa-user-plus"></i></a></li>
                 <?php } ?>
             </ul>
         </nav>
@@ -1026,10 +1025,6 @@
             <a href="login.php" class="mobile-menu-item">
                 <i class="fas fa-sign-in-alt"></i>
                 <span>Login</span>
-            </a>
-            <a href="signup.php" class="mobile-menu-item">
-                <i class="fas fa-user-plus"></i>
-                <span>Sign Up</span>
             </a>
             <?php } ?>
         </div>
