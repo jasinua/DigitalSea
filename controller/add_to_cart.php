@@ -25,6 +25,7 @@ function sendJsonResponse($success, $message, $cartCount = null) {
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
+    $_SESSION['last_page'] = $_SERVER['HTTP_REFERER'];
     sendJsonResponse(false, 'User not logged in');
 }
 

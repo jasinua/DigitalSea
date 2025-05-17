@@ -3,6 +3,12 @@
     require_once 'model/dbh.inc.php';
     require_once 'controller/home.inc.php';
 
+    if(isset($_SESSION['redirect_back']) && $_SESSION['redirect_back'] == true && isset($_SESSION['user_id'])){
+        header("Location: " . $_SESSION['last_page']);
+        unset($_SESSION['last_page']);
+        unset($_SESSION['redirect_back']);
+    }
+
     // Helper function to get image source
     function getImageSource($product_id, $image_url) {
         $local_image = "images/product_$product_id.png";

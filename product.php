@@ -16,9 +16,17 @@
     $is_in_wishlist = in_array($productID, $wishlist_items);
 
     if (isset($_POST['addToCart'])) {
-        addToCart($_SESSION['user_id'], $productID, $_POST['quantity'], $_POST['quantity'] * $data['price']);
-        header("Location: cart.php");
+        if(isset($_SESSION['user_id'])){
+            addToCart($_SESSION['user_id'], $productID, $_POST['quantity'], $_POST['quantity'] * $data['price']);
+            header("Location: cart.php");
+        }else{
+            $_SESSION['last_page'] = $_SERVER['HTTP_REFERER'];
+            $_SESSION['redirect_back'] = true;
+            header("Location: login.php");
+        }
     }
+
+    if ($data){ 
 ?>
 
 <html lang="en">
@@ -27,6 +35,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($data['name']) ? htmlspecialchars($data['name']) : 'Product'; ?></title>
 </head>
+
 
 <?php include "css/product-css.php"; ?>
 
@@ -230,7 +239,9 @@
                 }
             });
 
-            console.log(rating);
+            
+            document.getElementById('rate').textContent = 'Rating..';
+
 
             $.ajax({
                 url: 'controller/add_rating.php',
@@ -240,11 +251,11 @@
                     rating: rating
                 },
                 success: function(response) {
-                    const result = JSON.parse(response);
-                    if (result.status === 'success') {
+                    const result = response
+                    if (result['status'] === 'success') {
                         updateAverageRating();
                     } else {
-                        alert(result.message);
+                        alert(result['message']);
                     }
                 },
                 error: function() {
@@ -254,6 +265,8 @@
         }
 
         function updateAverageRating() {
+
+
             $.ajax({
                 url: 'controller/get_average_rating.php',
                 method: 'POST',
@@ -264,7 +277,13 @@
                     const result = JSON.parse(response);
                     if (result.status === 'success') {
                         document.getElementById('average-rating').textContent = result.average_rating;
+                        document.getElementById('rate').textContent = 'Rate';
+                    }else{
+                        alert(result.message);
                     }
+                },
+                error: function() {
+                    alert('An error occurred while updating the average rating');
                 }
             });
         }
@@ -281,6 +300,35 @@
                 }
             });
         }
+
+        localStorage.setItem('last_page', window.location.href);
     </script>
-</body>
+    </body>
 </html>
+
+<?php
+    }else{
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>404 Product Not Found</title>
+        </head>
+        <body style='margin: 0; padding: 0; '>
+        <?php include 'header/header.php' ?>
+            <div id='container' style='background: linear-gradient(to right, rgb(69, 110, 142) 0%, rgb(26, 78, 118) 6%, var(--noir-color) 16%, 
+                    var(--noir-color) 100%);'>
+                <div id='prodContainer' style='display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 100px); flex-direction: column;'>
+                    <p style='font-size: 160px; font-weight: bold; color: #fff; margin-bottom: 0px; margin-top: 0px;'>404</p>
+                    <p style='font-size: 20px; color: #fff; margin-top: 0px;'>Product not found</p>
+                    <a onclick='window.history.back();' style='font-size: 20px; color: #fff;'>Go back</a>
+                </div>
+            </div>
+            <?php include 'footer/footer.php' ?>
+            
+        </body>
+        <?php
+    }
+?>
