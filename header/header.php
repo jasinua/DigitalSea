@@ -1,6 +1,11 @@
 <?php
+    function getImageSource($product_id, $image_url) {
+        $local_image = "images/product_$product_id.png";
+        return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
+    }
     ob_start(); // Fillon output buffering
     include_once "controller/function.php"
+
 ?>
 
 <!DOCTYPE html>
@@ -889,7 +894,9 @@
                             $cart_items = returnCart($_SESSION['user_id']);
                             $cart_count = 0;
                             while ($item = $cart_items->fetch_assoc()) {
-                                $cart_count += $item['quantity'];
+                                if ($item['order_id'] === null) {
+                                    $cart_count += $item['quantity'];
+                                }
                             }
                             if ($cart_count > 0 && basename($_SERVER['PHP_SELF']) !== 'cart.php') {
                                 $badge_text = ($cart_count > 9) ? '9+' : $cart_count;
@@ -907,11 +914,14 @@
 
                             // Merge duplicate products by summing quantities
                             while ($item = $cart_items->fetch_assoc()) {
-                                $pid = $item['product_id'];
-                                if (!isset($product_quantities[$pid])) {
-                                    $product_quantities[$pid] = 0;
+                                // Only include items where order_id is null
+                                if ($item['order_id'] === null) {
+                                    $pid = $item['product_id'];
+                                    if (!isset($product_quantities[$pid])) {
+                                        $product_quantities[$pid] = 0;
+                                    }
+                                    $product_quantities[$pid] += $item['quantity'];
                                 }
-                                $product_quantities[$pid] += $item['quantity'];
                             }
 
                             // Display merged products, limited to 3 initially
@@ -922,11 +932,17 @@
                                     ?>
                                     <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
                                         <div class="cart-preview-item">
-                                            <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                            <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                                             <div class="cart-preview-item-info">
                                                 <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
                                                 <div class="cart-preview-item-price">
-                                                    <?php echo number_format($product['price'], 2); ?>€
+                                                    <?php 
+                                                    $price = $product['price'];
+                                                    $discount = $product['discount'];
+                                                    if ($discount > 0) {
+                                                        $price = $price - ($price * $discount/100);
+                                                    }
+                                                    echo number_format($price, 2); ?>€
                                                     <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
                                                 </div>
                                             </div>
@@ -946,11 +962,17 @@
                                         ?>
                                         <a class="cart-preview-item-link" href="product.php?product=<?php echo $product['product_id']; ?>">
                                             <div class="cart-preview-item">
-                                                <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                                <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                                                 <div class="cart-preview-item-info">
                                                     <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
                                                     <div class="cart-preview-item-price">
-                                                        <?php echo number_format($product['price'], 2); ?>€
+                                                        <?php 
+                                                        $price = $product['price'];
+                                                        $discount = $product['discount'];
+                                                        if ($discount > 0) {
+                                                            $price = $price - ($price * $discount/100);
+                                                        }
+                                                        echo number_format($price, 2); ?>€
                                                         <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
                                                     </div>
                                                 </div>

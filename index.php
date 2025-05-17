@@ -10,10 +10,10 @@
     }
 
     // Helper function to get image source
-    function getImageSource($product_id, $image_url) {
-        $local_image = "images/product_$product_id.png";
-        return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
-    }
+    // function getImageSource($product_id, $image_url) {
+    //     $local_image = "images/product_$product_id.png";
+    //     return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
+    // }
 
     // Get current page from URL, default to 1
     $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -188,7 +188,7 @@
 
                     <div class="filter-section collapsed">
                         <h3>Price Range</h3>
-                        <div class="filter-content">
+                        <div class="filter-content" style="border-left: none;">
                             <div class="price-range">
                                 <input type="number" name="min_price" placeholder="Min €" min="0" step="0.01">
                                 <span>-</span>
@@ -199,7 +199,7 @@
 
                     <div class="filter-section collapsed">
                         <h3>Discounts</h3>
-                        <div class="filter-content">
+                        <div class="filter-content" style="border-left: none;">
                             <div class="filter">
                                 <input type="checkbox" name="discounted_only" id="discounted_only" value="1">
                                 <label for="discounted_only">Show only items on sale</label>

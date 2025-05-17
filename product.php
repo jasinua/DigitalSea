@@ -2,10 +2,10 @@
     session_start();
     include 'controller/home.inc.php';
 
-    function getImageSource($product_id, $image_url) {
-        $local_image = "images/product_$product_id.png";
-        return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
-    }
+    // function getImageSource($product_id, $image_url) {
+    //     $local_image = "images/product_$product_id.png";
+    //     return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
+    // }
 
     $productID = $_GET["product"];
     $data = getProductData($productID);
