@@ -1,4 +1,8 @@
 <?php 
+
+require_once dirname(__FILE__) . '/../api/api.php';
+
+
     function isLoggedIn($check) {
         if($check) {
             return true;
@@ -253,4 +257,149 @@
             echo "No products found in JSON data.";
         }
     }
+
+
+
+        
+    function addAPIProductsToDatabase($conn) {
+        $products = get_all_products();
+    
+        if (!is_array($products)) {
+            echo "Invalid product data format.";
+            return;
+        }
+    
+        foreach ($products as $product) {
+    
+            if (!isset($product['product_id'])) {
+                echo "Product ID missing, skipping product.";
+                continue;
+            }
+    
+            // Check if the product already exists in the database
+            $stmt = $conn->prepare("CALL checkProducts(?)");
+            $stmt->bind_param("i", $product['product_id']);
+            $stmt->execute();
+            $stmt->bind_result($count);
+            $stmt->fetch();
+            $stmt->close();
+    
+            if ($count == 0) {
+                // Insert new product
+                $stmt = $conn->prepare("
+                    INSERT INTO products 
+                    (product_id, name, description, price, image_url, stock, discount, api_source) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ");
+    
+                $mainImage = $product['image_url']['main_image'] ?? '';
+                $discount = $product['discount'] ?? 0;
+                $source = 'DigitalSeaAPI';
+    
+                $stmt->bind_param(
+                    "issdsiis",
+                    $product['product_id'],
+                    $product['name'],
+                    $product['description'],
+                    $product['price'],
+                    $mainImage,
+                    $product['stock'],
+                    $discount,
+                    $source
+                );
+    
+                if (!$stmt->execute()) {
+                    echo "Error inserting product ID " . $product['product_id'] . ": " . $stmt->error . "\n";
+                } else {
+                    echo "Product ID " . $product['product_id'] . " inserted successfully.\n";
+                }
+    
+                $stmt->close();
+            } else {
+                echo "Product ID " . $product['product_id'] . " already exists in the database.\n";
+            }
+        }
+    
+        echo "Products update completed.";
+    }
+    
+    function addAPIDetailsToDatabase($conn) {
+        $products = get_all_products();
+        
+        if (!is_array($products)) {
+            echo "Invalid product data format.";
+            return;
+        }
+    
+        foreach ($products as $product) {
+    
+            if (!isset($product['product_id'])) {
+                echo "Product ID missing, skipping product.";
+                continue;
+            }
+    
+            // Check if the product already exists in the database
+            $stmt = $conn->prepare("CALL checkProducts(?)");
+            $stmt->bind_param("i", $product['product_id']);
+            $stmt->execute();
+            $stmt->bind_result($count);
+            $stmt->fetch();
+            $stmt->close();
+    
+            if ($count == 0) {
+                echo "Product ID " . $product['product_id'] . " not found. Skipping details insertion.\n";
+                continue;
+            }
+    
+            if (!isset($product['details']) || !is_array($product['details'])) {
+                echo "No details found for Product ID " . $product['product_id'] . ". Skipping.\n";
+                continue;
+            }
+    
+            foreach ($product['details'] as $key => $value) {
+
+                if (empty($key) || empty($value)) {
+                    echo "Empty key or value for Product ID " . $product['product_id'] . ". Skipping.\n";
+                    continue;
+                }
+            
+                // Check if the detail already exists
+                $stmt = $conn->prepare("
+                    SELECT COUNT(*) FROM product_details 
+                    WHERE product_id = ? AND prod_desc1 = ?
+                ");
+                $stmt->bind_param("is", $product['product_id'], $key);
+                $stmt->execute();
+                $stmt->bind_result($exists);
+                $stmt->fetch();
+                $stmt->close();
+            
+                if ($exists > 0) {
+                    echo "Detail already exists for Product ID " . $product['product_id'] . ": $key\n";
+                    continue;
+                }
+            
+                // Insert the detail
+                $stmt = $conn->prepare("
+                    INSERT INTO product_details (product_id, prod_desc1, prod_desc2) 
+                    VALUES (?, ?, ?)
+                ");
+                $stmt->bind_param("iss", $product['product_id'], $key, $value);
+            
+                if (!$stmt->execute()) {
+                    echo "Error inserting detail for Product ID " . $product['product_id'] . ": " . $stmt->error . "\n";
+                } else {
+                    echo "Inserted detail for Product ID " . $product['product_id'] . ": $key => $value\n";
+                }
+            
+                $stmt->close();
+            }
+            
+        }
+    
+        echo "Details update completed.";
+    }
+    
+
+
 ?>

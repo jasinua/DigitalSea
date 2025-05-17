@@ -46,17 +46,18 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     // Fetch cart again after updates
     $rawCart = returnCart($userId);
-    $mergedCart = [];
-    
+
+    // Filter and count items with order_id == null
+    $filteredCart = [];
+    $count = 0;
     foreach ($rawCart as $item) {
-        $pid = $item['product_id'];
-        if (isset($mergedCart[$pid])) {
-            $mergedCart[$pid]['quantity'] = $item['quantity'];
-        } else {
-            $mergedCart[$pid] = $item;
+        if (!isset($item['order_id']) || is_null($item['order_id'])) {
+            $filteredCart[] = $item;
+            $count++;
         }
     }
-    $res = array_values($mergedCart);
+
+    $res = array_values($filteredCart);
 
     include "header/header.php";
 ?>

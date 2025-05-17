@@ -33,7 +33,6 @@
                 description = ?, 
                 price = ?, 
                 stock = ?, 
-                api_source = ?, 
                 image_url = ?,
                 discount = ?
                 WHERE product_id = ?";
@@ -43,7 +42,7 @@
             throw new Exception("Prepare failed: " . $conn->error);
         }
 
-        $stmt->bind_param("ssdissii", $name, $description, $price, $stock, $api_source, $main_image, $discount, $product_id);
+        $stmt->bind_param("ssdisii", $name, $description, $price, $stock, $main_image, $discount, $product_id);
         
         if (!$stmt->execute()) {
             throw new Exception("Execute failed: " . $stmt->error);
@@ -64,7 +63,7 @@
             }
 
             // Insert new details
-            $insert_sql = "INSERT INTO product_details (product_id, detail_key, detail_value) VALUES (?, ?, ?)";
+            $insert_sql = "INSERT INTO product_details (product_id, prod_desc1, prod_desc2) VALUES (?, ?, ?)";
             $insert_stmt = $conn->prepare($insert_sql);
             if (!$insert_stmt) {
                 throw new Exception("Prepare insert failed: " . $conn->error);
