@@ -59,7 +59,7 @@ function addToCart($userId, $productId, $quantity, $price) {
     
     try {
         // First check if product exists in cart
-        $check_stmt = $conn->prepare("SELECT quantity FROM cart WHERE user_id = ? AND product_id = ?");
+        $check_stmt = $conn->prepare("SELECT quantity FROM cart WHERE user_id = ? AND product_id = ? AND order_id IS NULL");
         $check_stmt->bind_param("ii", $userId, $productId);
         $check_stmt->execute();
         $result = $check_stmt->get_result();
@@ -69,7 +69,7 @@ function addToCart($userId, $productId, $quantity, $price) {
             $row = $result->fetch_assoc();
             $new_quantity = $row['quantity'] + $quantity;
             
-            $update_stmt = $conn->prepare("UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?");
+            $update_stmt = $conn->prepare("UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ? AND order_id IS NULL");
             $update_stmt->bind_param("iii", $new_quantity, $userId, $productId);
             return $update_stmt->execute();
         } else {
