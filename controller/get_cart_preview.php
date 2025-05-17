@@ -50,11 +50,14 @@
 
         // Merge duplicate products by summing quantities
         while ($item = $cartItems->fetch_assoc()) {
-            $pid = $item['product_id'];
-            if (!isset($product_quantities[$pid])) {
-                $product_quantities[$pid] = 0;
+            // Only include items where order_id is null
+            if ($item['order_id'] === null) {
+                $pid = $item['product_id'];
+                if (!isset($product_quantities[$pid])) {
+                    $product_quantities[$pid] = 0;
+                }
+                $product_quantities[$pid] += $item['quantity'];
             }
-            $product_quantities[$pid] += $item['quantity'];
         }
 
         // Display merged products, limited to 3 initially
@@ -69,7 +72,13 @@
                         <div class="cart-preview-item-info">
                             <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
                             <div class="cart-preview-item-price">
-                                <?php echo number_format($product['price'], 2); ?>€
+                                <?php 
+                                $price = $product['price'];
+                                $discount = $product['discount'];
+                                if ($discount > 0) {
+                                    $price = $price - ($price * $discount/100);
+                                }
+                                echo number_format($price, 2); ?>€
                                 <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
                             </div>
                         </div>
@@ -93,7 +102,13 @@
                             <div class="cart-preview-item-info">
                                 <div class="cart-preview-item-name"><?php echo htmlspecialchars($product['name']); ?></div>
                                 <div class="cart-preview-item-price">
-                                    <?php echo number_format($product['price'], 2); ?>€
+                                    <?php 
+                                    $price = $product['price'];
+                                    $discount = $product['discount'];
+                                    if ($discount > 0) {
+                                        $price = $price - ($price * $discount/100);
+                                    }
+                                    echo number_format($price, 2); ?>€
                                     <?php if ($qty > 1) { echo " <span style='color:#888;font-size:13px;'>(x$qty)</span>"; } ?>
                                 </div>
                             </div>

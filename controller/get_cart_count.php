@@ -15,7 +15,10 @@ $cart_items = returnCart($userId);
 $cart_count = 0;
 
 while ($item = $cart_items->fetch_assoc()) {
-    $cart_count += $item['quantity'];
+    
+    if ($item['order_id'] === null) {
+        $cart_count += $item['quantity'];
+    }
 }
 
 echo json_encode(['count' => $cart_count]);

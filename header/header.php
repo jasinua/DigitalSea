@@ -894,7 +894,9 @@
                             $cart_items = returnCart($_SESSION['user_id']);
                             $cart_count = 0;
                             while ($item = $cart_items->fetch_assoc()) {
-                                $cart_count += $item['quantity'];
+                                if ($item['order_id'] === null) {
+                                    $cart_count += $item['quantity'];
+                                }
                             }
                             if ($cart_count > 0 && basename($_SERVER['PHP_SELF']) !== 'cart.php') {
                                 $badge_text = ($cart_count > 9) ? '9+' : $cart_count;
