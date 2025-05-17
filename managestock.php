@@ -11,10 +11,25 @@
     include_once "controller/function.php"; // for $conn
     include_once "model/dbh.inc.php";
     $products = [];
-    $sql = "SELECT * FROM products";
+    $sql = "SELECT * FROM products WHERE api_source IS NULL";
     $result = $conn->query($sql);
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
+            // Fetch details for each product
+            $sql11 = "SELECT * FROM product_details WHERE product_id = ?";
+            $stmt11 = $conn->prepare($sql11);
+            $stmt11->bind_param("i", $row['product_id']);
+            $stmt11->execute();
+            $result11 = $stmt11->get_result();
+            
+            $details = [];
+            if ($result11 && $result11->num_rows > 0) {
+                while ($detail = $result11->fetch_assoc()) {
+                    $details[] = $detail;
+                }
+            }
+            
+            $row['details'] = $details;
             $products[] = $row;
         }
     }
@@ -60,10 +75,10 @@
         }
         
         // Insert product into database
-        $sql = "INSERT INTO products (name, description, type, price, stock, api_source, discount, image_url) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO products (name, description, price, stock, discount, image_url) 
+                VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssdissd", $name, $description, $type, $price, $stock, $api_source, $discount, $image_url);
+        $stmt->bind_param("ssdisd", $name, $description, $price, $stock, $discount, $image_url);
         
         if ($stmt->execute()) {
             $product_id = $conn->insert_id;
@@ -73,7 +88,7 @@
                 foreach ($_POST['details_key'] as $index => $key) {
                     if (!empty($key) && !empty($_POST['details_value'][$index])) {
                         $value = $_POST['details_value'][$index];
-                        $detail_sql = "INSERT INTO product_details (product_id, detail_key, detail_value) VALUES (?, ?, ?)";
+                        $detail_sql = "INSERT INTO product_details (product_id, prod_desc1, prod_desc2) VALUES (?, ?, ?)";
                         $detail_stmt = $conn->prepare($detail_sql);
                         $detail_stmt->bind_param("iss", $product_id, $key, $value);
                         $detail_stmt->execute();
@@ -87,6 +102,18 @@
             echo "<script>alert('Error adding product: " . $conn->error . "');</script>";
         }
     }
+
+
+    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+    $search = strtolower($search);
+
+    if (!empty($search)) {
+        $sql = "SELECT * FROM products WHERE LOWER(description) LIKE '%$search%'";
+        $result = $conn->query($sql);
+        $products = $result->fetch_all(MYSQLI_ASSOC);
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -107,7 +134,9 @@
         <div id="notification" class="notification" style="display: none;"></div>
 
         <div class="search-add">
-            <input type="text" placeholder="Search..."> <button type="button" class="btn" onclick="toggleForm()">Add Product</button></div>
+            <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()">
+            <button type="button" class="btn" onclick="toggleForm()">Add Product</button>
+        </div>
 
         <!-- Modal -->
         <div id="modal">
@@ -116,7 +145,7 @@
                 <button class="close-btn" onclick="closeForm()">&times;</button>
                 <form method="post" id="productForm">
                     <input type="hidden" name="product_id" id="product_id">
-                    <h2>Add a New Product</h2>
+                    <h2 id='modal-title'>Add a New Product</h2>
 
                     <label>Name:</label>
                     <input type="text" name="name" required>
@@ -124,8 +153,8 @@
                     <label>Description:</label>
                     <textarea name="description" required></textarea>
 
-                    <label>Type:</label>
-                    <input type="text" name="type">
+                    <!-- <label>Type:</label>
+                    <input type="text" name="type"> -->
 
                     <label>Price:</label>
                     <input type="number" name="price" step="0.01" required>
@@ -133,8 +162,8 @@
                     <label>Stock:</label>
                     <input type="number" name="stock" required>
 
-                    <label>API Source:</label>
-                    <input type="text" name="api_source">
+                    <!-- <label>API Source:</label>
+                    <input type="text" name="api_source"> -->
 
                     <label>Product Image:</label>
                     <div class="image-input-container">
@@ -174,7 +203,7 @@
                     <th>Description</th>
                     <th>Price</th>
                     <th>Stock</th>
-                    <th>API Source</th>
+                    <!-- <th>API Source</th> -->
                     <th>Discount</th>
                     <th>Details</th>
                     <th>Actions</th>
@@ -184,14 +213,14 @@
                 <?php if (!empty($products)): ?>
                     <?php foreach ($products as $index => $product): ?>
                         <tr data-index="<?= $index ?>">
-                        <td>
+                            <td>
                                 <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" class="product-img" alt="<?= htmlspecialchars($product['name']) ?>">
                             </td>
                             <td><?= htmlspecialchars($product['name']) ?></td>
                             <td><?= htmlspecialchars($product['description']) ?></td>
                             <td><strong><?= htmlspecialchars(number_format($product['price'], 2)) ?>€</strong></td>
                             <td><?= htmlspecialchars($product['stock']) ?></td>
-                            <td><?= htmlspecialchars($product['api_source']) ?></td>
+                            <!-- <td><?php //echo htmlspecialchars($product['api_source']) ?></td> -->
                             <td>
                                 <?php if (!empty($product['discount'])): ?>
                                     <strong><?= htmlspecialchars($product['discount']) ?>%</strong>
@@ -200,15 +229,15 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php if (!empty($product['details'])): ?>
-                                    <ul class="details-list">
-                                        <?php foreach ($product['details'] as $key => $value): ?>
-                                            <li><strong><?= htmlspecialchars($key) ?>:</strong> <?= htmlspecialchars($value) ?></li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                <?php else: ?>
-                                    No details
-                                <?php endif; ?>
+                                <?php 
+                                    if (!empty($product['details'])) {
+                                        foreach ($product['details'] as $detail) {
+                                            echo htmlspecialchars($detail['prod_desc1']) . ": " . htmlspecialchars($detail['prod_desc2']) . "<br>";
+                                        }
+                                    } else {
+                                        echo "No details";
+                                    }
+                                ?>
                             </td>
                             <td>
                                 <button type="button" class="btn edit-btn" onclick="editProduct(<?= $index ?>)">Edit</button>
@@ -223,6 +252,62 @@
     </div>
 </body>
 <script>
+
+    function searchProducts() {
+        const searchInput = document.getElementById('searchInput');
+        const searchValue = searchInput.value.toLowerCase();
+        const products = <?php echo json_encode($products); ?>;
+
+        const filteredProducts = products.filter(product => 
+            product.description.toLowerCase().includes(searchValue) ||
+            product.name.toLowerCase().includes(searchValue)
+        );
+
+        const tableBody = document.querySelector('tbody');
+        tableBody.innerHTML = '';
+
+        if (filteredProducts.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No products found.</td></tr>';
+            return;
+        }
+
+        filteredProducts.forEach((product, filteredIndex) => {   
+            const row = document.createElement('tr');
+            // Find the original index in the products array
+            const originalIndex = products.findIndex(p => p.product_id === product.product_id);
+            row.setAttribute('data-index', originalIndex);
+
+            let detailsHtml = 'No details';
+            if (product.details && product.details.length > 0) {
+                detailsHtml = product.details.map(detail => 
+                    `${detail.prod_desc1}: ${detail.prod_desc2}`
+                ).join('<br>');
+            }
+
+            let discountHtml = 'No discount';
+            if (product.discount && parseFloat(product.discount) > 0) {
+                discountHtml = `<strong>${product.discount}%</strong>`;
+            }
+
+            row.innerHTML = `
+                <td><img src="images/product_${product.product_id}.png" alt="${product.name}" class="product-img"></td>
+                <td>${product.name}</td>
+                <td>${product.description}</td>
+                <td><strong>${Number(product.price).toFixed(2)}€</strong></td>
+                <td>${product.stock}</td>
+                <td>${discountHtml}</td>
+                <td>${detailsHtml}</td>
+                <td>
+                    <button type="button" class="btn edit-btn" onclick="editProduct(${originalIndex})">Edit</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+
+
+
     function addDetailField() {
         const container = document.getElementById('detailsContainer');
         const div = document.createElement('div');
@@ -320,49 +405,41 @@
         form.product_id.value = product.product_id;
         form.name.value = product.name;
         form.description.value = product.description;
-        // form.type.value = product.type || '';
         form.price.value = product.price;
         form.stock.value = product.stock;
-        form.api_source.value = product.api_source || '';
-        form.discount.value = product.discount;
-        
-        // --- Fix for main image field ---
-        if (typeof product.image_url === 'string') {
-            form.main_image.value = product.image_url;
-            form.image_1.value = '';
-            form.image_2.value = '';
-        } else if (typeof product.image_url === 'object' && product.image_url !== null) {
-            form.main_image.value = product.image_url.main_image || '';
-            form.image_1.value = product.image_url[1] || '';
-            form.image_2.value = product.image_url[2] || '';
-        } else {
-            form.main_image.value = '';
-            form.image_1.value = '';
-            form.image_2.value = '';
-        }
+        form.discount.value = product.discount || '';
 
-        // Remove old details fields
-        const detailsContainer = document.getElementById('detailsContainer');
-        detailsContainer.innerHTML = '';
-        if (product.details) {
-            Object.entries(product.details).forEach(([key, value]) => {
-                const div = document.createElement('div');
-                div.style.marginBottom = "10px";
-                div.style.display = "flex";
-                div.style.alignItems = "center";
-                div.innerHTML = `
-                    <input type="text" name="details_key[]" placeholder="Key" required style="flex: 1; margin-right: 10px;" value="${key}">
-                    <input type="text" name="details_value[]" placeholder="Value" required style="flex: 1; margin-right: 10px;" value="${value}">
-                    <button type="button" onclick="this.parentNode.remove()" style="background: none; border: none; cursor: pointer;">
-                        <i class="fa-solid fa-trash" style="color:red; font-size:20px;"></i>
-                    </button>
-                `;
-                detailsContainer.appendChild(div);
+        // Fetch product details
+        fetch('controller/get_product_details.php?product_id=' + product.product_id)
+            .then(response => response.json())
+            .then(details => {
+                const detailsContainer = document.getElementById('detailsContainer');
+                detailsContainer.innerHTML = '';
+                
+                if (details && details.length > 0) {
+                    details.forEach(detail => {
+                        const div = document.createElement('div');
+                        div.style.marginBottom = "10px";
+                        div.style.display = "flex";
+                        div.style.alignItems = "center";
+                        div.innerHTML = `
+                            <input type="text" name="details_key[]" placeholder="Key" required style="flex: 1; margin-right: 10px;" value="${detail.prod_desc1}">
+                            <input type="text" name="details_value[]" placeholder="Value" required style="flex: 1; margin-right: 10px;" value="${detail.prod_desc2}">
+                            <button type="button" onclick="this.parentNode.remove()" style="background: none; border: none; cursor: pointer;">
+                                <i class="fa-solid fa-trash" style="color:red; font-size:20px;"></i>
+                            </button>
+                        `;
+                        detailsContainer.appendChild(div);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching product details:', error);
             });
-        }
 
         // Change submit button to Update
         document.getElementById('submit-btn').value = 'Update Product';
+        document.getElementById('modal-title').innerHTML = 'Edit Product';
         // Store index in a hidden field
         if (!document.getElementById('edit-index')) {
             const hidden = document.createElement('input');

@@ -50,6 +50,7 @@
 
     // Get cart items for this user
     $cartItems = returnCart($userId);
+    
     if (!$cartItems || $cartItems->num_rows === 0) {
         header("Location: cart.php?error=emptycart");
         exit;
@@ -59,6 +60,7 @@
     $subtotal = 0;
     $discount = 0;
     while ($item = $cartItems->fetch_assoc()) {
+        if($item['order_id'] == null){
         $pid = $item['product_id'];
         $qty = $item['quantity'];
         
@@ -78,6 +80,7 @@
         }
     }
 
+    }
     $tax = $subtotal * 0.18; // 18% VAT
     $totalAmount = $subtotal + $tax - $discount;
 
@@ -514,6 +517,18 @@
                     submitButton.disabled = false;
                     submitButton.innerHTML = 'Pay Now €<?php echo number_format($totalAmount, 2); ?>';
                 } else if (paymentIntent.status === 'succeeded') {
+                    <?php
+                        $_SESSION['payment_success'] = true;
+                        $_SESSION['payment_timestamp'] = time();
+                        $_SESSION['total_amount'] = $totalAmount;
+
+                      
+
+                        // Clear cart items
+
+
+
+                    ?>
                     window.location.href = 'order-confirmation.php?success=1';
                 }
             } catch (err) {

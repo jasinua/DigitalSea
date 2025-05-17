@@ -412,7 +412,7 @@
                                          alt="<?php echo htmlspecialchars($prod['description']); ?>"
                                          width="225"
                                          height="180">
-                                    <div class='title'><?php echo htmlspecialchars($prod['description']); ?></div>
+                                    <div class='title'><?php echo htmlspecialchars($prod['description']); if($prod['api_source'] == "DigitalSeaAPI") { echo " - " . $prod['api_source']; } ?></div>
                                 <div class='bottom-container'>
                                     <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
                                         <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
