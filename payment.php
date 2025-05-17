@@ -24,7 +24,7 @@
     $userId = $_SESSION['user_id'];
 
     // Get user info from database
-    $userQuery = "SELECT first_name, last_name, email FROM users WHERE user_id = ?";
+    $userQuery = "SELECT first_name, last_name, email, address FROM users WHERE user_id = ?";
     $stmt = $conn->prepare($userQuery);
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -33,6 +33,20 @@
 
     $userFullName = $userData['first_name'] . ' ' . $userData['last_name'];
     $userEmail = $userData['email'];
+    $userAddress = $userData['address'];
+
+    // Handle address update if submitted
+    if (isset($_POST['update_address']) && isset($_POST['new_address'])) {
+        $newAddress = trim($_POST['new_address']);
+        $updateStmt = $conn->prepare("UPDATE users SET address = ? WHERE user_id = ?");
+        $updateStmt->bind_param("si", $newAddress, $userId);
+        if ($updateStmt->execute()) {
+            $userAddress = $newAddress;
+            $success_message = "Address updated successfully";
+        } else {
+            $error_message = "Failed to update address";
+        }
+    }
 
     // Get cart items for this user
     $cartItems = returnCart($userId);
@@ -131,6 +145,17 @@
                             <div class="form-row">
                                 <label for="email">Email</label>
                                 <input type="email" id="email" value="<?php echo htmlspecialchars($userEmail); ?>" required>
+                            </div>
+                            
+                            <div class="form-row">
+                                <label for="address">Shipping Address</label>
+                                <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($userAddress); ?>" required>
+                                <div id="address-update-container" style="display: none; margin-top: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; justify-content: center;">
+                                        <input type="checkbox" id="update-address-checkbox" name="update_address" style="width: auto;">
+                                        <span>Update my account address with this new address</span>
+                                    </label>
+                                </div>
                             </div>
                             
                             <div class="form-row">
@@ -396,6 +421,19 @@
         const stripe = Stripe('<?php echo $_ENV['STRIPE_PUBLISHABLE_KEY']; ?>');
         const elements = stripe.elements();
 
+        // Add address change listener
+        const addressInput = document.getElementById('address');
+        const addressUpdateContainer = document.getElementById('address-update-container');
+        const originalAddress = '<?php echo htmlspecialchars($userAddress); ?>';
+
+        addressInput.addEventListener('input', function() {
+            if (this.value !== originalAddress) {
+                addressUpdateContainer.style.display = 'block';
+            } else {
+                addressUpdateContainer.style.display = 'none';
+            }
+        });
+
         const style = {
             base: {
                 color: '#32325d',
@@ -428,6 +466,32 @@
             submitButton.disabled = true;
             submitButton.innerHTML = '<span class="spinner"></span> Processing...';
 
+            // Check if address was changed and update is requested
+            const addressInput = document.getElementById('address');
+            const updateAddressCheckbox = document.getElementById('update-address-checkbox');
+            
+            if (addressInput.value !== originalAddress && updateAddressCheckbox.checked) {
+                // Create a form data object for the address update
+                const addressFormData = new FormData();
+                addressFormData.append('update_address', '1');
+                addressFormData.append('new_address', addressInput.value);
+
+                // Send the address update request
+                try {
+                    const updateResponse = await fetch('payment.php', {
+                        method: 'POST',
+                        body: addressFormData
+                    });
+                    
+                    if (!updateResponse.ok) {
+                        throw new Error('Failed to update address');
+                    }
+                } catch (error) {
+                    console.error('Error updating address:', error);
+                    // Continue with payment even if address update fails
+                }
+            }
+
             try {
                 const { paymentIntent, error } = await stripe.confirmCardPayment(
                     '<?php echo $clientSecret; ?>',
@@ -436,7 +500,10 @@
                             card: card,
                             billing_details: {
                                 name: document.getElementById('cardholder-name').value,
-                                email: document.getElementById('email').value
+                                email: document.getElementById('email').value,
+                                address: {
+                                    line1: document.getElementById('address').value
+                                }
                             }
                         }
                     }

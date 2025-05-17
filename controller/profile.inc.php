@@ -4,7 +4,8 @@
 
     // Check if user is logged in
     if (!isset($_SESSION['user_id'])) {
-        die("Error: You're not logged in. Session user_id is not set.");
+        header("Location: login.php");
+        exit();
     }
 
     $user_id = $_SESSION['user_id'];

@@ -962,7 +962,7 @@
                             }
 
                             if (empty($product_quantities)) {
-                                echo '<div class="cart-preview-item">Your cart is empty</div>';
+                                echo '<div style="text-align:center; padding: 20px; color: #333;">Your cart is empty</div>';
                             }
                         }
                         ?>
@@ -970,7 +970,7 @@
                 </li>
                 <li><a href="profile.php"><i class="fas fa-user"></i></a></li>
                 <li><a href="controller/logout.php?from=header"><i class="fas fa-sign-out-alt"></i></a></li>
-                        <?php if(isAdmin($_SESSION['user_id'])) { echo "<li><a href='managestock.php'><i class='fas fa-wrench'></i></a></li>"; } ?>
+                        <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 1) { echo "<li><a href='managestock.php'><i class='fas fa-wrench'></i></a></li>"; } ?>
                         <?php } else { ?>
                 <li><a href="login.php"><i class="fas fa-sign-in-alt"></i></a></li>
                 <li><a href="signup.php"><i class="fas fa-user-plus"></i></a></li>
@@ -1016,7 +1016,7 @@
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Logout</span>
             </a>
-            <?php if(isAdmin($_SESSION['user_id'])) { ?>
+            <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 1) { ?>
             <a href="managestock.php" class="mobile-menu-item">
                 <i class="fas fa-wrench"></i>
                 <span>Manage Stock</span>

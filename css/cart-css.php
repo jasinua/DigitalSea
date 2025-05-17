@@ -4,7 +4,7 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        min-height: calc(100vh - 120px);
+        min-height: calc(100vh - 100px);
         background-color: var(--ivory-color);
         padding: 20px;
     }
@@ -15,6 +15,21 @@
         max-width: 1400px;
         gap: 20px;
         margin: auto;
+    }
+
+    .continue-shopping-btn {
+        display: inline-block;
+        padding: 12px 25px;
+        background-color: var(--button-color);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .continue-shopping-btn:hover {
+        background-color: var(--button-color-hover);
+        transform: translateY(-2px);
     }
 
     .cart-left, .cart-right {

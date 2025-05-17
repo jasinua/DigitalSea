@@ -337,7 +337,7 @@
 
     .notification {
         position: fixed;
-        top: 20px;
+        top: 60px;
         right: 20px;
         padding: 15px 25px;
         border-radius: 8px;

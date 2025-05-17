@@ -218,46 +218,50 @@ document.addEventListener('DOMContentLoaded', function() {
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        // Update cart count badge in header
-                        let badge = document.querySelector('.cart-count-badge');
-                        const cartIcon = document.querySelector('a[href="cart.php"] i.fas.fa-shopping-cart');
+                        // Fetch updated cart count
+                        $.ajax({
+                            url: 'controller/get_cart_count.php', // Create this new endpoint
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(countResponse) {
+                                let badge = document.querySelector('.cart-count-badge');
+                                const cartIcon = document.querySelector('a[href="cart.php"] i.fas.fa-shopping-cart');
 
-                        // Get current count from badge if it exists
-                        let currentCount = 0;
-                        if (badge && badge.textContent) {
-                            currentCount = parseInt(badge.textContent.replace('+', '')) || 0;
-                        }
+                                // Update badge with server-provided count
+                                let newCount = countResponse.count;
 
-                        // Increment the current count since we're adding an item
-                        let newCount = currentCount + 1;
+                                if (!badge) {
+                                    badge = document.createElement('span');
+                                    badge.className = 'cart-count-badge';
+                                    cartIcon.parentNode.style.position = 'relative';
+                                    cartIcon.parentNode.appendChild(badge);
+                                }
 
-                        if (!badge) {
-                            badge = document.createElement('span');
-                            badge.className = 'cart-count-badge';
-                            cartIcon.parentNode.style.position = 'relative';
-                            cartIcon.parentNode.appendChild(badge);
-                        }
+                                // Show red dot for 2 seconds
+                                badge.textContent = "";
+                                badge.style.backgroundColor = 'red';
+                                badge.style.width = '15px';
+                                badge.style.height = '15px';
+                                badge.style.border = 'none';
 
-                        // Show red dot for 3 seconds
-                        badge.textContent = "";
-                        badge.style.backgroundColor = 'red';
-                        badge.style.width = '15px';
-                        badge.style.height = '15px';
-                        badge.style.border = 'none';
-
-                        setTimeout(function() {
-                            badge.textContent = newCount > 9 ? "9+" : newCount;
-                            badge.style.backgroundColor = 'var(--noir-color)';
-                            badge.style.width = '17px';
-                            badge.style.height = '17px';
-                            badge.style.border = '1px solid white';
-                        }, 2000);
-                        
-                        // Show success message
-                        button.html('<i class="fas fa-check"></i> Added to Cart');
-                        
-                        // Update cart preview
-                        updateCartPreview();
+                                setTimeout(function() {
+                                    badge.textContent = newCount > 9 ? "9+" : newCount;
+                                    badge.style.backgroundColor = 'var(--noir-color)';
+                                    badge.style.width = '17px';
+                                    badge.style.height = '17px';
+                                    badge.style.border = '1px solid white';
+                                }, 2000);
+                                
+                                // Show success message
+                                button.html('<i class="fas fa-check"></i> Added to Cart');
+                                
+                                // Update cart preview
+                                updateCartPreview();
+                            },
+                            error: function() {
+                                console.error('Error fetching cart count');
+                            }
+                        });
                     } else {
                         button.html('<i class="fas fa-times"></i> Failed');
                         showRemoveNotification('Failed to add item to cart');
@@ -270,7 +274,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }, 2000);
                 },
                 error: function(xhr, status, error) {
-                    // Handle AJAX errors
                     button.html('<i class="fas fa-times"></i> Error');
                     console.error('AJAX Error: ' + status + ' - ' + error);
                     setTimeout(function() {

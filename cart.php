@@ -58,8 +58,6 @@ if (isLoggedIn($_SESSION['user_id'])) {
     }
     $res = array_values($mergedCart);
 
-    
-
     include "header/header.php";
 ?>
 
@@ -67,6 +65,16 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
 <div class="page-wrapper">
     <div class="save-message">Ndryshimet u ruajtën me sukses!</div>
+    <?php if (empty($res)): ?>
+        <div class="empty-cart-container" style="text-align: center; padding: 50px 20px;">
+            <div class="empty-cart-icon" style="font-size: 48px; margin-bottom: 20px; color: var(--mist-color);">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h2 style="margin-bottom: 20px; color: var(--mist-color);">Your cart is empty</h2>
+            <p style="margin-bottom: 20px; color: var(--mist-color);">Looks like you haven't added any items to your cart yet.</p>
+            <a href="index.php" class="continue-shopping-btn">Continue Shopping</a>
+        </div>
+    <?php else: ?>
     <form action="" method="post" id="cartForm">
         <div class="cart-wrapper">
 
@@ -205,6 +213,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
             </div>
         </div>
     </form>
+    <?php endif; ?>
 </div>
 
 <?php include "footer/footer.php" ?>
