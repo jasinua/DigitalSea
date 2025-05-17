@@ -522,14 +522,9 @@
                         $_SESSION['payment_timestamp'] = time();
                         $_SESSION['total_amount'] = $totalAmount;
 
-                      
-
                         // Clear cart items
-
-
-
                     ?>
-                    window.location.href = 'order-confirmation.php?success=1';
+                    window.location.href = 'redirect-order.php';
                 }
             } catch (err) {
                 errorElement.textContent = 'An error occurred. Please try again.';
