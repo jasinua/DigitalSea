@@ -7,45 +7,20 @@
         $email = $_COOKIE['user_email'];
         $hashed_password = $_COOKIE['user_password'];
         
-        try {
-            // Verify the stored credentials
-            $stmt = $conn->prepare("CALL checkUserExist(?)");
-            if (!$stmt) {
-                throw new Exception("Database error: " . $conn->error);
-            }
+        // Verify the stored credentials
+        $stmt = $conn->prepare("CALL checkUserExist(?)");
+        $stmt->bind_param("s", $email);
+        
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            $user = $result->fetch_assoc();
             
-            $stmt->bind_param("s", $email);
-            
-            if ($stmt->execute()) {
-                $result = $stmt->get_result();
-                $user = $result->fetch_assoc();
-                
-                if ($user && $user['password'] === $hashed_password) {
-                    // Start session if not already started
-                    if (session_status() === PHP_SESSION_NONE) {
-                        session_start();
-                    }
-                    
-                    // Set session variables
-                    $_SESSION['user_id'] = $user['user_id'];
-                    $_SESSION['isAdministrator'] = $user['isAdmin'];
-                    
-                    // Set security headers
-                    header("X-Frame-Options: DENY");
-                    header("X-XSS-Protection: 1; mode=block");
-                    
-                    // Redirect to index
-                    header("Location: index.php");
-                    exit();
-                } else {
-                    // Clear invalid cookies
-                    setcookie('user_email', '', time() - 3600, '/');
-                    setcookie('user_password', '', time() - 3600, '/');
-                }
+            if ($user && $user['password'] === $hashed_password) {
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['isAdministrator'] = $user['isAdmin'];
+                header("Location: index.php");
+                exit();
             }
-        } catch (Exception $e) {
-            // Log error but don't show to user
-            error_log("Cookie login error: " . $e->getMessage());
         }
     }
 
@@ -56,18 +31,11 @@
         unset($_SESSION['redirect_back']);
     }
 
-    if(isset($_SESSION['previous_url'])){ 
-        $_SESSION['add_to_wishlist_in_product_page'] = true;
-        header("Location: " . $_SESSION['previous_url']);
-        unset($_SESSION['previous_url']);
-    }
-
     // Helper function to get image source
     // function getImageSource($product_id, $image_url) {
     //     $local_image = "images/product_$product_id.png";
     //     return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
     // }
-    
 
     // Get current page from URL, default to 1
     $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -770,37 +738,25 @@
                         icon.classList.toggle('fas', isActive);
                     }
                 });
-            }   
-            
+            }
+
             const wishlistButtons = document.querySelectorAll('.wishlist-btn');
-            var product_id_to_add;
-            <?php if(isset($_SESSION['add_to_wishlist']) && $_SESSION['add_to_wishlist'] == true && isset($_SESSION['product_id_to_add']) && isset($_SESSION['user_id'])){ 
-                echo "product_id_to_add = " . $_SESSION['product_id_to_add'] . ";";
-            } ?>
             wishlistButtons.forEach(btn => {
-                
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     const productId = btn.dataset.productId;
-                    
-
                     fetch('controller/add_to_wishlist.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: `product_id=${productId}`
                     })
-                    .then(response => {
-                        if (response.redirected) {
-                            window.location.href = response.url;
-                            return;
-                        }
-                        return response.text();
-                    })
+                    .then(response => response.text())
                     .then(result => {
-                        if (!result) return; // Skip if we redirected
                         result = result.trim();
-                        if (result === 'added') {
+                        if (result === 'not_logged_in') {
+                            window.location.href = 'login.php';
+                        } else if (result === 'added') {
                             updateAllProductHearts(productId, true);
                         } else if (result === 'removed') {
                             updateAllProductHearts(productId, false);
@@ -814,16 +770,7 @@
                         alert('Error updating wishlist. Please try again.');
                     });
                 });
-
-                //nese eshte set idja e produktit qe ka mu shtu ne wishlist, preke butonin qe mu shtu lol
-                if (typeof product_id_to_add !== 'undefined') {
-                    if(product_id_to_add == btn.dataset.productId) {
-                        btn.click();
-                    }
-                }
             });
-
-            
 
             wishlistButtons.forEach(btn => {
                 const productId = btn.dataset.productId;
@@ -920,15 +867,8 @@
                                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                                 body: `product_id=${productId}`
                             })
-                            .then(response => {
-                                if (response.redirected) {
-                                    window.location.href = response.url;
-                                    return;
-                                }
-                                return response.text();
-                            })
+                            .then(response => response.text())
                             .then(result => {
-                                if (!result) return; // Skip if we redirected
                                 result = result.trim();
                                 if (result === 'not_logged_in') {
                                     window.location.href = 'login.php';

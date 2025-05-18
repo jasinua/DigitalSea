@@ -74,33 +74,40 @@
             exit();
         }
         
-        // Insert product into database
         $sql = "INSERT INTO products (name, description, price, stock, discount, image_url) 
-                VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssdisd", $name, $description, $price, $stock, $discount, $image_url);
+        VALUES (?, ?, ?, ?, ?, ?)";
+
         
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssdiis", $name, $description, $price, $stock, $discount, $image_url);
+
         if ($stmt->execute()) {
             $product_id = $conn->insert_id;
             
-            // Process product details
-            if (isset($_POST['details_key']) && isset($_POST['details_value'])) {
-                foreach ($_POST['details_key'] as $index => $key) {
-                    if (!empty($key) && !empty($_POST['details_value'][$index])) {
-                        $value = $_POST['details_value'][$index];
-                        $detail_sql = "INSERT INTO product_details (product_id, prod_desc1, prod_desc2) VALUES (?, ?, ?)";
-                        $detail_stmt = $conn->prepare($detail_sql);
-                        $detail_stmt->bind_param("iss", $product_id, $key, $value);
-                        $detail_stmt->execute();
+            if ($product_id > 0) { // Ensure valid product_id
+                if (isset($_POST['details_key']) && isset($_POST['details_value'])) {
+                    foreach ($_POST['details_key'] as $index => $key) {
+                        if (!empty($key) && !empty($_POST['details_value'][$index])) {
+                            $value = $_POST['details_value'][$index];
+                            $detail_sql = "INSERT INTO product_details (product_id, prod_desc1, prod_desc2) VALUES (?, ?, ?)";
+                            $detail_stmt = $conn->prepare($detail_sql);
+                            $detail_stmt->bind_param("iss", $product_id, $key, $value);
+                            if (!$detail_stmt->execute()) {
+                                echo "<script>alert('Error adding product details: " . $conn->error . "');</script>";
+                            }
+                            $detail_stmt->close();
+                        }
                     }
                 }
+                echo "<script>alert('Product added successfully!'); window.location.href=window.location.href;</script>";
+                exit();
+            } else {
+                echo "<script>alert('Error: Invalid product ID');</script>";
             }
-            
-            echo "<script>alert('Product added successfully!'); window.location.href=window.location.href;</script>";
-            exit();
         } else {
             echo "<script>alert('Error adding product: " . $conn->error . "');</script>";
         }
+        $stmt->close();
     }
 
 
@@ -151,7 +158,7 @@
                     <input type="text" name="name" required>
 
                     <label>Description:</label>
-                    <textarea name="description" required></textarea>
+                    <textarea name="description"></textarea>
 
                     <!-- <label>Type:</label>
                     <input type="text" name="type"> -->

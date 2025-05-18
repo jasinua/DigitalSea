@@ -20,32 +20,85 @@
         $price = (float)$_POST['price'];
         $stock = (int)$_POST['stock'];
         $api_source = $_POST['api_source'] ?? '';
-        $main_image = $_POST['main_image'] ?? '';
         $discount = (float)$_POST['discount'] ?? 0;
+
+        // Handle image upload
+        $main_image = '';
+        if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
+            $upload_dir = '../images/';
+            $temp_name = $_FILES['product_image']['tmp_name'];
+            $new_filename = "product_{$product_id}.png";
+            $upload_path = $upload_dir . $new_filename;
+            
+            if (move_uploaded_file($temp_name, $upload_path)) {
+                $main_image = "images/product_{$product_id}.png";
+            } else {
+                throw new Exception('Error uploading image');
+            }
+        } else {
+            // If no new image uploaded, keep existing image
+            $check_sql = "SELECT image_url FROM products WHERE product_id = ?";
+            $check_stmt = $conn->prepare($check_sql);
+            $check_stmt->bind_param("i", $product_id);
+            $check_stmt->execute();
+            $result = $check_stmt->get_result();
+            if ($row = $result->fetch_assoc()) {
+                $main_image = $row['image_url'];
+            }
+            $check_stmt->close();
+        }
 
         // Log the received data
         error_log("Updating product ID: " . $product_id);
         error_log("Received data: " . print_r($_POST, true));
 
-        // Update the product in the database
-        $sql = "UPDATE products SET 
-                name = ?, 
-                description = ?, 
-                price = ?, 
-                stock = ?, 
-                image_url = ?,
-                discount = ?
-                WHERE product_id = ?";
+        // Check if this is a new product or an update
+        if (empty($product_id)) {
+            // This is a new product - INSERT
+            $sql = "INSERT INTO products (name, description, price, stock, image_url, discount) 
+                    VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Prepare failed: " . $conn->error);
+            }
+            $stmt->bind_param("ssdisi", $name, $description, $price, $stock, $main_image, $discount);
+            
+            if (!$stmt->execute()) {
+                throw new Exception("Execute failed: " . $stmt->error);
+            }
+            
+            // Get the new product ID
+            $product_id = $conn->insert_id;
 
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            throw new Exception("Prepare failed: " . $conn->error);
-        }
+            // If this was a new product with an image, rename the file to match the new ID
+            if (!empty($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
+                $old_path = $upload_dir . "product_temp.png";
+                $new_path = $upload_dir . "product_{$product_id}.png";
+                if (file_exists($old_path)) {
+                    rename($old_path, $new_path);
+                }
+            }
+        } else {
+            // This is an existing product - UPDATE
+            $sql = "UPDATE products SET 
+                    name = ?, 
+                    description = ?, 
+                    price = ?, 
+                    stock = ?, 
+                    image_url = ?,
+                    discount = ?
+                    WHERE product_id = ?";
 
-        $stmt->bind_param("ssdisii", $name, $description, $price, $stock, $main_image, $discount, $product_id);
-        
-        if (!$stmt->execute()) {
-            throw new Exception("Execute failed: " . $stmt->error);
+            $stmt = $conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Prepare failed: " . $conn->error);
+            }
+
+            $stmt->bind_param("ssdisii", $name, $description, $price, $stock, $main_image, $discount, $product_id);
+            
+            if (!$stmt->execute()) {
+                throw new Exception("Execute failed: " . $stmt->error);
+            }
         }
 
         // Update details if any
@@ -80,7 +133,7 @@
             }
         }
 
-        echo json_encode(['success' => true, 'message' => 'Product updated successfully']);
+        echo json_encode(['success' => true, 'message' => 'Product ' . (empty($product_id) ? 'added' : 'updated') . ' successfully']);
 
     } catch (Exception $e) {
         error_log("Error in update_product.php: " . $e->getMessage());

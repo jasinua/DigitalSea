@@ -166,7 +166,7 @@
                         <div class="confirm-code-field">
                             <input type="text" name="forgot-password-email" id="forgot-password-email" placeholder="Email" required>
                         </div>
-                        <input type="submit" value="Reset Password">
+                        <input type="submit" value="Reset Password" id="forgotPasswordSubmit">
                         <div id="forgotPasswordError" class="error" style="display: none;"></div>
                         <div id="forgotPasswordSuccess" class="success" style="display: none;"></div>
                     </form>
@@ -628,6 +628,12 @@
                     if (result['status'] === 'success') {
                         document.getElementById('forgotPasswordSuccess').textContent = result['message'];
                         document.getElementById('forgotPasswordSuccess').style.display = 'block';
+                        submitButton.value = 'Resend Code';
+                        submitButton.disabled = false;
+                        submitButton.onclick = function(e) {
+                            e.preventDefault();
+                            resendForgotPasswordCode();
+                        };
                     } else {
                         document.getElementById('forgotPasswordError').textContent = result['message'];
                         document.getElementById('forgotPasswordError').style.display = 'block';
@@ -641,8 +647,41 @@
                     submitButton.disabled = false;
                     submitButton.value = 'Reset Password';
                 }
-            })
+            });
+        }
 
+        function resendForgotPasswordCode() {
+            const email = document.getElementById('forgot-password-email').value;
+            const submitButton = document.getElementById('forgotPasswordSubmit');
+
+            submitButton.disabled = true;
+            submitButton.value = 'Sending...';
+
+            $.ajax({    
+                url: 'controller/forgot_password.php',
+                method: 'POST',
+                data: {
+                    email: email
+                },
+                success: function(response) {
+                    const result = response;
+                    if (result['status'] === 'success') {
+                        document.getElementById('forgotPasswordSuccess').textContent = result['message'];
+                        document.getElementById('forgotPasswordSuccess').style.display = 'block';
+                    } else {
+                        document.getElementById('forgotPasswordError').textContent = result['message'];
+                        document.getElementById('forgotPasswordError').style.display = 'block';
+                    }
+                    submitButton.disabled = false;
+                    submitButton.value = 'Resend Code';
+                },
+                error: function() {
+                    document.getElementById('forgotPasswordError').textContent = "Failed to resend code";
+                    document.getElementById('forgotPasswordError').style.display = 'block';
+                    submitButton.disabled = false;
+                    submitButton.value = 'Resend Code';
+                }
+            });
         }
 
         function handleForgotPasswordChange(event) {
