@@ -2,6 +2,52 @@
     session_start();
     require_once 'model/dbh.inc.php';
     require_once 'controller/home.inc.php';
+    // Check for authentication cookies
+    if (!isset($_SESSION['user_id']) && isset($_COOKIE['user_email']) && isset($_COOKIE['user_password'])) {
+        $email = $_COOKIE['user_email'];
+        $hashed_password = $_COOKIE['user_password'];
+        
+        try {
+            // Verify the stored credentials
+            $stmt = $conn->prepare("CALL checkUserExist(?)");
+            if (!$stmt) {
+                throw new Exception("Database error: " . $conn->error);
+            }
+            
+            $stmt->bind_param("s", $email);
+            
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                $user = $result->fetch_assoc();
+                
+                if ($user && $user['password'] === $hashed_password) {
+                    // Start session if not already started
+                    if (session_status() === PHP_SESSION_NONE) {
+                        session_start();
+                    }
+                    
+                    // Set session variables
+                    $_SESSION['user_id'] = $user['user_id'];
+                    $_SESSION['isAdministrator'] = $user['isAdmin'];
+                    
+                    // Set security headers
+                    header("X-Frame-Options: DENY");
+                    header("X-XSS-Protection: 1; mode=block");
+                    
+                    // Redirect to index
+                    header("Location: index.php");
+                    exit();
+                } else {
+                    // Clear invalid cookies
+                    setcookie('user_email', '', time() - 3600, '/');
+                    setcookie('user_password', '', time() - 3600, '/');
+                }
+            }
+        } catch (Exception $e) {
+            // Log error but don't show to user
+            error_log("Cookie login error: " . $e->getMessage());
+        }
+    }
 
     // Only redirect if trying to access a protected page and not already on login page
     if(isset($_SESSION['redirect_back']) && $_SESSION['redirect_back'] == true && isset($_SESSION['user_id']) && basename($_SERVER['PHP_SELF']) !== 'login.php'){
