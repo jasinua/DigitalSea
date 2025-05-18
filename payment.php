@@ -56,30 +56,64 @@
         exit;
     }
 
-    // Calculate total amount
-    $subtotal = 0;
-    $discount = 0;
+    // Check stock levels before proceeding
+    $stockIssues = [];
+    $cartItems->data_seek(0); // Reset the result pointer
     while ($item = $cartItems->fetch_assoc()) {
-        if($item['order_id'] == null){
-        $pid = $item['product_id'];
-        $qty = $item['quantity'];
-        
-        $productResult = returnProduct($pid);
-        if ($productResult && $product = $productResult->fetch_assoc()) {
-            $price = $product['price'];
-            $productDiscount = $product['discount'];
+        if($item['order_id'] == null) {
+            $pid = $item['product_id'];
+            $qty = $item['quantity'];
             
-            if ($productDiscount > 0) {
-                $finalPrice = $price - ($price * $productDiscount / 100);
-                $discount += ($price - $finalPrice) * $qty;
-            } else {
-                $finalPrice = $price;
+            // Check stock level
+            $stockQuery = "SELECT name, stock FROM products WHERE product_id = ?";
+            $stockStmt = $conn->prepare($stockQuery);
+            $stockStmt->bind_param("i", $pid);
+            $stockStmt->execute();
+            $stockResult = $stockStmt->get_result();
+            $productData = $stockResult->fetch_assoc();
+            
+            if ($productData['stock'] < $qty) {
+                $stockIssues[] = sprintf(
+                    "%s: Only %d items available (you requested %d)",
+                    $productData['name'],
+                    $productData['stock'],
+                    $qty
+                );
             }
-            
-            $subtotal += $price * $qty;
         }
     }
 
+    // If there are stock issues, redirect to cart with error message
+    if (!empty($stockIssues)) {
+        $_SESSION['error'] = "Stock issues detected: " . implode(", ", $stockIssues);
+        header("Location: cart.php");
+        exit();
+    }
+
+    // Calculate total amount
+    $subtotal = 0;
+    $discount = 0;
+    $cartItems->data_seek(0); // Reset the result pointer again
+    while ($item = $cartItems->fetch_assoc()) {
+        if($item['order_id'] == null){
+            $pid = $item['product_id'];
+            $qty = $item['quantity'];
+            
+            $productResult = returnProduct($pid);
+            if ($productResult && $product = $productResult->fetch_assoc()) {
+                $price = $product['price'];
+                $productDiscount = $product['discount'];
+                
+                if ($productDiscount > 0) {
+                    $finalPrice = $price - ($price * $productDiscount / 100);
+                    $discount += ($price - $finalPrice) * $qty;
+                } else {
+                    $finalPrice = $price;
+                }
+                
+                $subtotal += $price * $qty;
+            }
+        }
     }
     $tax = $subtotal * 0.18; // 18% VAT
     $totalAmount = $subtotal + $tax - $discount;
@@ -573,4 +607,5 @@
         }
     </script>
 </body>
+</html>
 </html>
