@@ -116,15 +116,31 @@
 
     // Create Payment Intent
     try {
-        $paymentIntent = \Stripe\PaymentIntent::create([
-            'amount' => round($totalAmount * 100),
-            'currency' => $_ENV['STRIPE_CURRENCY'],
-            'payment_method_types' => ['card'],
-            'metadata' => [
-                'user_id' => $userId,
-                'email' => $userEmail
-            ]
-        ]);
+        $minimumAmount = 0.50; // Minimum amount in EUR (50 cents)
+        $amountInCents = round($totalAmount * 100);
+
+        if ($totalAmount < $minimumAmount) {
+            // Create a Setup Intent for small amounts
+            $paymentIntent = \Stripe\SetupIntent::create([
+                'payment_method_types' => ['card'],
+                'metadata' => [
+                    'user_id' => $userId,
+                    'email' => $userEmail,
+                    'amount' => $amountInCents
+                ]
+            ]);
+        } else {
+            // Create a regular Payment Intent for normal amounts
+            $paymentIntent = \Stripe\PaymentIntent::create([
+                'amount' => $amountInCents,
+                'currency' => $_ENV['STRIPE_CURRENCY'],
+                'payment_method_types' => ['card'],
+                'metadata' => [
+                    'user_id' => $userId,
+                    'email' => $userEmail
+                ]
+            ]);
+        }
         $clientSecret = $paymentIntent->client_secret;
     } catch (\Stripe\Exception\ApiErrorException $e) {
         error_log("Stripe Error: " . $e->getMessage());
@@ -499,60 +515,53 @@
             submitButton.disabled = true;
             submitButton.innerHTML = '<span class="spinner"></span> Processing...';
 
-            // Check if address was changed and update is requested
-            const addressInput = document.getElementById('address');
-            const updateAddressCheckbox = document.getElementById('update-address-checkbox');
-            
-            if (addressInput.value !== originalAddress && updateAddressCheckbox.checked) {
-                // Create a form data object for the address update
-                const addressFormData = new FormData();
-                addressFormData.append('update_address', '1');
-                addressFormData.append('new_address', addressInput.value);
-
-                // Send the address update request
-                try {
-                    const updateResponse = await fetch('payment.php', {
-                        method: 'POST',
-                        body: addressFormData
-                    });
-                    
-                    if (!updateResponse.ok) {
-                        throw new Error('Failed to update address');
-                    }
-                } catch (error) {
-                    console.error('Error updating address:', error);
-                    // Continue with payment even if address update fails
-                }
-            }
-
             try {
-                const { paymentIntent, error } = await stripe.confirmCardPayment(
-                    '<?php echo $clientSecret; ?>',
-                    {
-                        payment_method: {
-                            card: card,
-                            billing_details: {
-                                name: document.getElementById('cardholder-name').value,
-                                email: document.getElementById('email').value,
-                                address: {
-                                    line1: document.getElementById('address').value
+                let result;
+                if (<?php echo $totalAmount; ?> < <?php echo $minimumAmount; ?>) {
+                    // Handle Setup Intent
+                    result = await stripe.confirmCardSetup(
+                        '<?php echo $clientSecret; ?>',
+                        {
+                            payment_method: {
+                                card: card,
+                                billing_details: {
+                                    name: document.getElementById('cardholder-name').value,
+                                    email: document.getElementById('email').value,
+                                    address: {
+                                        line1: document.getElementById('address').value
+                                    }
                                 }
                             }
                         }
-                    }
-                );
+                    );
+                } else {
+                    // Handle Payment Intent
+                    result = await stripe.confirmCardPayment(
+                        '<?php echo $clientSecret; ?>',
+                        {
+                            payment_method: {
+                                card: card,
+                                billing_details: {
+                                    name: document.getElementById('cardholder-name').value,
+                                    email: document.getElementById('email').value,
+                                    address: {
+                                        line1: document.getElementById('address').value
+                                    }
+                                }
+                            }
+                        }
+                    );
+                }
 
-                if (error) {
-                    errorElement.textContent = error.message;
+                if (result.error) {
+                    errorElement.textContent = result.error.message;
                     submitButton.disabled = false;
                     submitButton.innerHTML = 'Pay Now €<?php echo number_format($totalAmount, 2); ?>';
-                } else if (paymentIntent.status === 'succeeded') {
+                } else {
                     <?php
                         $_SESSION['payment_success'] = true;
                         $_SESSION['payment_timestamp'] = time();
                         $_SESSION['total_amount'] = $totalAmount;
-
-                        // Clear cart items
                     ?>
                     window.location.href = 'controller/redirect-order.php';
                 }
@@ -603,5 +612,4 @@
         }
     </script>
 </body>
-</html>
-</html>
+</html></html>

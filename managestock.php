@@ -40,10 +40,8 @@
     if (isset($_POST['submit'])) {
         $name = $_POST['name'];
         $description = $_POST['description'];
-        $type = $_POST['type'];
         $price = (float) $_POST['price'];
         $stock = (int) $_POST['stock'];
-        $api_source = $_POST['api_source'];
         $discount = (float) $_POST['discount'];
         
         // Get the next product ID
@@ -74,38 +72,69 @@
             exit();
         }
         
-        $sql = "INSERT INTO products (name, description, price, stock, discount, image_url) 
-        VALUES (?, ?, ?, ?, ?, ?)";
-
-        
+        // Insert product into database
+        $sql = "INSERT INTO products (product_id, name, description, price, stock, discount, image_url, api_source) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, 'DigitalSeaApi')";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssdiis", $name, $description, $price, $stock, $discount, $image_url);
-
+        if (!$stmt) {
+            echo "<script>alert('Prepare failed: " . $conn->error . "');</script>";
+            exit();
+        }
+        
+        $stmt->bind_param("issdiis", $next_id, $name, $description, $price, $stock, $discount, $image_url);
+        
         if ($stmt->execute()) {
-            $product_id = $conn->insert_id;
+            $product_id = $next_id; // Use the next_id we generated
             
-            if ($product_id > 0) { // Ensure valid product_id
-                if (isset($_POST['details_key']) && isset($_POST['details_value'])) {
-                    foreach ($_POST['details_key'] as $index => $key) {
-                        if (!empty($key) && !empty($_POST['details_value'][$index])) {
-                            $value = $_POST['details_value'][$index];
-                            $detail_sql = "INSERT INTO product_details (product_id, prod_desc1, prod_desc2) VALUES (?, ?, ?)";
-                            $detail_stmt = $conn->prepare($detail_sql);
-                            $detail_stmt->bind_param("iss", $product_id, $key, $value);
-                            if (!$detail_stmt->execute()) {
-                                echo "<script>alert('Error adding product details: " . $conn->error . "');</script>";
-                            }
-                            $detail_stmt->close();
+            // Process product details
+            if (isset($_POST['details_key']) && isset($_POST['details_value'])) {
+                foreach ($_POST['details_key'] as $index => $key) {
+                    if (!empty($key) && !empty($_POST['details_value'][$index])) {
+                        $value = $_POST['details_value'][$index];
+                        $detail_sql = "INSERT INTO product_details (product_id, prod_desc1, prod_desc2) VALUES (?, ?, ?)";
+                        $detail_stmt = $conn->prepare($detail_sql);
+                        if (!$detail_stmt) {
+                            echo "<script>alert('Prepare details failed: " . $conn->error . "');</script>";
+                            continue;
                         }
+                        $detail_stmt->bind_param("iss", $product_id, $key, $value);
+                        if (!$detail_stmt->execute()) {
+                            echo "<script>alert('Error inserting details: " . $detail_stmt->error . "');</script>";
+                        }
+                        $detail_stmt->close();
                     }
                 }
-                echo "<script>alert('Product added successfully!'); window.location.href=window.location.href;</script>";
-                exit();
-            } else {
-                echo "<script>alert('Error: Invalid product ID');</script>";
             }
+            
+            // Update Firebase with the new product
+            require_once __DIR__ . '/vendor/autoload.php';
+            $serviceAccountPath = __DIR__ . '/api/digitalsea.json';
+            
+            $firebase = (new Kreait\Firebase\Factory)
+                ->withServiceAccount($serviceAccountPath)
+                ->withDatabaseUri('https://auth-89876-default-rtdb.firebaseio.com');
+            
+            $database = $firebase->createDatabase();
+            
+            $firebaseData = [
+                'product_id' => $product_id,
+                'name' => $name,
+                'description' => $description,
+                'price' => $price,
+                'stock' => $stock,
+                'discount' => $discount,
+                'image_url' => $image_url
+            ];
+            
+            try {
+                $database->getReference('products/' . $product_id)->set($firebaseData);
+                echo "<script>alert('Product added successfully!'); window.location.href=window.location.href;</script>";
+            } catch (Exception $e) {
+                echo "<script>alert('Product added to database but failed to update Firebase: " . $e->getMessage() . "');</script>";
+            }
+            exit();
         } else {
-            echo "<script>alert('Error adding product: " . $conn->error . "');</script>";
+            echo "<script>alert('Error adding product: " . $stmt->error . "');</script>";
         }
         $stmt->close();
     }
@@ -364,43 +393,6 @@
             notification.style.display = 'none';
         }, 3000);
     }
-
-    document.getElementById('productForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        const isEdit = document.getElementById('edit-index') !== null;
-        
-        // Log form data for debugging
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
-        
-        fetch('controller/update_product.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Server response:', data); // Debug log
-            if (data.success) {
-                showNotification(data.message, 'success');
-                closeForm();
-                location.reload();
-            } else {
-                showNotification(data.message || 'Error updating product', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error updating product: ' + error.message, 'error');
-        });
-    });
 
     function editProduct(index) {
         // Get product data from PHP array (rendered as JS object)

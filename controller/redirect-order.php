@@ -3,13 +3,23 @@
 session_start();
 
 
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 
 
 include_once "../model/dbh.inc.php";
 
 include_once "function.php";
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+require_once '../model/dbh.inc.php';
+
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Auth;
+use Kreait\Firebase\Database;
 
 if(isset($_SESSION['payment_success']) && $_SESSION['payment_success'] === true) {
     
@@ -24,12 +34,83 @@ if(isset($_SESSION['payment_success']) && $_SESSION['payment_success'] === true)
 
     $orderId = $conn->insert_id;
 
+
+    
+
+// Firebase configuration
+$firebaseConfig = [
+    'apiKey' => 'AIzaSyCif5CiVmFDv-vbBmtZiml3PIIuU7_AOS8',
+    'authDomain' => 'auth-89876.firebaseapp.com',
+    'databaseURL' => 'https://auth-89876-default-rtdb.firebaseio.com',
+    'projectId' => 'auth-89876',
+    'storageBucket' => 'auth-89876.appspot.com',
+    'messagingSenderId' => '955052187840',
+    'appId' => '1:955052187840:web:22ad7bb7a1c7ff7f814d25',
+    'measurementId' => 'G-66MY7DRXV7'
+];
+
+// Path to your service account JSON file
+$serviceAccountPath = __DIR__ . '/../api/digitalsea.json';
+
+$firebase = (new Factory)
+    ->withServiceAccount($serviceAccountPath)
+    ->withDatabaseUri($firebaseConfig['databaseURL']);
+
+// Initialize Firebase services
+$auth = $firebase->createAuth();
+$database = $firebase->createDatabase();
+$storage = $firebase->createStorage();
+
+// Example: Fetch data from the Realtime Database
+$reference = $database->getReference('products');
+$snapshot = $reference->getSnapshot();
+$data = $snapshot->getValue();
+
+
+
+$returnCartProducts = "SELECT *, p.api_source AS api_source FROM cart c INNER JOIN products p ON c.product_id = p.product_id WHERE c.user_id = ?";
+$stmt1 = $conn->prepare($returnCartProducts);
+$stmt1->bind_param("i", $_SESSION['user_id']);
+$stmt1->execute();
+$result1 = $stmt1->get_result();
+
+foreach ($result1 as $row) {
+        if($row['api_source'] == 'DigitalSeaAPI'){
+            $productId = $row['product_id'];
+            $quantity = $row['quantity']; 
+            foreach ($data as $key => $value) {
+                if (isset($value['product_id']) && $value['product_id'] == $productId) {
+                    $stock = $value['stock'];
+                    if($stock >= $quantity){
+                        $newStock = $stock - $quantity;
+                        $database->getReference("products/{$key}")->update(['stock' => $newStock]);
+                        $updateProductStock = "UPDATE products SET stock = ? WHERE product_id = ?";
+                        $stmt = $conn->prepare($updateProductStock);
+                        $stmt->bind_param("ii", $newStock, $productId);
+                        $stmt->execute();
+                    } 
+                }
+            }
+            
+        } else {
+            $productId = $row['product_id'];
+            $quantity = $row['quantity'];
+            $stock = $row['stock'];
+            if($stock >= $quantity){
+                $newStock = $stock - $quantity;
+                $updateProductStock = "UPDATE products SET stock = ? WHERE product_id = ?";
+                $stmt = $conn->prepare($updateProductStock);
+                $stmt->bind_param("ii", $newStock, $productId);
+                $stmt->execute();
+            }
+        }
+}
+
+
     $updateCart = "UPDATE cart SET order_id = ? WHERE user_id = ? AND order_id IS NULL";
     $stmt = $conn->prepare($updateCart);
     $stmt->bind_param("ii", $orderId, $_SESSION['user_id']);
     $stmt->execute();
-
-
 
     // / Get user email from database
 $getUserEmail = "SELECT email FROM users WHERE user_id = ?";
@@ -115,39 +196,15 @@ try {
 } catch (Exception $e) {
     // Log the error but don't show it to the user
     error_log("Failed to send invoice email: " . $mail->ErrorInfo);
-}
 
-
-
-
-    $cartItems = returnCart($_SESSION['user_id']);
-    while ($item = $cartItems->fetch_assoc()) {
-        if($item['order_id'] == $orderId) {
-            $productId = $item['product_id'];
-            $orderedQty = $item['quantity'];
-            
-            $getStockQuery = "SELECT stock FROM products WHERE product_id = ?";
-            $stmt = $conn->prepare($getStockQuery);
-            $stmt->bind_param("i", $productId);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $currentStock = $result->fetch_assoc()['stock'];
-            
-            $newStock = $currentStock - $orderedQty;
-            
-            $updateProductStock = "UPDATE products SET stock = ? WHERE product_id = ?";
-            $stmt = $conn->prepare($updateProductStock);
-            $stmt->bind_param("ii", $newStock, $productId);
-            $stmt->execute();
-        }
-    }
+}   
 
     header("Location: ../order-confirmation.php?success=1&order_id=" . $orderId);
     session_unset($_SESSION['payment_success']);
     session_unset($_SESSION['total_amount']);
     session_unset($_SESSION['payment_timestamp']);
-
-
+    // session_unset($_SESSION['payment_success'], $_SESSION['total_amount'], $_SESSION['payment_timestamp']);
+    // exit();
 } else {
     header("Location: ../payment.php");
 }

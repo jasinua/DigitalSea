@@ -292,8 +292,8 @@ require_once dirname(__FILE__) . '/../api/api.php';
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 ");
     
-                $mainImage = $product['image_url']['main_image'] ?? '';
-                $discount = $product['discount'] ?? 0;
+                $mainImage = $product['image_url']['main_image'];
+                $discount = 0;
                 $source = 'DigitalSeaAPI';
     
                 $stmt->bind_param(
@@ -325,6 +325,8 @@ require_once dirname(__FILE__) . '/../api/api.php';
     
     function addAPIDetailsToDatabase($conn) {
         $products = get_all_products();
+
+        // echo $products;
         
         if (!is_array($products)) {
             echo "Invalid product data format.";
