@@ -29,7 +29,7 @@
         color: #153147;
         margin: 0 0 20px 0;
         padding-bottom: 10px;
-        border-bottom: 2px solid #f0f0f0;
+        border-bottom: 2px solid #eee;
     }
 
     .profile-info-container {
@@ -44,7 +44,7 @@
         width: 200px;
         height: 200px;
         background: rgba(21, 49, 71, 0.1);
-    border-radius: 50%;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -63,7 +63,7 @@
     }
 
     .info-item {
-    display: flex;
+        display: flex;
         align-items: center;
         gap: 15px;
         padding: 15px;
@@ -111,15 +111,15 @@
 
     .form-group input {
         padding: 12px 15px;
-        border: 2px solid #e9ecef;
+        border: 2px solid #eee;
         border-radius: 12px;
         font-size: 1rem;
         transition: all 0.3s ease;
     }
 
     .form-group input:focus {
-        border-color: #153147;
-        box-shadow: 0 0 0 3px rgba(21, 49, 71, 0.1);
+        border-color: var(--noir-color);
+        box-shadow: var(--shadow-input);
         outline: none;
     }
 
@@ -207,6 +207,147 @@
         background: #f8d7da;
         color: #721c24;
         border: 1px solid #f5c6cb;
+    }
+
+    .orders-section {
+        margin-top: 2rem;
+    }
+
+    .orders-table {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .orders-table table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 1rem;
+        color: var(--page-text-color)
+    }
+
+    .orders-table tr {
+        border-bottom: 2px solid #eee;
+    }
+
+    .orders-table tr:last-child {
+        border-bottom: none;
+    }
+
+    .orders-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: var(--page-text-color)
+    }
+
+    .orders-table tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .orders-table .btn-secondary {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .orders-table .btn-secondary i {
+        margin-right: 0.5rem;
+    }
+
+    .no-orders {
+        text-align: center;
+        color: #666;
+        padding: 2rem;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .orders-table {
+            font-size: 0.9rem;
+        }
+        
+        .orders-table th,
+        .orders-table td {
+            padding: 0.75rem;
+        }
+        
+        .orders-table .btn-secondary {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+    }
+
+    .invoice-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background-color: var(--button-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .invoice-btn:hover {
+        background-color: var(--navy-color);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .invoice-btn i {
+        font-size: 1.1rem;
+    }
+
+    .invoice-btn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    @media (max-width: 768px) {
+        .invoice-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .invoice-btn i {
+            font-size: 1rem;
+        }
+    }
+
+    .order-history-btn {
+        background-color: white;
+        border: 2px solid var(--button-color);
+        color: var(--button-color);
+        padding: 10px 20px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .order-history-btn:hover {
+        background-color: var(--button-color);
+        color: white;
+    }
+
+    .order-history-btn.active {
+        background-color: var(--button-color);
+        color: white;
+    }
+
+    .order-history-btn.active:hover {
+        background-color: white;
+        color: var(--button-color);
+    }
+
+    #orderHistoryContent {
+        margin-top: 20px;
     }
 
     @media (max-width: 1100px) {

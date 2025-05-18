@@ -46,18 +46,24 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     // Fetch cart again after updates
     $rawCart = returnCart($userId);
+    $mergedCart = [];
 
     // Filter and count items with order_id == null
     $filteredCart = [];
     $count = 0;
     foreach ($rawCart as $item) {
         if (!isset($item['order_id']) || is_null($item['order_id'])) {
-            $filteredCart[] = $item;
+            $pid = $item['product_id'];
+            if (isset($mergedCart[$pid])) {
+                $mergedCart[$pid]['quantity'] += $item['quantity'];
+            } else {
+                $mergedCart[$pid] = $item;
+            }
             $count++;
         }
     }
 
-    $res = array_values($filteredCart);
+    $res = array_values($mergedCart);
 
     include "header/header.php";
 ?>
@@ -65,7 +71,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
 <?php include "css/cart-css.php"; ?>
 
 <div class="page-wrapper">
-    <div class="save-message">Ndryshimet u ruajtën me sukses!</div>
+    <div class="save-message">Changes saved successfully!</div>
     <?php if (empty($res)): ?>
         <div class="empty-cart-container" style="text-align: center; padding: 50px 20px;">
             <div class="empty-cart-icon" style="font-size: 48px; margin-bottom: 20px; color: var(--mist-color);">
@@ -75,7 +81,15 @@ if (isLoggedIn($_SESSION['user_id'])) {
             <p style="margin-bottom: 20px; color: var(--mist-color);">Looks like you haven't added any items to your cart yet.</p>
             <a href="index.php" class="continue-shopping-btn">Continue Shopping</a>
         </div>
-    <?php else: ?>
+    <?php else:
+        
+    //Check for error messages
+    $error_message = isset($_SESSION['error']) ? $_SESSION['error'] : '';
+    echo $error_message;
+    unset($_SESSION['error']);
+    ?>
+    
+
     <form action="" method="post" id="cartForm">
         <div class="cart-wrapper">
 
@@ -196,13 +210,12 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     </div>
                             <?php } ?>
                         </div>
-                        
+                    </div>
+                    <div>
                         <div class="summary-item"><span>Subtotal:</span> <span><?php echo number_format($subtotal, 2); ?>€</span></div>
                         <div class="summary-item"><span>VAT 18%:</span> <span><?php echo number_format($subtotal * 0.18, 2); ?>€</span></div>
                         <div class="summary-item"><span>Discount:</span> <span style="color: red">- <?php echo number_format($alldiscount, 2);?>€</span></div>
                         <input class="input-for-discount" type="hidden" name="discount" value="<?php echo $alldiscount; ?>">
-                    </div>
-                    <div>
                         <div class="summary-item total">
                             <span>Total:</span>
                             <span><?php echo number_format($subtotal + $subtotal * 0.18 - $alldiscount, 2); ?>€</span>
@@ -223,6 +236,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
     document.addEventListener("DOMContentLoaded", () => {
         const quantityInputs = document.querySelectorAll('.quantity-input');
         const saveBtn = document.getElementById('saveChanges');
+        saveBtn.disabled = true;
         const saveMessage = document.querySelector('.save-message');
         let saveTimeout;
         let hasUnsavedChanges = false;
@@ -247,7 +261,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
                     return currentInput && currentInput.value !== origVal;
                 });
                 
-                updateCheckoutButton();
+                // Only update button state if not processing checkout
+                if (!checkoutBtn.classList.contains('processing')) {
+                    updateCheckoutButton();
+                }
             });
         });
 
@@ -261,7 +278,32 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
         // Update checkout button state
         function updateCheckoutButton() {
-            checkoutBtn.disabled = hasUnsavedChanges;
+            // Only disable if there are unsaved changes and button is not processing
+            if (hasUnsavedChanges && !checkoutBtn.classList.contains('processing')) {
+                checkoutBtn.disabled = true;
+                saveBtn.disabled = false;
+            } else if (!hasUnsavedChanges) {
+                checkoutBtn.disabled = false;
+                saveBtn.disabled = true;
+            }
+        }
+
+        // Handle checkout button click
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', function(e) {
+                // Prevent the default form submission
+                e.preventDefault();
+                
+                // Add processing class and disable button
+                this.classList.add('processing');
+                this.disabled = true;
+                this.style.opacity = '0.7';
+                this.style.cursor = 'not-allowed';
+                this.textContent = 'Processing...';
+                
+                // Bypass unsaved changes check and go directly to payment
+                window.location.href = 'payment.php';
+            });
         }
 
         // Reset unsaved changes after saving
@@ -322,13 +364,25 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                 const remainingItems = document.querySelectorAll('tbody tr');
                                 if (remainingItems.length === 0) {
                                     const cartTable = document.querySelector('.itemsTable');
-                                    cartTable.innerHTML = '<div class="empty-cart">Your cart is empty. <a href="index.php">Continue shopping</a></div>';
+                                    cartTable.innerHTML = '<div class="empty-cart" style="display: flex; justify-content: center; align-self: center; margin: auto; width: 100%; height: 100%; align-items: center; padding-bottom: 40px;">Your cart is empty. <a href="index.php">Continue shopping</a></div>';
                                     
                                     const summaryBox = document.querySelector('#prodNameXprice');
                                     summaryBox.innerHTML = '<div class="empty-cart-summary">There are no products in the cart.</div>';
                                     
+                                    const checkoutBtn = document.querySelector('.checkout-btn');
+                                    checkoutBtn.classList.add('no-items');
+                                    checkoutBtn.disabled = true;
+
+                                    const saveBtn = document.querySelector('.save-btn');
+                                    saveBtn.disabled = true;
                                     // Update totals
                                     updateCartTotals(0, 0);
+                                }else{
+                                    try{
+                                        checkoutBtn.classList.remove('no-items');
+                                    }catch(e){
+                                        console.log(e);
+                                    }
                                 }
                             }, 300);
                         } else {
@@ -366,8 +420,19 @@ if (isLoggedIn($_SESSION['user_id'])) {
         
         // Handle save changes button
         saveBtn.addEventListener('click', () => {
+
+            //disable the input fields and the remove buttons
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.disabled = true;
+            });
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.disabled = true;
+            });
+
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             saveBtn.disabled = true;
+
+
             
             // Submit the form via AJAX
             const formData = new FormData(document.getElementById('cartForm'));
@@ -378,9 +443,15 @@ if (isLoggedIn($_SESSION['user_id'])) {
             })
             .then(response => {
                 saveBtn.innerHTML = 'Save Changes';
-                saveBtn.disabled = false;
-                saveBtn.style.backgroundColor = 'var(--button-color)';
                 
+                //enable the input fields and the remove buttons
+                document.querySelectorAll('.quantity-input').forEach(input => {
+                    input.disabled = false;
+                });
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.disabled = false;
+                });
+
                 // Show save message
                 saveMessage.classList.add('show');
                 
@@ -513,6 +584,25 @@ if (isLoggedIn($_SESSION['user_id'])) {
         
         // Listen for window resize events
         window.addEventListener('resize', initResponsive);
+
+        // Update cart table height
+        // const cartTable = document.querySelector('.itemsTable');
+        // cartTable.style.height = '90%';
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     const proceedButton = document.querySelector('.checkout-btn');
+        //     if (proceedButton) {
+        //         proceedButton.addEventListener('click', function(e) {
+        //             // Disable the button immediately after click
+        //             this.disabled = true;
+        //             // Add a visual indication that the button is disabled
+        //             this.style.opacity = '0.7';
+        //             this.style.cursor = 'not-allowed';
+        //             // Change text to indicate processing
+        //             this.textContent = 'Processing...';
+        //         });
+        //     }
+        // });
     });
 </script>
 

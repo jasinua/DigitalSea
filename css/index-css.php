@@ -115,8 +115,7 @@
     
     .filter-section {
         margin-bottom: 24px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 16px;
+        border-bottom: 2px solid #eee;
     }
     
     .filter-section:last-child {
@@ -448,7 +447,7 @@
         background-color: var(--ivory-color);
         width: 100%;
         max-width: 1400px; /* Limit width to show 4 items */
-        gap: 20px;
+        /* gap: 20px; */
     }
     
     #newItemsHeader {
@@ -1129,7 +1128,7 @@
 
         .filter-section {
             margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 2px solid #eee;
             padding-bottom: 16px;
         }
 

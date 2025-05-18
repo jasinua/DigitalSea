@@ -109,7 +109,12 @@
                                 <p class='price-value'><?php echo number_format($data['price'], 2, '.', ',') ?>€</p>
                             <?php } ?>
                         </div>
-                        <input id='buy' type='submit' name='addToCart' value='Add to cart'>
+                        <?php if($data['stock'] > 0){ ?>
+                            <input id='buy' type='submit' value='Add to cart' onclick="this.disabled = true; this.value = 'Adding...'; document.getElementById('buy2').click();" >
+                            <input id='buy2' type="submit" name="addToCart" value="Add to cart" style="display: none;" hidden>
+                        <?php }else{ ?>
+                            <input id='buy' type='submit' name='addToCart' value='Out of stock' disabled style='background-color: #ccc; cursor: not-allowed;'>
+                        <?php } ?>
                     </div>
                 </form>
             </div>
@@ -137,19 +142,40 @@
                 e.preventDefault();
                 const button = $(this);
                 
-                $.ajax({
-                    url: 'controller/add_to_wishlist.php',
+                fetch('controller/add_to_wishlist.php', {
                     method: 'POST',
-                    data: { product_id: productId },
-                    success: function(response) {
-                        if (response.trim() === 'added') {
-                            button.addClass('active').find('i').removeClass('far').addClass('fas');
-                        } else if (response.trim() === 'removed') {
-                            button.removeClass('active').find('i').removeClass('fas').addClass('far');
-                        }
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `product_id=${productId}&url=${window.location.href}`
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        return;
                     }
+                    return response.text();
+                })
+                .then(result => {
+                    if (!result) return; // Skip if we redirected
+                    result = result.trim();
+                    if (result === 'added') {
+                        button.addClass('active').find('i').removeClass('far').addClass('fas');
+                    } else if (result === 'removed') {
+                        button.removeClass('active').find('i').removeClass('fas').addClass('far');
+                    } else if (result === 'error') {
+                        console.error('Error updating wishlist');
+                        alert('Error updating wishlist. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error updating wishlist. Please try again.');
                 });
             });
+
+            <?php if(isset($_SESSION['add_to_wishlist_in_product_page'])){ 
+                echo "$('.wishlist-btn').click();";
+                unset($_SESSION['add_to_wishlist_in_product_page']); 
+            } ?>
 
             // Show/hide clear button based on search input
             $('.search-input').on('input', function() {

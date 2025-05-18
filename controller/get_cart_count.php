@@ -15,8 +15,7 @@ $cart_items = returnCart($userId);
 $cart_count = 0;
 
 while ($item = $cart_items->fetch_assoc()) {
-    
-    if ($item['order_id'] === null) {
+    if (!isset($item['order_id']) || is_null($item['order_id'])) {
         $cart_count += $item['quantity'];
     }
 }

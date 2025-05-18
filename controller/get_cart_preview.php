@@ -38,9 +38,9 @@
             outputError('Database connection error');
         }
         
-        $cartItems = returnCart($userId);
+        $cart_items = returnCart($userId);
         
-        if (!$cartItems || $cartItems->num_rows === 0) {
+        if (!$cart_items || $cart_items->num_rows === 0) {
             outputError('Your cart is empty');
         }
         
@@ -49,9 +49,9 @@
         $count = 0;
 
         // Merge duplicate products by summing quantities
-        while ($item = $cartItems->fetch_assoc()) {
+        while ($item = $cart_items->fetch_assoc()) {
             // Only include items where order_id is null
-            if ($item['order_id'] === null) {
+            if (!isset($item['order_id']) || is_null($item['order_id'])) {
                 $pid = $item['product_id'];
                 if (!isset($product_quantities[$pid])) {
                     $product_quantities[$pid] = 0;

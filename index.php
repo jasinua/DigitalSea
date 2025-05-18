@@ -3,10 +3,17 @@
     require_once 'model/dbh.inc.php';
     require_once 'controller/home.inc.php';
 
-    if(isset($_SESSION['redirect_back']) && $_SESSION['redirect_back'] == true && isset($_SESSION['user_id'])){
+    // Only redirect if trying to access a protected page and not already on login page
+    if(isset($_SESSION['redirect_back']) && $_SESSION['redirect_back'] == true && isset($_SESSION['user_id']) && basename($_SERVER['PHP_SELF']) !== 'login.php'){
         header("Location: " . $_SESSION['last_page']);
         unset($_SESSION['last_page']);
         unset($_SESSION['redirect_back']);
+    }
+
+    if(isset($_SESSION['previous_url'])){ 
+        $_SESSION['add_to_wishlist_in_product_page'] = true;
+        header("Location: " . $_SESSION['previous_url']);
+        unset($_SESSION['previous_url']);
     }
 
     // Helper function to get image source
@@ -14,6 +21,7 @@
     //     $local_image = "images/product_$product_id.png";
     //     return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
     // }
+    
 
     // Get current page from URL, default to 1
     $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -275,7 +283,7 @@
                         <button class="carousel-arrow" id="newItemsPrev">
                             <i class="fas fa-chevron-left"></i>
                         </button>
-                        <div class='itemLine' id='newItems'>
+                        <div class='itemLine' id='newItems' style="width: 100%;">
                             <?php foreach (getData("SELECT * FROM products ORDER BY product_id DESC LIMIT 8") as $prod) { ?>
                                 <div class='item newItemsItem' id="newItemsItem">
                                     <a href="product.php?product=<?php echo $prod['product_id'] ?>" class="product-link">
@@ -716,25 +724,37 @@
                         icon.classList.toggle('fas', isActive);
                     }
                 });
-            }
-
+            }   
+            
             const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+            var product_id_to_add;
+            <?php if(isset($_SESSION['add_to_wishlist']) && $_SESSION['add_to_wishlist'] == true && isset($_SESSION['product_id_to_add']) && isset($_SESSION['user_id'])){ 
+                echo "product_id_to_add = " . $_SESSION['product_id_to_add'] . ";";
+            } ?>
             wishlistButtons.forEach(btn => {
+                
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     const productId = btn.dataset.productId;
+                    
+
                     fetch('controller/add_to_wishlist.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: `product_id=${productId}`
                     })
-                    .then(response => response.text())
+                    .then(response => {
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                            return;
+                        }
+                        return response.text();
+                    })
                     .then(result => {
+                        if (!result) return; // Skip if we redirected
                         result = result.trim();
-                        if (result === 'not_logged_in') {
-                            window.location.href = 'login.php';
-                        } else if (result === 'added') {
+                        if (result === 'added') {
                             updateAllProductHearts(productId, true);
                         } else if (result === 'removed') {
                             updateAllProductHearts(productId, false);
@@ -748,7 +768,16 @@
                         alert('Error updating wishlist. Please try again.');
                     });
                 });
+
+                //nese eshte set idja e produktit qe ka mu shtu ne wishlist, preke butonin qe mu shtu lol
+                if (typeof product_id_to_add !== 'undefined') {
+                    if(product_id_to_add == btn.dataset.productId) {
+                        btn.click();
+                    }
+                }
             });
+
+            
 
             wishlistButtons.forEach(btn => {
                 const productId = btn.dataset.productId;
@@ -845,8 +874,15 @@
                                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                                 body: `product_id=${productId}`
                             })
-                            .then(response => response.text())
+                            .then(response => {
+                                if (response.redirected) {
+                                    window.location.href = response.url;
+                                    return;
+                                }
+                                return response.text();
+                            })
                             .then(result => {
+                                if (!result) return; // Skip if we redirected
                                 result = result.trim();
                                 if (result === 'not_logged_in') {
                                     window.location.href = 'login.php';
