@@ -252,11 +252,13 @@ require_once 'ordersPdf/order-pdf.php';
                 <?php endif; ?>
 
                 <div class="button-group" style="margin-top: 20px;">
-                    <a href="controller/logout.php" class="btn btn-secondary">Log Out</a>
+                    <a href="controller/logout.php" class="btn btn-secondary">Log Out</a> 
+                    
+                    <button id="orderHistoryBtn" class="order-history-btn">Show Order History</button>
                 </div>
 
                 <div class="profile-section orders-section">
-                    <button id="orderHistoryBtn" class="order-history-btn">Show Order History</button>
+                    <!-- <button id="orderHistoryBtn" class="order-history-btn">Show Order History</button> -->
                     <div id="orderHistoryContent" style="display: none;">
                         <?php if ($orders->num_rows > 0): ?>
                             <div class="orders-table">

@@ -155,6 +155,7 @@
 
     .button-group {
     display: flex;
+    justify-content: space-between;
         gap: 15px;
         margin-top: 30px;
     }
