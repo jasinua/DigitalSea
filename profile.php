@@ -2,8 +2,7 @@
     include_once "controller/function.php";
     include_once "controller/profile.inc.php";
     include "header/header.php";
-    
-require_once 'ordersPdf/order-pdf.php';
+    require_once 'ordersPdf/order-pdf.php';
 
     // Check if user is logged in
     if (!isset($_SESSION['user_id'])) {
@@ -40,35 +39,19 @@ require_once 'ordersPdf/order-pdf.php';
     // Get user's orders
     $orders = getUserOrders($user_id);
 
-    // Handle profile updates
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['update_profile'])) {
+    include_once "controller/function.php";
+
+    if (isset($_POST['update_profile'])) {
             $first_name = trim($_POST['first_name'] ?? '');
             $last_name = trim($_POST['last_name'] ?? '');
-            $email = trim($_POST['email'] ?? '');
             $address = trim($_POST['address'] ?? '');
 
             $errors = [];
 
-            // Validate email
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors[] = "Invalid email format";
-            } else {
-                // Check if email is already taken by another user
-                $stmt = $conn->prepare("SELECT user_id FROM users WHERE email = ? AND user_id != ?");
-                $stmt->bind_param("si", $email, $user_id);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                
-                if ($result->num_rows > 0) {
-                    $errors[] = "This email is already taken by another user";
-                }
-            }
-
             if (empty($errors)) {
                 // Update profile
-                $stmt = $conn->prepare("UPDATE users SET first_name = ?, last_name = ?, email = ?, address = ? WHERE user_id = ?");
-                $stmt->bind_param("ssssi", $first_name, $last_name, $email, $address, $user_id);
+                $stmt = $conn->prepare("UPDATE users SET first_name = ?, last_name = ?, address = ? WHERE user_id = ?");
+                $stmt->bind_param("sssi", $first_name, $last_name, $address, $user_id);
 
                 if ($stmt->execute()) {
                     // Refresh user data
@@ -78,7 +61,8 @@ require_once 'ordersPdf/order-pdf.php';
                     $errors[] = "Error updating profile";
                 }
             }
-        } elseif (isset($_POST['update_password'])) {
+
+    } elseif (isset($_POST['update_password'])) {
             $current_password = $_POST['current_password'] ?? '';
             $new_password = $_POST['new_password'] ?? '';
             $confirm_password = $_POST['confirm_password'] ?? '';
@@ -120,7 +104,7 @@ require_once 'ordersPdf/order-pdf.php';
                 }
             }
         }
-    }
+
 ?>
 
 <!DOCTYPE html>
@@ -136,6 +120,7 @@ require_once 'ordersPdf/order-pdf.php';
 
 <body>
     <div class="profile-container">
+
         <div class="profile-card">
             <div class="profile-content">
                 <div class="profile-info-container">
@@ -183,20 +168,22 @@ require_once 'ordersPdf/order-pdf.php';
                                     <label for="last_name">Last Name</label>
                                     <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
-                                </div>
-                                <div class="form-group">
+                                <div class="form-group" style="grid-column: 1 / 3; grid-row: 2;">
                                     <label for="address">Address</label>
                                     <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($user['address']); ?>" required>
                                 </div>
                             </div>
-                            <div class="button-group">
-                                <button type="submit" name="update_profile" class="btn btn-primary">Update Profile</button>
+                            <div class="button-group" style="margin-top: 55px; ">
+                                <button type="submit" name="update_profile" class="btn btn-primary" style="width: 100%;">Update Profile</button>
+                            </div>
+                            <div class="button-group" style="margin-top: 30px; margin-bottom: 10px;">
+                                <a href="controller/logout.php" class="btn btn-secondary" style="width: 100%; text-align: center;">Log Out</a> 
+                                <div id="orderHistoryBtn" class="order-history-btn" style="width: 100%; text-align: center; font-weight: bold;">Show Order History</div>
                             </div>
                         </form>
                     </div>
+
+                    
 
                     <div class="profile-section password-section">
                         <h2 class="section-title">Change Password</h2>
@@ -211,7 +198,7 @@ require_once 'ordersPdf/order-pdf.php';
                                         </span>
                                     </div>
                                 </div>
-                                <div class="form-group" style="grid-column: 1 / 2; grid-row: 2;">
+                                <div class="form-group" style="grid-column: 1 / 3; grid-row: 2;">
                                     <label for="new_password">New Password</label>
                                     <div class="password-field">
                                         <input type="password" id="new_password" name="new_password" required>
@@ -220,7 +207,7 @@ require_once 'ordersPdf/order-pdf.php';
                                         </span>
                                     </div>
                                 </div>
-                                <div class="form-group" style="grid-column: 2 / 3; grid-row: 2;">
+                                <div class="form-group" style="grid-column: 1 / 3; grid-row: 3;">
                                     <label for="confirm_password">Confirm New Password</label>
                                     <div class="password-field">
                                         <input type="password" id="confirm_password" name="confirm_password" required>
@@ -230,8 +217,9 @@ require_once 'ordersPdf/order-pdf.php';
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="button-group">
-                                <button type="submit" name="update_password" class="btn btn-primary" style="margin-left: auto;">Update Password</button>
+                                <button type="submit" name="update_password" class="btn btn-primary" style="width: 100%;">Update Password</button>
                             </div>
                         </form>
                     </div>
@@ -250,12 +238,6 @@ require_once 'ordersPdf/order-pdf.php';
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-
-                <div class="button-group" style="margin-top: 20px;">
-                    <a href="controller/logout.php" class="btn btn-secondary" style="padding: 10px 51px;">Log Out</a> 
-                    
-                    <button id="orderHistoryBtn" class="order-history-btn">Show Order History</button>
-                </div>
 
                 <div class="profile-section orders-section">
                     <!-- <button id="orderHistoryBtn" class="order-history-btn">Show Order History</button> -->
@@ -332,6 +314,7 @@ require_once 'ordersPdf/order-pdf.php';
                 }
             });
         });
+
     </script>
 
 </body>

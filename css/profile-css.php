@@ -16,10 +16,6 @@
         padding: 40px;
     }
 
-    .profile-section {
-        margin-bottom: 40px;
-    }
-
     .profile-section:last-child {
         margin-bottom: 0;
     }
@@ -185,6 +181,7 @@
         background: var(--logout-color);
         color: var(--text-color);
         text-decoration: none;
+        height:43px;
     }
 
     .btn-secondary:hover {
@@ -202,12 +199,14 @@
         background: #d4edda;
         color: #155724;
         border: 1px solid #c3e6cb;
+        margin-top: 20px;
     }
 
     .alert-error {
         background: #f8d7da;
         color: #721c24;
         border: 1px solid #f5c6cb;
+        margin-top: 20px;
     }
 
     .orders-section {
@@ -322,18 +321,23 @@
     }
 
     .order-history-btn {
-        background-color: white;
+        background-color: var(--button-color);
         border: 2px solid var(--button-color);
-        color: var(--button-color);
-        padding: 10px 18px;
-        border-radius: 12px;
+        color: white;
+        border-radius: 8px;
+        padding: 12px 25px;
+        font-weight: 600;
         cursor: pointer;
-        font-size: 1rem;
         transition: all 0.3s ease;
+        border: none;
+        font-size: 1rem;
+        height:43px;
+
     }
 
     .order-history-btn:hover {
-        background-color: var(--button-color);
+        background-color: var(--button-color-hover);
+        transform: translateY(-2px);
         color: white;
     }
 
@@ -343,8 +347,9 @@
     }
 
     .order-history-btn.active:hover {
-        background-color: white;
-        color: var(--button-color);
+        background-color: var(--button-color-hover);
+        transform: translateY(-2px);
+        color: white;
     }
 
     #orderHistoryContent {

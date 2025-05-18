@@ -772,22 +772,6 @@
                 });
             });
 
-            wishlistButtons.forEach(btn => {
-                const productId = btn.dataset.productId;
-                fetch('controller/check_wishlist.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `product_id=${productId}`
-                })
-                .then(response => response.text())
-                .then(result => {
-                    if (result.trim() === 'true') {
-                        updateAllProductHearts(productId, true);
-                    }
-                })
-                .catch(error => console.error('Error checking wishlist status:', error));
-            });
-
             // Lazy Loading Images
             const lazyImages = document.querySelectorAll('img.lazy');
             if ('IntersectionObserver' in window) {

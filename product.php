@@ -112,7 +112,7 @@
                             <?php } ?>
                         </div>
                         <?php if($data['stock'] > 0){ ?>
-                            <input id='buy' type='submit' value='Add to cart' onclick="this.disabled = true; this.value = 'Adding...'; document.getElementById('buy2').click();" >
+                            <input id='buy' type='submit' value='Add to cart' onclick="if(document.getElementById('stock').value <= <?php echo $data['stock'] ?>){this.disabled = true; this.value = 'Adding...'; document.getElementById('buy2').click();}" >
                             <input id='buy2' type="submit" name="addToCart" value="Add to cart" style="display: none;" hidden>
                         <?php }else{ ?>
                             <input id='buy' type='submit' name='addToCart' value='Out of stock' disabled style='background-color: #ccc; cursor: not-allowed;'>
@@ -126,19 +126,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Check initial wishlist status
-            const productId = <?php echo $productID; ?>;
-            $.ajax({
-                url: 'controller/check_wishlist.php',
-                method: 'POST',
-                data: { product_id: productId },
-                success: function(response) {
-                    if (response.trim() === 'true') {
-                        $('.wishlist-btn').addClass('active').find('i').removeClass('far').addClass('fas');
-                    }
-                }
-            });
-
             // Handle wishlist button click
             $('.wishlist-btn').click(function(e) {
                 e.preventDefault();

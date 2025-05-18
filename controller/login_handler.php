@@ -10,7 +10,6 @@ try {
     // Include database connection first
     include_once "../model/dbh.inc.php";
     include_once "login.inc.php";
-    include_once "signup.inc.php";
     include_once "function.php";
 
     // Check if database connection is available
@@ -39,39 +38,6 @@ try {
                             $response['redirect'] = "index.php";
                         } else {
                             $response['message'] = "Invalid email or password.";
-                        }
-                    }
-                    break;
-
-                case 'register':
-                    $first_name = $_POST['first_name'];
-                    $last_name = $_POST['last_name'];
-                    $email = $_POST['email'];
-                    $birthday = $_POST['birthday'];
-                    $password = $_POST['password'];
-                    $password_repeat = $_POST['repeat_password'];
-
-                    if (emptyInputSignUp($first_name, $last_name, $birthday, $email, $password, $password_repeat)) {
-                        $response['message'] = "Please fill in all fields.";
-                    } elseif (!invalidInputs($first_name, $last_name)) {
-                        $response['message'] = "Invalid name inputs.";
-                    } elseif (!checkEmail($email)) {
-                        $response['message'] = "Invalid email format.";
-                    } elseif (invalidPasswordFormat($password)) {
-                        $response['message'] = "Password must be at least 5 characters long.";
-                    } elseif (!checkPassword($password, $password_repeat)) {
-                        $response['message'] = "Passwords do not match.";
-                    } elseif (!checkAge($birthday)) {
-                        $response['message'] = "You must be at least 18 years old.";
-                    } elseif (emailExists($email)) {
-                        $response['message'] = "Email already exists.";
-                    } else {
-                        if (createUser($first_name, $last_name, $birthday, $email, $password)) {
-                            $response['success'] = true;
-                            $response['message'] = "Account created successfully! Welcome to DigitalSea.";
-                            $response['redirect'] = "login.php";
-                        } else {
-                            $response['message'] = "Something went wrong. Please try again.";
                         }
                     }
                     break;
