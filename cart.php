@@ -71,7 +71,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
 <?php include "css/cart-css.php"; ?>
 
 <div class="page-wrapper">
-    <div class="save-message">Ndryshimet u ruajtën me sukses!</div>
+    <div class="save-message">Changes saved successfully!</div>
     <?php if (empty($res)): ?>
         <div class="empty-cart-container" style="text-align: center; padding: 50px 20px;">
             <div class="empty-cart-icon" style="font-size: 48px; margin-bottom: 20px; color: var(--mist-color);">
@@ -81,7 +81,15 @@ if (isLoggedIn($_SESSION['user_id'])) {
             <p style="margin-bottom: 20px; color: var(--mist-color);">Looks like you haven't added any items to your cart yet.</p>
             <a href="index.php" class="continue-shopping-btn">Continue Shopping</a>
         </div>
-    <?php else: ?>
+    <?php else:
+        
+    //Check for error messages
+    $error_message = isset($_SESSION['error']) ? $_SESSION['error'] : '';
+    echo $error_message;
+    unset($_SESSION['error']);
+    ?>
+    
+
     <form action="" method="post" id="cartForm">
         <div class="cart-wrapper">
 
@@ -228,6 +236,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
     document.addEventListener("DOMContentLoaded", () => {
         const quantityInputs = document.querySelectorAll('.quantity-input');
         const saveBtn = document.getElementById('saveChanges');
+        saveBtn.disabled = true;
         const saveMessage = document.querySelector('.save-message');
         let saveTimeout;
         let hasUnsavedChanges = false;
@@ -272,8 +281,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
             // Only disable if there are unsaved changes and button is not processing
             if (hasUnsavedChanges && !checkoutBtn.classList.contains('processing')) {
                 checkoutBtn.disabled = true;
+                saveBtn.disabled = false;
             } else if (!hasUnsavedChanges) {
                 checkoutBtn.disabled = false;
+                saveBtn.disabled = true;
             }
         }
 
@@ -358,8 +369,20 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     const summaryBox = document.querySelector('#prodNameXprice');
                                     summaryBox.innerHTML = '<div class="empty-cart-summary">There are no products in the cart.</div>';
                                     
+                                    const checkoutBtn = document.querySelector('.checkout-btn');
+                                    checkoutBtn.classList.add('no-items');
+                                    checkoutBtn.disabled = true;
+
+                                    const saveBtn = document.querySelector('.save-btn');
+                                    saveBtn.disabled = true;
                                     // Update totals
                                     updateCartTotals(0, 0);
+                                }else{
+                                    try{
+                                        checkoutBtn.classList.remove('no-items');
+                                    }catch(e){
+                                        console.log(e);
+                                    }
                                 }
                             }, 300);
                         } else {
@@ -397,8 +420,19 @@ if (isLoggedIn($_SESSION['user_id'])) {
         
         // Handle save changes button
         saveBtn.addEventListener('click', () => {
+
+            //disable the input fields and the remove buttons
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.disabled = true;
+            });
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.disabled = true;
+            });
+
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             saveBtn.disabled = true;
+
+
             
             // Submit the form via AJAX
             const formData = new FormData(document.getElementById('cartForm'));
@@ -409,9 +443,15 @@ if (isLoggedIn($_SESSION['user_id'])) {
             })
             .then(response => {
                 saveBtn.innerHTML = 'Save Changes';
-                saveBtn.disabled = false;
-                saveBtn.style.backgroundColor = 'var(--button-color)';
                 
+                //enable the input fields and the remove buttons
+                document.querySelectorAll('.quantity-input').forEach(input => {
+                    input.disabled = false;
+                });
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.disabled = false;
+                });
+
                 // Show save message
                 saveMessage.classList.add('show');
                 
