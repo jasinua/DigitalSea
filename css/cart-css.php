@@ -68,7 +68,7 @@
         font-size: 1.2em;
         color: var(--noir-color);
         background-color: var(--ivory-color);
-        border-bottom: 1px solid #eee;
+        border-bottom: 2px solid #eee;
     }
 
     table {
@@ -114,6 +114,10 @@
     td:first-child {
         text-align: left;
         justify-content: flex-start;
+    }
+
+    thead tr {
+        border-bottom: 2px solid #eee;
     }
 
     tr {
@@ -265,9 +269,6 @@
         font-weight: 600;
         font-size: 1.1rem;
         color: var(--noir-color);
-        border-top: 1px solid #eee;
-        padding-top: 15px;
-        margin-top: 5px;
     }
 
     .emri-me-zbritje {
@@ -338,7 +339,7 @@
     #prodNameXprice {
         overflow-y: auto;
         max-height: 240px;
-        border-bottom: 2px solid #eee;
+        border-bottom: 1px solid #eee;
     }
 
     @media (max-width: 1200px) {

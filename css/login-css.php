@@ -84,7 +84,7 @@
         width: 100%;
         padding: 12px 15px;
         margin: 10px 0;
-        border: 1px solid var(--navy-color);
+        border: 1px solid #eee;
         border-radius: 6px;
         font-size: 15px;
         transition: all 0.5s ease;

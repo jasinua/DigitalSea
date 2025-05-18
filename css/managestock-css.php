@@ -219,14 +219,18 @@
     th, td {
         color: var(--page-text-color);
         padding: 8px;
-        border-bottom: 1px solid var(--mist-color);
-        text-align: left;
+        text-align: center;
         font-size: 0.97rem;
+    }
+
+    tr {
+        border-bottom: 2px solid #eee;
     }
 
     th {
         background-color: var(--button-color);
         color: var(--text-color);
+        padding: 20px;
         font-size: 1.05rem;
     }
 
@@ -266,8 +270,14 @@
         padding: 10px;
         font-size: 16px;
         border: 1px solid var(--mist-color);
-        border-radius: 6px;
+        border-radius: 12px;
         margin: auto;
+    }
+
+    .search-add input[type="text"]:focus {
+        border: 2px solid var(--button-color);
+        /* box-shadow: var(--shadow-input); */
+        outline: none;
     }
 
     .search-add .btn {
@@ -319,7 +329,6 @@
 
     .product-img {
         width: 80px;
-        height: 80px;
         object-fit: cover;
         border-radius: 8px;
         display: block;

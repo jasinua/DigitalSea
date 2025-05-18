@@ -115,8 +115,7 @@
     
     .filter-section {
         margin-bottom: 24px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 16px;
+        border-bottom: 2px solid #eee;
     }
     
     .filter-section:last-child {
@@ -1129,7 +1128,7 @@
 
         .filter-section {
             margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 2px solid #eee;
             padding-bottom: 16px;
         }
 

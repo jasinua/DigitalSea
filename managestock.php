@@ -217,7 +217,7 @@
                                 <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" class="product-img" alt="<?= htmlspecialchars($product['name']) ?>">
                             </td>
                             <td><?= htmlspecialchars($product['name']) ?></td>
-                            <td><?= htmlspecialchars($product['description']) ?></td>
+                            <td style="width: 20%;"><?= htmlspecialchars($product['description']) ?></td>
                             <td><strong><?= htmlspecialchars(number_format($product['price'], 2)) ?>€</strong></td>
                             <td><?= htmlspecialchars($product['stock']) ?></td>
                             <!-- <td><?php //echo htmlspecialchars($product['api_source']) ?></td> -->
@@ -228,12 +228,14 @@
                                     No discount
                                 <?php endif; ?>
                             </td>
-                            <td>
+                            <td style="width: 25%;">
                                 <?php 
                                     if (!empty($product['details'])) {
+                                        $details = [];
                                         foreach ($product['details'] as $detail) {
-                                            echo htmlspecialchars($detail['prod_desc1']) . ": " . htmlspecialchars($detail['prod_desc2']) . "<br>";
+                                            $details[] = htmlspecialchars($detail['prod_desc1']) . ": " . htmlspecialchars($detail['prod_desc2']);
                                         }
+                                        echo implode("<br>", $details);
                                     } else {
                                         echo "No details";
                                     }
@@ -420,11 +422,12 @@
                     details.forEach(detail => {
                         const div = document.createElement('div');
                         div.style.marginBottom = "10px";
+                        div.style.paddingBottom = "10px";
                         div.style.display = "flex";
                         div.style.alignItems = "center";
                         div.innerHTML = `
-                            <input type="text" name="details_key[]" placeholder="Key" required style="flex: 1; margin-right: 10px;" value="${detail.prod_desc1}">
-                            <input type="text" name="details_value[]" placeholder="Value" required style="flex: 1; margin-right: 10px;" value="${detail.prod_desc2}">
+                            <input type="text" name="details_key[]" placeholder="Key" required style="flex: 1; margin-right: 10px; padding-bottom: 10px;" value="${detail.prod_desc1}">
+                            <input type="text" name="details_value[]" placeholder="Value" required style="flex: 1; margin-right: 10px; padding-bottom: 10px;" value="${detail.prod_desc2}">
                             <button type="button" onclick="this.parentNode.remove()" style="background: none; border: none; cursor: pointer;">
                                 <i class="fa-solid fa-trash" style="color:red; font-size:20px;"></i>
                             </button>

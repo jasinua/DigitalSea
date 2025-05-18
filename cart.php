@@ -202,13 +202,12 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     </div>
                             <?php } ?>
                         </div>
-                        
+                    </div>
+                    <div>
                         <div class="summary-item"><span>Subtotal:</span> <span><?php echo number_format($subtotal, 2); ?>€</span></div>
                         <div class="summary-item"><span>VAT 18%:</span> <span><?php echo number_format($subtotal * 0.18, 2); ?>€</span></div>
                         <div class="summary-item"><span>Discount:</span> <span style="color: red">- <?php echo number_format($alldiscount, 2);?>€</span></div>
                         <input class="input-for-discount" type="hidden" name="discount" value="<?php echo $alldiscount; ?>">
-                    </div>
-                    <div>
                         <div class="summary-item total">
                             <span>Total:</span>
                             <span><?php echo number_format($subtotal + $subtotal * 0.18 - $alldiscount, 2); ?>€</span>
