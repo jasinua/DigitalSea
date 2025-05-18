@@ -10,10 +10,6 @@
     require_once 'vendor/stripe/stripe-php/init.php';
     \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
-    // Check for error messages
-    $error_message = isset($_SESSION['error']) ? $_SESSION['error'] : '';
-    unset($_SESSION['error']);
-
     // Check if user is logged in
     if (!isset($_SESSION['user_id'])) {
         header("Location: login.php");
@@ -83,7 +79,7 @@
         }
     }
 
-    // If there are stock issues, redirect to cart with error message
+    //If there are stock issues, redirect to cart with error message
     if (!empty($stockIssues)) {
         $_SESSION['error'] = "Stock issues detected: " . implode(", ", $stockIssues);
         header("Location: cart.php");
@@ -156,7 +152,7 @@
         
         <div class="container">
             <h2 id="payment-header">Complete Payment</h2>
-            <?php if ($error_message): ?>
+            <?php if (isset($error_message) && $error_message): ?>
                 <div class="error-message">
                     <?php echo htmlspecialchars($error_message); ?>
                 </div>

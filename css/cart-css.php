@@ -16,7 +16,7 @@
         gap: 20px;
         margin: auto;
     }
-
+    
     .continue-shopping-btn {
         display: inline-block;
         padding: 12px 25px;
@@ -324,6 +324,10 @@
         font-size: 0.9rem;
         white-space: nowrap;
         animation: pulse 2s infinite;
+    }
+
+    .checkout-btn.no-items:disabled::after {
+        content: none;
     }
 
     .checkout-btn.processing:disabled::after {
