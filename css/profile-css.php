@@ -322,7 +322,6 @@
         cursor: pointer;
         font-size: 1rem;
         transition: all 0.3s ease;
-        margin-bottom: 20px;
     }
 
     .order-history-btn:hover {
