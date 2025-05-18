@@ -3,7 +3,8 @@
     require_once 'model/dbh.inc.php';
     require_once 'controller/home.inc.php';
 
-    if(isset($_SESSION['redirect_back']) && $_SESSION['redirect_back'] == true && isset($_SESSION['user_id'])){
+    // Only redirect if trying to access a protected page and not already on login page
+    if(isset($_SESSION['redirect_back']) && $_SESSION['redirect_back'] == true && isset($_SESSION['user_id']) && basename($_SERVER['PHP_SELF']) !== 'login.php'){
         header("Location: " . $_SESSION['last_page']);
         unset($_SESSION['last_page']);
         unset($_SESSION['redirect_back']);
@@ -275,7 +276,7 @@
                         <button class="carousel-arrow" id="newItemsPrev">
                             <i class="fas fa-chevron-left"></i>
                         </button>
-                        <div class='itemLine' id='newItems'>
+                        <div class='itemLine' id='newItems' style="width: 100%;">
                             <?php foreach (getData("SELECT * FROM products ORDER BY product_id DESC LIMIT 8") as $prod) { ?>
                                 <div class='item newItemsItem' id="newItemsItem">
                                     <a href="product.php?product=<?php echo $prod['product_id'] ?>" class="product-link">

@@ -46,18 +46,24 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
     // Fetch cart again after updates
     $rawCart = returnCart($userId);
+    $mergedCart = [];
 
     // Filter and count items with order_id == null
     $filteredCart = [];
     $count = 0;
     foreach ($rawCart as $item) {
         if (!isset($item['order_id']) || is_null($item['order_id'])) {
-            $filteredCart[] = $item;
+            $pid = $item['product_id'];
+            if (isset($mergedCart[$pid])) {
+                $mergedCart[$pid]['quantity'] += $item['quantity'];
+            } else {
+                $mergedCart[$pid] = $item;
+            }
             $count++;
         }
     }
 
-    $res = array_values($filteredCart);
+    $res = array_values($mergedCart);
 
     include "header/header.php";
 ?>
@@ -247,7 +253,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
                     return currentInput && currentInput.value !== origVal;
                 });
                 
-                updateCheckoutButton();
+                // Only update button state if not processing checkout
+                if (!checkoutBtn.classList.contains('processing')) {
+                    updateCheckoutButton();
+                }
             });
         });
 
@@ -261,7 +270,30 @@ if (isLoggedIn($_SESSION['user_id'])) {
 
         // Update checkout button state
         function updateCheckoutButton() {
-            checkoutBtn.disabled = hasUnsavedChanges;
+            // Only disable if there are unsaved changes and button is not processing
+            if (hasUnsavedChanges && !checkoutBtn.classList.contains('processing')) {
+                checkoutBtn.disabled = true;
+            } else if (!hasUnsavedChanges) {
+                checkoutBtn.disabled = false;
+            }
+        }
+
+        // Handle checkout button click
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', function(e) {
+                // Prevent the default form submission
+                e.preventDefault();
+                
+                // Add processing class and disable button
+                this.classList.add('processing');
+                this.disabled = true;
+                this.style.opacity = '0.7';
+                this.style.cursor = 'not-allowed';
+                this.textContent = 'Processing...';
+                
+                // Bypass unsaved changes check and go directly to payment
+                window.location.href = 'payment.php';
+            });
         }
 
         // Reset unsaved changes after saving
@@ -322,7 +354,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                 const remainingItems = document.querySelectorAll('tbody tr');
                                 if (remainingItems.length === 0) {
                                     const cartTable = document.querySelector('.itemsTable');
-                                    cartTable.innerHTML = '<div class="empty-cart">Your cart is empty. <a href="index.php">Continue shopping</a></div>';
+                                    cartTable.innerHTML = '<div class="empty-cart" style="display: flex; justify-content: center; align-self: center; margin: auto; width: 100%; height: 100%; align-items: center; padding-bottom: 40px;">Your cart is empty. <a href="index.php">Continue shopping</a></div>';
                                     
                                     const summaryBox = document.querySelector('#prodNameXprice');
                                     summaryBox.innerHTML = '<div class="empty-cart-summary">There are no products in the cart.</div>';
@@ -513,6 +545,25 @@ if (isLoggedIn($_SESSION['user_id'])) {
         
         // Listen for window resize events
         window.addEventListener('resize', initResponsive);
+
+        // Update cart table height
+        // const cartTable = document.querySelector('.itemsTable');
+        // cartTable.style.height = '90%';
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     const proceedButton = document.querySelector('.checkout-btn');
+        //     if (proceedButton) {
+        //         proceedButton.addEventListener('click', function(e) {
+        //             // Disable the button immediately after click
+        //             this.disabled = true;
+        //             // Add a visual indication that the button is disabled
+        //             this.style.opacity = '0.7';
+        //             this.style.cursor = 'not-allowed';
+        //             // Change text to indicate processing
+        //             this.textContent = 'Processing...';
+        //         });
+        //     }
+        // });
     });
 </script>
 

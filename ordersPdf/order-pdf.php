@@ -88,8 +88,8 @@ function generatePDF($orderId) {
                 <tr>
                     <td width="15%"><strong>Company:</strong></td>
                     <td width="35%">Digital Sea</td>
-                    <td width="15%"><strong>Order Date:</strong></td>
-                    <td width="35%">'.date('Y-m-d').'</td>
+                    <td width="20%; "><strong>Order Date:</strong></td>
+                    <td width="30%">'.date('Y-m-d').'</td>
                 </tr>
                 <tr>
                     <td><strong>Address:</strong></td>

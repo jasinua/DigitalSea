@@ -2,8 +2,8 @@
 
 session_start();
 
-include_once "model/dbh.inc.php";
-include_once "controller/function.php";
+include_once "../model/dbh.inc.php";
+include_once "../controller/function.php";
 
 if(isset($_SESSION['payment_success']) && $_SESSION['payment_success'] === true) {
     
@@ -45,14 +45,14 @@ if(isset($_SESSION['payment_success']) && $_SESSION['payment_success'] === true)
         }
     }
 
-    header("Location: order-confirmation.php?success=1&order_id=" . $orderId);
+    header("Location: ../order-confirmation.php?success=1&order_id=" . $orderId);
     session_unset($_SESSION['payment_success']);
     session_unset($_SESSION['total_amount']);
     session_unset($_SESSION['payment_timestamp']);
     
 
 } else {
-    header("Location: payment.php");
+    header("Location: ../payment.php");
 }
 
 ?>

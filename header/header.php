@@ -894,7 +894,7 @@
                             $cart_items = returnCart($_SESSION['user_id']);
                             $cart_count = 0;
                             while ($item = $cart_items->fetch_assoc()) {
-                                if ($item['order_id'] === null) {
+                                if (!isset($item['order_id']) || is_null($item['order_id'])) {
                                     $cart_count += $item['quantity'];
                                 }
                             }
@@ -915,7 +915,7 @@
                             // Merge duplicate products by summing quantities
                             while ($item = $cart_items->fetch_assoc()) {
                                 // Only include items where order_id is null
-                                if ($item['order_id'] === null) {
+                                if (!isset($item['order_id']) || is_null($item['order_id'])) {
                                     $pid = $item['product_id'];
                                     if (!isset($product_quantities[$pid])) {
                                         $product_quantities[$pid] = 0;

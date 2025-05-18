@@ -63,7 +63,7 @@
     }
 
     .cart-right h3 {
-        padding: 10px 0;
+        padding: 10px 10px;
         margin: 0;
         font-size: 1.2em;
         color: var(--noir-color);
@@ -82,6 +82,10 @@
         display: flex;
         justify-content: space-between;
         width: 100%;
+    }
+
+    tbody tr:last-child {
+        border-bottom: none;
     }
 
     th, td {
@@ -219,12 +223,15 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: auto;
+        width: 30px;
+        height: 30px;
         margin: auto;
+        border-radius: 50%;
     }
 
     .remove-btn:hover {
-        color: #ff4444;
+        color: var(--error-color);
+        background-color: rgba(249, 64, 64, 0.1);
     }
 
     td{
@@ -316,6 +323,10 @@
         font-size: 0.9rem;
         white-space: nowrap;
         animation: pulse 2s infinite;
+    }
+
+    .checkout-btn.processing:disabled::after {
+        content: none;
     }
 
     @keyframes pulse {

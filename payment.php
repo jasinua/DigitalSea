@@ -558,7 +558,7 @@
 
                         // Clear cart items
                     ?>
-                    window.location.href = 'redirect-order.php';
+                    window.location.href = 'controller/redirect-order.php';
                 }
             } catch (err) {
                 errorElement.textContent = 'An error occurred. Please try again.';

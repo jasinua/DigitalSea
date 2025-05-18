@@ -448,7 +448,7 @@
         background-color: var(--ivory-color);
         width: 100%;
         max-width: 1400px; /* Limit width to show 4 items */
-        gap: 20px;
+        /* gap: 20px; */
     }
     
     #newItemsHeader {

@@ -209,6 +209,141 @@
         border: 1px solid #f5c6cb;
     }
 
+    .orders-section {
+        margin-top: 2rem;
+    }
+
+    .orders-table {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .orders-table table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        color: var(--page-text-color)
+    }
+
+    .orders-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: var(--page-text-color)
+    }
+
+    .orders-table tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .orders-table .btn-secondary {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .orders-table .btn-secondary i {
+        margin-right: 0.5rem;
+    }
+
+    .no-orders {
+        text-align: center;
+        color: #666;
+        padding: 2rem;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .orders-table {
+            font-size: 0.9rem;
+        }
+        
+        .orders-table th,
+        .orders-table td {
+            padding: 0.75rem;
+        }
+        
+        .orders-table .btn-secondary {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+    }
+
+    .invoice-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background-color: var(--button-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .invoice-btn:hover {
+        background-color: var(--navy-color);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .invoice-btn i {
+        font-size: 1.1rem;
+    }
+
+    .invoice-btn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    @media (max-width: 768px) {
+        .invoice-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .invoice-btn i {
+            font-size: 1rem;
+        }
+    }
+
+    .order-history-btn {
+        background-color: white;
+        border: 2px solid var(--button-color);
+        color: var(--button-color);
+        padding: 10px 20px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    .order-history-btn:hover {
+        background-color: var(--button-color);
+        color: white;
+    }
+
+    .order-history-btn.active {
+        background-color: var(--button-color);
+        color: white;
+    }
+
+    .order-history-btn.active:hover {
+        background-color: white;
+        color: var(--button-color);
+    }
+
+    #orderHistoryContent {
+        margin-top: 20px;
+    }
+
     @media (max-width: 1100px) {
         .profile-info-container {
             grid-template-columns: 1fr;

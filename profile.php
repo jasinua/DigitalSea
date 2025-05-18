@@ -30,7 +30,7 @@ require_once 'ordersPdf/order-pdf.php';
     function getUserOrders($user_id) {
         global $conn;
         $stmt = $conn->prepare("
-           SELECT * FROM orders WHERE user_id = ?
+           SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC
         ");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
@@ -237,43 +237,6 @@ require_once 'ordersPdf/order-pdf.php';
                     </div>
                 </div>
 
-                <div class="profile-section orders-section">
-                    <h2 class="section-title">Order History</h2>
-                    <?php if ($orders->num_rows > 0): ?>
-                        <div class="orders-table">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th width="25%" style="text-align: center;">Order ID</th>
-                                        <th width="25%" style="text-align: center;">Date & Time</th>
-                                        <th width="25%" style="text-align: center;">Total Amount</th>
-                                        <th width="25%" style="text-align: center;">Invoice</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php while ($order = $orders->fetch_assoc()): ?>
-                                        <tr>
-                                            <td style="text-align: center;">#<?php echo $order['order_id']; ?></td>
-                                            <td style="text-align: center;"><?php echo date('F j, Y, g:i a', strtotime($order['order_date'])); ?></td>
-                                            <td style="text-align: center;"><?php echo number_format($order['total_price'], 2); ?>€</td>
-                                            <td style="text-align: center;">
-                                                <form action="ordersPdf/order-pdf.php" method="post">
-                                                    <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
-                                                    <button type="submit" name="view_invoice" class="btn btn-secondary invoice-btn">
-                                                        <i class="fas fa-file-pdf"></i> View Invoice
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    <?php endwhile; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php else: ?>
-                        <p class="no-orders">You haven't placed any orders yet.</p>
-                    <?php endif; ?>
-                </div>
-
                 <?php if (isset($success)): ?>
                     <div class="alert alert-success">
                         <?php echo $success; ?>
@@ -290,6 +253,45 @@ require_once 'ordersPdf/order-pdf.php';
 
                 <div class="button-group" style="margin-top: 20px;">
                     <a href="controller/logout.php" class="btn btn-secondary">Log Out</a>
+                </div>
+
+                <div class="profile-section orders-section">
+                    <button id="orderHistoryBtn" class="order-history-btn">Show Order History</button>
+                    <div id="orderHistoryContent" style="display: none;">
+                        <?php if ($orders->num_rows > 0): ?>
+                            <div class="orders-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th width="25%" style="text-align: center;">Order ID</th>
+                                            <th width="25%" style="text-align: center;">Date & Time</th>
+                                            <th width="25%" style="text-align: center;">Total Amount</th>
+                                            <th width="25%" style="text-align: center;">Invoice</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php while ($order = $orders->fetch_assoc()): ?>
+                                            <tr>
+                                                <td style="text-align: center;">#<?php echo $order['order_id']; ?></td>
+                                                <td style="text-align: center;"><?php echo date('F j, Y, g:i a', strtotime($order['order_date'])); ?></td>
+                                                <td style="text-align: center;"><?php echo number_format($order['total_price'], 2); ?>€</td>
+                                                <td style="text-align: center;">
+                                                    <form action="ordersPdf/order-pdf.php" method="post">
+                                                        <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
+                                                        <button type="submit" name="view_invoice" class="btn btn-secondary invoice-btn">
+                                                            <i class="fas fa-file-pdf"></i> Download Invoice
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        <?php endwhile; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <p class="no-orders">You haven't placed any orders yet.</p>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div> 
@@ -311,112 +313,24 @@ require_once 'ordersPdf/order-pdf.php';
                 toggleIcon.classList.add('fa-eye');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderHistoryBtn = document.getElementById('orderHistoryBtn');
+            const orderHistoryContent = document.getElementById('orderHistoryContent');
+            
+            orderHistoryBtn.addEventListener('click', function() {
+                if (orderHistoryContent.style.display === 'none') {
+                    orderHistoryContent.style.display = 'block';
+                    orderHistoryBtn.textContent = 'Hide Order History';
+                    orderHistoryBtn.classList.add('active');
+                } else {
+                    orderHistoryContent.style.display = 'none';
+                    orderHistoryBtn.textContent = 'Show Order History';
+                    orderHistoryBtn.classList.remove('active');
+                }
+            });
+        });
     </script>
 
-    <style>
-    .orders-section {
-        margin-top: 2rem;
-    }
-
-    .orders-table {
-        width: 100%;
-        overflow-x: auto;
-    }
-
-    .orders-table table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-    }
-
-    .orders-table th,
-    .orders-table td {
-        padding: 1rem;
-        border-bottom: 1px solid #eee;
-        color: var(--page-text-color)
-    }
-
-    .orders-table th {
-        background-color: #f8f9fa;
-        font-weight: 600;
-        color: var(--page-text-color)
-    }
-
-    .orders-table tr:hover {
-        background-color: #f8f9fa;
-    }
-
-    .orders-table .btn-secondary {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    .orders-table .btn-secondary i {
-        margin-right: 0.5rem;
-    }
-
-    .no-orders {
-        text-align: center;
-        color: #666;
-        padding: 2rem;
-        font-style: italic;
-    }
-
-    @media (max-width: 768px) {
-        .orders-table {
-            font-size: 0.9rem;
-        }
-        
-        .orders-table th,
-        .orders-table td {
-            padding: 0.75rem;
-        }
-        
-        .orders-table .btn-secondary {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-    }
-
-    .invoice-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 16px;
-        background-color: var(--button-color);
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.9rem;
-    }
-
-    .invoice-btn:hover {
-        background-color: var(--navy-color);
-        transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .invoice-btn i {
-        font-size: 1.1rem;
-    }
-
-    .invoice-btn:active {
-        transform: translateY(0);
-        box-shadow: none;
-    }
-
-    @media (max-width: 768px) {
-        .invoice-btn {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-        }
-        
-        .invoice-btn i {
-            font-size: 1rem;
-        }
-    }
-    </style>
 </body>
 </html>
