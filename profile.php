@@ -202,7 +202,7 @@ require_once 'ordersPdf/order-pdf.php';
                         <h2 class="section-title">Change Password</h2>
                         <form method="POST" action="">
                             <div class="form-grid">
-                                <div class="form-group" style="grid-column: 1 / 2; grid-row: 1;">
+                                <div class="form-group" style="grid-column: 1 / 3; grid-row: 1;">
                                     <label for="current_password">Current Password</label>
                                     <div class="password-field">
                                         <input type="password" id="current_password" name="current_password" required>
@@ -231,7 +231,7 @@ require_once 'ordersPdf/order-pdf.php';
                                 </div>
                             </div>
                             <div class="button-group">
-                                <button type="submit" name="update_password" class="btn btn-primary">Update Password</button>
+                                <button type="submit" name="update_password" class="btn btn-primary" style="margin-left: auto;">Update Password</button>
                             </div>
                         </form>
                     </div>
@@ -252,7 +252,7 @@ require_once 'ordersPdf/order-pdf.php';
                 <?php endif; ?>
 
                 <div class="button-group" style="margin-top: 20px;">
-                    <a href="controller/logout.php" class="btn btn-secondary">Log Out</a> 
+                    <a href="controller/logout.php" class="btn btn-secondary" style="padding: 10px 51px;">Log Out</a> 
                     
                     <button id="orderHistoryBtn" class="order-history-btn">Show Order History</button>
                 </div>

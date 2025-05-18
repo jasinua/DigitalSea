@@ -154,15 +154,15 @@
     }
 
     .button-group {
-    display: flex;
-    justify-content: space-between;
+        display: flex;
+        justify-content: space-between;
         gap: 15px;
         margin-top: 30px;
     }
 
     .btn {
         padding: 12px 25px;
-        border-radius: 12px;
+        border-radius: 8px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -325,7 +325,7 @@
         background-color: white;
         border: 2px solid var(--button-color);
         color: var(--button-color);
-        padding: 10px 20px;
+        padding: 10px 18px;
         border-radius: 12px;
         cursor: pointer;
         font-size: 1rem;
