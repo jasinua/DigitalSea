@@ -54,7 +54,7 @@ try {
                 .verification-code { 
                     font-size: 32px; 
                     font-weight: bold; 
-                    color: #007bff; 
+                    color: #153147; 
                     text-align: center; 
                     letter-spacing: 5px;
                     margin: 20px 0;
@@ -72,7 +72,7 @@ try {
                 .button {
                     display: inline-block;
                     padding: 10px 20px;
-                    background-color: #007bff;
+                    background-color: #153147;
                     color: white;
                     text-decoration: none;
                     border-radius: 5px;
@@ -83,7 +83,7 @@ try {
         <body>
             <div class='container'>
                 <div class='header'>
-                    <h1 style='color: #007bff; margin: 0;'>DigitalSea</h1>
+                    <h1 style='color: #153147; margin: 0;'>DigitalSea</h1>
                 </div>
                 <div class='content'>
                     <h2>Welcome to DigitalSea!</h2>

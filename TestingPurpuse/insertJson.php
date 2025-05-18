@@ -99,7 +99,7 @@
         }
 
         button, .btn {
-            background-color: #007bff;
+            background-color: #153147;
             color: white;
             padding: 8px 15px;
             margin-top: 10px;
@@ -131,7 +131,7 @@
         }
 
         th {
-            background-color: #007bff;
+            background-color: #153147;
             color: white;
         }
 
@@ -150,7 +150,7 @@
         }
 
         .link-button {
-            color: #007bff;
+            color: #153147;
             text-decoration: none;
         }
         
