@@ -7,9 +7,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 
-include_once "model/dbh.inc.php";
+include_once "../model/dbh.inc.php";
 
-include_once "controller/function.php";
+include_once "function.php";
 
 if(isset($_SESSION['payment_success']) && $_SESSION['payment_success'] === true) {
     
@@ -41,7 +41,7 @@ $userEmail = $result->fetch_assoc()['email'];
     
 
 
-require_once 'ordersPdf/order-pdf.php';
+require_once '../ordersPdf/order-pdf.php';
 $pdfContent = generatePDF($orderId);
 
 // Send email using PHPMailer
