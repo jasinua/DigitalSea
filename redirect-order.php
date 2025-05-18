@@ -46,6 +46,10 @@ if(isset($_SESSION['payment_success']) && $_SESSION['payment_success'] === true)
     }
 
     header("Location: order-confirmation.php?success=1&order_id=" . $orderId);
+    session_unset($_SESSION['payment_success']);
+    session_unset($_SESSION['total_amount']);
+    session_unset($_SESSION['payment_timestamp']);
+    
 
 } else {
     header("Location: payment.php");
