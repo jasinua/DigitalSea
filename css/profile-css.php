@@ -325,7 +325,7 @@
         background-color: white;
         border: 2px solid var(--button-color);
         color: var(--button-color);
-        padding: 10px 20px;
+        padding: 10px 18px;
         border-radius: 12px;
         cursor: pointer;
         font-size: 1rem;
