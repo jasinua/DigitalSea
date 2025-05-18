@@ -75,7 +75,7 @@ try {
                 .button {
                     display: inline-block;
                     padding: 10px 20px;
-                    background-color: #007bff;
+                    background-color: #153147;
                     color: white;
                     text-decoration: none;
                     border-radius: 5px;
@@ -90,16 +90,16 @@ try {
             </style>
         </head>
         <body>
-            <div class='container'>
+            <div class='container' style='color: #232a2f;'>
                 <div class='header'>
-                    <h1 style='color: #007bff; margin: 0;'>DigitalSea</h1>
+                    <h1 style='color: #153147; margin: 0;'>DigitalSea</h1>
                 </div>
                 <div class='content'>
                     <h2>Password Reset Request</h2>
                     <p>We received a request to reset your password. Click the button below to create a new password:</p>
                     
                     <div style='text-align: center;'>
-                        <a href='{$reset_link}' class='button'>Reset Password</a>
+                        <a href='{$reset_link}' class='button' style='background-color: #153147; color: white;'>Reset Password</a>
                     </div>
                     
                     <p>This link will expire in 1 hour for security purposes.</p>
