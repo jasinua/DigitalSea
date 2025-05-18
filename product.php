@@ -67,10 +67,12 @@
                 </div>
                 <div id='rating' '>
                     <p>Rating:</p>
-                    <div id='stars'>
-                        <?php include 'ratingPart.php'; ?>
-                        <button id='rate' onclick="submitRating()">Rate</button>
-                    </div>
+                    <?php if(isset($_SESSION['user_id'])){ ?>
+                        <div id='stars'>
+                            <?php include 'ratingPart.php'; ?>
+                            <button id='rate' onclick="submitRating()">Rate</button>
+                        </div>
+                    <?php } ?>
                     <p id="average-rating"><?php 
                         $rating_sql = "SELECT AVG(rating) as avg_rating FROM product_ratings WHERE product_id = ?";
                         $rating_stmt = $conn->prepare($rating_sql);
