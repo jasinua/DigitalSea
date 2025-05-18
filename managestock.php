@@ -194,7 +194,9 @@
                     <button type="button" onclick="addDetailField()" class="detail-button" >Add Detail</button>
 
                     <br><br>
-                    <div class="div"><input type="submit" name="submit" value="Insert Product" id="submit-btn" class="btn">
+                    <div class="div">
+                        <input type="submit" name="submit" value="Insert Product" id="submit-btn" class="btn">
+                        <button type="button" id="delete-btn" class="btn delete-btn" style="display: none; background-color: #dc3545; margin-left: 10px;" onclick="deleteProduct()">Delete Product</button>
                     </div>
                 </form>
             </div>
@@ -418,6 +420,9 @@
         form.stock.value = product.stock;
         form.discount.value = product.discount || '';
 
+        // Show delete button
+        document.getElementById('delete-btn').style.display = 'inline-block';
+
         // Fetch product details
         fetch('controller/get_product_details.php?product_id=' + product.product_id)
             .then(response => response.json())
@@ -461,6 +466,35 @@
         document.getElementById('edit-index').value = index;
     }
 
+    function deleteProduct() {
+        const productId = document.getElementById('product_id').value;
+        if (!productId) return;
+
+        if (confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+            fetch('controller/delete_product.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'product_id=' + productId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification(data.message, 'success');
+                    closeForm();
+                    location.reload();
+                } else {
+                    showNotification(data.message || 'Error deleting product', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Error deleting product', 'error');
+            });
+        }
+    }
+
     // On modal close, reset form to add mode
     function closeForm() {
         document.getElementById('modal').style.display = "none";
@@ -470,6 +504,7 @@
         form.reset();
         document.getElementById('detailsContainer').innerHTML = '';
         document.getElementById('submit-btn').value = 'Insert Product';
+        document.getElementById('delete-btn').style.display = 'none';
         const editIndex = document.getElementById('edit-index');
         if (editIndex) editIndex.remove();
     }
