@@ -126,6 +126,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+
+            const productId = <?php echo $productID; ?>;
+
             // Handle wishlist button click
             $('.wishlist-btn').click(function(e) {
                 e.preventDefault();
