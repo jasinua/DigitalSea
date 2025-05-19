@@ -19,7 +19,7 @@ if (file_exists($autoloadPath)) {
 $servername = $_ENV['DatabaseServername'] ?? 'localhost';
 $username = $_ENV['DatabaseUsername'] ?? 'root';
 $password = $_ENV['DatabasePassword'] ?? '';
-$dbname = $_ENV['DatabaseName'] ?? 'digitalsea';
+$dbname = $_ENV['DatabaseName'] ?? 'sql7769680';
 
 try {
     $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);

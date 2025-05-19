@@ -362,11 +362,17 @@
                             }
                             
                             if (!empty($_GET['min_price'])) {
-                                $where_conditions[] = "price >= " . floatval($_GET['min_price']);
+                                $where_conditions[] = "CASE 
+                                    WHEN discount > 0 THEN price * (1 - discount/100)
+                                    ELSE price 
+                                END >= " . floatval($_GET['min_price']);
                             }
                             
                             if (!empty($_GET['max_price'])) {
-                                $where_conditions[] = "price <= " . floatval($_GET['max_price']);
+                                $where_conditions[] = "CASE 
+                                    WHEN discount > 0 THEN price * (1 - discount/100)
+                                    ELSE price 
+                                END <= " . floatval($_GET['max_price']);
                             }
 
                             if (isset($_GET['discounted_only'])) {
