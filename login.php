@@ -31,7 +31,7 @@
     $tokenSet = false;
     if(isset($_GET['token'])) {
         $token = $_GET['token'];
-        $stmt = $conn->prepare("SELECT * FROM users WHERE token = ?");
+        $stmt = $conn->prepare("CALL getDataFromToken(?)");
         $stmt->bind_param("s", $token);
         $stmt->execute();
         $result = $stmt->get_result();

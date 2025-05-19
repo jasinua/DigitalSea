@@ -15,7 +15,7 @@
     // Function to get user data
     function getUserData($user_id) {
         global $conn;
-        $stmt = $conn->prepare("SELECT first_name, last_name, email, address FROM users WHERE user_id = ?");
+        $stmt = $conn->prepare("CALL profileData(?)");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -28,9 +28,7 @@
     // Function to get user's orders
     function getUserOrders($user_id) {
         global $conn;
-        $stmt = $conn->prepare("
-           SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC
-        ");
+        $stmt = $conn->prepare("CALL getOrders(?)");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         return $stmt->get_result();
@@ -50,7 +48,7 @@
 
             if (empty($errors)) {
                 // Update profile
-                $stmt = $conn->prepare("UPDATE users SET first_name = ?, last_name = ?, address = ? WHERE user_id = ?");
+                $stmt = $conn->prepare("CALL updateProfile(?, ?, ?, ?)");
                 $stmt->bind_param("sssi", $first_name, $last_name, $address, $user_id);
 
                 if ($stmt->execute()) {
@@ -77,7 +75,7 @@
                 $errors[] = "New password must be at least 5 characters long";
             } else {
                 // Verify current password
-                $stmt = $conn->prepare("SELECT password FROM users WHERE user_id = ?");
+                $stmt = $conn->prepare("CALL verifyPassword(?)");
                 $stmt->bind_param("i", $user_id);
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -92,7 +90,7 @@
                     } else {
                         // Update password
                         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-                        $stmt = $conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
+                        $stmt = $conn->prepare("CALL updatePassword(?,?)");
                         $stmt->bind_param("si", $hashed_password, $user_id);
                         
                         if ($stmt->execute()) {

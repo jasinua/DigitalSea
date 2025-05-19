@@ -14,10 +14,7 @@ function generatePDF($orderId) {
     $dompdf = new Dompdf($options);
 
     // Get order details from database
-    $query = "SELECT c.*, p.name, p.price, p.discount 
-              FROM cart c 
-              INNER JOIN products p ON c.product_id = p.product_id
-              WHERE c.order_id = ?";
+    $query = "CALL showProductsInPdf(?)";
 
     global $conn;
     $stmt = $conn->prepare($query);

@@ -22,7 +22,7 @@ if (!isset($_SESSION['user_id'])) {
 $orderId = $_GET['order_id'];
 
 // Get user email from database
-$getUserEmail = "SELECT email FROM users WHERE user_id = ?";
+$getUserEmail = "CALL getEmail(?)";
 $stmt = $conn->prepare($getUserEmail);
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();

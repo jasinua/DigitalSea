@@ -20,7 +20,7 @@
     $userId = $_SESSION['user_id'];
 
     // Get user info from database
-    $userQuery = "SELECT first_name, last_name, email, address FROM users WHERE user_id = ?";
+    $userQuery = "CALL profileData(?)";
     $stmt = $conn->prepare($userQuery);
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -35,7 +35,7 @@
     if (isset($_POST['update_address']) && isset($_POST['address'])) {
         $newAddress = trim($_POST['address']);
         if ($newAddress !== '') {
-            $updateStmt = $conn->prepare("UPDATE users SET address = ? WHERE user_id = ?");
+            $updateStmt = $conn->prepare("CALL updateAddress(?,?)");
             $updateStmt->bind_param("si", $newAddress, $userId);
             if ($updateStmt->execute()) {
                 $userAddress = $newAddress;

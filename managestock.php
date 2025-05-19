@@ -11,28 +11,41 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['isAdministrator']) || $_SE
 include_once "controller/function.php"; // for $conn
 include_once "model/dbh.inc.php";
 $products = [];
-$sql = "SELECT * FROM products WHERE api_source IS NULL OR api_source = ''";
+$product_ids = [];
+
+// First, get all product IDs
+$sql = "CALL showProductsInStock()";
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        // Fetch details for each product
-        $sql11 = "SELECT * FROM product_details WHERE product_id = ?";
-        $stmt11 = $conn->prepare($sql11);
-        $stmt11->bind_param("i", $row['product_id']);
-        $stmt11->execute();
-        $result11 = $stmt11->get_result();
-        
-        $details = [];
-        if ($result11 && $result11->num_rows > 0) {
-            while ($detail = $result11->fetch_assoc()) {
-                $details[] = $detail;
-            }
-        }
-        
-        $row['details'] = $details;
         $products[] = $row;
+        $product_ids[] = $row['product_id'];
     }
 }
+$result->free();
+$conn->next_result(); // Free the result set and prepare for the next query
+
+// Now, fetch details for each product
+foreach ($products as &$product) {
+    $product['details'] = [];
+    
+    $sql11 = "CALL getProductDetails(?)";
+    $stmt11 = $conn->prepare($sql11);
+    $stmt11->bind_param("i", $product['product_id']);
+    $stmt11->execute();
+    $result11 = $stmt11->get_result();
+    
+    if ($result11 && $result11->num_rows > 0) {
+        while ($detail = $result11->fetch_assoc()) {
+            $product['details'][] = $detail;
+        }
+    }
+
+    $result11->free();
+    $conn->next_result(); // Free the result set and prepare for the next query
+    $stmt11->close();
+}
+
 
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $search = strtolower($search);
