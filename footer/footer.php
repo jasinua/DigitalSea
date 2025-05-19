@@ -26,22 +26,28 @@
         margin-bottom: 10px;
         position: relative;
         padding-right: 25px;
-        cursor: pointer;
     }
 
-    .footer-column h3::after {
-        content: '\f107';
-        font-family: 'Font Awesome 5 Free';
-        font-weight: 900;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        transition: transform 0.3s ease;
-    }
+    @media screen and (max-width: 1350px) {
+        .footer-column h3 {
+            cursor: pointer;
+            padding-right: 25px;
+        }
 
-    .footer-column:not(.collapsed) h3::after {
-        transform: translateY(-50%) rotate(180deg);
+        .footer-column h3::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s ease;
+        }
+
+        .footer-column:not(.collapsed) h3::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
     }
 
     .footer-links {
@@ -215,7 +221,7 @@
         }
     }
 
-    @media screen and (max-width: 1550px) {
+    @media screen and (max-width: 1350px) {
         .footer {
             flex-direction: column !important;
             text-align: center;
@@ -488,7 +494,7 @@
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const isSmallScreen = window.innerWidth <= 1550;
+        const isSmallScreen = window.innerWidth <= 1350;
         const footerColumns = document.querySelectorAll('.footer-column');
         
         if (isSmallScreen) {
@@ -503,7 +509,7 @@
         }
 
         window.addEventListener('resize', () => {
-            const isSmallScreen = window.innerWidth <= 1550;
+            const isSmallScreen = window.innerWidth <= 1350;
             footerColumns.forEach(column => {
                 if (isSmallScreen) {
                     column.classList.add('collapsed');
