@@ -1,16 +1,14 @@
 <style>
     .page-wrapper {
-        width: 100vw;
-        max-width: 100vw;
+        width: 100%;
         margin: 0;
         border-radius: 0;
         box-shadow: none;
     }
 
     .developers-wrapper {
-        width: 100vw;
-        max-width: 100vw;
-        margin: 0;
+        width: 95%;
+        margin: auto;
         background: var(--ivory-color);
         border-radius: 0;
         box-shadow: none;
@@ -40,9 +38,8 @@
         gap: 32px;
         justify-content: center;
         align-items: stretch;
-        width: 100vw;
-        max-width: 100vw;
-        padding: 0 2vw;
+        width: 100%;
+        padding: 0 2px;
         box-sizing: border-box;
     }
 

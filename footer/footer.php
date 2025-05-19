@@ -24,24 +24,6 @@
         color: var(--text-color);
         font-size: 18px;
         margin-bottom: 10px;
-        position: relative;
-        padding-right: 25px;
-        cursor: pointer;
-    }
-
-    .footer-column h3::after {
-        content: '\f107';
-        font-family: 'Font Awesome 5 Free';
-        font-weight: 900;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        transition: transform 0.3s ease;
-    }
-
-    .footer-column:not(.collapsed) h3::after {
-        transform: translateY(-50%) rotate(180deg);
     }
 
     .footer-links {
@@ -215,7 +197,7 @@
         }
     }
 
-    @media screen and (max-width: 1550px) {
+    @media screen and (max-width: 1350px) {
         .footer {
             flex-direction: column !important;
             text-align: center;
@@ -240,9 +222,24 @@
         }
         .footer-column h3 {
             font-size: 1.1rem;
-            padding: 10px 0;
+            padding: 10px 25px 10px 0;
             margin-bottom: 0;
             text-align: left;
+            cursor: pointer;
+            position: relative;
+        }
+        .footer-column h3::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s ease;
+        }
+        .footer-column:not(.collapsed) h3::after {
+            transform: translateY(-50%) rotate(180deg);
         }
         .footer-links {
             padding: 0 10px 10px 10px;
@@ -268,6 +265,15 @@
             font-size: 1.5rem;
             margin: 0 10px;
             padding: 10px;
+        }
+    }
+
+    @media screen and (min-width: 1351px) {
+        .footer-column h3::after {
+            display: none;
+        }
+        .footer-links {
+            display: block !important;
         }
     }
 </style>
@@ -488,7 +494,7 @@
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const isSmallScreen = window.innerWidth <= 1550;
+        const isSmallScreen = window.innerWidth <= 1350;
         const footerColumns = document.querySelectorAll('.footer-column');
         
         if (isSmallScreen) {
@@ -503,7 +509,7 @@
         }
 
         window.addEventListener('resize', () => {
-            const isSmallScreen = window.innerWidth <= 1550;
+            const isSmallScreen = window.innerWidth <= 1350;
             footerColumns.forEach(column => {
                 if (isSmallScreen) {
                     column.classList.add('collapsed');
