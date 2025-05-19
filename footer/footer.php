@@ -24,6 +24,24 @@
         color: var(--text-color);
         font-size: 18px;
         margin-bottom: 10px;
+        position: relative;
+        padding-right: 25px;
+        cursor: pointer;
+    }
+
+    .footer-column h3::after {
+        content: '\f107';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: transform 0.3s ease;
+    }
+
+    .footer-column:not(.collapsed) h3::after {
+        transform: translateY(-50%) rotate(180deg);
     }
 
     .footer-links {
@@ -80,6 +98,10 @@
         color:red;
     }
 
+    .footer-links li {
+        list-style: none;
+    }
+
     /* Media queries for responsive footer */
     @media screen and (max-width: 992px) {
         .footer {
@@ -119,56 +141,54 @@
             text-align: center;
             padding: 20px 10px;
         }
-        
         .footer-column {
             flex: 0 0 100%;
             margin-left: 0;
             margin-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 5px;
+            padding-bottom: 10px;
         }
-        
         .footer-column:last-child {
             margin-bottom: 5px;
             border-bottom: none;
         }
-        
         .footer-column h3 {
-            position: relative;
-            cursor: pointer;
+            font-size: 1.1rem;
             padding: 10px 0;
             margin-bottom: 0;
+            cursor: pointer;
+            background: none;
+            border: none;
+            outline: none;
+            width: 100%;
+            text-align: left;
+            position: relative;
         }
-        
-        .footer-column h3::after {
-            content: '\f107';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            position: absolute;
-            right: 10px;
-            transition: transform 0.3s;
-        }
-        
-        .footer-column.active h3::after {
-            transform: rotate(180deg);
-        }
-        
         .footer-links {
-            display: none;
             padding: 0 10px 10px 10px;
+            font-size: 1rem;
+            display: none;
+            transition: max-height 0.3s ease;
         }
-        
         .footer-column.active .footer-links {
             display: block;
         }
-        
+        .footer-column a, .footer-links li a {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            padding: 10px 0;
+            display: block;
+        }
         .social-icons {
             padding: 10px 0 15px 0;
+            justify-content: center;
+            flex-direction: row !important;
+            display: flex !important;
         }
-        
         .social-icons a {
-            font-size: 20px;
-            margin: 0 15px;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            padding: 10px;
         }
     }
     
@@ -192,6 +212,62 @@
             padding: 15px 5px;
             display:flex;
             flex-direction: column;
+        }
+    }
+
+    @media screen and (max-width: 1550px) {
+        .footer {
+            flex-direction: column !important;
+            text-align: center;
+            padding: 30px 10px;
+        }
+        .footer > div {
+            flex-direction: column !important;
+            display: flex !important;
+            align-items: stretch !important;
+        }
+        .footer-column {
+            flex: 0 0 100%;
+            margin-left: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            max-width: 100vw;
+        }
+        .footer-column:last-child {
+            margin-bottom: 5px;
+            border-bottom: none;
+        }
+        .footer-column h3 {
+            font-size: 1.1rem;
+            padding: 10px 0;
+            margin-bottom: 0;
+            text-align: left;
+        }
+        .footer-links {
+            padding: 0 10px 10px 10px;
+            font-size: 1rem;
+            display: none;
+        }
+        .footer-column:not(.collapsed) .footer-links {
+            display: block;
+        }
+        .footer-column a, .footer-links li a {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            padding: 10px 0;
+            display: block;
+        }
+        .social-icons {
+            padding: 10px 0 15px 0;
+            justify-content: center;
+            flex-direction: row !important;
+            display: flex !important;
+        }
+        .social-icons a {
+            font-size: 1.5rem;
+            margin: 0 10px;
+            padding: 10px;
         }
     }
 </style>
@@ -370,9 +446,8 @@
             <div class="footer-column">
                 <h3>Resources</h3>
                 <div class="footer-links">
-                    <a href="#">Contact Us</a>
-                    <a href="#">Blog</a>
-                    <a href="#">FAQ</a>
+                    <li><a href="contact.php">Contact Us</a></li>
+                    <li><a href="faq.php">FAQ</a></li>
                 </div>
             </div>
             <div class="footer-column">
@@ -386,17 +461,14 @@
             <div class="footer-column">
                 <h3>About</h3>
                 <div class="footer-links">
-                    <a href="#">DigitalSea, Inc.</a>
-                    <a href="#">Developers</a>
-                    <a href="#">Investors</a>
-                    <a href="#">Careers</a>
-                    <a href="#">Press</a>
+                    <a href="index.php">DigitalSea, Inc.</a>
+                    <a href="developers.php">Developers</a>
                     <a href="#">Team</a>
                 </div>
             </div>
         </div>
     
-        <div class="social-icons">
+        <div class="social-icons" style="display:flex; flex-direction:row !important; justify-content:center;">
             <a href="#">
                 <i id="facebook" class="fab fa-facebook-f"></i>
             </a>
@@ -415,50 +487,30 @@
         </div>
     </div>
     <script>
-    // Add accordion functionality for mobile footer
     document.addEventListener('DOMContentLoaded', function() {
-        if (window.innerWidth <= 576) {
-            const footerHeadings = document.querySelectorAll('.footer-column h3');
-            
-            footerHeadings.forEach(heading => {
-                heading.addEventListener('click', function() {
-                    const parent = this.parentElement;
-                    parent.classList.toggle('active');
+        const isSmallScreen = window.innerWidth <= 1550;
+        const footerColumns = document.querySelectorAll('.footer-column');
+        
+        if (isSmallScreen) {
+            footerColumns.forEach(column => {
+                column.classList.add('collapsed');
+                const heading = column.querySelector('h3');
+                
+                heading.addEventListener('click', () => {
+                    column.classList.toggle('collapsed');
                 });
             });
         }
-        
-        // Add resize listener to handle accordion behavior
-        window.addEventListener('resize', function() {
-            const footerColumns = document.querySelectorAll('.footer-column');
-            const footerLinks = document.querySelectorAll('.footer-links');
-            
-            if (window.innerWidth <= 576) {
-                footerColumns.forEach(column => {
-                    const heading = column.querySelector('h3');
-                    if (!heading.hasAttribute('listener')) {
-                        heading.setAttribute('listener', 'true');
-                        heading.addEventListener('click', function() {
-                            column.classList.toggle('active');
-                        });
-                    }
-                });
-                
-                // Hide links by default on mobile
-                footerLinks.forEach(link => {
-                    link.style.display = 'none';
-                });
-            } else {
-                // Show all links on larger screens
-                footerLinks.forEach(link => {
-                    link.style.display = 'block';
-                });
-                
-                // Remove active class from all columns
-                footerColumns.forEach(column => {
-                    column.classList.remove('active');
-                });
-            }
+
+        window.addEventListener('resize', () => {
+            const isSmallScreen = window.innerWidth <= 1550;
+            footerColumns.forEach(column => {
+                if (isSmallScreen) {
+                    column.classList.add('collapsed');
+                } else {
+                    column.classList.remove('collapsed');
+                }
+            });
         });
     });
     </script>
