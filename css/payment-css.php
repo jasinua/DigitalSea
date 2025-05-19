@@ -499,4 +499,15 @@
     #crypto-payment {
         margin-bottom:10px;
     }
+
+    #update-address-checkbox {
+        accent-color: var(--button-color);
+        background-color: var(--button-color);
+        border-radius: 4px;
+        width: 18px;
+        height: 18px;
+        border: 1.5px solid var(--button-color);
+        margin-right: 8px;
+        cursor: pointer;
+    }
 </style>

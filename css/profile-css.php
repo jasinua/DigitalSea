@@ -342,12 +342,14 @@
     }
 
     .order-history-btn.active {
-        background-color: var(--button-color);
-        color: white;
+        background-color: white;
+        color: var(--button-color);
+        border: 2px solid var(--button-color);
     }
 
     .order-history-btn.active:hover {
-        background-color: var(--button-color-hover);
+        background-color: var(--button-color);
+        border: none;
         transform: translateY(-2px);
         color: white;
     }

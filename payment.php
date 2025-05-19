@@ -31,16 +31,20 @@
     $userEmail = $userData['email'];
     $userAddress = $userData['address'];
 
-    // Handle address update if submitted
-    if (isset($_POST['update_address']) && isset($_POST['new_address'])) {
-        $newAddress = trim($_POST['new_address']);
-        $updateStmt = $conn->prepare("UPDATE users SET address = ? WHERE user_id = ?");
-        $updateStmt->bind_param("si", $newAddress, $userId);
-        if ($updateStmt->execute()) {
-            $userAddress = $newAddress;
-            $success_message = "Address updated successfully";
-        } else {
-            $error_message = "Failed to update address";
+    // Handle address update if submitted via AJAX
+    if (isset($_POST['update_address']) && isset($_POST['address'])) {
+        $newAddress = trim($_POST['address']);
+        if ($newAddress !== '') {
+            $updateStmt = $conn->prepare("UPDATE users SET address = ? WHERE user_id = ?");
+            $updateStmt->bind_param("si", $newAddress, $userId);
+            if ($updateStmt->execute()) {
+                $userAddress = $newAddress;
+                echo json_encode(['success' => true, 'message' => "Address updated successfully"]);
+                exit();
+            } else {
+                echo json_encode(['success' => false, 'message' => "Failed to update address"]);
+                exit();
+            }
         }
     }
 
@@ -200,7 +204,7 @@
                                 <label for="address">Shipping Address</label>
                                 <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($userAddress); ?>" required>
                                 <div id="address-update-container" style="display: none; margin-top: 10px;">
-                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; justify-content: center;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                                         <input type="checkbox" id="update-address-checkbox" name="update_address" style="width: auto;">
                                         <span>Update my account address with this new address</span>
                                     </label>
@@ -242,9 +246,8 @@
                     </div>
                 </div>
             </div>
-                    <!-- end of card payment -->
-
-                    <!-- CRYPTO PAYMENT -->        
+                    
+            <!-- CRYPTO PAYMENT -->        
             <?php
             // Configuration 
             require __DIR__ . '/vendor/autoload.php';
@@ -512,8 +515,46 @@
 
         form.addEventListener('submit', async function(event) {
             event.preventDefault();
+            
+            // Check if shipping address is empty
+            const addressValue = document.getElementById('address').value.trim();
+            if (!addressValue) {
+                errorElement.textContent = 'Shipping address is required.';
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Pay Now €<?php echo number_format($totalAmount, 2); ?>';
+                document.getElementById('address').focus();
+                return;
+            }
+            
             submitButton.disabled = true;
             submitButton.innerHTML = '<span class="spinner"></span> Processing...';
+
+            // First update address if checkbox is checked
+            const updateAddressCheckbox = document.getElementById('update-address-checkbox');
+            if (updateAddressCheckbox && updateAddressCheckbox.checked) {
+                try {
+                    const response = await fetch('payment.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `update_address=1&address=${encodeURIComponent(addressValue)}`
+                    });
+                    
+                    const result = await response.json();
+                    if (!result.success) {
+                        errorElement.textContent = result.message;
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = 'Pay Now €<?php echo number_format($totalAmount, 2); ?>';
+                        return;
+                    }
+                } catch (error) {
+                    errorElement.textContent = 'Failed to update address. Please try again.';
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = 'Pay Now €<?php echo number_format($totalAmount, 2); ?>';
+                    return;
+                }
+            }
 
             try {
                 let result;
@@ -612,4 +653,4 @@
         }
     </script>
 </body>
-</html></html>
+</html>

@@ -26,21 +26,29 @@ try {
     $price = (float)$_POST['price'];
     $stock = (int)$_POST['stock'];
     $discount = !empty($_POST['discount']) ? (float)$_POST['discount'] : 0;
+
+    // Validate discount (cannot exceed 100%)
+    if ($discount > 100) {
+        throw new Exception('Discount cannot exceed 100%');
+    }
+
     $is_update = !empty($product_id);
 
     // Handle image upload
     $image_url = '';
     if ($_POST['image_source'] === 'file' && isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
         $upload_dir = '../images/';
+        if (!is_dir($upload_dir) || !is_writable($upload_dir)) {
+            throw new Exception('Upload directory is not accessible or writable');
+        }
         $temp_name = $_FILES['product_image']['tmp_name'];
-        $new_filename = "product_{$product_id}.png";
+        $new_filename = $is_update ? "product_{$product_id}.png" : "product_temp.png";
         $upload_path = $upload_dir . $new_filename;
         
-        if (move_uploaded_file($temp_name, $upload_path)) {
-            $image_url = "images/product_{$product_id}.png";
-        } else {
+        if (!move_uploaded_file($temp_name, $upload_path)) {
             throw new Exception('Error uploading image');
         }
+        $image_url = "images/{$new_filename}";
     } elseif ($_POST['image_source'] === 'url' && !empty($_POST['image_url'])) {
         $image_url = $_POST['image_url'];
     } elseif ($is_update) {
@@ -51,6 +59,8 @@ try {
         $result = $check_stmt->get_result();
         if ($row = $result->fetch_assoc()) {
             $image_url = $row['image_url'];
+        } else {
+            throw new Exception('Product not found');
         }
         $check_stmt->close();
     } else {
@@ -69,8 +79,8 @@ try {
         }
         $stmt->bind_param("ssdiisi", $name, $description, $price, $stock, $discount, $image_url, $product_id);
     } else {
-        $sql = "INSERT INTO products (name, description, price, stock, discount, image_url, api_source) 
-                VALUES (?, ?, ?, ?, ?, ?, 'DigitalSeaApi')";
+        $sql = "INSERT INTO products (name, description, price, stock, discount, image_url) 
+                VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $conn->error);
@@ -84,6 +94,18 @@ try {
 
     if (!$is_update) {
         $product_id = $conn->insert_id;
+        // Rename the uploaded image file to include the new product_id
+        if ($_POST['image_source'] === 'file' && file_exists($upload_dir . "product_temp.png")) {
+            $new_image_path = $upload_dir . "product_{$product_id}.png";
+            rename($upload_dir . "product_temp.png", $new_image_path);
+            $image_url = "images/product_{$product_id}.png";
+            // Update the image_url in the database
+            $update_sql = "UPDATE products SET image_url = ? WHERE product_id = ?";
+            $update_stmt = $conn->prepare($update_sql);
+            $update_stmt->bind_param("si", $image_url, $product_id);
+            $update_stmt->execute();
+            $update_stmt->close();
+        }
     }
 
     // Process product details
@@ -94,6 +116,7 @@ try {
             $delete_stmt = $conn->prepare($delete_sql);
             $delete_stmt->bind_param("i", $product_id);
             $delete_stmt->execute();
+            $delete_stmt->close();
         }
 
         foreach ($_POST['details_key'] as $index => $key) {
@@ -106,34 +129,9 @@ try {
                     throw new Exception("Error inserting details: " . $detail_stmt->error);
                 }
                 $details[] = ['prod_desc1' => $key, 'prod_desc2' => $value];
+                $detail_stmt->close();
             }
         }
-    }
-
-    // Update Firebase
-    require_once __DIR__ . '/../vendor/autoload.php';
-    $serviceAccountPath = __DIR__ . '/../api/digitalsea.json';
-    
-    $firebase = (new Kreait\Firebase\Factory)
-        ->withServiceAccount($serviceAccountPath)
-        ->withDatabaseUri('https://auth-89876-default-rtdb.firebaseio.com');
-    
-    $database = $firebase->createDatabase();
-    
-    $firebaseData = [
-        'product_id' => $product_id,
-        'name' => $name,
-        'description' => $description,
-        'price' => $price,
-        'stock' => $stock,
-        'discount' => $discount,
-        'image_url' => $image_url
-    ];
-    
-    try {
-        $database->getReference('products/' . $product_id)->set($firebaseData);
-    } catch (Exception $e) {
-        error_log("Firebase update failed: " . $e->getMessage());
     }
 
     // Return success response with product data and details

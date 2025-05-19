@@ -178,7 +178,7 @@
                             </div>
                             <div class="button-group" style="margin-top: 30px; margin-bottom: 10px;">
                                 <a href="controller/logout.php" class="btn btn-secondary" style="width: 100%; text-align: center;">Log Out</a> 
-                                <div id="orderHistoryBtn" class="order-history-btn" style="width: 100%; text-align: center; font-weight: bold;">Show Order History</div>
+                                <div id="orderHistoryBtn" class="order-history-btn" style="width: 100%; display: flex; justify-content: center; align-items: center; text-align: center; font-weight: bold;">Show Order History</div>
                             </div>
                         </form>
                     </div>

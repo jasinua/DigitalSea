@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['isAdministrator']) || $_SE
 include_once "controller/function.php"; // for $conn
 include_once "model/dbh.inc.php";
 $products = [];
-$sql = "SELECT * FROM products WHERE api_source IS NULL";
+$sql = "SELECT * FROM products WHERE api_source IS NULL OR api_source = ''";
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -248,6 +248,18 @@ if (!empty($search)) {
     function toggleForm() {
         document.getElementById('modal').style.display = "block";
         document.body.style.overflow = "hidden";
+        // Reset form for add mode
+        const form = document.getElementById('productForm');
+        form.reset();
+        document.getElementById('detailsContainer').innerHTML = '';
+        document.getElementById('submit-btn').value = 'Insert Product';
+        document.getElementById('modal-title').innerHTML = 'Add a New Product';
+        form.product_id.value = '';
+        // Remove current image display if it exists
+        const currentImage = document.querySelector('.image-input-container').previousElementSibling;
+        if (currentImage && currentImage.tagName === 'DIV') {
+            currentImage.remove();
+        }
     }
 
     function closeForm() {
@@ -259,6 +271,8 @@ if (!empty($search)) {
         document.getElementById('submit-btn').value = 'Insert Product';
         document.getElementById('delete-btn').style.display = 'none';
         document.getElementById('modal-title').innerHTML = 'Add a New Product';
+        const editIndex = document.getElementById('edit-index');
+        if (editIndex) editIndex.remove();
         const currentImage = document.querySelector('.image-input-container').previousElementSibling;
         if (currentImage && currentImage.tagName === 'DIV') {
             currentImage.remove();
