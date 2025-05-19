@@ -27,7 +27,7 @@ if(isset($_SESSION['payment_success']) && $_SESSION['payment_success'] === true)
     $status = 'pending';
     $orderDate = date('Y-m-d H:i:s');
 
-    $createOrder = "INSERT INTO orders (user_id, total_price, status, order_date) VALUES (?, ?, ?, ?)";
+    $createOrder = "CALL createOrder(?,?,?,?)";
     $stmt = $conn->prepare($createOrder);
     $stmt->bind_param("idss", $_SESSION['user_id'], $totalAmount, $status, $orderDate);
     $stmt->execute();
@@ -68,7 +68,7 @@ $data = $snapshot->getValue();
 
 
 
-$returnCartProducts = "SELECT *, p.api_source AS api_source FROM cart c INNER JOIN products p ON c.product_id = p.product_id WHERE c.user_id = ?";
+$returnCartProducts = "CALL returnCartProd(?)";
 $stmt1 = $conn->prepare($returnCartProducts);
 $stmt1->bind_param("i", $_SESSION['user_id']);
 $stmt1->execute();
@@ -84,7 +84,7 @@ foreach ($result1 as $row) {
                     if($stock >= $quantity){
                         $newStock = $stock - $quantity;
                         $database->getReference("products/{$key}")->update(['stock' => $newStock]);
-                        $updateProductStock = "UPDATE products SET stock = ? WHERE product_id = ?";
+                        $updateProductStock = "CALL updateProdStock(?,?)";
                         $stmt = $conn->prepare($updateProductStock);
                         $stmt->bind_param("ii", $newStock, $productId);
                         $stmt->execute();
@@ -98,7 +98,7 @@ foreach ($result1 as $row) {
             $stock = $row['stock'];
             if($stock >= $quantity){
                 $newStock = $stock - $quantity;
-                $updateProductStock = "UPDATE products SET stock = ? WHERE product_id = ?";
+                $updateProductStock = "CALL updateProdStock(?,?)";
                 $stmt = $conn->prepare($updateProductStock);
                 $stmt->bind_param("ii", $newStock, $productId);
                 $stmt->execute();
@@ -107,13 +107,13 @@ foreach ($result1 as $row) {
 }
 
 
-    $updateCart = "UPDATE cart SET order_id = ? WHERE user_id = ? AND order_id IS NULL";
+    $updateCart = "CALL updateCartOrder(?,?)";
     $stmt = $conn->prepare($updateCart);
     $stmt->bind_param("ii", $orderId, $_SESSION['user_id']);
     $stmt->execute();
 
     // / Get user email from database
-$getUserEmail = "SELECT email FROM users WHERE user_id = ?";
+$getUserEmail = "CALL getEmail(?)";
 $stmt = $conn->prepare($getUserEmail);
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();

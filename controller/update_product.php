@@ -52,7 +52,7 @@ try {
     } elseif ($_POST['image_source'] === 'url' && !empty($_POST['image_url'])) {
         $image_url = $_POST['image_url'];
     } elseif ($is_update) {
-        $check_sql = "SELECT image_url FROM products WHERE product_id = ?";
+        $check_sql = "CALL imageUpload(?)";
         $check_stmt = $conn->prepare($check_sql);
         $check_stmt->bind_param("i", $product_id);
         $check_stmt->execute();
@@ -72,15 +72,14 @@ try {
     error_log("Received data: " . print_r($_POST, true));
 
     if ($is_update) {
-        $sql = "UPDATE products SET name = ?, description = ?, price = ?, stock = ?, discount = ?, image_url = ? WHERE product_id = ?";
+        $sql = "CALL updateProduct(?,?,?,?,?,?,?)";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $conn->error);
         }
         $stmt->bind_param("ssdiisi", $name, $description, $price, $stock, $discount, $image_url, $product_id);
     } else {
-        $sql = "INSERT INTO products (name, description, price, stock, discount, image_url) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "CALL insertProduct(?,?,?,?,?,?)";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $conn->error);
@@ -100,7 +99,7 @@ try {
             rename($upload_dir . "product_temp.png", $new_image_path);
             $image_url = "images/product_{$product_id}.png";
             // Update the image_url in the database
-            $update_sql = "UPDATE products SET image_url = ? WHERE product_id = ?";
+            $update_sql = "CALL updateProductImage(?,?)";
             $update_stmt = $conn->prepare($update_sql);
             $update_stmt->bind_param("si", $image_url, $product_id);
             $update_stmt->execute();
@@ -112,7 +111,7 @@ try {
     $details = [];
     if (isset($_POST['details_key']) && isset($_POST['details_value'])) {
         if ($is_update) {
-            $delete_sql = "DELETE FROM product_details WHERE product_id = ?";
+            $delete_sql = "CALL deleteProductDetails(?)";
             $delete_stmt = $conn->prepare($delete_sql);
             $delete_stmt->bind_param("i", $product_id);
             $delete_stmt->execute();
@@ -122,7 +121,7 @@ try {
         foreach ($_POST['details_key'] as $index => $key) {
             if (!empty($key) && !empty($_POST['details_value'][$index])) {
                 $value = $_POST['details_value'][$index];
-                $detail_sql = "INSERT INTO product_details (product_id, prod_desc1, prod_desc2) VALUES (?, ?, ?)";
+                $detail_sql = "CALL inseretProductDetails(?,?,?)";
                 $detail_stmt = $conn->prepare($detail_sql);
                 $detail_stmt->bind_param("iss", $product_id, $key, $value);
                 if (!$detail_stmt->execute()) {

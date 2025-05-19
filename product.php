@@ -74,7 +74,7 @@
                         </div>
                     <?php } ?>
                     <p id="average-rating"><?php 
-                        $rating_sql = "SELECT AVG(rating) as avg_rating FROM product_ratings WHERE product_id = ?";
+                        $rating_sql = "CALL averageRating(?)";
                         $rating_stmt = $conn->prepare($rating_sql);
                         $rating_stmt->bind_param("i", $productID);
                         $rating_stmt->execute();
@@ -200,7 +200,7 @@
             // Initialize stars based on user's previous rating
             <?php
             if (isset($_SESSION['user_id'])) {
-                $user_rating_sql = "SELECT rating FROM product_ratings WHERE product_id = ? AND user_id = ?";
+                $user_rating_sql = "CALL getRating(?, ?)";
                 $user_rating_stmt = $conn->prepare($user_rating_sql);
                 $user_rating_stmt->bind_param("ii", $productID, $_SESSION['user_id']);
                 $user_rating_stmt->execute();

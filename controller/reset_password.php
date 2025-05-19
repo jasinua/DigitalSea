@@ -18,7 +18,7 @@ $token = $_POST['token'];
 $password = $_POST['password'];
 
 // Check if token exists and is not expired (1 hour validity)
-$stmt = $conn->prepare("SELECT * FROM users WHERE token = ? AND token_time > ?");
+$stmt = $conn->prepare("CALL getTokenReset(?,?)");
 $current_time = time() - 3600; // 1 hour ago
 $stmt->bind_param("si", $token, $current_time);
 $stmt->execute();
@@ -40,7 +40,7 @@ $stmt->close();
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 // Update the password and clear the token
-$stmt = $conn->prepare("UPDATE users SET password = ?, token = NULL, token_time = NULL WHERE user_id = ?");
+$stmt = $conn->prepare("CALL updatePasswordToken(?,?)");
 $stmt->bind_param("si", $hashed_password, $user['user_id']);
 
 if ($stmt->execute()) {

@@ -17,7 +17,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
             $qty = (int)$quantities[$index];
             $prc = (float)$prices[$index];
             if ($qty >= 1) {
-                $stmt = $conn->prepare("UPDATE cart SET quantity = ?, price = ? WHERE user_id = ? AND product_id = ?");
+                $stmt = $conn->prepare("CALL updateCartItems(?,?,?,?)");
                 $stmt->bind_param("idii", $qty, $prc, $userId, $product_id);
                 $stmt->execute();
             }
@@ -27,7 +27,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
     // Handle product removal
     if (isset($_POST['remove'])) {
         $remove_id = (int)$_POST['remove'];
-        $stmt = $conn->prepare("DELETE FROM cart WHERE user_id = ? AND product_id = ?");
+        $stmt = $conn->prepare("CALL removeItemsFromCart(?,?)");
         $stmt->bind_param("ii", $userId, $remove_id);
         $stmt->execute();
     }

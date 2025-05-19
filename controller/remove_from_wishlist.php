@@ -14,7 +14,7 @@
     $product_id = $_POST['product_id'];
 
     // Remove the product from the wishlist
-    $stmt = $conn->prepare("DELETE FROM wishlist WHERE user_id = ? AND product_id = ?");
+    $stmt = $conn->prepare("CALL removeFromWishlist(?,?)");
     $stmt->bind_param("ii", $user_id, $product_id);
     $stmt->execute();
 
