@@ -175,6 +175,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         $item.fadeOut(300, function() {
                             $(this).remove();
                             showRemoveNotification('Item removed from wishlist.');
+
+                            // Update wishlist count
+                            var $countElem = $('.wishlist-count');
+                            var currentCount = parseInt($countElem.text());
+                            var newCount = Math.max(currentCount - 1, 0);
+                            $countElem.text(newCount + ' ' + (newCount === 1 ? 'item' : 'items'));
+
+                            // If wishlist is empty, show empty state
+                            if ($('.wishlist-item').length === 0) {
+                                $('.wishlist-grid').remove();
+                                $('.wishlist-container').append('<div class="empty-wishlist"><i class="fas fa-heart"></i><p>Your wishlist is empty</p><a href="index.php" class="continue-shopping">Continue Shopping</a></div>');
+                            }
                         });
                     }
                 }
