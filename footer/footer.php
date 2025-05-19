@@ -80,6 +80,10 @@
         color:red;
     }
 
+    .footer-links li {
+        list-style: none;
+    }
+
     /* Media queries for responsive footer */
     @media screen and (max-width: 992px) {
         .footer {
@@ -370,9 +374,8 @@
             <div class="footer-column">
                 <h3>Resources</h3>
                 <div class="footer-links">
-                    <a href="#">Contact Us</a>
-                    <a href="#">Blog</a>
-                    <a href="#">FAQ</a>
+                    <li><a href="contact.php">Contact Us</a></li>
+                    <li><a href="faq.php">FAQ</a></li>
                 </div>
             </div>
             <div class="footer-column">
@@ -386,11 +389,8 @@
             <div class="footer-column">
                 <h3>About</h3>
                 <div class="footer-links">
-                    <a href="#">DigitalSea, Inc.</a>
-                    <a href="#">Developers</a>
-                    <a href="#">Investors</a>
-                    <a href="#">Careers</a>
-                    <a href="#">Press</a>
+                    <a href="index.php">DigitalSea, Inc.</a>
+                    <a href="developers.php">Developers</a>
                     <a href="#">Team</a>
                 </div>
             </div>
