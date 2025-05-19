@@ -30,18 +30,18 @@
                 </div>
             </div>
             <div class="dev-card">
-                <img src="jasin.png" alt="Jasin Avdiu">
+                <img src="jasin.jpg" alt="Jasin Avdiu">
                 <div class="dev-info">
                     <div>
                         <h3>Jasin Avdiu</h3>
                         <p>Full Stack Problem Solver. Loves learning new tech, automating tasks, and open source. Runner and foodie.</p>
                     </div>
                     <div class="dev-links">
-                        <a href="#" target="_blank"><span class="icon">
+                        <a href="https://jasinavdiu.ct.ws/?i=1" target="_blank"><span class="icon">
                             <span class="icon"><i class="fas fa-briefcase"></i></span>
                             <span>Portfolio</span>
                         </a>
-                        <a href="#" target="_blank"><span class="icon">
+                        <a href="https://www.linkedin.com/in/jasin-avdiu-01114524b/" target="_blank"><span class="icon">
                             <span class="icon"><i class="fab fa-linkedin"></i></span>
                             <span>LinkedIn</span>
                         </a>
@@ -60,11 +60,11 @@
                         <p>Full Stack Problem Solver. Loves learning new tech, automating tasks, and open source. Runner and foodie.</p>
                     </div>
                     <div class="dev-links">
-                        <a href="#" target="_blank"><span class="icon">
+                        <a href="https://marijankolaj.ct.ws/?i=1" target="_blank"><span class="icon">
                             <span class="icon"><i class="fas fa-briefcase"></i></span>
                             <span>Portfolio</span>
                         </a>
-                        <a href="#" target="_blank"><span class="icon">
+                        <a href="https://www.linkedin.com/in/marijankolaj/" target="_blank"><span class="icon">
                             <span class="icon"><i class="fab fa-linkedin"></i></span>
                             <span>LinkedIn</span>
                         </a>

@@ -101,15 +101,15 @@
     .dev-links a {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         background: var(--button-color);
-        color: #fff;
+        color: white;
         padding: 8px 15px;
         border-radius: 6px;
         font-weight: 500;
         text-decoration: none;
         transition: background 0.2s;
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
     .dev-links a:hover {
