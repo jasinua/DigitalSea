@@ -411,7 +411,7 @@
             const formData = new FormData(form);
             formData.append('action', 'login');
 
-            fetch('controller/ajax-handler.php', {
+            fetch('controller/login_handler.php', {
                 method: 'POST',
                 body: formData
             })
