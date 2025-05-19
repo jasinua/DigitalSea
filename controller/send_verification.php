@@ -54,7 +54,7 @@ try {
                 .verification-code { 
                     font-size: 32px; 
                     font-weight: bold; 
-                    color: #153147; 
+                    color: #153147;
                     text-align: center; 
                     letter-spacing: 5px;
                     margin: 20px 0;
@@ -83,9 +83,9 @@ try {
         <body>
             <div class='container'>
                 <div class='header'>
-                    <h1 style='color: #153147; margin: 0;'>DigitalSea</h1>
+                    <h1 style='color: #28353F; margin: 0;'>DigitalSea</h1>
                 </div>
-                <div class='content'>
+                <div class='content' style='color: #28353F;'>
                     <h2>Welcome to DigitalSea!</h2>
                     <p>Dear {$username},</p>
                     <p>Thank you for choosing DigitalSea. To complete your registration and ensure the security of your account, please use the following verification code:</p>

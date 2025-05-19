@@ -166,7 +166,7 @@ try {
         <body>
             <div class='container'>
                 <div class='header'>
-                    <h1 style='color: #007bff; margin: 0;'>DigitalSea</h1>
+                    <h1 style='color: #28353F; margin: 0;'>DigitalSea</h1>
                 </div>
                 <div class='content'>
                     <h2>Thank You for Your Purchase!</h2>
