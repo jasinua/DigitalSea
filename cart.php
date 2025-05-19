@@ -268,9 +268,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Monitor changes in remove buttons
     document.querySelectorAll('.remove-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            hasUnsavedChanges = true;
-            updateCheckoutButton();
+        btn.addEventListener('click', function() {
+            const productId = this.dataset.productId;
+            const row = this.closest('tr');
+            const summaryItem = document.querySelector(`.summary-item[data-product-id="${productId}"]`);
+
+            // Disable the button and show loading state
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            // Send AJAX request to remove item
+            fetch('', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `remove=${productId}`
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Remove the row from the table
+                    row.remove();
+                    // Remove the item from summary
+                    if (summaryItem) {
+                        summaryItem.remove();
+                    }
+                    // Update cart totals
+                    updateCartSummary();
+                    // Check if cart is empty
+                    if (document.querySelectorAll('.itemsTable tr').length === 0) {
+                        location.reload(); // Reload to show empty cart message
+                    }
+                } else {
+                    throw new Error('Failed to remove item');
+                }
+            })
+            .catch(error => {
+                this.disabled = false;
+                this.innerHTML = '×';
+                alert('Error removing item. Please try again.');
+            });
         });
     });
 
