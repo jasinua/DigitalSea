@@ -3,6 +3,7 @@
         $local_image = "images/product_$product_id.png";
         return file_exists($local_image) ? $local_image : htmlspecialchars($image_url);
     }
+    
     ob_start(); // Fillon output buffering
     include_once "controller/function.php"
 

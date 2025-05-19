@@ -1,155 +1,47 @@
 <?php
-    session_start();
+session_start();
 
-    // Check if user is logged in and is an admin
-    if (!isset($_SESSION['user_id']) || !isset($_SESSION['isAdministrator']) || $_SESSION['isAdministrator'] != 1) {
-        header("Location: index.php");
-        exit();
+// Check if user is logged in and is an admin
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['isAdministrator']) || $_SESSION['isAdministrator'] != 1) {
+    header("Location: index.php");
+    exit();
+}
+
+// Fetch products from database
+include_once "controller/function.php"; // for $conn
+include_once "model/dbh.inc.php";
+$products = [];
+$sql = "SELECT * FROM products WHERE api_source IS NULL";
+$result = $conn->query($sql);
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        // Fetch details for each product
+        $sql11 = "SELECT * FROM product_details WHERE product_id = ?";
+        $stmt11 = $conn->prepare($sql11);
+        $stmt11->bind_param("i", $row['product_id']);
+        $stmt11->execute();
+        $result11 = $stmt11->get_result();
+        
+        $details = [];
+        if ($result11 && $result11->num_rows > 0) {
+            while ($detail = $result11->fetch_assoc()) {
+                $details[] = $detail;
+            }
+        }
+        
+        $row['details'] = $details;
+        $products[] = $row;
     }
+}
 
-    // --- NEW: Fetch products from database ---
-    include_once "controller/function.php"; // for $conn
-    include_once "model/dbh.inc.php";
-    $products = [];
-    $sql = "SELECT * FROM products WHERE api_source IS NULL";
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$search = strtolower($search);
+
+if (!empty($search)) {
+    $sql = "SELECT * FROM products WHERE LOWER(description) LIKE '%$search%'";
     $result = $conn->query($sql);
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            // Fetch details for each product
-            $sql11 = "SELECT * FROM product_details WHERE product_id = ?";
-            $stmt11 = $conn->prepare($sql11);
-            $stmt11->bind_param("i", $row['product_id']);
-            $stmt11->execute();
-            $result11 = $stmt11->get_result();
-            
-            $details = [];
-            if ($result11 && $result11->num_rows > 0) {
-                while ($detail = $result11->fetch_assoc()) {
-                    $details[] = $detail;
-                }
-            }
-            
-            $row['details'] = $details;
-            $products[] = $row;
-        }
-    }
-
-    $file = 'controller/products.json';
-
-    // Handle form submission
-    if (isset($_POST['submit'])) {
-        $name = $_POST['name'];
-        $description = $_POST['description'];
-        $price = (float) $_POST['price'];
-        $stock = (int) $_POST['stock'];
-        $discount = (float) $_POST['discount'];
-        
-        // Get the next product ID
-        $sql = "SELECT MAX(product_id) as max_id FROM products";
-        $result = $conn->query($sql);
-        $row = $result->fetch_assoc();
-        $next_id = ($row['max_id'] ?? 0) + 1;
-        
-        $image_url = '';
-        
-        // Handle image based on source
-        if ($_POST['image_source'] === 'file' && isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = 'images/';
-            $temp_name = $_FILES['product_image']['tmp_name'];
-            $new_filename = "product_{$next_id}.png";
-            $upload_path = $upload_dir . $new_filename;
-            
-            if (move_uploaded_file($temp_name, $upload_path)) {
-                $image_url = $upload_path;
-            } else {
-                echo "<script>alert('Error uploading image');</script>";
-                exit();
-            }
-        } elseif ($_POST['image_source'] === 'url' && !empty($_POST['image_url'])) {
-            $image_url = $_POST['image_url'];
-        } else {
-            echo "<script>alert('Please provide either an image file or URL');</script>";
-            exit();
-        }
-        
-        // Insert product into database
-        $sql = "INSERT INTO products (product_id, name, description, price, stock, discount, image_url, api_source) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, 'DigitalSeaApi')";
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            echo "<script>alert('Prepare failed: " . $conn->error . "');</script>";
-            exit();
-        }
-        
-        $stmt->bind_param("issdiis", $next_id, $name, $description, $price, $stock, $discount, $image_url);
-        
-        if ($stmt->execute()) {
-            $product_id = $next_id; // Use the next_id we generated
-            
-            // Process product details
-            if (isset($_POST['details_key']) && isset($_POST['details_value'])) {
-                foreach ($_POST['details_key'] as $index => $key) {
-                    if (!empty($key) && !empty($_POST['details_value'][$index])) {
-                        $value = $_POST['details_value'][$index];
-                        $detail_sql = "INSERT INTO product_details (product_id, prod_desc1, prod_desc2) VALUES (?, ?, ?)";
-                        $detail_stmt = $conn->prepare($detail_sql);
-                        if (!$detail_stmt) {
-                            echo "<script>alert('Prepare details failed: " . $conn->error . "');</script>";
-                            continue;
-                        }
-                        $detail_stmt->bind_param("iss", $product_id, $key, $value);
-                        if (!$detail_stmt->execute()) {
-                            echo "<script>alert('Error inserting details: " . $detail_stmt->error . "');</script>";
-                        }
-                        $detail_stmt->close();
-                    }
-                }
-            }
-            
-            // Update Firebase with the new product
-            require_once __DIR__ . '/vendor/autoload.php';
-            $serviceAccountPath = __DIR__ . '/api/digitalsea.json';
-            
-            $firebase = (new Kreait\Firebase\Factory)
-                ->withServiceAccount($serviceAccountPath)
-                ->withDatabaseUri('https://auth-89876-default-rtdb.firebaseio.com');
-            
-            $database = $firebase->createDatabase();
-            
-            $firebaseData = [
-                'product_id' => $product_id,
-                'name' => $name,
-                'description' => $description,
-                'price' => $price,
-                'stock' => $stock,
-                'discount' => $discount,
-                'image_url' => $image_url
-            ];
-            
-            try {
-                $database->getReference('products/' . $product_id)->set($firebaseData);
-                echo "<script>alert('Product added successfully!'); window.location.href=window.location.href;</script>";
-            } catch (Exception $e) {
-                echo "<script>alert('Product added to database but failed to update Firebase: " . $e->getMessage() . "');</script>";
-            }
-            exit();
-        } else {
-            echo "<script>alert('Error adding product: " . $stmt->error . "');</script>";
-        }
-        $stmt->close();
-    }
-
-
-    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-
-    $search = strtolower($search);
-
-    if (!empty($search)) {
-        $sql = "SELECT * FROM products WHERE LOWER(description) LIKE '%$search%'";
-        $result = $conn->query($sql);
-        $products = $result->fetch_all(MYSQLI_ASSOC);
-    }
-
+    $products = $result->fetch_all(MYSQLI_ASSOC);
+}
 ?>
 
 <!DOCTYPE html>
@@ -158,10 +50,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Product Management</title>
+    <?php include "css/managestock-css.php"; ?>
 </head>
-
-<?php include "css/managestock-css.php"; ?>
-
 <body>
     <?php include "header/header.php"; ?>
 
@@ -178,8 +68,8 @@
         <div id="modal">
             <div class="modal-content">
                 <div class="modal-accent"></div>
-                <button class="close-btn" onclick="closeForm()">&times;</button>
-                <form method="post" id="productForm">
+                <button class="close-btn" onclick="closeForm()">×</button>
+                <form method="post" id="productForm" onsubmit="return handleFormSubmit(event)">
                     <input type="hidden" name="product_id" id="product_id">
                     <h2 id='modal-title'>Add a New Product</h2>
 
@@ -189,24 +79,18 @@
                     <label>Description:</label>
                     <textarea name="description"></textarea>
 
-                    <!-- <label>Type:</label>
-                    <input type="text" name="type"> -->
-
                     <label>Price:</label>
                     <input type="number" name="price" step="0.01" required>
 
                     <label>Stock:</label>
                     <input type="number" name="stock" required>
 
-                    <!-- <label>API Source:</label>
-                    <input type="text" name="api_source"> -->
-
                     <label>Product Image:</label>
                     <div class="image-input-container">
                         <div class="image-input-option">
                             <input type="radio" name="image_source" value="file" id="image_file" checked>
                             <label for="image_file">Upload File</label>
-                            <input type="file" name="product_image" accept="image/*" id="file_input">
+                            <input type="file" name="product_image" accept="image/*" id="file_input" style="color: var(--page-text-color);">
                         </div>
                         <div class="image-input-option">
                             <input type="radio" name="image_source" value="url" id="image_url">
@@ -220,7 +104,7 @@
 
                     <h3>Product Details</h3>
                     <div id="detailsContainer"></div>
-                    <button type="button" onclick="addDetailField()" class="detail-button" >Add Detail</button>
+                    <button type="button" onclick="addDetailField()" class="detail-button">Add Detail</button>
 
                     <br><br>
                     <div class="div">
@@ -241,7 +125,6 @@
                     <th>Description</th>
                     <th>Price</th>
                     <th>Stock</th>
-                    <!-- <th>API Source</th> -->
                     <th>Discount</th>
                     <th>Details</th>
                     <th>Actions</th>
@@ -249,8 +132,8 @@
             </thead>
             <tbody>
                 <?php if (!empty($products)): ?>
-                    <?php foreach ($products as $index => $product): ?>
-                        <tr data-index="<?= $index ?>">
+                    <?php foreach ($products as $product): ?>
+                        <tr data-index="<?= htmlspecialchars($product['product_id']) ?>">
                             <td>
                                 <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" class="product-img" alt="<?= htmlspecialchars($product['name']) ?>">
                             </td>
@@ -258,7 +141,6 @@
                             <td style="width: 20%;"><?= htmlspecialchars($product['description']) ?></td>
                             <td><strong><?= htmlspecialchars(number_format($product['price'], 2)) ?>€</strong></td>
                             <td><?= htmlspecialchars($product['stock']) ?></td>
-                            <!-- <td><?php //echo htmlspecialchars($product['api_source']) ?></td> -->
                             <td>
                                 <?php if (!empty($product['discount'])): ?>
                                     <strong><?= htmlspecialchars($product['discount']) ?>%</strong>
@@ -280,7 +162,7 @@
                                 ?>
                             </td>
                             <td>
-                                <button type="button" class="btn edit-btn" onclick="editProduct(<?= $index ?>)">Edit</button>
+                                <button type="button" class="btn edit-btn" onclick="editProduct(<?= $product['product_id'] ?>)">Edit</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -290,9 +172,12 @@
             </tbody>
         </table>
     </div>
-</body>
-<script>
 
+    <button id="scrollToTop" class="scroll-to-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
     function searchProducts() {
         const searchInput = document.getElementById('searchInput');
         const searchValue = searchInput.value.toLowerCase();
@@ -311,11 +196,9 @@
             return;
         }
 
-        filteredProducts.forEach((product, filteredIndex) => {   
+        filteredProducts.forEach(product => {   
             const row = document.createElement('tr');
-            // Find the original index in the products array
-            const originalIndex = products.findIndex(p => p.product_id === product.product_id);
-            row.setAttribute('data-index', originalIndex);
+            row.setAttribute('data-index', product.product_id);
 
             let detailsHtml = 'No details';
             if (product.details && product.details.length > 0) {
@@ -330,30 +213,27 @@
             }
 
             row.innerHTML = `
-                <td><img src="images/product_${product.product_id}.png" alt="${product.name}" class="product-img"></td>
+                <td><img src="images/product_${product.product_id}.png" alt="${product.name}" class="product-img" onerror="this.src='${product.image_url}'"></td>
                 <td>${product.name}</td>
-                <td>${product.description}</td>
+                <td style="width: 20%;">${product.description}</td>
                 <td><strong>${Number(product.price).toFixed(2)}€</strong></td>
                 <td>${product.stock}</td>
                 <td>${discountHtml}</td>
-                <td>${detailsHtml}</td>
+                <td style="width: 25%;">${detailsHtml}</td>
                 <td>
-                    <button type="button" class="btn edit-btn" onclick="editProduct(${originalIndex})">Edit</button>
+                    <button type="button" class="btn edit-btn" onclick="editProduct(${product.product_id})">Edit</button>
                 </td>
             `;
             tableBody.appendChild(row);
         });
     }
 
-
-
-
     function addDetailField() {
         const container = document.getElementById('detailsContainer');
         const div = document.createElement('div');
         div.style.marginBottom = "10px";
-        div.style.display = "flex";  // Align input fields horizontally
-        div.style.alignItems = "center";  // Center the items vertically
+        div.style.display = "flex";
+        div.style.alignItems = "center";
 
         div.innerHTML = `
             <input type="text" name="details_key[]" placeholder="Key" required style="flex: 1; margin-right: 10px;">
@@ -373,9 +253,18 @@
     function closeForm() {
         document.getElementById('modal').style.display = "none";
         document.body.style.overflow = "auto";
+        const form = document.getElementById('productForm');
+        form.reset();
+        document.getElementById('detailsContainer').innerHTML = '';
+        document.getElementById('submit-btn').value = 'Insert Product';
+        document.getElementById('delete-btn').style.display = 'none';
+        document.getElementById('modal-title').innerHTML = 'Add a New Product';
+        const currentImage = document.querySelector('.image-input-container').previousElementSibling;
+        if (currentImage && currentImage.tagName === 'DIV') {
+            currentImage.remove();
+        }
     }
 
-    // Close modal if clicked outside
     window.onclick = function(event) {
         const modal = document.getElementById('modal');
         if (event.target === modal) {
@@ -394,44 +283,54 @@
         }, 3000);
     }
 
-    function editProduct(index) {
-        // Get product data from PHP array (rendered as JS object)
-        const products = <?php echo json_encode($products); ?>;
-        const product = products[index];
-        if (!product) return;
-
-        // Open modal
-        toggleForm();
-
-        // Fill modal fields
-        const form = document.getElementById('productForm');
-        form.product_id.value = product.product_id;
-        form.name.value = product.name;
-        form.description.value = product.description;
-        form.price.value = product.price;
-        form.stock.value = product.stock;
-        form.discount.value = product.discount || '';
-
-        // Show delete button
-        document.getElementById('delete-btn').style.display = 'inline-block';
-
-        // Fetch product details
-        fetch('controller/get_product_details.php?product_id=' + product.product_id)
+    function editProduct(productId) {
+        // Fetch the latest product data from the server
+        fetch('controller/get_product.php?product_id=' + productId)
             .then(response => response.json())
-            .then(details => {
+            .then(data => {
+                if (!data.success) {
+                    showNotification(data.message || 'Error fetching product', 'error');
+                    return;
+                }
+
+                const product = data.product;
+                toggleForm();
+
+                const form = document.getElementById('productForm');
+                form.product_id.value = product.product_id;
+                form.name.value = product.name;
+                form.description.value = product.description;
+                form.price.value = product.price;
+                form.stock.value = product.stock;
+                form.discount.value = product.discount || '';
+
+                const currentImage = document.createElement('div');
+                currentImage.style.marginBottom = '10px';
+                const imagePath = `images/product_${product.product_id}.png`;
+                currentImage.innerHTML = `
+                    <label>Current Image:</label>
+                    <img src="${imagePath}" 
+                         alt="Current product image" 
+                         style="max-width: 200px; margin-top: 5px;"
+                         onerror="this.src='${product.image_url}'">
+                `;
+                const imageContainer = document.querySelector('.image-input-container');
+                imageContainer.parentNode.insertBefore(currentImage, imageContainer);
+
+                document.getElementById('delete-btn').style.display = 'inline-block';
+
                 const detailsContainer = document.getElementById('detailsContainer');
                 detailsContainer.innerHTML = '';
                 
-                if (details && details.length > 0) {
-                    details.forEach(detail => {
+                if (product.details && product.details.length > 0) {
+                    product.details.forEach(detail => {
                         const div = document.createElement('div');
                         div.style.marginBottom = "10px";
-                        div.style.paddingBottom = "10px";
                         div.style.display = "flex";
                         div.style.alignItems = "center";
                         div.innerHTML = `
-                            <input type="text" name="details_key[]" placeholder="Key" required style="flex: 1; margin-right: 10px; padding-bottom: 10px;" value="${detail.prod_desc1}">
-                            <input type="text" name="details_value[]" placeholder="Value" required style="flex: 1; margin-right: 10px; padding-bottom: 10px;" value="${detail.prod_desc2}">
+                            <input type="text" name="details_key[]" placeholder="Key" required style="flex: 1; margin-right: 10px;" value="${detail.prod_desc1}">
+                            <input type="text" name="details_value[]" placeholder="Value" required style="flex: 1; margin-right: 10px;" value="${detail.prod_desc2}">
                             <button type="button" onclick="this.parentNode.remove()" style="background: none; border: none; cursor: pointer;">
                                 <i class="fa-solid fa-trash" style="color:red; font-size:20px;"></i>
                             </button>
@@ -439,23 +338,14 @@
                         detailsContainer.appendChild(div);
                     });
                 }
+
+                document.getElementById('submit-btn').value = 'Update Product';
+                document.getElementById('modal-title').innerHTML = 'Edit Product';
             })
             .catch(error => {
-                console.error('Error fetching product details:', error);
+                console.error('Error fetching product:', error);
+                showNotification('Error fetching product data', 'error');
             });
-
-        // Change submit button to Update
-        document.getElementById('submit-btn').value = 'Update Product';
-        document.getElementById('modal-title').innerHTML = 'Edit Product';
-        // Store index in a hidden field
-        if (!document.getElementById('edit-index')) {
-            const hidden = document.createElement('input');
-            hidden.type = 'hidden';
-            hidden.name = 'edit_index';
-            hidden.id = 'edit-index';
-            form.appendChild(hidden);
-        }
-        document.getElementById('edit-index').value = index;
     }
 
     function deleteProduct() {
@@ -475,7 +365,8 @@
                 if (data.success) {
                     showNotification(data.message, 'success');
                     closeForm();
-                    location.reload();
+                    const row = document.querySelector(`tr[data-index="${productId}"]`);
+                    if (row) row.remove();
                 } else {
                     showNotification(data.message || 'Error deleting product', 'error');
                 }
@@ -485,20 +376,6 @@
                 showNotification('Error deleting product', 'error');
             });
         }
-    }
-
-    // On modal close, reset form to add mode
-    function closeForm() {
-        document.getElementById('modal').style.display = "none";
-        document.body.style.overflow = "auto";
-        // Reset form
-        const form = document.getElementById('productForm');
-        form.reset();
-        document.getElementById('detailsContainer').innerHTML = '';
-        document.getElementById('submit-btn').value = 'Insert Product';
-        document.getElementById('delete-btn').style.display = 'none';
-        const editIndex = document.getElementById('edit-index');
-        if (editIndex) editIndex.remove();
     }
 
     document.querySelectorAll('input[name="image_source"]').forEach(radio => {
@@ -519,5 +396,127 @@
             }
         });
     });
-</script>
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = new FormData(form);
+        const isUpdate = form.product_id.value !== '';
+        
+        const submitBtn = document.getElementById('submit-btn');
+        const originalBtnText = submitBtn.value;
+        submitBtn.value = 'Processing...';
+        submitBtn.disabled = true;
+
+        fetch('controller/update_product.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(data.message, 'success');
+                closeForm();
+                
+                if (isUpdate) {
+                    updateTableRow(data.product);
+                } else {
+                    addNewTableRow(data.product);
+                }
+            } else {
+                showNotification(data.message || 'Error processing request', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Error processing request', 'error');
+        })
+        .finally(() => {
+            submitBtn.value = originalBtnText;
+            submitBtn.disabled = false;
+        });
+
+        return false;
+    }
+
+    function updateTableRow(product) {
+        const row = document.querySelector(`tr[data-index="${product.product_id}"]`);
+        if (!row) {
+            console.error('Row not found for product:', product.product_id);
+            return;
+        }
+
+        const cells = row.cells;
+        
+        const imagePath = `images/product_${product.product_id}.png`;
+        cells[0].innerHTML = `
+            <img src="${imagePath}" 
+                 class="product-img" 
+                 alt="${product.name}"
+                 onerror="this.src='${product.image_url}'">
+        `;
+        
+        cells[1].textContent = product.name;
+        cells[2].textContent = product.description;
+        cells[3].innerHTML = `<strong>${parseFloat(product.price).toFixed(2)}€</strong>`;
+        cells[4].textContent = product.stock;
+        cells[5].innerHTML = product.discount > 0 ? 
+            `<strong>${product.discount}%</strong>` : 
+            'No discount';
+        
+        cells[6].innerHTML = product.details && product.details.length > 0 ?
+            product.details.map(detail => 
+                `${detail.prod_desc1}: ${detail.prod_desc2}`
+            ).join('<br>') :
+            'No details';
+    }
+
+    function addNewTableRow(product) {
+        const tbody = document.querySelector('tbody');
+        const row = document.createElement('tr');
+        row.setAttribute('data-index', product.product_id);
+        
+        const imagePath = `images/product_${product.product_id}.png`;
+        row.innerHTML = `
+            <td>
+                <img src="${imagePath}" 
+                     class="product-img" 
+                     alt="${product.name}"
+                     onerror="this.src='${product.image_url}'">
+            </td>
+            <td>${product.name}</td>
+            <td style="width: 20%;">${product.description}</td>
+            <td><strong>${parseFloat(product.price).toFixed(2)}€</strong></td>
+            <td>${product.stock}</td>
+            <td>${product.discount > 0 ? `<strong>${product.discount}%</strong>` : 'No discount'}</td>
+            <td style="width: 25%;">${product.details && product.details.length > 0 ? 
+                product.details.map(detail => 
+                    `${detail.prod_desc1}: ${detail.prod_desc2}`
+                ).join('<br>') : 'No details'}</td>
+            <td>
+                <button type="button" class="btn edit-btn" onclick="editProduct(${product.product_id})">Edit</button>
+            </td>
+        `;
+        
+        tbody.insertBefore(row, tbody.firstChild);
+    }
+
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    window.onscroll = function() {
+        const scrollBtn = document.getElementById('scrollToTop');
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
+    };
+    </script>
+</body>
 </html>
