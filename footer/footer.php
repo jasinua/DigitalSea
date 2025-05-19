@@ -24,6 +24,7 @@
         color: var(--text-color);
         font-size: 18px;
         margin-bottom: 10px;
+<<<<<<< HEAD
         position: relative;
         padding-right: 25px;
     }
@@ -48,6 +49,8 @@
         .footer-column:not(.collapsed) h3::after {
             transform: translateY(-50%) rotate(180deg);
         }
+=======
+>>>>>>> parent of 95e045d (developer css fixed and footer for small media fixed)
     }
 
     .footer-links {
@@ -147,54 +150,56 @@
             text-align: center;
             padding: 20px 10px;
         }
+        
         .footer-column {
             flex: 0 0 100%;
             margin-left: 0;
             margin-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
+            padding-bottom: 5px;
         }
+        
         .footer-column:last-child {
             margin-bottom: 5px;
             border-bottom: none;
         }
+        
         .footer-column h3 {
-            font-size: 1.1rem;
+            position: relative;
+            cursor: pointer;
             padding: 10px 0;
             margin-bottom: 0;
-            cursor: pointer;
-            background: none;
-            border: none;
-            outline: none;
-            width: 100%;
-            text-align: left;
-            position: relative;
         }
+        
+        .footer-column h3::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .footer-column.active h3::after {
+            transform: rotate(180deg);
+        }
+        
         .footer-links {
-            padding: 0 10px 10px 10px;
-            font-size: 1rem;
             display: none;
-            transition: max-height 0.3s ease;
+            padding: 0 10px 10px 10px;
         }
+        
         .footer-column.active .footer-links {
             display: block;
         }
-        .footer-column a, .footer-links li a {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            padding: 10px 0;
-            display: block;
-        }
+        
         .social-icons {
             padding: 10px 0 15px 0;
-            justify-content: center;
-            flex-direction: row !important;
-            display: flex !important;
         }
+        
         .social-icons a {
-            font-size: 1.5rem;
-            margin: 0 10px;
-            padding: 10px;
+            font-size: 20px;
+            margin: 0 15px;
         }
     }
     
@@ -220,6 +225,7 @@
             flex-direction: column;
         }
     }
+<<<<<<< HEAD
 
     @media screen and (max-width: 1350px) {
         .footer {
@@ -276,6 +282,8 @@
             padding: 10px;
         }
     }
+=======
+>>>>>>> parent of 95e045d (developer css fixed and footer for small media fixed)
 </style>
 <body>
     <div class="footer" <?php if(strpos($_SERVER['REQUEST_URI'], 'login.php') !== false): ?>style="display: none;"<?php endif; ?>>
@@ -474,7 +482,7 @@
             </div>
         </div>
     
-        <div class="social-icons" style="display:flex; flex-direction:row !important; justify-content:center;">
+        <div class="social-icons">
             <a href="#">
                 <i id="facebook" class="fab fa-facebook-f"></i>
             </a>
@@ -493,7 +501,9 @@
         </div>
     </div>
     <script>
+    // Add accordion functionality for mobile footer
     document.addEventListener('DOMContentLoaded', function() {
+<<<<<<< HEAD
         const isSmallScreen = window.innerWidth <= 1350;
         const footerColumns = document.querySelectorAll('.footer-column');
         
@@ -517,6 +527,50 @@
                     column.classList.remove('collapsed');
                 }
             });
+=======
+        if (window.innerWidth <= 576) {
+            const footerHeadings = document.querySelectorAll('.footer-column h3');
+            
+            footerHeadings.forEach(heading => {
+                heading.addEventListener('click', function() {
+                    const parent = this.parentElement;
+                    parent.classList.toggle('active');
+                });
+            });
+        }
+        
+        // Add resize listener to handle accordion behavior
+        window.addEventListener('resize', function() {
+            const footerColumns = document.querySelectorAll('.footer-column');
+            const footerLinks = document.querySelectorAll('.footer-links');
+            
+            if (window.innerWidth <= 576) {
+                footerColumns.forEach(column => {
+                    const heading = column.querySelector('h3');
+                    if (!heading.hasAttribute('listener')) {
+                        heading.setAttribute('listener', 'true');
+                        heading.addEventListener('click', function() {
+                            column.classList.toggle('active');
+                        });
+                    }
+                });
+                
+                // Hide links by default on mobile
+                footerLinks.forEach(link => {
+                    link.style.display = 'none';
+                });
+            } else {
+                // Show all links on larger screens
+                footerLinks.forEach(link => {
+                    link.style.display = 'block';
+                });
+                
+                // Remove active class from all columns
+                footerColumns.forEach(column => {
+                    column.classList.remove('active');
+                });
+            }
+>>>>>>> parent of 95e045d (developer css fixed and footer for small media fixed)
         });
     });
     </script>
