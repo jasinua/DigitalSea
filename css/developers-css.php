@@ -3,7 +3,6 @@
         width: 100vw;
         max-width: 100vw;
         margin: 0;
-        background: #fff;
         border-radius: 0;
         box-shadow: none;
     }
@@ -12,13 +11,13 @@
         width: 100vw;
         max-width: 100vw;
         margin: 0;
-        background: #fff;
+        background: var(--ivory-color);
         border-radius: 0;
         box-shadow: none;
         padding: 32px 0;
     }
 
-    .developers-wrapper h2 {
+    .developers-wrapper h1 {
         text-align: center;
         color: var(--button-color);
         margin-bottom: 32px;
@@ -48,7 +47,7 @@
     }
 
     .dev-card {
-        background: var(--ivory-color);
+        background: white;
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         padding: 40px 24px;
@@ -80,7 +79,7 @@
     .dev-card h3 {
         margin: 0 0 10px 0;
         color: var(--navy-color);
-        font-size: 2rem;
+        font-size: 1.8rem;
         text-align: center;
     }
 
@@ -113,8 +112,8 @@
     }
 
     .dev-links a:hover {
-        background: var(--button-color-hover);
-        color: #fff;
+        background: var(--ivory-color);
+        color: var(--button-color);
     }
 
     .dev-links .icon {

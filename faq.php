@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <?php include 'header/header.php'; ?>
 <?php include 'css/faq-css.php'; ?>
 <div class="faq-wrapper">
