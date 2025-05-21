@@ -1,6 +1,7 @@
 <?php
     session_start();
     include 'controller/home.inc.php';
+    include 'header/header.php';
 
     // function getImageSource($product_id, $image_url) {
     //     $local_image = "images/product_$product_id.png";
@@ -40,7 +41,6 @@
 <?php include "css/product-css.php"; ?>
 
 <body>
-    <?php include 'header/header.php' ?>
     <div id='container'>
         <div id='prodContainer'>
             
@@ -335,7 +335,6 @@
             <title>404 Product Not Found</title>
         </head>
         <body style='margin: 0; padding: 0; '>
-        <?php include 'header/header.php' ?>
             <div id='container' style='background: linear-gradient(to right, rgb(69, 110, 142) 0%, rgb(26, 78, 118) 6%, var(--noir-color) 16%, 
                     var(--noir-color) 100%);'>
                 <div id='prodContainer' style='display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 100px); flex-direction: column;'>

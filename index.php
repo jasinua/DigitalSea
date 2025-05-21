@@ -69,10 +69,12 @@
     <!-- Defer JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" defer></script>
+    
 </head>
+
+<?php include "header/header.php" ?>
 <body>
     <div class="page-wrapper">
-        <?php include "header/header.php" ?>
         <div id='container'>
             <div id='filters'>
                 <button type="button" class="close-filters"><i class="fas fa-times"></i></button>
