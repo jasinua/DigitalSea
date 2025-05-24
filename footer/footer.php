@@ -602,17 +602,18 @@
                 footerLinks.forEach(link => {
                     link.style.display = 'none';
                 });
-            } else {
-                // Show all links on larger screens
-                footerLinks.forEach(link => {
-                    link.style.display = 'block';
-                });
-                
-                // Remove active class from all columns
-                footerColumns.forEach(column => {
-                    column.classList.remove('active');
-                });
-            }
+                } else {
+                    // Show all links on larger screens
+                    footerLinks.forEach(link => {
+                        link.style.display = 'block';
+                    });
+                    
+                    // Remove active class from all columns
+                    footerColumns.forEach(column => {
+                        column.classList.remove('active');
+                    });
+                }
+            });
         });
     });
     </script>
