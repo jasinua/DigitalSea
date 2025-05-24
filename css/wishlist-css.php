@@ -224,6 +224,27 @@
         }
     }
 
+    .discount-percentage {
+        display: none;
+    }
+
+    @media (max-width: 371px) {
+        .original-price {
+            display: none;
+        }
+
+        .discount-percentage {
+            display: block;
+            background-color: var(--error-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 1;
+        }
+    }
+
     .wishlist-item {
         background: white;
         border-radius: 12px;

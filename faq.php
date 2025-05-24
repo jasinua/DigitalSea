@@ -1,8 +1,8 @@
 <?php
-session_start();
+    session_start();
+    include 'header/header.php'; 
+    include 'css/faq-css.php'; 
 ?>
-<?php include 'header/header.php'; ?>
-<?php include 'css/faq-css.php'; ?>
 <div class="faq-wrapper">
     <h2>Frequently Asked Questions</h2>
     <div class="faq-list">

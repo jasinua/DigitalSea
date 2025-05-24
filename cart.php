@@ -88,7 +88,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
             <!-- Left: Cart Table -->
             <div class="cart-left">
                 <div>
-                    <table>
+                    <table class="table-headers">
                         <thead>
                             <tr>
                                 <th>Product</th>
@@ -113,7 +113,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     $subtotal += $total;
                                 ?>
                                 <tr>
-                                    <td style="width: 60%;">
+                                    <td>
                                         <div class="product-info">
                                             <input type="hidden" name="prod_id[]" value="<?php echo $product['product_id']; ?>">
                                             <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" alt="Product Image">
@@ -123,7 +123,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                             </div>
                                         </div>
                                     </td>
-                                    <td style="width: 20%;">
+                                    <td>
                                         <div class="price-info">
                                             <?php if($discount) { ?>
                                                 <span class="discounted-price"><?php echo number_format($pricedsc, 2); ?>€</span>
@@ -133,7 +133,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                             <?php } ?>
                                         </div>
                                     </td>
-                                    <td style="width: 10%;">
+                                    <td>
                                         <div class="quantity-controls">
                                             <input 
                                                 type="number" 
@@ -147,7 +147,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                         </div>
                                     </td>
                                     <input type="hidden" name="price[]" value="<?php echo $discount ? $pricedsc : $price; ?>">
-                                    <td style="width: 10%;">
+                                    <td>
                                         <button class="remove-btn" type="button" data-product-id="<?php echo $product['product_id']; ?>">×</button>
                                     </td>
                                 </tr>

@@ -22,10 +22,10 @@ if (file_exists($autoloadPath)) {
 // $dbname = $_ENV['DatabaseName'] ?? 'digitalsea';
 
 // Default database parameters if .env is missing
-$servername = 'localhost';
-$username ='root';
-$password ='';
-$dbname = 'sql7769680';
+$servername = $_ENV['DatabaseServername'] ?? 'localhost';
+$username = $_ENV['DatabaseUsername'] ?? 'root';
+$password = $_ENV['DatabasePassword'] ?? '';
+$dbname = $_ENV['DatabaseName'] ?? 'sql7769680';
 
 // Create a single connection if it doesn't already exist
 if (!isset($conn)) {

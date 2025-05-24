@@ -24,47 +24,20 @@
         color: var(--text-color);
         font-size: 18px;
         margin-bottom: 10px;
-<<<<<<< HEAD
-        position: relative;
-        padding-right: 25px;
-    }
-
-    @media screen and (max-width: 1350px) {
-        .footer-column h3 {
-            cursor: pointer;
-            padding-right: 25px;
-        }
-
-        .footer-column h3::after {
-            content: '\f107';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            transition: transform 0.3s ease;
-        }
-
-        .footer-column:not(.collapsed) h3::after {
-            transform: translateY(-50%) rotate(180deg);
-        }
-=======
->>>>>>> parent of 95e045d (developer css fixed and footer for small media fixed)
     }
 
     .footer-links {
         display: block;
     }
 
-    .footer-column a {
+    .footer-column a, .footer-links li a {
         color: var(--footer-items-color);
         text-decoration: none;
         display: block;
         margin-bottom: 10px;
     }
 
-    .footer-column a:hover {
+    .footer-column a:hover, .footer-links li a:hover {
         text-decoration: underline;
     }
 
@@ -111,6 +84,97 @@
         list-style: none;
     }
 
+    @media screen and (max-width: 1350px) {
+        .footer {
+            flex-direction: column !important;
+            text-align: center;
+            padding: 30px 10px;
+        }
+        
+        .footer > div {
+            flex-direction: column !important;
+            display: flex !important;
+            align-items: stretch !important;
+        }
+        
+        .footer-column {
+            flex: 0 0 100%;
+            margin-left: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            max-width: 100vw;
+        }
+        
+        .footer-column:last-child {
+            margin-bottom: 5px;
+            border-bottom: none;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.1rem;
+            padding: 10px 25px 10px 0;
+            margin-bottom: 0;
+            text-align: left;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s ease;
+        }
+        
+        .footer-column:not(.collapsed) h3::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        
+        .footer-links {
+            padding: 0 10px 10px 10px;
+            font-size: 1rem;
+            display: none;
+        }
+
+        .footer-column:not(.collapsed) .footer-links {
+            display: block;
+        }
+
+        .footer-column a, .footer-links li a {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            padding: 10px 0;
+            display: block;
+        }
+        
+        .social-icons {
+            padding: 10px 0 15px 0;
+            justify-content: center;
+            flex-direction: row !important;
+            display: flex !important;
+        }
+        
+        .social-icons a {
+            font-size: 1.5rem;
+            margin: 0 10px;
+            padding: 10px;
+        }
+    }
+
+    @media screen and (min-width: 1351px) {
+        .footer-column h3::after {
+            display: none;
+        }
+        .footer-links {
+            display: block !important;
+        }
+    }
+
     /* Media queries for responsive footer */
     @media screen and (max-width: 992px) {
         .footer {
@@ -133,7 +197,7 @@
             font-size: 16px;
         }
         
-        .footer-column a {
+        .footer-column a, .footer-links li a {
             font-size: 14px;
             margin-bottom: 8px;
         }
@@ -193,6 +257,13 @@
             display: block;
         }
         
+        .footer-column a, .footer-links li a {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            padding: 10px 0;
+            display: block;
+        }
+        
         .social-icons {
             padding: 10px 0 15px 0;
         }
@@ -209,7 +280,7 @@
             padding: 8px 0;
         }
         
-        .footer-column a {
+        .footer-column a, .footer-links li a {
             font-size: 13px;
             margin-bottom: 6px;
         }
@@ -220,70 +291,45 @@
         }
         
         .footer {
-            padding: 15px 5px;
+            padding: 15px 10px;
             display:flex;
             flex-direction: column;
         }
     }
 <<<<<<< HEAD
 
-    @media screen and (max-width: 1350px) {
-        .footer {
-            flex-direction: column !important;
-            text-align: center;
-            padding: 30px 10px;
-        }
-        .footer > div {
-            flex-direction: column !important;
-            display: flex !important;
-            align-items: stretch !important;
-        }
-        .footer-column {
-            flex: 0 0 100%;
-            margin-left: 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
-            max-width: 100vw;
-        }
-        .footer-column:last-child {
-            margin-bottom: 5px;
-            border-bottom: none;
-        }
-        .footer-column h3 {
-            font-size: 1.1rem;
-            padding: 10px 0;
-            margin-bottom: 0;
-            text-align: left;
-        }
-        .footer-links {
-            padding: 0 10px 10px 10px;
-            font-size: 1rem;
-            display: none;
-        }
-        .footer-column:not(.collapsed) .footer-links {
-            display: block;
-        }
-        .footer-column a, .footer-links li a {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            padding: 10px 0;
-            display: block;
-        }
+    @media (max-width: 335px) {
         .social-icons {
-            padding: 10px 0 15px 0;
-            justify-content: center;
-            flex-direction: row !important;
-            display: flex !important;
-        }
-        .social-icons a {
-            font-size: 1.5rem;
-            margin: 0 10px;
-            padding: 10px;
+            width: 100%;
         }
     }
-=======
->>>>>>> parent of 95e045d (developer css fixed and footer for small media fixed)
+
+    @media (max-width: 300px) {
+        .stock-status {
+            display: none;
+        }
+
+        .product-details {
+            justify-content: center;
+        }
+
+        .wishlist-item {
+            padding: 10px;
+        }
+
+        .product-info img {
+            height: 100px;
+        }
+
+        .social-icons {
+            justify-content: space-between;
+        }
+
+        .social-icons a {
+            margin: 0;
+        }
+    }
+
 </style>
 <body>
     <div class="footer" <?php if(strpos($_SERVER['REQUEST_URI'], 'login.php') !== false): ?>style="display: none;"<?php endif; ?>>
@@ -482,7 +528,7 @@
             </div>
         </div>
     
-        <div class="social-icons">
+        <div class="social-icons" style="display:flex; flex-direction:row !important;">
             <a href="#">
                 <i id="facebook" class="fab fa-facebook-f"></i>
             </a>
@@ -503,7 +549,6 @@
     <script>
     // Add accordion functionality for mobile footer
     document.addEventListener('DOMContentLoaded', function() {
-<<<<<<< HEAD
         const isSmallScreen = window.innerWidth <= 1350;
         const footerColumns = document.querySelectorAll('.footer-column');
         

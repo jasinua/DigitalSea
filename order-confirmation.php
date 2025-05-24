@@ -55,7 +55,7 @@ include "header/header.php";
                 <div class="email-notice">
                     <p>We've sent your invoice to: <?php echo htmlspecialchars($userEmail); ?></p>
                 </div>
-                <div style="display: flex; flex-direction: row; justify-content: space-evenly;">
+                <div class="conf-btn-div">
                     <form action="ordersPdf/order-pdf.php" method='post'>
                         <input type="hidden" name="order_id" value="<?php echo $orderId; ?>">
                         <button type="submit" name='pdf' class="btn" style="padding: 15px 24px; cursor: pointer;">

@@ -125,7 +125,7 @@
                     <div class="profile-avatar">
                         <i class="fas fa-user"></i>
                     </div>
-                    <div class="profile-section">
+                    <div class="profile-section profile-info-section">
                         <h2 class="section-title">Profile Information</h2>
                         <div class="info-grid">
                             <div class="info-item">
@@ -166,7 +166,7 @@
                                     <label for="last_name">Last Name</label>
                                     <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" required>
                                 </div>
-                                <div class="form-group" style="grid-column: 1 / 3; grid-row: 2;">
+                                <div class="form-group form-group-address">
                                     <label for="address">Address</label>
                                     <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($user['address']); ?>" required>
                                 </div>
@@ -174,9 +174,9 @@
                             <div class="button-group" style="margin-top: 55px; ">
                                 <button type="submit" name="update_profile" class="btn btn-primary" style="width: 100%;">Update Profile</button>
                             </div>
-                            <div class="button-group" style="margin-top: 30px; margin-bottom: 10px;">
+                            <div class="button-group big-media" style="margin-top: 30px; margin-bottom: 10px;">
                                 <a href="controller/logout.php" class="btn btn-secondary" style="width: 100%; text-align: center;">Log Out</a> 
-                                <div id="orderHistoryBtn" class="order-history-btn" style="width: 100%; display: flex; justify-content: center; align-items: center; text-align: center; font-weight: bold;">Show Order History</div>
+                                <div class="order-history-btn" style="width: 100%; display: flex; justify-content: center; align-items: center; text-align: center; font-weight: bold;">Show Order History</div>
                             </div>
                         </form>
                     </div>
@@ -218,6 +218,10 @@
                             
                             <div class="button-group">
                                 <button type="submit" name="update_password" class="btn btn-primary" style="width: 100%;">Update Password</button>
+                            </div>
+                            <div class="button-group small-media" style="margin-top: 30px; margin-bottom: 10px;">
+                                <a href="controller/logout.php" class="btn btn-secondary" style="width: 100%; text-align: center;">Log Out</a> 
+                                <div class="order-history-btn" style="width: 100%; display: flex; justify-content: center; align-items: center; text-align: center; font-weight: bold;">Show Order History</div>
                             </div>
                         </form>
                     </div>
@@ -296,24 +300,21 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const orderHistoryBtn = document.getElementById('orderHistoryBtn');
-            const orderHistoryContent = document.getElementById('orderHistoryContent');
-            
-            orderHistoryBtn.addEventListener('click', function() {
+        document.querySelectorAll('.order-history-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const orderHistoryContent = document.getElementById('orderHistoryContent');
                 if (orderHistoryContent.style.display === 'none') {
                     orderHistoryContent.style.display = 'block';
-                    orderHistoryBtn.textContent = 'Hide Order History';
-                    orderHistoryBtn.classList.add('active');
+                    btn.textContent = 'Hide Order History';
+                    btn.classList.add('active');
                 } else {
                     orderHistoryContent.style.display = 'none';
-                    orderHistoryBtn.textContent = 'Show Order History';
-                    orderHistoryBtn.classList.remove('active');
+                    btn.textContent = 'Show Order History';
+                    btn.classList.remove('active');
                 }
             });
         });
 
     </script>
-
 </body>
 </html>

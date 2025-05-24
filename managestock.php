@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'header/header.php';
 
 // Check if user is logged in and is an admin
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['isAdministrator']) || $_SESSION['isAdministrator'] != 1) {
@@ -66,7 +67,6 @@ if (!empty($search)) {
     <?php include "css/managestock-css.php"; ?>
 </head>
 <body>
-    <?php include "header/header.php"; ?>
 
     <div class="body-container">
         <h1>Manage Your Products</h1>

@@ -1,5 +1,6 @@
 <?php 
     include_once "model/dbh.inc.php";
+    include 'header/header.php';
 
     // Check for authentication cookies
     if (!isset($_SESSION['user_id']) && isset($_COOKIE['user_email']) && isset($_COOKIE['user_password'])) {
@@ -53,7 +54,6 @@
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
     <link rel="stylesheet" href="css/transitions.css">
-    
 </head>
 
 <?php include "css/login-css.php"; ?>
@@ -61,7 +61,6 @@
 
 <body>
     <div class="page-wrapper">
-        <?php include "header/header.php"?>
         <div id="container" class="page-container">
             <div id="signupContainer">
                 <!-- Signup Form -->

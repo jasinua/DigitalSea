@@ -69,10 +69,12 @@
     <!-- Defer JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" defer></script>
+    
 </head>
+
+<?php include "header/header.php" ?>
 <body>
     <div class="page-wrapper">
-        <?php include "header/header.php" ?>
         <div id='container'>
             <div id='filters'>
                 <button type="button" class="close-filters"><i class="fas fa-times"></i></button>
@@ -297,7 +299,7 @@
                         <button class="carousel-arrow" id="newItemsPrev">
                             <i class="fas fa-chevron-left"></i>
                         </button>
-                        <div class='itemLine' id='newItems' style="width: 100%;">
+                        <div class='itemLine' id='newItems'>
                             <?php foreach (getData("SELECT * FROM products ORDER BY product_id DESC LIMIT 8") as $prod) { ?>
                                 <div class='item newItemsItem' id="newItemsItem">
                                     <a href="product.php?product=<?php echo $prod['product_id'] ?>" class="product-link">
@@ -362,11 +364,17 @@
                             }
                             
                             if (!empty($_GET['min_price'])) {
-                                $where_conditions[] = "price >= " . floatval($_GET['min_price']);
+                                $where_conditions[] = "CASE 
+                                    WHEN discount > 0 THEN price * (1 - discount/100)
+                                    ELSE price 
+                                END >= " . floatval($_GET['min_price']);
                             }
                             
                             if (!empty($_GET['max_price'])) {
-                                $where_conditions[] = "price <= " . floatval($_GET['max_price']);
+                                $where_conditions[] = "CASE 
+                                    WHEN discount > 0 THEN price * (1 - discount/100)
+                                    ELSE price 
+                                END <= " . floatval($_GET['max_price']);
                             }
 
                             if (isset($_GET['discounted_only'])) {
@@ -479,7 +487,7 @@
                                 ?>
                                 
                                 <?php if ($current_page > 1): ?>
-                                    <a href="#" class="pagination-btn" data-page="<?php echo $current_page - 1; ?>">
+                                    <a href="#" class="pagination-btn" id="prevBtn" data-page="<?php echo $current_page - 1; ?>">
                                         <i class="fas fa-chevron-left"></i> Previous
                                     </a>
                                 <?php endif; ?>
@@ -495,7 +503,7 @@
                                 </div>
 
                                 <?php if ($current_page < $total_pages): ?>
-                                    <a href="#" class="pagination-btn" data-page="<?php echo $current_page + 1; ?>">
+                                    <a href="#" class="pagination-btn" id="nextBtn" data-page="<?php echo $current_page + 1; ?>">
                                         Next <i class="fas fa-chevron-right"></i>
                                     </a>
                                 <?php endif; ?>
@@ -519,49 +527,58 @@
             const newItemsPrev = document.getElementById('newItemsPrev');
             const newItemsNext = document.getElementById('newItemsNext');
             let currentNewItemsIndex = 0;
-            let itemWidth = 330;
-            let itemMargin = 20;
-            let visibleNewItems = 4;
 
             function updateVisibleItems() {
-                if (window.innerWidth <= 1150) {
-                    visibleNewItems = 3;
+                if (!newItems) return;
+                const items = newItems.querySelectorAll('.newItemsItem');
+                let itemWidth, itemMargin, visibleNewItems;
+
+                // Adjust based on screen size
+                if (window.innerWidth <= 480) {
+                    itemWidth = 180; // Matches CSS width at this breakpoint
+                    itemMargin = 6;  // Total margin (3px on each side)
+                    visibleNewItems = 2;
+                } else if (window.innerWidth <= 768) {
                     itemWidth = 220;
-                    itemMargin = -10;
-                } else if (window.innerWidth <= 1550) {
-                    visibleNewItems = 3;
-                    itemWidth = 330;
                     itemMargin = 10;
+                    visibleNewItems = 2;
+                } else if (window.innerWidth <= 1150) {
+                    itemWidth = 260;
+                    itemMargin = 12;
+                    visibleNewItems = 3;
+                } else if (window.innerWidth <= 1550) {
+                    itemWidth = 300;
+                    itemMargin = 16;
+                    visibleNewItems = 3;
                 } else {
-                    visibleNewItems = 4;
                     itemWidth = 330;
                     itemMargin = 20;
+                    visibleNewItems = 4;
                 }
+
                 const scrollAmount = itemWidth + itemMargin;
 
-                if (newItems) {
-                    const items = newItems.querySelectorAll('.newItemsItem');
-                    newItems.style.width = `${(itemWidth + itemMargin) * items.length}px`;
-                    items.forEach(item => {
-                        item.style.width = `${itemWidth}px`;
-                        item.style.marginRight = `${itemMargin}px`;
-                    });
-                    // Reset scroll position to align with current index
-                    newItems.scrollTo({
-                        left: currentNewItemsIndex * scrollAmount,
-                        behavior: 'auto'
-                    });
-                }
-                if (newItems && newItemsPrev && newItemsNext) {
-                    updateNewItemsArrows();
-                }
+                // Update styles
+                items.forEach(item => {
+                    item.style.width = `${itemWidth}px`;
+                    item.style.minWidth = `${itemWidth}px`;
+                    item.style.margin = `0 ${itemMargin / 2}px`;
+                });
+
+                newItems.scrollTo({
+                    left: currentNewItemsIndex * scrollAmount,
+                    behavior: 'auto'
+                });
+
+                updateNewItemsArrows(items, visibleNewItems);
             }
 
-            function updateNewItemsArrows() {
+            function updateNewItemsArrows(items, visibleNewItems) {
                 if (newItems && newItemsPrev && newItemsNext) {
-                    const items = newItems.querySelectorAll('.newItemsItem');
                     newItemsPrev.disabled = currentNewItemsIndex <= 0;
                     newItemsNext.disabled = currentNewItemsIndex >= items.length - visibleNewItems;
+                    newItemsPrev.style.opacity = currentNewItemsIndex <= 0 ? '0' : '1';
+                    newItemsNext.style.opacity = currentNewItemsIndex >= items.length - visibleNewItems ? '0' : '1';
                 }
             }
 
@@ -569,35 +586,42 @@
                 newItemsPrev.addEventListener('click', () => {
                     if (currentNewItemsIndex > 0) {
                         currentNewItemsIndex--;
+                        const items = newItems.querySelectorAll('.newItemsItem');
+                        const scrollAmount = items[0].offsetWidth + parseInt(window.getComputedStyle(items[0]).marginLeft) * 2;
                         newItems.scrollTo({
-                            left: currentNewItemsIndex * (itemWidth + itemMargin),
+                            left: currentNewItemsIndex * scrollAmount,
                             behavior: 'smooth'
                         });
-                        updateNewItemsArrows();
+                        updateNewItemsArrows(items, window.innerWidth <= 480 ? 2 : window.innerWidth <= 768 ? 2 : window.innerWidth <= 1150 ? 3 : 4);
                     }
                 });
 
                 newItemsNext.addEventListener('click', () => {
                     const items = newItems.querySelectorAll('.newItemsItem');
+                    const visibleNewItems = window.innerWidth <= 480 ? 2 : window.innerWidth <= 768 ? 2 : window.innerWidth <= 1150 ? 3 : 4;
                     if (currentNewItemsIndex < items.length - visibleNewItems) {
                         currentNewItemsIndex++;
+                        const scrollAmount = items[0].offsetWidth + parseInt(window.getComputedStyle(items[0]).marginLeft) * 2;
                         newItems.scrollTo({
-                            left: currentNewItemsIndex * (itemWidth + itemMargin),
+                            left: currentNewItemsIndex * scrollAmount,
                             behavior: 'smooth'
                         });
-                        updateNewItemsArrows();
+                        updateNewItemsArrows(items, visibleNewItems);
                     }
                 });
 
                 newItems.addEventListener('scroll', () => {
                     if (!newItems) return;
+                    const items = newItems.querySelectorAll('.newItemsItem');
+                    if (items.length === 0) return;
                     const scrollPosition = newItems.scrollLeft;
-                    const scrollAmount = itemWidth + itemMargin;
+                    const scrollAmount = items[0].offsetWidth + parseInt(window.getComputedStyle(items[0]).marginLeft) * 2;
+                    const visibleNewItems = window.innerWidth <= 480 ? 2 : window.innerWidth <= 768 ? 2 : window.innerWidth <= 1150 ? 3 : 4;
                     currentNewItemsIndex = Math.min(
                         Math.max(0, Math.round(scrollPosition / scrollAmount)),
-                        newItems.querySelectorAll('.newItemsItem').length - visibleNewItems
+                        items.length - visibleNewItems
                     );
-                    updateNewItemsArrows();
+                    updateNewItemsArrows(items, visibleNewItems);
                 });
 
                 window.addEventListener('resize', updateVisibleItems);
@@ -832,6 +856,15 @@
 
                     paginationContainer.innerHTML = data.pagination;
 
+                    if (window.innerWidth < 550) {
+                        document.querySelectorAll('.pagination-btn').forEach(btn => {
+                            const textSpan = btn.querySelector('span');
+                            if (textSpan) {
+                                textSpan.style.display = 'none';
+                            }
+                        });
+                    }
+
                     const newPaginationLinks = document.querySelectorAll('.pagination-btn, .page-number');
                     newPaginationLinks.forEach(link => {
                         link.addEventListener('click', (e) => {
@@ -913,7 +946,6 @@
 
             window.addEventListener('scroll', () => {
                 if (container) {
-                    // Skip background change on filtered pages
                     if (window.location.search.includes('subfilter') || 
                         window.location.search.includes('search') || 
                         window.location.search.includes('min_price') || 
@@ -930,6 +962,36 @@
                     const headerPosition = newItemsHeader.getBoundingClientRect().top;
                     filterToggleTop.style.backgroundColor = headerPosition > 100 ? 'white' : 'var(--noir-color)';
                     filterToggleTop.style.color = headerPosition > 100 ? 'var(--noir-color)' : 'white';
+                }
+            });
+        });
+
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.pagination-btn').forEach(btn => {
+                const icon = btn.querySelector('i');
+                let textNode;
+                if (btn.id === 'prevBtn') {
+                    textNode = btn.childNodes[btn.childNodes.length - 1];
+                } else {
+                    textNode = btn.childNodes[0];
+                }
+                if (window.innerWidth < 550) {
+                    textNode.textContent = '';
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.pagination-btn').forEach(btn => {
+                const icon = btn.querySelector('i');
+                let textNode;
+                if (btn.id === 'prevBtn') {
+                    textNode = btn.childNodes[btn.childNodes.length - 1];
+                } else {
+                    textNode = btn.childNodes[0];
+                }
+                if (window.innerWidth < 550) {
+                    textNode.textContent = '';
                 }
             });
         });

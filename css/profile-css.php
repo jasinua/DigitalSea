@@ -100,6 +100,11 @@
         gap: 8px;
     }
 
+    .form-group-address {
+        grid-column: 1 / 3;
+        grid-row: 2;
+    }
+
     .form-group label {
         font-weight: 600;   
         color: #153147;
@@ -154,6 +159,10 @@
         justify-content: space-between;
         gap: 15px;
         margin-top: 30px;
+    }
+
+    .button-group.small-media {
+        display: none;
     }
 
     .btn {
@@ -383,6 +392,14 @@
             grid-template-columns: 1fr;
             gap: 30px;
         }
+
+        .button-group.big-media {
+            display: none;
+        }
+
+        .button-group.small-media {
+            display: flex;
+        }
     }
 
     @media (max-width: 768px) {
@@ -409,9 +426,86 @@
         }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 576px) {
+        .profile-container {
+            min-width: 100%;
+        }
+
+        .profile-info-container {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            border-bottom: none;
+        }
+
+        .profile-section .profile-info-section .section-title {
+            margin-bottom: 0;
+        }
+        
         .info-grid {
             display: none;
+        }
+    }
+
+    /* Default styles (desktop) */
+    .profile-form input,
+    .profile-form select {
+        font-size: 1rem;
+        padding: 12px 16px;
+    }
+
+    .profile-form button {
+        font-size: 1rem;
+        padding: 12px 24px;
+    }
+
+    .profile-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    /* Tablet */
+    @media (max-width: 900px) {
+        .profile-form input,
+        .profile-form select {
+            font-size: 1rem;
+            padding: 10px 14px;
+        }
+        .profile-form button {
+            font-size: 1rem;
+            padding: 10px 18px;
+        }
+        .profile-icon {
+            width: 70px;
+            height: 70px;
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+        .profile-form input,
+        .profile-form select {
+            font-size: 0.9rem;
+            padding: 8px 10px;
+        }
+        .profile-form button {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+        }
+        .profile-icon {
+            width: 45px;
+            height: 45px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+            /* gap: 20px; */
+        }
+
+        .form-group-address {
+            grid-column: 1;
+            grid-row: 3;
         }
     }
 </style>

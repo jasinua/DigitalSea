@@ -1,4 +1,5 @@
 <?php 
+    session_start();
     include 'header/header.php'; 
     include 'css/developers-css.php'; 
 ?>
@@ -16,15 +17,15 @@
                     <div class="dev-links">
                         <a href="https://etrithasolli.github.io/" target="_blank"><span class="icon">
                             <span class="icon"><i class="fas fa-briefcase"></i></span>
-                            <span>Portfolio</span>
+                            <span class="dev-link-text">Portfolio</span>
                         </a>
                         <a href="https://www.linkedin.com/in/etrit-hasolli-6156332b6/" target="_blank"><span class="icon">
                             <span class="icon"><i class="fab fa-linkedin"></i></span>
-                            <span>LinkedIn</span>
+                            <span class="dev-link-text">LinkedIn</span>
                         </a>
                         <a href="https://github.com/EtritHasolli" target="_blank"><span class="icon">
                             <span class="icon"><i class="fab fa-github"></i></span>
-                            <span>GitHub</span>
+                            <span class="dev-link-text">GitHub</span>
                         </a>
                     </div>
                 </div>
@@ -39,15 +40,15 @@
                     <div class="dev-links">
                         <a href="https://jasinavdiu.ct.ws/?i=1" target="_blank"><span class="icon">
                             <span class="icon"><i class="fas fa-briefcase"></i></span>
-                            <span>Portfolio</span>
+                            <span class="dev-link-text">Portfolio</span>
                         </a>
                         <a href="https://www.linkedin.com/in/jasin-avdiu-01114524b/" target="_blank"><span class="icon">
                             <span class="icon"><i class="fab fa-linkedin"></i></span>
-                            <span>LinkedIn</span>
+                            <span class="dev-link-text">LinkedIn</span>
                         </a>
                         <a href="#" target="_blank"><span class="icon">
                             <span class="icon"><i class="fab fa-github"></i></span>
-                            <span>GitHub</span>
+                            <span class="dev-link-text">GitHub</span>
                         </a>
                     </div>
                 </div>
@@ -62,15 +63,15 @@
                     <div class="dev-links">
                         <a href="https://marijankolaj.ct.ws/?i=1" target="_blank"><span class="icon">
                             <span class="icon"><i class="fas fa-briefcase"></i></span>
-                            <span>Portfolio</span>
+                            <span class="dev-link-text">Portfolio</span>
                         </a>
                         <a href="https://www.linkedin.com/in/marijankolaj/" target="_blank"><span class="icon">
                             <span class="icon"><i class="fab fa-linkedin"></i></span>
-                            <span>LinkedIn</span>
+                            <span class="dev-link-text">LinkedIn</span>
                         </a>
                         <a href="#" target="_blank"><span class="icon">
                             <span class="icon"><i class="fab fa-github"></i></span>
-                            <span>GitHub</span>
+                            <span class="dev-link-text">GitHub</span>
                         </a>
                     </div>
                 </div>

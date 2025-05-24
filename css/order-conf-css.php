@@ -2,11 +2,11 @@
     .page-wrapper {
         width: 100%;
         color: var(--page-text-color);
-        font-family: 'Roboto', sans-serif;
+        justify-content: center;
     }
     
     h2 {
-        margin: 40px 0 30px 0;
+        margin: 0 0 30px 0;
         font-size: 2.2rem;
         text-align: center;
         color: var(--page-text-color);
@@ -15,7 +15,8 @@
     .container {
         max-width: 600px;
         margin: 0 auto;
-        padding: 20px;
+        display: flex;
+        justify-content: center;
     }
     
     .confirmation-box {
@@ -35,7 +36,6 @@
     
     .email-notice {
         color: #666;
-        font-size: 0.9rem;
         margin: 15px 0;
         padding: 10px;
         background-color: white;
@@ -59,20 +59,44 @@
         background-color: var(--button-color-hover);
         transform: translateY(-2px);
     }
+
+    .conf-btn-div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
     
-    :root {
-        --success-color: #00c853;
-        --border-color: #ddd;
-        --border-radius: 8px;
-        --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    @media screen and (max-width: 640px) {
+        h2 {
+            font-size: 2rem;
+        }
+
+        .confirmation-box {
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .conf-btn-div {
+            flex-direction: column;
+            width: fit-content;
+        }
+    }
+
+    @media screen and (max-width: 530px) {
+        .confirmation-box {
+            width: 400px;
+        }
+
+        h2 {
+            font-size: 1.8rem !important;
+        }
     }
     
     @media (max-width: 480px) {
-        .container {
-            padding: 10px;
-        }
-        
         .confirmation-box {
+            width: 90%;
             padding: 20px;
         }
     }

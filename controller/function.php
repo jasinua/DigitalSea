@@ -398,6 +398,27 @@ require_once dirname(__FILE__) . '/../api/api.php';
         echo "Details update completed.";
     }
     
-
+    function getWishlistCount($user_id) {
+        $rootPath = str_replace('\\', '/', realpath(dirname(__FILE__) . '/../'));
+        include_once $rootPath . "/model/dbh.inc.php";
+        global $conn;
+        if (!$conn) {
+            $servername = $_ENV['DatabaseServername'] ?? 'localhost';
+            $username = $_ENV['DatabaseUsername'] ?? 'root';
+            $password = $_ENV['DatabasePassword'] ?? '';
+            $dbname = $_ENV['DatabaseName'] ?? 'digitalsea';
+            $conn = mysqli_connect($servername, $username, $password, $dbname);
+            if (!$conn) {
+                return 0;
+            }
+        }
+        $stmt = $conn->prepare("SELECT COUNT(*) as cnt FROM wishlist WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $stmt->bind_result($cnt);
+        $stmt->fetch();
+        $stmt->close();
+        return $cnt;
+    }
 
 ?>
