@@ -213,7 +213,7 @@ foreach ($products as $prod) {
 $pagination_html = '';
 if ($total_pages > 1) {
     if ($current_page > 1) {
-        $pagination_html .= '<a href="#" class="pagination-btn" data-page="' . ($current_page - 1) . '"><i class="fas fa-chevron-left"></i> Previous</a>';
+        $pagination_html .= '<a href="#" class="pagination-btn" id="prevBtn" data-page="' . ($current_page - 1) . '"><i class="fas fa-chevron-left"></i><span>Previous</span></a>';
     }
     $pagination_html .= '<div class="page-numbers">';
     for ($i = 1; $i <= $total_pages; $i++) {
@@ -221,7 +221,7 @@ if ($total_pages > 1) {
     }
     $pagination_html .= '</div>';
     if ($current_page < $total_pages) {
-        $pagination_html .= '<a href="#" class="pagination-btn" data-page="' . ($current_page + 1) . '">Next <i class="fas fa-chevron-right"></i></a>';
+        $pagination_html .= '<a href="#" class="pagination-btn" id="nextBtn" data-page="' . ($current_page + 1) . '"><span>Next</span><i class="fas fa-chevron-right"></i></a>';
     }
     $pagination_html .= '</div>';
 }

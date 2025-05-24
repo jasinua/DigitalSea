@@ -207,8 +207,16 @@
         }
 
         .login-container, .signup-container, .forgotPassword-container, .confirmation-container {
-            width: 60%;
+            width: 75%;
             max-width: unset;
+        }
+
+        .login-container input:focus {
+            box-shadow: none;
+        }
+
+        #container {
+            background-color: white !important;
         }
     }
     
@@ -255,7 +263,6 @@
             padding: 16px 8px !important;
             margin: 0 auto !important;
             border-radius: 10px !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
             width: 98vw !important;
             min-width: unset !important;
         }

@@ -290,7 +290,7 @@
         }
         
         .footer {
-            padding: 15px 5px;
+            padding: 15px 10px;
             display:flex;
             flex-direction: column;
         }

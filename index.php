@@ -487,7 +487,7 @@
                                 ?>
                                 
                                 <?php if ($current_page > 1): ?>
-                                    <a href="#" class="pagination-btn" data-page="<?php echo $current_page - 1; ?>">
+                                    <a href="#" class="pagination-btn" id="prevBtn" data-page="<?php echo $current_page - 1; ?>">
                                         <i class="fas fa-chevron-left"></i> Previous
                                     </a>
                                 <?php endif; ?>
@@ -503,7 +503,7 @@
                                 </div>
 
                                 <?php if ($current_page < $total_pages): ?>
-                                    <a href="#" class="pagination-btn" data-page="<?php echo $current_page + 1; ?>">
+                                    <a href="#" class="pagination-btn" id="nextBtn" data-page="<?php echo $current_page + 1; ?>">
                                         Next <i class="fas fa-chevron-right"></i>
                                     </a>
                                 <?php endif; ?>
@@ -554,7 +554,6 @@
                         item.style.width = `${itemWidth}px`;
                         item.style.marginRight = `${itemMargin}px`;
                     });
-                    // Reset scroll position to align with current index
                     newItems.scrollTo({
                         left: currentNewItemsIndex * scrollAmount,
                         behavior: 'auto'
@@ -840,6 +839,15 @@
 
                     paginationContainer.innerHTML = data.pagination;
 
+                    if (window.innerWidth < 550) {
+                        document.querySelectorAll('.pagination-btn').forEach(btn => {
+                            const textSpan = btn.querySelector('span');
+                            if (textSpan) {
+                                textSpan.style.display = 'none';
+                            }
+                        });
+                    }
+
                     const newPaginationLinks = document.querySelectorAll('.pagination-btn, .page-number');
                     newPaginationLinks.forEach(link => {
                         link.addEventListener('click', (e) => {
@@ -921,7 +929,6 @@
 
             window.addEventListener('scroll', () => {
                 if (container) {
-                    // Skip background change on filtered pages
                     if (window.location.search.includes('subfilter') || 
                         window.location.search.includes('search') || 
                         window.location.search.includes('min_price') || 
@@ -938,6 +945,36 @@
                     const headerPosition = newItemsHeader.getBoundingClientRect().top;
                     filterToggleTop.style.backgroundColor = headerPosition > 100 ? 'white' : 'var(--noir-color)';
                     filterToggleTop.style.color = headerPosition > 100 ? 'var(--noir-color)' : 'white';
+                }
+            });
+        });
+
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.pagination-btn').forEach(btn => {
+                const icon = btn.querySelector('i');
+                let textNode;
+                if (btn.id === 'prevBtn') {
+                    textNode = btn.childNodes[btn.childNodes.length - 1];
+                } else {
+                    textNode = btn.childNodes[0];
+                }
+                if (window.innerWidth < 550) {
+                    textNode.textContent = '';
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.pagination-btn').forEach(btn => {
+                const icon = btn.querySelector('i');
+                let textNode;
+                if (btn.id === 'prevBtn') {
+                    textNode = btn.childNodes[btn.childNodes.length - 1];
+                } else {
+                    textNode = btn.childNodes[0];
+                }
+                if (window.innerWidth < 550) {
+                    textNode.textContent = '';
                 }
             });
         });
