@@ -32,7 +32,7 @@ $token = bin2hex(random_bytes(32)); // 64 characters long
 $token_time = time();
 
 // Update user with token and token_time
-$stmt = $conn->prepare("UPDATE users SET token = ?, token_time = ? WHERE email = ?");
+$stmt = $conn->prepare("CALL updateToken(?, ?, ?)");
 $stmt->bind_param("sis", $token, $token_time, $email);
 $stmt->execute();
 

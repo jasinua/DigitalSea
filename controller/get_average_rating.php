@@ -8,12 +8,13 @@ if (!isset($_POST['product_id'])) {
 
 $product_id = $_POST['product_id'];
 
-$rating_sql = "SELECT AVG(rating) as avg_rating FROM product_ratings WHERE product_id = ?";
+$rating_sql = "CALL averageRating(?)";
 $rating_stmt = $conn->prepare($rating_sql);
 $rating_stmt->bind_param("i", $product_id);
 $rating_stmt->execute();
 $rating_result = $rating_stmt->get_result();
 $rating_data = $rating_result->fetch_assoc();
+$rating_stmt->close();
 
 echo json_encode([
     'status' => 'success',

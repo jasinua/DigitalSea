@@ -19,7 +19,7 @@ try {
     $product_id = (int)$_GET['product_id'];
 
     // Fetch product data
-    $sql = "SELECT * FROM products WHERE product_id = ?";
+    $sql = "CALL getProdData(?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $product_id);
     $stmt->execute();
@@ -30,13 +30,15 @@ try {
     }
 
     $product = $result->fetch_assoc();
+    $stmt->close();
 
     // Fetch product details
-    $sql_details = "SELECT * FROM product_details WHERE product_id = ?";
+    $sql_details = "CALL getProductDetails(?)";
     $stmt_details = $conn->prepare($sql_details);
     $stmt_details->bind_param("i", $product_id);
     $stmt_details->execute();
     $result_details = $stmt_details->get_result();
+    $stmt_details->close();
 
     $details = [];
     if ($result_details && $result_details->num_rows > 0) {

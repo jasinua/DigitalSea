@@ -1,11 +1,13 @@
 <?php
 
+
+
+
+
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
+    
 session_start();
-
-
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 
 
@@ -31,10 +33,16 @@ if(isset($_SESSION['payment_success']) && $_SESSION['payment_success'] === true)
     $stmt = $conn->prepare($createOrder);
     $stmt->bind_param("idss", $_SESSION['user_id'], $totalAmount, $status, $orderDate);
     $stmt->execute();
+    $result = $stmt->get_result();
+    $orderId = $result->fetch_assoc()['order_id'];
+    
 
-    $orderId = $conn->insert_id;
+    $stmt->close();
 
-
+    while ($conn->more_results()) {
+        $conn->next_result();
+        $conn->store_result();
+    }
     
 
 // Firebase configuration
@@ -74,6 +82,7 @@ $stmt1->bind_param("i", $_SESSION['user_id']);
 $stmt1->execute();
 $result1 = $stmt1->get_result();
 
+$stmt1->close();
 foreach ($result1 as $row) {
         if($row['api_source'] == 'DigitalSeaAPI'){
             $productId = $row['product_id'];
@@ -88,6 +97,7 @@ foreach ($result1 as $row) {
                         $stmt = $conn->prepare($updateProductStock);
                         $stmt->bind_param("ii", $newStock, $productId);
                         $stmt->execute();
+                        $stmt->close();
                     } 
                 }
             }
@@ -102,6 +112,7 @@ foreach ($result1 as $row) {
                 $stmt = $conn->prepare($updateProductStock);
                 $stmt->bind_param("ii", $newStock, $productId);
                 $stmt->execute();
+                $stmt->close();
             }
         }
 }
@@ -111,6 +122,7 @@ foreach ($result1 as $row) {
     $stmt = $conn->prepare($updateCart);
     $stmt->bind_param("ii", $orderId, $_SESSION['user_id']);
     $stmt->execute();
+    $stmt->close();
 
     // / Get user email from database
 $getUserEmail = "CALL getEmail(?)";
@@ -119,6 +131,8 @@ $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $result = $stmt->get_result();
 $userEmail = $result->fetch_assoc()['email'];
+
+$stmt->close();
     
 
 
@@ -210,3 +224,13 @@ try {
 }
 
 ?>
+    // Generate PDF and send email (no changes here)
+
+    header("Location: ../order-confirmation.php?success=1&order_id=" . $orderId);
+    session_unset($_SESSION['payment_success']);
+    session_unset($_SESSION['total_amount']);
+    session_unset($_SESSION['payment_timestamp']);
+    
+} else {
+    header("Location: ../payment.php");
+}

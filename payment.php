@@ -27,9 +27,12 @@
     $userResult = $stmt->get_result();
     $userData = $userResult->fetch_assoc();
 
+
     $userFullName = $userData['first_name'] . ' ' . $userData['last_name'];
     $userEmail = $userData['email'];
     $userAddress = $userData['address'];
+
+    $stmt->close();
 
     // Handle address update if submitted via AJAX
     if (isset($_POST['update_address']) && isset($_POST['address'])) {
@@ -40,10 +43,13 @@
             if ($updateStmt->execute()) {
                 $userAddress = $newAddress;
                 echo json_encode(['success' => true, 'message' => "Address updated successfully"]);
+                $updateStmt->close();
                 exit();
+
             } else {
                 echo json_encode(['success' => false, 'message' => "Failed to update address"]);
                 exit();
+                $updateStmt->close();
             }
         }
     }
@@ -71,6 +77,8 @@
             $stockStmt->execute();
             $stockResult = $stockStmt->get_result();
             $productData = $stockResult->fetch_assoc();
+
+            $stockStmt->close();
             
             if ($productData['stock'] < $qty) {
                 $stockIssues[] = sprintf(

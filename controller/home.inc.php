@@ -41,12 +41,13 @@ function getWishlistItems($user_id) {
         return [];
     }
     
-    $sql = "SELECT product_id FROM wishlist WHERE user_id = ?";
+    $sql = "CALL getProdID(?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
     
+    $stmt->close();
     $wishlist = [];
     while($row = $result->fetch_assoc()) {
         $wishlist[] = $row['product_id'];
@@ -59,24 +60,29 @@ function addToCart($userId, $productId, $quantity, $price) {
     
     try {
         // First check if product exists in cart
-        $check_stmt = $conn->prepare("SELECT quantity FROM cart WHERE user_id = ? AND product_id = ? AND order_id IS NULL");
+        $check_stmt = $conn->prepare("CALL getCart(?,?)");
         $check_stmt->bind_param("ii", $userId, $productId);
         $check_stmt->execute();
         $result = $check_stmt->get_result();
+        $check_stmt->close();
         
         if ($result->num_rows > 0) {
             // Product exists, update quantity
             $row = $result->fetch_assoc();
             $new_quantity = $row['quantity'] + $quantity;
             
-            $update_stmt = $conn->prepare("UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ? AND order_id IS NULL");
+            $update_stmt = $conn->prepare("CALL updateCart(?,?,?)");
             $update_stmt->bind_param("iii", $new_quantity, $userId, $productId);
-            return $update_stmt->execute();
+            $success = $update_stmt->execute();
+            $update_stmt->close();
+            return $success;    
         } else {
             // Product doesn't exist, insert new
-            $insert_stmt = $conn->prepare("INSERT INTO cart (user_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
+            $insert_stmt = $conn->prepare("CALL addProdToCart(?,?,?,?)");
             $insert_stmt->bind_param("iiid", $userId, $productId, $quantity, $price);
-            return $insert_stmt->execute();
+            $success = $insert_stmt->execute();
+            $insert_stmt->close();
+            return $success;
         }
     } catch (Exception $e) {
         error_log("Error in addToCart: " . $e->getMessage());
@@ -87,9 +93,12 @@ function addToCart($userId, $productId, $quantity, $price) {
 // Get total count of products for pagination
 function getTotalProducts() {
     global $conn;
-    $result = $conn->query("SELECT COUNT(*) as total FROM products");
+    $result = $conn->query("CALL totalForPage()");
     $row = $result->fetch_assoc();
-    return $row['total'];
+    $total = $row['total'];
+    $result->close();
+    return $total;
+    
 }
 
 function getProducts($page = 1, $items_per_page = 18) {
@@ -97,12 +106,12 @@ function getProducts($page = 1, $items_per_page = 18) {
     
     $offset = ($page - 1) * $items_per_page;
     
-    $sql = "SELECT * FROM products LIMIT ? OFFSET ?";
+    $sql = "CALL prodPage(?,?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ii", $items_per_page, $offset);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+    $stmt->close();
     $products = [];
     while ($row = $result->fetch_assoc()) {
         $products[] = $row;

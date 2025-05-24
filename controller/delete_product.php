@@ -23,7 +23,7 @@ try {
 
     try {
         // Delete product details first (due to foreign key constraint)
-        $delete_details_sql = "DELETE FROM product_details WHERE product_id = ?";
+        $delete_details_sql = "CALL deleteProductDetails(?)";
         $delete_details_stmt = $conn->prepare($delete_details_sql);
         if (!$delete_details_stmt) {
             throw new Exception("Prepare details delete failed: " . $conn->error);
@@ -35,7 +35,7 @@ try {
         }
 
         // Delete the product
-        $delete_product_sql = "DELETE FROM products WHERE product_id = ?";
+        $delete_product_sql = "CALL deleteProduct(?)";
         $delete_product_stmt = $conn->prepare($delete_product_sql);
         if (!$delete_product_stmt) {
             throw new Exception("Prepare product delete failed: " . $conn->error);

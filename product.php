@@ -24,7 +24,7 @@
             $_SESSION['redirect_back'] = true;
             header("Location: login.php");
         }
-    }
+    }   
 
     if ($data){ 
 ?>
@@ -80,6 +80,7 @@
                         $rating_stmt->execute();
                         $rating_result = $rating_stmt->get_result();
                         $rating_data = $rating_result->fetch_assoc();
+                        $rating_stmt->close();
                         echo number_format($rating_data['avg_rating'] ?? 0, 2);
                     ?></p>
                 </div>

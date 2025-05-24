@@ -26,21 +26,25 @@ $user_id = $_SESSION['user_id'];
 
 try {
     // Check if product is already in wishlist
-    $check_stmt = $conn->prepare("SELECT * FROM wishlist WHERE user_id = ? AND product_id = ?");
+    $check_stmt = $conn->prepare("CALL wishlistProd(?, ?)");
     $check_stmt->bind_param("ii", $user_id, $product_id);
     $check_stmt->execute();
     $result = $check_stmt->get_result();
+    $check_stmt->close();
 
     if ($result->num_rows > 0) {
         // Product exists in wishlist, remove it ONLY if add_to_wishlist is not true
         if(!isset($_SESSION['add_to_wishlist'])){
-            $delete_stmt = $conn->prepare("DELETE FROM wishlist WHERE user_id = ? AND product_id = ?");
+            $delete_stmt = $conn->prepare("CALL removeFromWishlist(?, ?)");
             $delete_stmt->bind_param("ii", $user_id, $product_id);
+            
         
             if ($delete_stmt->execute()) {
                 echo "removed";
+                $delete_stmt->close();
             } else {
                 echo "error";
+                $delete_stmt->close();
             }
         }else if(isset($_SESSION['add_to_wishlist']) && $_SESSION['add_to_wishlist'] == true){
                 unset($_SESSION['add_to_wishlist']);
@@ -52,13 +56,15 @@ try {
 
     } else {
         // Product doesn't exist in wishlist, add it
-        $insert_stmt = $conn->prepare("INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)");
+        $insert_stmt = $conn->prepare("CALL addToWishlist(?, ?)");
         $insert_stmt->bind_param("ii", $user_id, $product_id);
         
         if ($insert_stmt->execute()) {
             echo "added";
+            $insert_stmt->close();
         } else {
             echo "error";
+            $insert_stmt->close();
         }
     }
 } catch (Exception $e) {

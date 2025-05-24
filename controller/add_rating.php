@@ -26,50 +26,49 @@ try {
         throw new Exception('Invalid rating value');
     }
 
-    // Check if user has already rated this product
-    $check_sql = "SELECT product_rating_id FROM product_ratings WHERE user_id = ? AND product_id = ?";
-    $check_stmt = $conn->prepare($check_sql);
-    if (!$check_stmt) {
-        throw new Exception('Database error: ' . $conn->error);
-    }
-    
-    $check_stmt->bind_param("ii", $user_id, $product_id);
-    $check_stmt->execute();
-    $result = $check_stmt->get_result();
+            // Check if user rated product
+        $check_stmt = $conn->prepare("CALL getProdRating(?, ?)");
+        if (!$check_stmt) {
+            throw new Exception('Database error: ' . $conn->error);
+        }
+        $check_stmt->bind_param("ii", $user_id, $product_id);
+        $check_stmt->execute();
+        $result = $check_stmt->get_result();
+        while ($conn->more_results() && $conn->next_result()) {;}
+        $check_stmt->close();
 
-    if ($result->num_rows > 0) {
-        // Update existing rating
-        $row = $result->fetch_assoc();
-        $rating_id = $row['product_rating_id'];
-        $update_sql = "UPDATE product_ratings SET rating = ? WHERE product_rating_id = ?";
-        $update_stmt = $conn->prepare($update_sql);
-        if (!$update_stmt) {
-            throw new Exception('Database error: ' . $conn->error);
+        if ($result->num_rows > 0) {
+            // Update existing rating
+            $row = $result->fetch_assoc();
+            $rating_id = $row['product_rating_id'];
+
+            $update_stmt = $conn->prepare("CALL updateProdRating(?, ?)");
+            if (!$update_stmt) {
+                throw new Exception('Database error: ' . $conn->error);
+            }
+            $update_stmt->bind_param("ii", $rating, $rating_id);
+            if (!$update_stmt->execute()) {
+                throw new Exception('Failed to update rating');
+            }
+            while ($conn->more_results() && $conn->next_result()) {;}
+            $update_stmt->close();
+
+            echo json_encode(['status' => 'success', 'message' => 'Rating updated successfully']);
+        } else {
+            // Insert new rating
+            $insert_stmt = $conn->prepare("CALL addProdRate(?, ?, ?)");
+            if (!$insert_stmt) {
+                throw new Exception('Database error: ' . $conn->error);
+            }
+            $insert_stmt->bind_param("iii", $product_id, $rating, $user_id);
+            if (!$insert_stmt->execute()) {
+                throw new Exception('Failed to add rating');
+            }
+            while ($conn->more_results() && $conn->next_result()) {;}
+            $insert_stmt->close();
+
+            echo json_encode(['status' => 'success', 'message' => 'Rating added successfully']);
         }
-        
-        $update_stmt->bind_param("ii", $rating, $rating_id);
-        
-        if (!$update_stmt->execute()) {
-            throw new Exception('Failed to update rating');
-        }
-        
-        echo json_encode(['status' => 'success', 'message' => 'Rating updated successfully']);
-    } else {
-        // Insert new rating
-        $insert_sql = "INSERT INTO product_ratings (product_id, rating, user_id) VALUES (?, ?, ?)";
-        $insert_stmt = $conn->prepare($insert_sql);
-        if (!$insert_stmt) {
-            throw new Exception('Database error: ' . $conn->error);
-        }
-        
-        $insert_stmt->bind_param("iii", $product_id, $rating, $user_id);
-        
-        if (!$insert_stmt->execute()) {
-            throw new Exception('Failed to add rating');
-        }
-        
-        echo json_encode(['status' => 'success', 'message' => 'Rating added successfully']);
-    }
 
 } catch (Exception $e) {
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);

@@ -67,7 +67,7 @@ function generatePDF($orderId) {
                 background-color: #f8f9fa;
             }
             .footer {
-                margin-top: 50px;
+                margin-top: 20px;
                 text-align: center;
                 font-size: 12px;
                 color: #666;
@@ -138,6 +138,10 @@ function generatePDF($orderId) {
                     </tr>
                 </tfoot>
             </table>
+        </div>
+
+        <div class="stamp">
+            <img src="https://firebasestorage.googleapis.com/v0/b/seks-f1000.appspot.com/o/ignorethis%2Fstamp.jpg?alt=media&token=4e9ef450-d759-4d68-9543-c688ecfd699b" alt="stamp" style="width: 20%;margin-left:40%; height: auto;">
         </div>
 
         <div class="footer">

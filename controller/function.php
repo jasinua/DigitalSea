@@ -69,8 +69,11 @@ require_once dirname(__FILE__) . '/../api/api.php';
         $stmt = $conn->prepare("CALL showCartList(?)");
         $stmt->bind_param("i", $userid);
         $stmt->execute();
+
+        $result = $stmt->get_result();
+        $stmt->close();
         
-        return $stmt->get_result();
+        return $result;
     }
 
     function returnProduct($productId) {
@@ -240,7 +243,7 @@ require_once dirname(__FILE__) . '/../api/api.php';
 
                 foreach($product['details'] as $key => $value) {
                     
-                    $stmt = $conn->prepare("INSERT INTO product_details (product_id, prod_desc1,prod_desc2) VALUES (?,?,?)");
+                    $stmt = $conn->prepare("CALL inseretProductDetails(?,?,?)");
                     $stmt->bind_param("iss", $product['product_id'], $key, $value);
         
                     // Execute the statement
@@ -286,11 +289,7 @@ require_once dirname(__FILE__) . '/../api/api.php';
     
             if ($count == 0) {
                 // Insert new product
-                $stmt = $conn->prepare("
-                    INSERT INTO products 
-                    (product_id, name, description, price, image_url, stock, discount, api_source) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                ");
+                $stmt = $conn->prepare("CALL addAPIProd(?,?,?,?,?,?,?,?)");
     
                 $mainImage = $product['image_url']['main_image'];
                 $discount = 0;
@@ -382,10 +381,7 @@ require_once dirname(__FILE__) . '/../api/api.php';
                 }
             
                 // Insert the detail
-                $stmt = $conn->prepare("
-                    INSERT INTO product_details (product_id, prod_desc1, prod_desc2) 
-                    VALUES (?, ?, ?)
-                ");
+                $stmt = $conn->prepare("CALL inseretProductDetails(?,?,?)");
                 $stmt->bind_param("iss", $product['product_id'], $key, $value);
             
                 if (!$stmt->execute()) {

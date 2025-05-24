@@ -28,6 +28,7 @@ $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $result = $stmt->get_result();
 $userEmail = $result->fetch_assoc()['email'];
+$stmt->close();
 
 include "header/header.php";
 ?>
