@@ -61,4 +61,35 @@
     .contact-form .btn:hover {
         background: var(--button-color-hover);
     }
+
+    @media screen and (max-width: 850px) {
+        .contact-wrapper {
+            width: 90%;
+        }
+    }
+
+    @media screen and (max-width: 600px) {
+        .contact-info {
+            font-size: 1rem;
+        }
+    }
+
+    @media screen and (max-width: 400px) {
+        .contact-info {
+            font-size: 0.8rem;
+        }
+
+        .contact-form label {
+            font-size: 0.8rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            font-size: 0.8rem;
+        }
+
+        .contact-form .btn {
+            font-size: 0.9rem;
+        }
+    }
 </style> 

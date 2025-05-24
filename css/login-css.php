@@ -181,4 +181,109 @@
     .far {
         padding-top: 25px;
     }
+
+    @media screen and (max-width: 1400px) {
+        .login-container,
+        .signup-container {
+            width: 70%;
+            max-width: unset;
+        }
+    }
+
+    @media screen and (max-width: 1100px) {
+        .login-container,
+        .signup-container {
+            width: 90%;
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        #img {
+            display: none;
+        }    
+
+        #loginContainer, #signupContainer, #forgotPasswordContainer, #confirmationContainer {
+            width: 100%;
+        }
+
+        .login-container, .signup-container, .forgotPassword-container, .confirmation-container {
+            width: 60%;
+            max-width: unset;
+        }
+    }
+    
+    @media screen and (max-width: 768px) {
+        header {
+            display: none;
+        }
+    }
+
+    @media screen and (max-width: 750px) {
+        .login-container, .signup-container, .forgotPassword-container, .confirmation-container {
+            width: 90%;
+        }
+    }
+
+    @media screen and (max-width: 470px) {
+        .login-container, .signup-container, .forgotPassword-container, .confirmation-container {
+            width: 100%;
+        }
+
+        .signup-container h1 {
+            margin-bottom: 10px !important;
+        }
+
+        .form-row {
+            margin: 0 !important;
+        }
+
+        .login-link {
+            margin-top: 0.5rem !important;
+        }
+
+        .signup-container input[type="submit"] {
+            margin-top: 0.5rem !important;
+        }
+
+        .confirm-password-field {
+            margin-top: 0!important;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .login-container, .login-card {
+            padding: 16px 8px !important;
+            margin: 0 auto !important;
+            border-radius: 10px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+            width: 98vw !important;
+            min-width: unset !important;
+        }
+        .login-title {
+            font-size: 1.3rem !important;
+            margin-bottom: 18px !important;
+        }
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            font-size: 1rem !important;
+            padding: 10px 12px !important;
+            width: 100% !important;
+            margin-bottom: 12px !important;
+        }
+        .login-form button {
+            font-size: 1rem !important;
+            padding: 10px 0 !important;
+            width: 100% !important;
+            margin-top: 10px !important;
+        }
+        .login-logo {
+            width: 60px !important;
+            height: 60px !important;
+            margin-bottom: 10px !important;
+        }
+        .login-links {
+            font-size: 0.95rem !important;
+            margin-top: 10px !important;
+        }
+    }
 </style>

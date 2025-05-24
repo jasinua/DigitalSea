@@ -76,6 +76,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                 ?>
                                 <span class="original-price"><?php echo number_format($original_price, 2); ?>€</span>
                                 <span class="product-price"><?php echo number_format($discounted_price, 2); ?>€</span>
+                                <span class="discount-percentage"><?php echo $discount; ?>%</span>
                                     <?php } else { ?>
                                 <span class="product-price"><?php echo number_format($product['price'], 2); ?>€</span>
                             <?php } ?>

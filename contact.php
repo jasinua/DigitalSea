@@ -28,7 +28,7 @@ if (isset($_SESSION['user_id'])) {
 <div class="contact-wrapper">
     <h2>Contact Us</h2>
     <div class="contact-info">
-        <p>Email: support@digitalsea.com</p>
+        <p>Email: digitalsea.ks@gmail.com</p>
         <p>Phone: +383 45 123 456</p>
         <p>Address: Universiteti i Prishtines, Prishtine, Kosovo</p>
     </div>
@@ -44,7 +44,7 @@ if (isset($_SESSION['user_id'])) {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'etrithasolli5@gmail.com';
+            $mail->Username = 'digitalsea.ks@gmail.com';
             $mail->Password = $_ENV['MAIL_PASSWORD'];
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
@@ -71,7 +71,7 @@ if (isset($_SESSION['user_id'])) {
 
             // Sender and receiver
             $mail->setFrom($userEmail, $userName);
-            $mail->addAddress('etrithasolli5@gmail.com');
+            $mail->addAddress('digitalsea.ks@gmail.com');
 
             // Email content
             $mail->Subject = $subject;

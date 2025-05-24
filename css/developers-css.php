@@ -117,15 +117,28 @@
         font-size: 1.2em;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1550px) {
+         .dev-link-text {
+            display: none;
+         }
+    }
+
+    @media (max-width: 1100px) {
         .dev-row {
             flex-direction: column;
             gap: 24px;
             align-items: center;
-            padding: 0 4vw;
         }
+
         .dev-card {
-            max-width: 400px;
+            max-width: 600px;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .dev-card {
+            max-width: 500px;
             width: 100%;
         }
     }
