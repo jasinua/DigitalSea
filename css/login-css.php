@@ -259,10 +259,12 @@
             width: 98vw !important;
             min-width: unset !important;
         }
+
         .login-title {
             font-size: 1.3rem !important;
             margin-bottom: 18px !important;
         }
+        
         .login-form input[type="text"],
         .login-form input[type="password"] {
             font-size: 1rem !important;
@@ -270,17 +272,20 @@
             width: 100% !important;
             margin-bottom: 12px !important;
         }
+        
         .login-form button {
             font-size: 1rem !important;
             padding: 10px 0 !important;
             width: 100% !important;
             margin-top: 10px !important;
         }
+        
         .login-logo {
             width: 60px !important;
             height: 60px !important;
             margin-bottom: 10px !important;
         }
+        
         .login-links {
             font-size: 0.95rem !important;
             margin-top: 10px !important;
