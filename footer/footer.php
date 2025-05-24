@@ -296,7 +296,6 @@
             flex-direction: column;
         }
     }
-<<<<<<< HEAD
 
     @media (max-width: 335px) {
         .social-icons {
@@ -572,7 +571,6 @@
                     column.classList.remove('collapsed');
                 }
             });
-=======
         if (window.innerWidth <= 576) {
             const footerHeadings = document.querySelectorAll('.footer-column h3');
             
@@ -615,7 +613,6 @@
                     column.classList.remove('active');
                 });
             }
->>>>>>> parent of 95e045d (developer css fixed and footer for small media fixed)
         });
     });
     </script>
