@@ -67,6 +67,9 @@
         --logout-color:rgb(222, 34, 34);
         --logout-color-hover: #C70000;
 
+        --success-color: #00c853;
+        --success-color-hover: #00a846;
+
         --error-color: #F94040;
         --error-color-hover: #C70000;
     }

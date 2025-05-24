@@ -441,13 +441,13 @@
     #newItems {
         overflow-x: hidden;
         display: flex;
-        margin: 0;
-        padding-bottom: 20px;
-        padding-left: 5px;
+        margin: 0 auto;
+        padding: 0 10px 20px 10px;
         background-color: var(--ivory-color);
         width: 100%;
-        max-width: 1400px; /* Limit width to show 4 items */
-        /* gap: 20px; */
+        max-width: 100%;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
     
     #newItemsHeader {
@@ -460,9 +460,9 @@
     
     #newItemsItem {
         width: 330px;
-        min-width: 330px; /* Fixed width for 4 items */
+        min-width: 330px;
         height: 440px;
-        margin: 15px 0;
+        margin: 0 10px;
         background-color: white;
         display: flex;
         flex-direction: column;
@@ -472,7 +472,7 @@
         transition: all 0.3s ease;
         position: relative;
         padding: 20px;
-        overflow: hidden;
+        scroll-snap-align: start;
     }
     
     #newItemsItem:hover {
@@ -579,47 +579,6 @@
         text-decoration:none;
         color:var(--page-text-color);
     }
-
-    /* .discount-circle {
-        position: fixed;
-        top: 80px;
-        right: 20px;
-        width: 65px;
-        height: 65px;
-        background-color: #e74c3c;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-decoration: none;
-        z-index: 1000;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        transition: var(--transition);
-    }
-
-    .discount-circle:hover {
-        transform: scale(1.1);
-        background-color: #c0392b;
-    }
-
-    .discount-circle i {
-        font-size: 24px;
-    }
-        
-    .discount-circle.active {
-        background-color: #c0392b;
-    }
-
-    .discount-circle.active:hover {
-        background-color: #a93226;
-    }
-
-    @media (max-width: 768px) {
-        .discount-circle {
-            top: 70px;
-        }
-    } */
     
     /* Wheel Carousel starts here*/
     .background-gradient{
@@ -633,14 +592,13 @@
     }
 
     .wheel-carousel {
-        width: 100%;
+        width: 85%;
         overflow: hidden;
         position: relative;
         height: 500px;
         box-sizing: border-box;
         display: flex;
         justify-content: center;
-        /* background-color: var(--ivory-color); */
         max-width: 1200px; /* Limit the width to show 3 items */
     }
     
@@ -1048,9 +1006,23 @@
         #newItems {
             gap: 10px;
         }
-        .newItemsItem {
-            transform: scale(0.9);
-            /* margin: 0 5px; */
+
+        #newItemsItem {
+            width: 300px;
+            min-width: 300px;
+            margin: 0 8px;
+        }
+    }
+
+    @media screen and (max-width: 1520px) {
+        .wheel-carousel {
+            width: 90%;
+        }
+    }
+
+    @media screen and (max-width: 1450px) {
+        .wheel-carousel {
+            width: 95%;
         }
     }
 
@@ -1102,13 +1074,20 @@
     }
 
     @media screen and (max-width: 1150px) {
-        #newItems {
-            gap: 0px;
+        #newItemsItem {
+            width: 260px;
+            min-width: 260px;
+            height: 400px;
+            margin: 0 6px;
         }
 
-        .newItemsItem {
-            transform: scale(0.8);
-            margin: 0 5px;
+        #newItemsItem img {
+            height: 240px;
+        }
+
+        #newItemsItem .title {
+            font-size: 14px;
+            min-height: 45px;
         }
     }
     
@@ -1192,6 +1171,32 @@
         .wheel-item img {
             height: 220px;
         }
+
+        .item .original-price {
+            display: none;
+        }
+    }
+
+    @media screen and (max-width: 860px) {
+        #newItemsItem {
+            width: 220px;
+            min-width: 220px;
+            height: 360px;
+            margin: 0 5px;
+        }
+
+        #newItemsItem img {
+            height: 200px;
+        }
+
+        #newItemsItem .title {
+            font-size: 13px;
+            min-height: 40px;
+        }
+
+        #newItemsItem .price {
+            font-size: 15px;
+        }
     }
 
      /* Safe Area Insets for Modern Mobile Devices */
@@ -1211,9 +1216,10 @@
     }
 
     /* Large Phones (480px to 768px) */
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 770px) {
         .wheel-carousel {
             height: 400px;
+            width: 85%;
         }
         
         .wheel-item {
@@ -1224,12 +1230,6 @@
         
         .wheel-item img {
             height: 200px;
-        }
-        
-        #newItemsItem {
-            width: 260px;
-            min-width: 260px;
-            height: 400px;
         }
         
         .item {
@@ -1411,6 +1411,22 @@
         }
     }
 
+    @media screen and (max-width: 660px) {
+        .new-items-carousel .carousel-arrow {
+            display: none;
+        }
+
+        #newItems {
+            overflow: auto;
+            max-width: 90%;
+        }
+    }
+
+    @media screen and (max-width: 630px) {
+        .wheel-carousel {
+            width: 65%;
+        }
+    }
 
 
     /* Narrower filters for screens below 500px */
@@ -1539,10 +1555,30 @@
             height: 180px;
         }
         
+        #newItems {
+            padding: 0 5px 20px 5px;
+        }
+
         #newItemsItem {
-            width: 220px;
-            min-width: 220px;
-            height: 380px;
+            width: 180px;
+            min-width: 180px;
+            height: 300px;
+            margin: 0 4px;
+        }
+
+        #newItemsItem img {
+            height: 160px;
+            padding: 8px;
+        }
+
+        #newItemsItem .title {
+            font-size: 12px;
+            min-height: 35px;
+            margin: 8px 0;
+        }
+
+        #newItemsItem .price {
+            font-size: 14px;
         }
         
         .item {
@@ -1552,10 +1588,6 @@
         
         .item img {
             height: 140px;
-        }
-
-        .item .original-price {
-            display: none;
         }
         
         .carousel-arrow {
@@ -1828,29 +1860,17 @@
         #items {
             overflow-x: hidden;
         }
-        /* Make new items smaller and show 2 per row */
+
         #newItemsItem {
             width: 150px;
             min-width: 150px;
             height: 250px;
-            padding: 12px;
-            margin: 8px 0;
+            margin: 0 3px;
         }
 
         #newItemsItem img {
-            height: 150px;
+            height: 140px;
             padding: 5px;
-        }
-
-        #newItemsItem .title {
-            font-size: 12px;
-            margin: 8px 0;
-            min-height: 40px;
-        }
-
-        #newItemsItem .price {
-            font-size: 14px;
-            padding: 0 3px 3px 5px;
         }
 
         /* Hide the original strikethrough price on small screens */

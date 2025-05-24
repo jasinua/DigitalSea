@@ -14,7 +14,6 @@
     .container {
         max-width: 100%;
         padding: 20px;
-        font-family: 'Roboto', sans-serif;
     }
 
     .payment-part {
@@ -152,89 +151,6 @@
         height: 40px;
         background: #2d3748;
         margin-bottom: 1rem;
-    }
-    
-    /* Responsive styles */
-    @media screen and (max-width: 768px) {
-        .container {
-            max-width: 95%;
-            padding: 15px;
-        }
-        
-        h2 {
-            font-size: 1.8rem;
-        }
-        
-        .payment-form {
-            padding: 20px;
-        }
-        
-        .card-details {
-            font-size: 0.9rem;
-        }
-        
-        .card-cvc {
-            font-size: 1.2rem;
-        }
-        
-        .card-chip {
-            width: 50px;
-            height: 35px;
-        }
-        
-        h2 {
-            font-size: 1.6rem;
-            /* margin: 25px 0 20px 0; */
-        }
-    }
-    
-    @media screen and (max-width: 480px) {
-        h2 {
-            font-size: 1.5rem;
-        }
-        
-        .payment-form {
-            padding: 15px;
-        }
-        
-        .form-row label {
-            font-size: 0.9rem;
-        }
-        
-        .form-row input {
-            padding: 10px;
-        }
-        
-        #payment-form button {
-            padding: 12px;
-            font-size: 1rem;
-        }
-        
-        .card {
-            height: 200px;
-        }
-        
-        .card-number {
-            font-size: 1.3rem;
-        }
-    }
-    
-    @media screen and (max-width: 400px) {
-        .card-container {
-            min-width: unset;
-        }
-        
-        .card {
-            height: 180px;
-        }
-        
-        .card-front, .card-back {
-            padding: 15px;
-        }
-        
-        .card-number {
-            font-size: 1.1rem;
-        }
     }
 
     .pay-with {
@@ -481,21 +397,6 @@
         border-top: 1px solid var(--border-color);
     }
 
-    @media (max-width: 480px) {
-        .payment-header {
-            padding: 20px;
-        }
-        
-        .payment-main {
-            padding: 20px;
-        }
-        
-        .detail-row {
-            flex-direction: column;
-            gap: 4px;
-        }
-    }
-
     #crypto-payment {
         margin-bottom:10px;
     }
@@ -509,5 +410,135 @@
         border: 1.5px solid var(--button-color);
         margin-right: 8px;
         cursor: pointer;
+    }
+
+    /* Responsive styles */
+    @media screen and (max-width: 1450px) {
+        .pay-with {
+            width: 60%;
+        }
+    }
+
+    @media screen and (max-width: 1170px) {
+        .payment-part {
+            gap: 20px;
+        }
+
+        .payment-header {
+            flex-direction: column;
+        }
+
+        .payment-header h1, .payment-header p {
+            margin: 0;
+        }
+    }
+
+    @media screen and (max-width: 950px) {
+        .payment-summary {
+            display: none;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .container {
+            max-width: 100%;
+            padding: 15px;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+        }
+
+        .payment-header {
+            height: unset;
+        }
+        
+        .payment-form {
+            padding: 20px;
+        }
+        
+        .card-details {
+            font-size: 0.9rem;
+        }
+        
+        .card-cvc {
+            font-size: 1.2rem;
+        }
+        
+        .card-chip {
+            width: 50px;
+            height: 35px;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            /* margin: 25px 0 20px 0; */
+        }
+    }
+
+    @media screen and (max-width: 700px) {
+        .pay-with {
+            width: 80%;
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        .pay-with {
+            width: 95%;
+        }
+    }
+    
+    @media screen and (max-width: 480px) {
+        h2 {
+            font-size: 1.5rem;
+        }
+        
+        .payment-form {
+            padding: 15px;
+        }
+        
+        .form-row label {
+            font-size: 0.9rem;
+        }
+        
+        .form-row input {
+            padding: 10px;
+        }
+        
+        #payment-form button {
+            padding: 12px;
+            font-size: 1rem;
+        }
+        
+        .card {
+            height: 200px;
+        }
+        
+        .card-number {
+            font-size: 1.3rem;
+        }
+        
+        .detail-row {
+            flex-direction: column;
+            gap: 4px;
+        }
+    }
+    
+    @media screen and (max-width: 400px) {
+        .card-container {
+            min-width: unset;
+        }
+        
+        .card {
+            height: 180px;
+        }
+        
+        .card-front, .card-back {
+            padding: 15px;
+        }
+        
+        .card-number {
+            font-size: 1.1rem;
+        }
     }
 </style>

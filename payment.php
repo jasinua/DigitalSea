@@ -651,6 +651,20 @@
             // Optionally, clear any stored payment state
             localStorage.removeItem('showCrypto');
         }
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth < 770) {
+                document.getElementById('cardd').textContent = 'Card';
+                document.getElementById('cryptoo').textContent = 'Crypto';
+            }
+        });
+
+        window.addEventListener('load', function() {
+            if (window.innerWidth < 770) {
+                document.getElementById('cardd').textContent = 'Card';
+                document.getElementById('cryptoo').textContent = 'Crypto';
+            }
+        });
     </script>
 </body>
 </html>
