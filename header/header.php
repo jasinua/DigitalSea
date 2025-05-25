@@ -1082,10 +1082,10 @@
             </a>
             <?php } ?>
             <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 2) { ?>
-            <a href="admin.php" class="moadminmenu-item">
+            <a href="admin.php" class="mobile-menu-item">
                 <i class="fas fa-lock"></i>
                 <span>Admin</span>
-       Admi </a>
+            </a>
             <?php } ?>
             <?php } else { ?>
             <a href="login.php" class="mobile-menu-item">
