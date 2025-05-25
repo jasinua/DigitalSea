@@ -142,6 +142,8 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                                 min="1" 
                                                 value="<?php echo $cart['quantity']; ?>" 
                                                 data-price="<?php echo $discount ? $pricedsc : $price; ?>"
+                                                data-original-price="<?php echo $price; ?>"
+                                                data-discount="<?php echo $discount; ?>"
                                                 data-product-id="<?php echo $product['product_id']; ?>"
                                             >
                                         </div>
@@ -150,6 +152,67 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     <td>
                                         <button class="remove-btn" type="button" data-product-id="<?php echo $product['product_id']; ?>">×</button>
                                     </td>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="itemsTable small-screen" style='max-height: 400px; display: none;'>
+                        <table>
+                            <tbody style='overflow: hidden; overflow-y: auto;'>
+                                <?php 
+                                $subtotal = 0;
+                                foreach ($res as $cart) {
+                                    $product_result = returnProduct($cart['product_id']);
+                                    $product = $product_result->fetch_assoc();
+                                    $discount = $product['discount'];
+                                    $price = $product['price'];
+                                    $pricedsc = $price - ($price * $discount/100);
+                                    $total = $product['price'] * $cart['quantity'];
+                                    $subtotal += $total;
+                                ?>
+                                <tr>
+                                    <td class="small-screen-product">
+                                        <div class="product-info">
+                                            <input type="hidden" name="prod_id[]" value="<?php echo $product['product_id']; ?>">
+                                            <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" alt="Product Image">
+                                            <div class="product-content">
+                                                <div class="product-details">
+                                                    <h4><?php echo $product['name']; ?></h4>
+                                                    <div class="desc mobile-desc"><?php echo $product['description']; ?></div>
+                                                </div>
+                                                <div class="product-controls">
+                                                    <div class="price-quantity">
+                                                        <div class="price-info">
+                                                            <?php if($discount) { ?>
+                                                                <span class="discounted-price"><?php echo number_format($pricedsc, 2); ?>€</span>
+                                                                <span class="original-price"><?php echo number_format($price, 2); ?>€</span>
+                                                            <?php } else { ?>
+                                                                <span class="discounted-price"><?php echo number_format($price, 2); ?>€</span>
+                                                            <?php } ?>
+                                                        </div>
+                                                        <div class="quantity-controls">
+                                                            <input 
+                                                                type="number" 
+                                                                name="quantity[]" 
+                                                                class="quantity-input" 
+                                                                min="1" 
+                                                                value="<?php echo $cart['quantity']; ?>" 
+                                                                data-price="<?php echo $discount ? $pricedsc : $price; ?>"
+                                                                data-original-price="<?php echo $price; ?>"
+                                                                data-discount="<?php echo $discount; ?>"
+                                                                data-product-id="<?php echo $product['product_id']; ?>"
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <button class="remove-btn" type="button" data-product-id="<?php echo $product['product_id']; ?>">×</button>
+                                        </div>
+                                    </td>
+                                    <input type="hidden" name="price[]" value="<?php echo $discount ? $pricedsc : $price; ?>">
                                 </tr>
                                 <?php } ?>
                             </tbody>
@@ -247,16 +310,22 @@ document.addEventListener("DOMContentLoaded", () => {
     quantityInputs.forEach(input => {
         input.addEventListener('change', () => {
             const productId = input.dataset.productId;
+
+            // Always get the visible input for this product
+            const visibleInput = Array.from(document.querySelectorAll(`.quantity-input[data-product-id="${productId}"]`))
+                .find(inp => inp.offsetParent !== null);
+
             const originalValue = originalValues.get(productId);
-            const currentValue = input.value;
+            const currentValue = visibleInput ? visibleInput.value : input.value;
 
             // Update product total and summary immediately
-            updateProductTotal(input);
+            updateProductTotal(visibleInput || input);
 
-            // Mark as unsaved if the value is different from original
+            // Mark as unsaved if any visible input value is different from original
             hasUnsavedChanges = Array.from(originalValues.entries()).some(([pid, origVal]) => {
-                const currentInput = document.querySelector(`input[data-product-id="${pid}"]`);
-                return currentInput && currentInput.value !== origVal;
+                const visInput = Array.from(document.querySelectorAll(`.quantity-input[data-product-id="${pid}"]`))
+                    .find(inp => inp.offsetParent !== null);
+                return visInput && visInput.value !== origVal;
             });
 
             // Update button state
@@ -337,7 +406,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle save changes
     saveBtn.addEventListener('click', () => {
+        // For each product, only enable the visible set of inputs (prod_id, quantity, price)
+        const allProductIds = new Set();
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            allProductIds.add(input.dataset.productId);
+        });
+
+        allProductIds.forEach(pid => {
+            // Find visible input for this product
+            const visibleQty = Array.from(document.querySelectorAll(`.quantity-input[data-product-id="${pid}"]`))
+                .find(inp => inp.offsetParent !== null);
+            const visiblePrice = Array.from(document.querySelectorAll(`input[name="price[]"][value="${visibleQty.dataset.price}"]`))
+                .find(inp => inp.offsetParent !== null || inp.closest('tr')?.style.display !== 'none');
+            const visibleProdId = Array.from(document.querySelectorAll(`input[name="prod_id[]"][value="${pid}"]`))
+                .find(inp => inp.offsetParent !== null || inp.closest('tr')?.style.display !== 'none');
+
+            // Disable all for this product
+            document.querySelectorAll(`.quantity-input[data-product-id="${pid}"]`).forEach(inp => inp.disabled = true);
+            document.querySelectorAll(`input[name="price[]"]`).forEach(inp => {
+                if (inp.value == visibleQty.dataset.price) inp.disabled = true;
+            });
+            document.querySelectorAll(`input[name="prod_id[]"][value="${pid}"]`).forEach(inp => inp.disabled = true);
+
+            // Enable only the visible ones
+            if (visibleQty) visibleQty.disabled = false;
+            if (visiblePrice) visiblePrice.disabled = false;
+            if (visibleProdId) visibleProdId.disabled = false;
+        });
+
         const formData = new FormData(document.getElementById('cartForm'));
+
+        // Re-enable all inputs after collecting form data
+        document.querySelectorAll('.quantity-input, input[name="price[]"], input[name="prod_id[]"]').forEach(input => {
+            input.disabled = false;
+        });
 
         quantityInputs.forEach(input => {
             input.disabled = true;
@@ -388,7 +490,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to update product total in summary
     function updateProductTotal(input) {
         const productId = input.dataset.productId;
-        const quantity = parseInt(input.value) || 1; // Default to 1 if invalid
+        let quantity = parseInt(input.value);
+
+        // If quantity is invalid, empty, or 0, reset input to 1 and treat as 1
+        if (isNaN(quantity) || quantity <= 0) {
+            input.value = 1; // Reset input to 1
+            quantity = 1; // Use 1 for calculations
+        }
+
         const price = parseFloat(input.dataset.price);
         const total = (quantity * price).toFixed(2);
 
@@ -408,28 +517,20 @@ document.addEventListener("DOMContentLoaded", () => {
         let subtotal = 0;
         let totalDiscount = 0;
 
-        quantityInputs.forEach(input => {
-            const productId = input.dataset.productId;
-            const quantity = parseInt(input.value) || 1;
-            const price = parseFloat(input.dataset.price);
+        // Only select visible quantity inputs
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            if (input.offsetParent === null) return; // skip hidden inputs
 
-            const summaryItem = document.querySelector(`.summary-item[data-product-id="${productId}"]`);
-            if (summaryItem) {
-                const discountText = summaryItem.querySelector('.zbritja');
-                if (discountText) {
-                    const discountMatch = discountText.textContent.match(/\d+/);
-                    if (discountMatch) {
-                        const discountPct = parseInt(discountMatch[0]);
-                        const originalPrice = price / (1 - discountPct / 100);
-                        const discountAmount = originalPrice - price;
-                        totalDiscount += discountAmount * quantity;
-                        subtotal += originalPrice * quantity;
-                    } else {
-                        subtotal += price * quantity;
-                    }
-                } else {
-                    subtotal += price * quantity;
-                }
+            const quantity = parseInt(input.value);
+            if (isNaN(quantity) || quantity <= 0) return;
+
+            const originalPrice = parseFloat(input.dataset.originalPrice);
+            const discountedPrice = parseFloat(input.dataset.price);
+            const discount = parseFloat(input.dataset.discount) || 0;
+
+            subtotal += discountedPrice * quantity;
+            if (discount > 0) {
+                totalDiscount += (originalPrice - discountedPrice) * quantity;
             }
         });
 
@@ -453,33 +554,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Initialize responsive elements
-    function initResponsive() {
-        const isMobile = window.innerWidth <= 580;
-        const descriptionElements = document.querySelectorAll('.mobile-desc');
-
-        descriptionElements.forEach(desc => {
-            if (isMobile) {
-                const fullText = desc.textContent;
-                if (fullText.length > 40) {
-                    const shortText = fullText.substring(0, 40) + '...';
-                    desc.setAttribute('data-full-text', fullText);
-                    desc.textContent = shortText;
-
-                    desc.addEventListener('click', function() {
-                        const isExpanded = this.classList.contains('expanded');
-                        if (isExpanded) {
-                            this.textContent = shortText;
-                            this.classList.remove('expanded');
-                        } else {
-                            this.textContent = this.getAttribute('data-full-text');
-                            this.classList.add('expanded');
-                        }
-                    });
-                }
-            }
-        });
-    }
 
     initResponsive();
     window.addEventListener('resize', initResponsive);

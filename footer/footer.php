@@ -84,11 +84,20 @@
         list-style: none;
     }
 
+    @media screen and (min-width: 1351px) {
+        .footer-column h3::after {
+            display: none;
+        }
+        .footer-links {
+            display: block !important;
+        }
+    }
+
     @media screen and (max-width: 1350px) {
         .footer {
             flex-direction: column !important;
             text-align: center;
-            padding: 30px 10px;
+            padding: 20px 10px;
         }
         
         .footer > div {
@@ -103,7 +112,7 @@
             margin-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 10px;
-            max-width: 100vw;
+            max-width: 100%;
         }
         
         .footer-column:last-child {
@@ -132,7 +141,7 @@
         }
         
         .footer-column:not(.collapsed) h3::after {
-            transform: translateY(-50%) rotate(180deg);
+            transform: rotate(-180deg) translateY(50%);
         }
         
         .footer-links {
@@ -142,6 +151,10 @@
         }
 
         .footer-column:not(.collapsed) .footer-links {
+            display: block;
+        }
+
+        .footer-column.active .footer-links {
             display: block;
         }
 
@@ -166,20 +179,11 @@
         }
     }
 
-    @media screen and (min-width: 1351px) {
-        .footer-column h3::after {
-            display: none;
-        }
-        .footer-links {
-            display: block !important;
-        }
-    }
-
     /* Media queries for responsive footer */
     @media screen and (max-width: 992px) {
         .footer {
             flex-wrap: wrap;
-            padding: 30px 0;
+            padding: 30px 15px;
         }
         
         .footer-column {
@@ -205,72 +209,6 @@
         .social-icons a {
             font-size: 22px;
             margin: 0 20px;
-        }
-    }
-    
-    @media screen and (max-width: 576px) {
-        .footer {
-            flex-direction: column;
-            text-align: center;
-            padding: 20px 10px;
-        }
-        
-        .footer-column {
-            flex: 0 0 100%;
-            margin-left: 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 5px;
-        }
-        
-        .footer-column:last-child {
-            margin-bottom: 5px;
-            border-bottom: none;
-        }
-        
-        .footer-column h3 {
-            position: relative;
-            cursor: pointer;
-            padding: 10px 0;
-            margin-bottom: 0;
-        }
-        
-        .footer-column h3::after {
-            content: '\f107';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            position: absolute;
-            right: 10px;
-            transition: transform 0.3s;
-        }
-        
-        .footer-column.active h3::after {
-            transform: rotate(180deg);
-        }
-        
-        .footer-links {
-            display: none;
-            padding: 0 10px 10px 10px;
-        }
-        
-        .footer-column.active .footer-links {
-            display: block;
-        }
-        
-        .footer-column a, .footer-links li a {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            padding: 10px 0;
-            display: block;
-        }
-        
-        .social-icons {
-            padding: 10px 0 15px 0;
-        }
-        
-        .social-icons a {
-            font-size: 20px;
-            margin: 0 15px;
         }
     }
     
@@ -571,7 +509,7 @@
                     column.classList.remove('collapsed');
                 }
             });
-        if (window.innerWidth <= 576) {
+        if (window.innerWidth <= 1350) {
             const footerHeadings = document.querySelectorAll('.footer-column h3');
             
             footerHeadings.forEach(heading => {
@@ -587,21 +525,22 @@
             const footerColumns = document.querySelectorAll('.footer-column');
             const footerLinks = document.querySelectorAll('.footer-links');
             
-            if (window.innerWidth <= 576) {
+            if (window.innerWidth <= 1350) {
                 footerColumns.forEach(column => {
                     const heading = column.querySelector('h3');
                     if (!heading.hasAttribute('listener')) {
                         heading.setAttribute('listener', 'true');
                         heading.addEventListener('click', function() {
                             column.classList.toggle('active');
+                            link.style.display = 'block';
                         });
                     }
                 });
                 
                 // Hide links by default on mobile
-                footerLinks.forEach(link => {
-                    link.style.display = 'none';
-                });
+                // footerLinks.forEach(link => {
+                //     link.style.display = 'none';
+                // });
                 } else {
                     // Show all links on larger screens
                     footerLinks.forEach(link => {

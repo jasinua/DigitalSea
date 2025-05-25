@@ -113,12 +113,22 @@
         }
 
         .wishlist-grid {
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 15px;
         }
 
         .wishlist-item {
-            max-width: none;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            border: 1px solid var(--mist-color);
+            max-width: 100%;
+            width: 100%;
         }
 
         .product-info img {
