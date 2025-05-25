@@ -248,9 +248,10 @@
                             <button class="carousel-arrow" id="wheelPrev">
                                 <i class="fas fa-chevron-left"></i>
                             </button>
+                            <?php $top_products = getTopProducts(); ?>
                             <div class='wheel-carousel'>
                                 <div class='wheel-track' id='topItems'>
-                                    <?php foreach (getTopProducts() as $prod) { ?>
+                                    <?php foreach ($top_products as $prod) { ?>
                                     <div class='wheel-item'>
                                         <a href="product.php?product=<?php echo $prod['product_id'] ?>" class="product-link">
                                             <?php if ($prod['discount'] > 0) { ?>
