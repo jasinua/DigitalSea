@@ -1,109 +1,65 @@
 <?php 
-    session_start();
-    include_once "controller/function.php";
-    include_once "model/dbh.inc.php";
-    require_once 'vendor/autoload.php';
+session_start();
+include_once "controller/function.php";
+include_once "model/dbh.inc.php";
+require_once 'vendor/autoload.php';
 
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-    $dotenv->load();
-    
-    require_once 'vendor/stripe/stripe-php/init.php';
-    \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
-    // Check if user is logged in
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: login.php");
-        exit();
-    }
+require_once 'vendor/stripe/stripe-php/init.php';
+\Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
-    // Get user ID
-    $userId = $_SESSION['user_id'];
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 
-    // Get user info from database
-    $userQuery = "CALL profileData(?)";
-    $stmt = $conn->prepare($userQuery);
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $userResult = $stmt->get_result();
-    $userData = $userResult->fetch_assoc();
+// Get user ID
+$userId = $_SESSION['user_id'];
 
+// Get user info from database
+$userQuery = "SELECT first_name, last_name, email, address FROM users WHERE user_id = ?";
+$stmt = $conn->prepare($userQuery);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$userResult = $stmt->get_result();
+$userData = $userResult->fetch_assoc();
 
-    $userFullName = $userData['first_name'] . ' ' . $userData['last_name'];
-    $userEmail = $userData['email'];
-    $userAddress = $userData['address'];
+$userFullName = $userData['first_name'] . ' ' . $userData['last_name'];
+$userEmail = $userData['email'];
+$userAddress = $userData['address'];
 
-    $stmt->close();
-
-    // Handle address update if submitted via AJAX
-    if (isset($_POST['update_address']) && isset($_POST['address'])) {
-        $newAddress = trim($_POST['address']);
-        if ($newAddress !== '') {
-            $updateStmt = $conn->prepare("CALL updateAddress(?,?)");
-            $updateStmt->bind_param("si", $newAddress, $userId);
-            if ($updateStmt->execute()) {
-                $userAddress = $newAddress;
-                echo json_encode(['success' => true, 'message' => "Address updated successfully"]);
-                $updateStmt->close();
-                exit();
-
-            } else {
-                echo json_encode(['success' => false, 'message' => "Failed to update address"]);
-                exit();
-                $updateStmt->close();
-            }
+// Handle address update if submitted via AJAX
+if (isset($_POST['update_address']) && isset($_POST['address'])) {
+    $newAddress = trim($_POST['address']);
+    if ($newAddress !== '') {
+        $updateStmt = $conn->prepare("UPDATE users SET address = ? WHERE user_id = ?");
+        $updateStmt->bind_param("si", $newAddress, $userId);
+        if ($updateStmt->execute()) {
+            $userAddress = $newAddress;
+            echo json_encode(['success' => true, 'message' => "Address updated successfully"]);
+            exit();
+        } else {
+            echo json_encode(['success' => false, 'message' => "Failed to update address"]);
+            exit();
         }
     }
+}
 
-    // Get cart items for this user
+// Function to calculate cart total from database
+function calculateCartTotal($userId, $conn) {
     $cartItems = returnCart($userId);
-    
     if (!$cartItems || $cartItems->num_rows === 0) {
-        header("Location: cart.php?error=emptycart");
-        exit;
+        return false;
     }
 
-    // Check stock levels before proceeding
-    $stockIssues = [];
-    $cartItems->data_seek(0); // Reset the result pointer
-    while ($item = $cartItems->fetch_assoc()) {
-        if($item['order_id'] == null) {
-            $pid = $item['product_id'];
-            $qty = $item['quantity'];
-            
-            // Check stock level
-            $stockQuery = "SELECT name, stock FROM products WHERE product_id = ?";
-            $stockStmt = $conn->prepare($stockQuery);
-            $stockStmt->bind_param("i", $pid);
-            $stockStmt->execute();
-            $stockResult = $stockStmt->get_result();
-            $productData = $stockResult->fetch_assoc();
-
-            $stockStmt->close();
-            
-            if ($productData['stock'] < $qty) {
-                $stockIssues[] = sprintf(
-                    "%s: Only %d items available (you requested %d)",
-                    $productData['name'],
-                    $productData['stock'],
-                    $qty
-                );
-            }
-        }
-    }
-
-    //If there are stock issues, redirect to cart with error message
-    if (!empty($stockIssues)) {
-        $_SESSION['error'] = "Stock issues detected: " . implode(", ", $stockIssues);
-        header("Location: cart.php");
-        exit();
-    }
-
-    // Calculate total amount
     $subtotal = 0;
     $discount = 0;
-    $cartItems->data_seek(0); // Reset the result pointer again
+    $cartItems->data_seek(0);
     while ($item = $cartItems->fetch_assoc()) {
-        if($item['order_id'] == null){
+        if ($item['order_id'] == null) {
             $pid = $item['product_id'];
             $qty = $item['quantity'];
             
@@ -125,14 +81,111 @@
     }
     $tax = $subtotal * 0.18; // 18% VAT
     $totalAmount = $subtotal + $tax - $discount;
+    
+    return [
+        'subtotal' => $subtotal,
+        'tax' => $tax,
+        'discount' => $discount,
+        'total' => $totalAmount,
+        'cartItems' => $cartItems
+    ];
+}
 
-    // Create Payment Intent
+// Initial cart calculation for display
+$cartData = calculateCartTotal($userId, $conn);
+if ($cartData === false) {
+    header("Location: cart.php?error=emptycart");
+    exit();
+}
+
+$subtotal = $cartData['subtotal'];
+$tax = $cartData['tax'];
+$discount = $cartData['discount'];
+$totalAmount = $cartData['total'];
+$cartItems = $cartData['cartItems'];
+
+// Check stock levels before proceeding
+$stockIssues = [];
+$cartItems->data_seek(0);
+while ($item = $cartItems->fetch_assoc()) {
+    if ($item['order_id'] == null) {
+        $pid = $item['product_id'];
+        $qty = $item['quantity'];
+        
+        $stockQuery = "SELECT name, stock FROM products WHERE product_id = ?";
+        $stockStmt = $conn->prepare($stockQuery);
+        $stockStmt->bind_param("i", $pid);
+        $stockStmt->execute();
+        $stockResult = $stockStmt->get_result();
+        $productData = $stockResult->fetch_assoc();
+        
+        if ($productData['stock'] < $qty) {
+            $stockIssues[] = sprintf(
+                "%s: Only %d items available (you requested %d)",
+                $productData['name'],
+                $productData['stock'],
+                $qty
+            );
+        }
+        $stockResult->free(); // Free the result set
+        $stockStmt->close(); // Close the statement
+    }
+}
+
+if (!empty($stockIssues)) {
+    $_SESSION['error'] = "Stock issues detected: " . implode(", ", $stockIssues);
+    header("Location: cart.php");
+    exit();
+}
+
+// Create Payment Intent for card payment (amount will be re-validated on submission)
+try {
+    $minimumAmount = 0.50; // Minimum amount in EUR (50 cents)
+    $amountInCents = round($totalAmount * 100);
+
+    if ($totalAmount < $minimumAmount) {
+        $paymentIntent = \Stripe\SetupIntent::create([
+            'payment_method_types' => ['card'],
+            'metadata' => [
+                'user_id' => $userId,
+                'email' => $userEmail,
+                'amount' => $amountInCents
+            ]
+        ]);
+    } else {
+        $paymentIntent = \Stripe\PaymentIntent::create([
+            'amount' => $amountInCents,
+            'currency' => $_ENV['STRIPE_CURRENCY'],
+            'payment_method_types' => ['card'],
+            'metadata' => [
+                'user_id' => $userId,
+                'email' => $userEmail
+            ]
+        ]);
+    }
+    $clientSecret = $paymentIntent->client_secret;
+} catch (\Stripe\Exception\ApiErrorException $e) {
+    error_log("Stripe Error: " . $e->getMessage());
+    $_SESSION['error'] = "Payment setup failed: " . $e->getMessage();
+    header("Location: payment.php");
+    exit();
+}
+
+// Handle card payment submission (AJAX)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_type']) && $_POST['payment_type'] === 'card') {
+    // Re-calculate total from database
+    $cartData = calculateCartTotal($userId, $conn);
+    if ($cartData === false) {
+        echo json_encode(['success' => false, 'message' => "Cart is empty or invalid"]);
+        exit();
+    }
+
+    $totalAmount = $cartData['total'];
+    $amountInCents = round($totalAmount * 100);
+
+    // Re-create Payment Intent with the correct amount from database
     try {
-        $minimumAmount = 0.50; // Minimum amount in EUR (50 cents)
-        $amountInCents = round($totalAmount * 100);
-
         if ($totalAmount < $minimumAmount) {
-            // Create a Setup Intent for small amounts
             $paymentIntent = \Stripe\SetupIntent::create([
                 'payment_method_types' => ['card'],
                 'metadata' => [
@@ -142,7 +195,6 @@
                 ]
             ]);
         } else {
-            // Create a regular Payment Intent for normal amounts
             $paymentIntent = \Stripe\PaymentIntent::create([
                 'amount' => $amountInCents,
                 'currency' => $_ENV['STRIPE_CURRENCY'],
@@ -154,14 +206,14 @@
             ]);
         }
         $clientSecret = $paymentIntent->client_secret;
+        echo json_encode(['success' => true, 'client_secret' => $clientSecret]);
     } catch (\Stripe\Exception\ApiErrorException $e) {
-        error_log("Stripe Error: " . $e->getMessage());
-        $_SESSION['error'] = "Payment setup failed: " . $e->getMessage();
-        header("Location: payment.php");
-        exit();
+        echo json_encode(['success' => false, 'message' => "Payment setup failed: " . $e->getMessage()]);
     }
+    exit();
+}
 
-    include "header/header.php";
+include "header/header.php";
 ?>
 
 <!DOCTYPE html>
@@ -177,7 +229,6 @@
 <?php include "css/payment-css.php"; ?>
 <body>
     <div class="page-wrapper">
-        
         <div class="container">
             <h2 id="payment-header">Complete Payment</h2>
             <?php if (isset($error_message) && $error_message): ?>
@@ -192,10 +243,10 @@
             </div>
             <div class="payment-part" id="card-payment">
                 <div class="payment-main">
-                <header class="payment-header" id="card-header">
-                            <h1>Card Payment</h1>
-                            <p>Pay securely with your card</p>
-                        </header>
+                    <header class="payment-header" id="card-header">
+                        <h1>Card Payment</h1>
+                        <p>Pay securely with your card</p>
+                    </header>
                     <div class="payment-form">
                         <form id="payment-form">
                             <div class="form-row">
@@ -258,26 +309,31 @@
             <!-- CRYPTO PAYMENT -->        
             <?php
             // Configuration 
-            require __DIR__ . '/vendor/autoload.php';
             $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
             $dotenv->load();
 
             define('COINBASE_API_KEY', $_ENV['COINBASE_API_KEY']);
             define('COINBASE_API_URL', 'https://api.commerce.coinbase.com');
 
-            // Handle form submission
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
-                $description = htmlspecialchars($_POST['description'] ?? '');
-                
-                if ($amount && $amount > 0) {
-                    $chargeId = createCharge($amount, $description);
-                    if ($chargeId) {
-                        header("Location: payment.php?charge_id=" . urlencode($chargeId) . "&payment_type=crypto");
-                        exit;
-                    }
+            // Handle crypto payment submission
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_type']) && $_POST['payment_type'] === 'crypto') {
+                // Re-calculate total from database
+                $cartData = calculateCartTotal($userId, $conn);
+                if ($cartData === false) {
+                    $error = "Cart is empty or invalid.";
                 } else {
-                    $error = "Please enter a valid amount";
+                    $totalAmount = $cartData['total'];
+                    $description = htmlspecialchars($_POST['description'] ?? '');
+                    
+                    if ($totalAmount > 0) {
+                        $chargeId = createCharge($totalAmount, $description);
+                        if ($chargeId) {
+                            header("Location: payment.php?charge_id=" . urlencode($chargeId) . "&payment_type=crypto");
+                            exit;
+                        }
+                    } else {
+                        $error = "Invalid amount calculated.";
+                    }
                 }
             }
 
@@ -327,7 +383,7 @@
                         'currency' => 'EUR'
                     ],
                     'metadata' => [
-                        'customer_id' => '12345' // Add your own metadata
+                        'customer_id' => '12345'
                     ]
                 ];
                 
@@ -351,44 +407,42 @@
             }
             ?>
 
+            <div class="paymentStuff" id="crypto-payment" style="display: none;">
+                <div class="payment-part">
+                    <?php if (!$chargeData): ?>
+                        <div class="payment-main crypto">
+                            <div class="payment-container">
+                                <header class="payment-header" id="crypto-header">
+                                    <h1>Crypto Payment</h1>
+                                    <p>Pay securely with cryptocurrency</p>
+                                </header>
 
-         <div class="paymentStuff" id="crypto-payment" style="display: none;">
-            <div class="payment-part">
-                
-            <?php if (!$chargeData): ?>
-                <div class="payment-main crypto">
-                        <div class="payment-container">
-                            <header class="payment-header" id="crypto-header">
-                                <h1>Crypto Payment</h1>
-                                <p>Pay securely with cryptocurrency</p>
-                            </header>
+                                <main class="payment-crypto">
+                                    <form method="POST" class="payment-form" id="crypto-form">
+                                        <input type="hidden" name="payment_type" value="crypto">
+                                        <?php if (isset($error)): ?>
+                                            <div class="alert error"><?php echo $error; ?></div>
+                                        <?php endif; ?>
 
-                            <main class="payment-crypto">
-                                <form method="POST" class="payment-form" id="crypto-form">
-                                    <?php if (isset($error)): ?>
-                                        <div class="alert error"><?php echo $error; ?></div>
-                                    <?php endif; ?>
+                                        <div class="form-group">
+                                            <label for="amount">Amount to Pay</label>
+                                            <input type="text" id="amountjeter" name="amountjeter" value="<?php echo number_format($totalAmount, 2); ?>" readonly>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="amount">Amount to Pay</label>
-                                        <input type="hidden" id="amount" name="amount" value="<?php echo $totalAmount; ?>" readonly>
-                                        <input type="text" id="amount" name="amountjeter" value="<?php echo number_format($totalAmount, 2); ?>" readonly>
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea id="description" name="description" rows="3">Payment for order</textarea>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="description">Description</label>
-                                        <textarea id="description" name="description" rows="3">Payment for order</textarea>
-                                    </div>
-
-                                    <button type="submit" class="btn">Create Payment</button>
-                                </form>
-                            </main>
+                                        <button type="submit" class="btn">Create Payment</button>
+                                    </form>
+                                </main>
+                            </div>
+                            <footer class="payment-footer">
+                                <p>Powered by Coinbase Commerce</p>
+                            </footer>
                         </div>
-                        <footer class="payment-footer">
-                            <p>Powered by Coinbase Commerce</p>
-                        </footer>
-                    </div>
-                    <div class="payment-summary" id="payment-summary">
+                        <div class="payment-summary" id="payment-summary">
                             <h3>Order Summary</h3>
                             <div class="summary-item">
                                 <span>Subtotal:</span>
@@ -409,7 +463,7 @@
                                 <span>€<?php echo number_format($totalAmount, 2); ?></span>
                             </div>
                         </div>
-                <?php else: ?>
+                    <?php else: ?>
                         <div class="payment-main crypto after">
                             <div class="payment-container after">
                                 <header class="payment-header" id="crypto-header">
@@ -418,60 +472,58 @@
                                 </header>
 
                                 <main class="payment-crypto">
-                                <div class="payment-details">
-                                    <div class="payment-after crypto">
-                                        <h2>Payment Details</h2>
-                                        <div class="detail-row">
-                                            <span class="detail-label">Amount:</span>
-                                            <span class="detail-value"><?php echo $chargeData['pricing']['local']['amount']; ?>€</span>
-                                        </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">Description:</span>
-                                            <span class="detail-value"><?php echo htmlspecialchars($chargeData['description']); ?></span>
-                                        </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">Status:</span>
-                                            <span class="detail-value status-<?php echo strtolower($chargeData['timeline'][0]['status']); ?>">
-                                                <?php echo $chargeData['timeline'][0]['status']; ?>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; flex-direction: column; margin-top: 20px;">
-                                        <div class="payment-action">
-                                            <a href="<?php echo $chargeData['hosted_url']; ?>" class="coinbase-button" target="_blank">
-                                                <p style="text-decoration:none;">Pay with crypto</p>
-                                            </a>
-                                            <p class="small-text">You'll be redirected to Coinbase to complete your payment</p>
-                                        </div>
-
-                                        <div class="payment-alternatives">
-                                            <p class="small-text">Or scan QR code:</p>
-                                            <div class="qr-code">
-                                                <?php 
-                                                if (isset($chargeData['hosted_url'])): 
-                                                    $qrData = $chargeData['hosted_url'];
-                                                ?>
-                                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=<?php echo urlencode($qrData); ?>" alt="Payment QR Code">
-                                                <?php endif; ?>
+                                    <div class="payment-details">
+                                        <div class="payment-after crypto">
+                                            <h2>Payment Details</h2>
+                                            <div class="detail-row">
+                                                <span class="detail-label">Amount:</span>
+                                                <span class="detail-value"><?php echo $chargeData['pricing']['local']['amount']; ?>€</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="detail-label">Description:</span>
+                                                <span class="detail-value"><?php echo htmlspecialchars($chargeData['description']); ?></span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="detail-label">Status:</span>
+                                                <span class="detail-value status-<?php echo strtolower($chargeData['timeline'][0]['status']); ?>">
+                                                    <?php echo $chargeData['timeline'][0]['status']; ?>
+                                                </span>
                                             </div>
                                         </div>
+                                        <div style="display: flex; flex-direction: column; margin-top: 20px;">
+                                            <div class="payment-action">
+                                                <a href="<?php echo $chargeData['hosted_url']; ?>" class="coinbase-button" target="_blank">
+                                                    <p style="text-decoration:none;">Pay with crypto</p>
+                                                </a>
+                                                <p class="small-text">You'll be redirected to Coinbase to complete your payment</p>
+                                            </div>
 
-                                        <div class="payment-switch" style="margin-top: 20px; text-align: center;">
-                                            <button onclick="switchToCard()" class="switch-button" style="background: none; border: none; color: var(--noir-color); text-decoration: underline; cursor: pointer;">
-                                                Pay with Card Instead
-                                            </button>
+                                            <div class="payment-alternatives">
+                                                <p class="small-text">Or scan QR code:</p>
+                                                <div class="qr-code">
+                                                    <?php 
+                                                    if (isset($chargeData['hosted_url'])): 
+                                                        $qrData = $chargeData['hosted_url'];
+                                                    ?>
+                                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=<?php echo urlencode($qrData); ?>" alt="Payment QR Code">
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+
+                                            <div class="payment-switch" style="margin-top: 20px; text-align: center;">
+                                                <button onclick="switchToCard()" class="switch-button" style="background: none; border: none; color: var(--noir-color); text-decoration: underline; cursor: pointer;">
+                                                    Pay with Card Instead
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </main>
+                                </main>
+                            </div>
+                            <footer class="payment-footer">
+                                <p>Powered by Coinbase Commerce</p>
+                            </footer>
                         </div>
-                        <footer class="payment-footer">
-                            <p>Powered by Coinbase Commerce</p>
-                        </footer>
-                    </div>
                     <?php endif; ?>
-
-                    </div>
                 </div>
             </div>
         </div>
@@ -564,46 +616,57 @@
                 }
             }
 
+            // Fetch the latest Payment Intent client secret with the amount from the database
             try {
-                let result;
-                if (<?php echo $totalAmount; ?> < <?php echo $minimumAmount; ?>) {
-                    // Handle Setup Intent
-                    result = await stripe.confirmCardSetup(
-                        '<?php echo $clientSecret; ?>',
-                        {
-                            payment_method: {
-                                card: card,
-                                billing_details: {
-                                    name: document.getElementById('cardholder-name').value,
-                                    email: document.getElementById('email').value,
-                                    address: {
-                                        line1: document.getElementById('address').value
-                                    }
-                                }
-                            }
-                        }
-                    );
-                } else {
-                    // Handle Payment Intent
-                    result = await stripe.confirmCardPayment(
-                        '<?php echo $clientSecret; ?>',
-                        {
-                            payment_method: {
-                                card: card,
-                                billing_details: {
-                                    name: document.getElementById('cardholder-name').value,
-                                    email: document.getElementById('email').value,
-                                    address: {
-                                        line1: document.getElementById('address').value
-                                    }
-                                }
-                            }
-                        }
-                    );
+                const response = await fetch('payment.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `payment_type=card`
+                });
+                
+                const result = await response.json();
+                if (!result.success) {
+                    errorElement.textContent = result.message;
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = 'Pay Now €<?php echo number_format($totalAmount, 2); ?>';
+                    return;
                 }
 
-                if (result.error) {
-                    errorElement.textContent = result.error.message;
+                const clientSecret = result.client_secret;
+
+                let stripeResult;
+                if (<?php echo $totalAmount; ?> < <?php echo $minimumAmount; ?>) {
+                    stripeResult = await stripe.confirmCardSetup(clientSecret, {
+                        payment_method: {
+                            card: card,
+                            billing_details: {
+                                name: document.getElementById('cardholder-name').value,
+                                email: document.getElementById('email').value,
+                                address: {
+                                    line1: document.getElementById('address').value
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    stripeResult = await stripe.confirmCardPayment(clientSecret, {
+                        payment_method: {
+                            card: card,
+                            billing_details: {
+                                name: document.getElementById('cardholder-name').value,
+                                email: document.getElementById('email').value,
+                                address: {
+                                    line1: document.getElementById('address').value
+                                }
+                            }
+                        }
+                    });
+                }
+
+                if (stripeResult.error) {
+                    errorElement.textContent = stripeResult.error.message;
                     submitButton.disabled = false;
                     submitButton.innerHTML = 'Pay Now €<?php echo number_format($totalAmount, 2); ?>';
                 } else {
@@ -641,7 +704,6 @@
             if (urlParams.get('payment_type') === 'crypto' || localStorage.getItem('showCrypto') === '1') {
                 document.getElementById('cryptoo').click();
             }
-            // Hide switcher and update header if chargeData exists
             if (document.querySelector('.payment-details')) {
                 document.getElementById('pay-with-switcher').style.display = 'none';
                 document.getElementById('payment-header').textContent = 'Complete Payment';
@@ -650,13 +712,10 @@
         });
 
         function switchToCard() {
-            // Remove charge_id and payment_type from URL
             const url = new URL(window.location.href);
             url.searchParams.delete('charge_id');
             url.searchParams.delete('payment_type');
-            // Reload the page without those parameters
             window.location.href = url.toString();
-            // Optionally, clear any stored payment state
             localStorage.removeItem('showCrypto');
         }
 
