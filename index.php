@@ -233,6 +233,8 @@
                 </form>
             </div>
 
+            <?php $is_logged_in = isset($_SESSION['user_id']); ?>
+
             <div id='items'>
                 <!-- Discount circle always rendered, fixed position -->
                 <!-- <a href="index.php?discounted_only=1" class="discount-circle">
@@ -268,7 +270,7 @@
                                                 height="180">
                                             <div class='title'><?php echo htmlspecialchars($prod['description']); ?></div>
                                             <div class='bottom-container'>
-                                                <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>">
+                                                <button class="wishlist-btn <?php echo in_array($prod['product_id'], $wishlist_items) ? 'active' : ''; ?>" data-product-id="<?php echo $prod['product_id']; ?>" onclick="redirectToLogin()">
                                                     <i class="<?php echo in_array($prod['product_id'], $wishlist_items) ? 'fas' : 'far'; ?> fa-heart"></i>
                                                 </button>
                                                 <div class='price'>
@@ -515,7 +517,17 @@
         <?php include "footer/footer.php" ?>
     </div>
 
+    
     <script>
+
+        function redirectToLogin() {
+            <?php if (isset($_SESSION['user_id'])) { ?>
+            <?php } else { 
+            echo "window.location.href = 'login.php';";
+            }
+            ?>
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Clear Filters
             window.clearAllFilters = function() {

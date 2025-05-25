@@ -14,7 +14,7 @@ $dotenv->load();
 $prefillEmail = '';
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
-    $stmt = $conn->prepare("SELECT email FROM users WHERE user_id = ?");
+    $stmt = $conn->prepare("CALL getEmail(?)");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -28,8 +28,13 @@ if (isset($_SESSION['user_id'])) {
 <div class="contact-wrapper">
     <h2>Contact Us</h2>
     <div class="contact-info">
+<<<<<<< Updated upstream
         <p>Email: digitalsea.ks@gmail.com</p>
         <p>Phone: +383 45 123 456</p>
+=======
+        <p>Email: support@digitalsea.com</p>
+        <p>Phone: +383 45 123 321</p>
+>>>>>>> Stashed changes
         <p>Address: Universiteti i Prishtines, Prishtine, Kosovo</p>
     </div>
     <?php
@@ -58,7 +63,7 @@ if (isset($_SESSION['user_id'])) {
             // If logged in, get email from DB, but use name from form
             if (isset($_SESSION['user_id'])) {
                 $userId = $_SESSION['user_id'];
-                $stmt = $conn->prepare("SELECT email FROM users WHERE user_id = ?");
+                $stmt = $conn->prepare("CALL getEmail(?)");
                 $stmt->bind_param("i", $userId);
                 $stmt->execute();
                 $result = $stmt->get_result();
