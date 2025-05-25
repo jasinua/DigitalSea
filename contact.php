@@ -28,13 +28,9 @@ if (isset($_SESSION['user_id'])) {
 <div class="contact-wrapper">
     <h2>Contact Us</h2>
     <div class="contact-info">
-<<<<<<< Updated upstream
+        
         <p>Email: digitalsea.ks@gmail.com</p>
         <p>Phone: +383 45 123 456</p>
-=======
-        <p>Email: support@digitalsea.com</p>
-        <p>Phone: +383 45 123 321</p>
->>>>>>> Stashed changes
         <p>Address: Universiteti i Prishtines, Prishtine, Kosovo</p>
     </div>
     <?php
