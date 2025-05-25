@@ -1075,7 +1075,7 @@
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Logout</span>
             </a>
-            <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 1) { ?>
+            <?php if(isset($_SESSION['isAdministrator']) && ($_SESSION['isAdministrator'] == 1 || $_SESSION['isAdministrator'] == 2)) { ?>
             <a href="managestock.php" class="mobile-menu-item">
                 <i class="fas fa-wrench"></i>
                 <span>Manage Stock</span>
