@@ -1,4 +1,10 @@
 <style>
+    .page-wrapper {
+        width: 100%;
+        min-height: 100vh;
+        background-color: var(--page-background-color);
+    }
+
     .admin-container {
         max-width: 1200px;
         margin: 2rem auto;
@@ -20,6 +26,10 @@
 
     .content {
         color: var(--page-text-color);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
     }
 
     .users-table {

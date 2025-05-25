@@ -184,6 +184,62 @@ if (!empty($search)) {
                 <?php endif; ?>
             </tbody>
         </table>
+
+        <!-- kthehna najher e kqyri qita -->
+        <table class="small-media-table" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Discount</th>
+                    <th>Details</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($products)): ?>
+                    <?php foreach ($products as $product): ?>
+                        <tr data-index="<?= htmlspecialchars($product['product_id']) ?>">
+                            <td>
+                                <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" class="product-img" alt="<?= htmlspecialchars($product['name']) ?>">
+                            </td>
+                            <td><?= htmlspecialchars($product['name']) ?></td>
+                            <td style="width: 20%;"><?= htmlspecialchars($product['description']) ?></td>
+                            <td><strong><?= htmlspecialchars(number_format($product['price'], 2)) ?>€</strong></td>
+                            <td><?= htmlspecialchars($product['stock']) ?></td>
+                            <td>
+                                <?php if (!empty($product['discount'])): ?>
+                                    <strong><?= htmlspecialchars($product['discount']) ?>%</strong>
+                                <?php else: ?>
+                                    No discount
+                                <?php endif; ?>
+                            </td>
+                            <td style="width: 25%;">
+                                <?php 
+                                    if (!empty($product['details'])) {
+                                        $details = [];
+                                        foreach ($product['details'] as $detail) {
+                                            $details[] = htmlspecialchars($detail['prod_desc1']) . ": " . htmlspecialchars($detail['prod_desc2']);
+                                        }
+                                        echo implode("<br>", $details);
+                                    } else {
+                                        echo "No details";
+                                    }
+                                ?>
+                            </td>
+                            <td>
+                                <button type="button" class="btn edit-btn" onclick="editProduct(<?= $product['product_id'] ?>)">Edit</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="8" style="text-align:center;">No products available.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 
     <button id="scrollToTop" class="scroll-to-top" onclick="scrollToTop()">
@@ -194,7 +250,7 @@ if (!empty($search)) {
     function searchProducts() {
         const searchInput = document.getElementById('searchInput');
         const searchValue = searchInput.value.toLowerCase();
-        const products = <?php echo json_encode($products); ?>;
+        const products = <?php echo json_encode($products) ?>;
 
         const filteredProducts = products.filter(product => 
             product.description.toLowerCase().includes(searchValue) ||
