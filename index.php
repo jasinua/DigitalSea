@@ -250,15 +250,7 @@
                             </button>
                             <div class='wheel-carousel'>
                                 <div class='wheel-track' id='topItems'>
-                                    <?php foreach (getData("SELECT *,
-                                            CASE 
-                                                WHEN discount > 0 THEN price * (1 - discount/100)
-                                                ELSE price 
-                                            END as final_price 
-                                            FROM products 
-                                            WHERE CASE 
-                                                WHEN discount > 0 THEN price * (1 - discount/100)
-                                                ELSE price END>1100 LIMIT 10") as $prod) { ?>
+                                    <?php foreach (getTopProducts() as $prod) { ?>
                                     <div class='wheel-item'>
                                         <a href="product.php?product=<?php echo $prod['product_id'] ?>" class="product-link">
                                             <?php if ($prod['discount'] > 0) { ?>

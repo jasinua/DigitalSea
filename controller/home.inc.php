@@ -9,11 +9,24 @@ function getData($query, $page = 1, $items_per_page = 18) {
         $offset = ($page - 1) * $items_per_page;
         $query .= " LIMIT $items_per_page OFFSET $offset";
     }
-    
+
     $res = $conn->query($query);
     $data = $res->fetch_all(MYSQLI_ASSOC);
+    $res->close();
     return $data;
 }
+
+function getTopProducts() {
+    global $conn;
+    $res = $conn->query("CALL topProducts()");
+    $data = $res->fetch_all(MYSQLI_ASSOC);
+    $res->close();
+    while ($conn->more_results() && $conn->next_result()) {
+        // flush remaining results
+    }
+    return $data;
+}
+
 
 function getProductData($id) {
     global $conn;
