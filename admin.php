@@ -25,6 +25,15 @@ if ($result instanceof mysqli_result && $result->num_rows > 0) {
 // Clear any remaining results from the stored procedure
 while ($conn->more_results() && $conn->next_result()) {;}
 
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+if (!empty($search)) {
+    $search = strtolower($search);
+    $users = array_filter($users, function($user) use ($search) {
+        return strpos(strtolower($user['first_name'] . ' ' . $user['last_name']), $search) !== false
+            || strpos(strtolower($user['email']), $search) !== false;
+    });
+}
+
 // Handle POST requests for deleting or updating users
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
     $userId = intval($_POST['user_id']);
@@ -69,56 +78,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
     <?php include 'css/admin-css.php'; ?>
 </head>
 <body>
-    <div class="admin-container">
-        <div class="admin-header">
-            <i class="fas fa-lock"></i>
-            <h1>Admin Dashboard</h1>
-        </div>
+    <div class="page-wrapper">
+        <div class="admin-container">
+            <div class="admin-header">
+                <i class="fas fa-lock"></i>
+                <h1>Admin Dashboard</h1>
+            </div>
 
-        <div class="content">
-            <h2>User Management</h2>
-            <table class="users-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Admin Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($users)): ?>
-                        <?php foreach ($users as $row): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($row['user_id']); ?></td>
-                                <td><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
-                                <td><?php echo htmlspecialchars($row['email']); ?></td>
-                                <td>
-                                    <?php
-                                    $adminClass = "admin-" . $row['isAdmin'];
-                                    $adminText = $row['isAdmin'] == 0 ? "User" : ($row['isAdmin'] == 1 ? "Moderator" : "Administrator");
-                                    echo "<span class='admin-badge " . $adminClass . "'>" . $adminText . "</span>";
-                                    if ($_SESSION['isAdministrator'] == 2 && $row['user_id'] != $_SESSION['user_id']) {
-                                        echo "<form method='post' class='admin-action-form'>";
-                                        echo "<input type='hidden' name='user_id' value='" . htmlspecialchars($row['user_id']) . "'>";
-                                        echo "<button type='submit' name='isAdmin' value='0' class='admin-action-btn' style='margin-right:5px;'>User</button>";
-                                        echo "<button type='submit' name='isAdmin' value='1' class='admin-action-btn' style='margin-right:5px;'>Moderator</button>";
-                                        echo "<button type='submit' name='isAdmin' value='2' class='admin-action-btn' style='margin-right:10px;'>Admin</button>";
-                                        echo "<button type='submit' name='deleteUser' value='1' class='admin-action-btn' style='background:#e74c3c;color:white;'>Delete</button>";
-                                        echo "</form>";
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr><td colspan='4'>No users found</td></tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+            <div class="content">
+                <h2>User Management</h2>
+                <form method="get" style="margin-bottom: 20px; display: flex; flex-direction: row; gap: 10px; justify-content: center;">
+                    <input type="text" name="search" placeholder="Search users by name or email..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" style="padding: 8px; width: 500px;">
+                    <button type="submit" style="padding: 8px 12px;">Search</button>
+                </form>
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Admin Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($users)): ?>
+                            <?php foreach ($users as $row): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($row['user_id']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                    <td>
+                                        <?php
+                                        $adminClass = "admin-" . $row['isAdmin'];
+                                        $adminText = $row['isAdmin'] == 0 ? "User" : ($row['isAdmin'] == 1 ? "Moderator" : "Administrator");
+                                        echo "<span class='admin-badge " . $adminClass . "'>" . $adminText . "</span>";
+                                        if ($_SESSION['isAdministrator'] == 2 && $row['user_id'] != $_SESSION['user_id']) {
+                                            echo "<form method='post' class='admin-action-form'>";
+                                            echo "<input type='hidden' name='user_id' value='" . htmlspecialchars($row['user_id']) . "'>";
+                                            echo "<button type='submit' name='isAdmin' value='0' class='admin-action-btn' style='margin-right:5px;'>User</button>";
+                                            echo "<button type='submit' name='isAdmin' value='1' class='admin-action-btn' style='margin-right:5px;'>Moderator</button>";
+                                            echo "<button type='submit' name='isAdmin' value='2' class='admin-action-btn' style='margin-right:10px;'>Admin</button>";
+                                            echo "<button type='submit' name='deleteUser' value='1' class='admin-action-btn' style='background:#e74c3c;color:white;'>Delete</button>";
+                                            echo "</form>";
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr><td colspan='4'>No users found</td></tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
     <?php include 'footer/footer.php'; ?>
 </body>
 </html>
