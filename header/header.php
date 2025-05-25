@@ -1029,7 +1029,8 @@
                     </li>
                     <li><a href="profile.php"><i class="fas fa-user"></i></a></li>
                     <li><a href="controller/logout.php?from=header"><i class="fas fa-sign-out-alt"></i></a></li>
-                            <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 1) { echo "<li><a href='managestock.php'><i class='fas fa-wrench'></i></a></li>"; } ?>
+                            <?php if(isset($_SESSION['isAdministrator']) && ($_SESSION['isAdministrator'] == 1 || $_SESSION['isAdministrator'] == 2)) { echo "<li><a href='managestock.php'><i class='fas fa-wrench'></i></a></li>"; } ?>
+                            <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 2) { echo "<li><a href='admin.php'><i class='fas fa-lock'></i></a></li>"; } ?>
                             <?php } else { ?>
                     <li><a href="login.php"><i class="fas fa-sign-in-alt"></i></a></li>
                 <?php } ?>
@@ -1079,6 +1080,12 @@
                 <i class="fas fa-wrench"></i>
                 <span>Manage Stock</span>
             </a>
+            <?php } ?>
+            <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 2) { ?>
+            <a href="admin.php" class="moadminmenu-item">
+                <i class="fas fa-lock"></i>
+                <span>Admin</span>
+       Admi </a>
             <?php } ?>
             <?php } else { ?>
             <a href="login.php" class="mobile-menu-item">

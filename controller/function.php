@@ -412,12 +412,15 @@ require_once dirname(__FILE__) . '/../api/api.php';
                 return 0;
             }
         }
+        
         $stmt = $conn->prepare("SELECT COUNT(*) as cnt FROM wishlist WHERE user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $stmt->bind_result($cnt);
         $stmt->fetch();
         $stmt->close();
+
+        while ($conn->more_results() && $conn->next_result()) {;} // <-- Add this after closing the statement
         return $cnt;
     }
 

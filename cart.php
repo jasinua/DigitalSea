@@ -103,14 +103,16 @@ if (isLoggedIn($_SESSION['user_id'])) {
                             <tbody style='overflow: hidden; overflow-y: auto;'>
                                 <?php 
                                 $subtotal = 0;
-                                foreach ($res as $cart) {
-                                    $product_result = returnProduct($cart['product_id']);
-                                    $product = $product_result->fetch_assoc();
+                                $alldiscount = 0;
+                                foreach ($res as $cartItem) {
+                                    $product = returnProduct($cartItem['product_id'])->fetch_assoc();
+                                    $qty = $cartItem['quantity'];
+                                    $prc = $product['price'];
                                     $discount = $product['discount'];
-                                    $price = $product['price'];
-                                    $pricedsc = $price - ($price * $discount/100);
-                                    $total = $product['price'] * $cart['quantity'];
-                                    $subtotal += $total;
+                                    $prcwdisc = $prc - ($prc * $discount/100);
+                                    $ttldsc = $qty * $prcwdisc;
+                                    $alldiscount += ($prc * $discount/100) * $qty;
+                                    $subtotal += $ttldsc;
                                 ?>
                                 <tr>
                                     <td>
@@ -126,10 +128,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     <td>
                                         <div class="price-info">
                                             <?php if($discount) { ?>
-                                                <span class="discounted-price"><?php echo number_format($pricedsc, 2); ?>€</span>
-                                                <span class="original-price"><?php echo number_format($price, 2); ?>€</span>
+                                                <span class="discounted-price"><?php echo number_format($prcwdisc, 2); ?>€</span>
+                                                <span class="original-price"><?php echo number_format($prc, 2); ?>€</span>
                                             <?php } else { ?>
-                                                <span class="discounted-price"><?php echo number_format($price, 2); ?>€</span>
+                                                <span class="discounted-price"><?php echo number_format($prc, 2); ?>€</span>
                                             <?php } ?>
                                         </div>
                                     </td>
@@ -140,15 +142,15 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                                 name="quantity[]" 
                                                 class="quantity-input" 
                                                 min="1" 
-                                                value="<?php echo $cart['quantity']; ?>" 
-                                                data-price="<?php echo $discount ? $pricedsc : $price; ?>"
-                                                data-original-price="<?php echo $price; ?>"
+                                                value="<?php echo $cartItem['quantity']; ?>" 
+                                                data-price="<?php echo $discount ? $prcwdisc : $prc; ?>"
+                                                data-original-price="<?php echo $prc; ?>"
                                                 data-discount="<?php echo $discount; ?>"
                                                 data-product-id="<?php echo $product['product_id']; ?>"
                                             >
                                         </div>
                                     </td>
-                                    <input type="hidden" name="price[]" value="<?php echo $discount ? $pricedsc : $price; ?>">
+                                    <input type="hidden" name="price[]" value="<?php echo $discount ? $prcwdisc : $prc; ?>">
                                     <td>
                                         <button class="remove-btn" type="button" data-product-id="<?php echo $product['product_id']; ?>">×</button>
                                     </td>
@@ -163,14 +165,16 @@ if (isLoggedIn($_SESSION['user_id'])) {
                             <tbody style='overflow: hidden; overflow-y: auto;'>
                                 <?php 
                                 $subtotal = 0;
-                                foreach ($res as $cart) {
-                                    $product_result = returnProduct($cart['product_id']);
-                                    $product = $product_result->fetch_assoc();
+                                $alldiscount = 0;
+                                foreach ($res as $cartItem) {
+                                    $product = returnProduct($cartItem['product_id'])->fetch_assoc();
+                                    $qty = $cartItem['quantity'];
+                                    $prc = $product['price'];
                                     $discount = $product['discount'];
-                                    $price = $product['price'];
-                                    $pricedsc = $price - ($price * $discount/100);
-                                    $total = $product['price'] * $cart['quantity'];
-                                    $subtotal += $total;
+                                    $prcwdisc = $prc - ($prc * $discount/100);
+                                    $ttldsc = $qty * $prcwdisc;
+                                    $alldiscount += ($prc * $discount/100) * $qty;
+                                    $subtotal += $ttldsc;
                                 ?>
                                 <tr>
                                     <td class="small-screen-product">
@@ -186,10 +190,10 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                                     <div class="price-quantity">
                                                         <div class="price-info">
                                                             <?php if($discount) { ?>
-                                                                <span class="discounted-price"><?php echo number_format($pricedsc, 2); ?>€</span>
-                                                                <span class="original-price"><?php echo number_format($price, 2); ?>€</span>
+                                                                <span class="discounted-price"><?php echo number_format($prcwdisc, 2); ?>€</span>
+                                                                <span class="original-price"><?php echo number_format($prc, 2); ?>€</span>
                                                             <?php } else { ?>
-                                                                <span class="discounted-price"><?php echo number_format($price, 2); ?>€</span>
+                                                                <span class="discounted-price"><?php echo number_format($prc, 2); ?>€</span>
                                                             <?php } ?>
                                                         </div>
                                                         <div class="quantity-controls">
@@ -198,9 +202,9 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                                                 name="quantity[]" 
                                                                 class="quantity-input" 
                                                                 min="1" 
-                                                                value="<?php echo $cart['quantity']; ?>" 
-                                                                data-price="<?php echo $discount ? $pricedsc : $price; ?>"
-                                                                data-original-price="<?php echo $price; ?>"
+                                                                value="<?php echo $cartItem['quantity']; ?>" 
+                                                                data-price="<?php echo $discount ? $prcwdisc : $prc; ?>"
+                                                                data-original-price="<?php echo $prc; ?>"
                                                                 data-discount="<?php echo $discount; ?>"
                                                                 data-product-id="<?php echo $product['product_id']; ?>"
                                                             >
@@ -212,7 +216,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                             <button class="remove-btn" type="button" data-product-id="<?php echo $product['product_id']; ?>">×</button>
                                         </div>
                                     </td>
-                                    <input type="hidden" name="price[]" value="<?php echo $discount ? $pricedsc : $price; ?>">
+                                    <input type="hidden" name="price[]" value="<?php echo $discount ? $prcwdisc : $prc; ?>">
                                 </tr>
                                 <?php } ?>
                             </tbody>
@@ -239,8 +243,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                     $prcwdisc = $prc - ($prc * $discount/100);
                                     $ttldsc = $qty * $prcwdisc;
                                     $alldiscount += ($prc * $discount/100) * $qty;
-                                    $ttl = $qty * $prc;
-                                    $subtotal += $ttl;
+                                    $subtotal += $ttldsc;
                                 ?>
                                 <div class="summary-item" data-product-id="<?php echo $product['product_id']; ?>">
                                     <div class="emri-me-zbritje">
@@ -263,7 +266,7 @@ if (isLoggedIn($_SESSION['user_id'])) {
                                         <p class="total-price">
                                             <span class="summary-qty" data-product-id="<?php echo $product['product_id']; ?>"><?php echo $qty; ?></span>
                                             x <?php echo number_format($prc, 2); ?>€ = 
-                                            <span class="summary-total" data-product-id="<?php echo $product['product_id']; ?>"><?php echo number_format($ttl, 2); ?>€</span>
+                                            <span class="summary-total" data-product-id="<?php echo $product['product_id']; ?>"><?php echo number_format($ttldsc, 2); ?>€</span>
                                         </p>
                                     <?php } ?>
                                 </div>

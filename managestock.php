@@ -543,7 +543,7 @@ if (!empty($search)) {
         } else {
             scrollBtn.classList.remove('visible');
         }
-    };
+    }
     </script>
 </body>
 </html>

@@ -147,13 +147,6 @@
         transform: translateY(-2px);
     }
 
-    @media (max-width: 600px) {
-        .modal-content {
-            padding: 10px 2vw 10px 2vw;
-            max-width: 98vw;
-        }
-    }
-
     label {
         display: block;
         margin-top: 10px;
@@ -334,16 +327,6 @@
         display: block;
     }
 
-    @media (max-width: 900px) {
-        .body-container {
-            width: 98%;
-            padding: 12px 4px;
-        }
-        table, th, td {
-            font-size: 0.95rem;
-        }
-    }
-
     .notification {
         position: fixed;
         top: 60px;
@@ -437,6 +420,101 @@
             to {
                 transform: translateX(0);
                 opacity: 1;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .body-container {
+                width: 98%;
+                padding: 12px 4px;
+            }
+            table, th, td {
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Responsive styles for small screens */
+        @media (max-width: 767px) {
+            .body-container {
+                width: 99vw;
+                max-width: 100vw;
+                margin: 10px 0;
+                padding: 8px 2vw;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            h1, h2 {
+                font-size: 1.3rem;
+                margin-top: 10px;
+            }
+            table {
+                width: 100vw;
+                max-width: 100vw;
+                margin: 10px 0;
+                border-radius: 0;
+                box-shadow: none;
+                font-size: 0.92rem;
+                overflow-x: auto;
+                display: block;
+            }
+            th, td {
+                padding: 6px 2px;
+                font-size: 0.92rem;
+                word-break: break-word;
+            }
+            .product-img {
+                width: 48px;
+                min-width: 48px;
+                max-width: 48px;
+            }
+            .modal-content {
+                max-width: 98vw;
+                margin: 20px auto;
+                padding: 8px 2vw;
+            }
+            .search-add {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+            .search-add input[type="text"], .search-add .btn {
+                width: 100%;
+                margin: 0;
+            }
+            .scroll-to-top {
+                right: 10px;
+                bottom: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            .notification {
+                top: 10px;
+                right: 5vw;
+                left: 5vw;
+                width: 90vw;
+                padding: 10px 5vw;
+                font-size: 0.98rem;
+                border-radius: 6px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .modal-content {
+                padding: 10px 2vw 10px 2vw;
+                max-width: 98vw;
+            }
+        }
+
+        /* Optional: Make table horizontally scrollable on very small screens */
+        @media (max-width: 500px) {
+            table, .modal-content {
+                font-size: 0.88rem;
+            }
+            th, td {
+                font-size: 0.88rem;
+                padding: 4px 1px;
             }
         }
 </style>
