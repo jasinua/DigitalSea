@@ -885,6 +885,52 @@
         padding: 0 6px;
         border: 1px solid white;
     }
+
+    /* Keyboard Shortcuts Modal Styles */
+    .modal-shortcuts {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-shortcuts-content {
+      background: var(--modal-bg-color, #fff);
+      color: var(--page-text-color, #232a2f);
+      border-radius: 10px;
+      padding: 32px 32px 24px 32px;
+      min-width: 320px;
+      max-width: 90vw;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      position: relative;
+      font-family: "Montserrat", Arial, sans-serif;
+    }
+    .modal-shortcuts-close {
+      position: absolute;
+      top: 12px; right: 18px;
+      font-size: 28px;
+      color: #888;
+      cursor: pointer;
+      font-weight: bold;
+      transition: color 0.2s;
+    }
+    .modal-shortcuts-close:hover {
+      color: #232a2f;
+    }
+    .modal-shortcuts h2 {
+      margin-bottom: 18px;
+      font-size: 1.4em;
+    }
+    .modal-shortcuts ul {
+      list-style: none;
+      padding: 0;
+    }
+    .modal-shortcuts li {
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
 </style>
 <body>
     <header>
@@ -1095,6 +1141,22 @@
             <?php } ?>
         </div>
     </header>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div id="shortcutsModal" class="modal-shortcuts">
+      <div class="modal-shortcuts-content">
+        <span class="modal-shortcuts-close" id="closeShortcutsModal">&times;</span>
+        <h2>Keyboard Shortcuts</h2>
+        <ul>
+          <li><b>F1</b>: Show this help</li>
+          <li><b>Ctrl + I </b>: Opens cart</li>
+          <li><b>Ctrl + O</b>: Opens Wishlist</li>
+          <li><b>Ctrl + L</b>: Quick Search</li>
+          <li><b>Esc</b>: Close this modal</li>
+          <!-- Add your own shortcuts here -->
+        </ul>
+      </div>
+    </div>
 </body>
 <script>
     $(document).ready(function() {
@@ -1181,6 +1243,61 @@
                 mobileMenuToggle.removeClass('active');
                 mobileSearchContainer.removeClass('active');
             }
+        });
+
+        // Keyboard Shortcuts Modal logic
+        function showShortcutsModal() {
+            $('#shortcutsModal').css('display', 'flex');
+        }
+        function hideShortcutsModal() {
+            $('#shortcutsModal').css('display', 'none');
+        }
+
+        // Open modal on F1
+        $(window).on('keydown', function(e) {
+            // F1 key (keyCode 112 or e.key === 'F1')
+            if (e.key === "F1" || e.keyCode === 112) {
+                e.preventDefault(); // Prevent browser help
+                showShortcutsModal();
+                return false; // Extra safety
+            }
+            // Esc key
+            if (e.key === "Escape" || e.keyCode === 27) {
+                hideShortcutsModal();
+            }
+            // Ctrl+I: Open cart
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'i' || e.key === 'I')) {
+                e.preventDefault();
+                window.location.href = 'cart.php';
+            }
+            // Ctrl+O: Open wishlist
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'o' || e.key === 'O')) {
+                e.preventDefault();
+                window.location.href = 'wishlist.php';
+            }
+            // Ctrl+L: Focus search bar
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'l' || e.key === 'L')) {
+                e.preventDefault();
+                // Try desktop search first
+                var $searchInput = $('.search-input:visible');
+                if ($searchInput.length) {
+                    $searchInput.focus();
+                } else {
+                    // If not visible, open mobile search
+                    $('.mobile-search-container').addClass('active');
+                    $('.mobile-search-input').focus();
+                }
+            }
+        });
+
+        // Close modal on X click
+        $('#closeShortcutsModal').on('click', function() {
+            hideShortcutsModal();
+        });
+
+        // Optional: Close modal when clicking outside the content
+        $('#shortcutsModal').on('click', function(e) {
+            if (e.target === this) hideShortcutsModal();
         });
     });
 </script>
