@@ -59,7 +59,9 @@
                 <div class="dev-info">
                     <div>
                         <h3>Marijan Kolaj</h3>
-                        <p>Full Stack Problem Solver. Loves learning new tech, automating tasks, and open source. Runner and foodie.</p>
+                        <p>A passionate and skilled full stack developer with a strong command of both front-end and back-end technologies. I specialize in building complete, efficient, and user-friendly web and mobile applications.
+
+With hands-on experience in Java, Python, HTML, CSS, PHP, and Kotlin, I bring a versatile toolkit to every project </p>
                     </div>
                     <div class="dev-links">
                         <a href="https://marijankolaj.ct.ws/?i=1" target="_blank"><span class="icon">
