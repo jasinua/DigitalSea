@@ -5,6 +5,9 @@ $link = preg_replace('/\.php$/', '', $link);
 $link = preg_replace('/\.php\?.*$/', '', $link);
 
 switch ($link) {
+    case '':
+        $page = 'user_manuals/User Manual.pdf#page=6';
+        break;
     case 'index':
         $page = 'user_manuals/User Manual.pdf#page=6';
         break;
