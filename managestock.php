@@ -1,6 +1,5 @@
 <?php
 session_start();
-include 'header/header.php';
 
 // Check if user is logged in and is an admin
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['isAdministrator']) || ($_SESSION['isAdministrator'] != 1 && $_SESSION['isAdministrator'] != 2)) {
@@ -12,41 +11,28 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['isAdministrator']) || ($_S
 include_once "controller/function.php"; // for $conn
 include_once "model/dbh.inc.php";
 $products = [];
-$product_ids = [];
-
-// First, get all product IDs
-$sql = "CALL showProductsInStock()";
+$sql = "SELECT * FROM products WHERE api_source IS NULL OR api_source = ''";
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $products[] = $row;
-        $product_ids[] = $row['product_id'];
-    }
-}
-$result->free();
-$conn->next_result(); // Free the result set and prepare for the next query
-
-// Now, fetch details for each product
-foreach ($products as &$product) {
-    $product['details'] = [];
-    
-    $sql11 = "CALL getProductDetails(?)";
-    $stmt11 = $conn->prepare($sql11);
-    $stmt11->bind_param("i", $product['product_id']);
-    $stmt11->execute();
-    $result11 = $stmt11->get_result();
-    
-    if ($result11 && $result11->num_rows > 0) {
-        while ($detail = $result11->fetch_assoc()) {
-            $product['details'][] = $detail;
+        // Fetch details for each product
+        $sql11 = "SELECT * FROM product_details WHERE product_id = ?";
+        $stmt11 = $conn->prepare($sql11);
+        $stmt11->bind_param("i", $row['product_id']);
+        $stmt11->execute();
+        $result11 = $stmt11->get_result();
+        
+        $details = [];
+        if ($result11 && $result11->num_rows > 0) {
+            while ($detail = $result11->fetch_assoc()) {
+                $details[] = $detail;
+            }
         }
+        
+        $row['details'] = $details;
+        $products[] = $row;
     }
-
-    $result11->free();
-    $conn->next_result(); // Free the result set and prepare for the next query
-    $stmt11->close();
 }
-
 
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $search = strtolower($search);
@@ -67,6 +53,7 @@ if (!empty($search)) {
     <?php include "css/managestock-css.php"; ?>
 </head>
 <body>
+    <?php include "header/header.php"; ?>
 
     <div class="body-container">
         <h1>Manage Your Products</h1>
@@ -184,62 +171,6 @@ if (!empty($search)) {
                 <?php endif; ?>
             </tbody>
         </table>
-
-        <!-- kthehna najher e kqyri qita -->
-        <table class="small-media-table" style="display: none;">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Discount</th>
-                    <th>Details</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($products)): ?>
-                    <?php foreach ($products as $product): ?>
-                        <tr data-index="<?= htmlspecialchars($product['product_id']) ?>">
-                            <td>
-                                <img src="<?php echo getImageSource($product['product_id'], $product['image_url']); ?>" class="product-img" alt="<?= htmlspecialchars($product['name']) ?>">
-                            </td>
-                            <td><?= htmlspecialchars($product['name']) ?></td>
-                            <td style="width: 20%;"><?= htmlspecialchars($product['description']) ?></td>
-                            <td><strong><?= htmlspecialchars(number_format($product['price'], 2)) ?>€</strong></td>
-                            <td><?= htmlspecialchars($product['stock']) ?></td>
-                            <td>
-                                <?php if (!empty($product['discount'])): ?>
-                                    <strong><?= htmlspecialchars($product['discount']) ?>%</strong>
-                                <?php else: ?>
-                                    No discount
-                                <?php endif; ?>
-                            </td>
-                            <td style="width: 25%;">
-                                <?php 
-                                    if (!empty($product['details'])) {
-                                        $details = [];
-                                        foreach ($product['details'] as $detail) {
-                                            $details[] = htmlspecialchars($detail['prod_desc1']) . ": " . htmlspecialchars($detail['prod_desc2']);
-                                        }
-                                        echo implode("<br>", $details);
-                                    } else {
-                                        echo "No details";
-                                    }
-                                ?>
-                            </td>
-                            <td>
-                                <button type="button" class="btn edit-btn" onclick="editProduct(<?= $product['product_id'] ?>)">Edit</button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr><td colspan="8" style="text-align:center;">No products available.</td></tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
     </div>
 
     <button id="scrollToTop" class="scroll-to-top" onclick="scrollToTop()">
@@ -250,7 +181,7 @@ if (!empty($search)) {
     function searchProducts() {
         const searchInput = document.getElementById('searchInput');
         const searchValue = searchInput.value.toLowerCase();
-        const products = <?php echo json_encode($products) ?>;
+        const products = <?php echo json_encode($products); ?>;
 
         const filteredProducts = products.filter(product => 
             product.description.toLowerCase().includes(searchValue) ||
@@ -599,7 +530,7 @@ if (!empty($search)) {
         } else {
             scrollBtn.classList.remove('visible');
         }
-    }
+    };
     </script>
 </body>
 </html>

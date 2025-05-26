@@ -6,7 +6,7 @@ include_once "../model/dbh.inc.php";
 header('Content-Type: application/json');
 
 // Check if user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['isAdministrator']) || $_SESSION['isAdministrator'] != 1) {
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['isAdministrator']) || ($_SESSION['isAdministrator'] != 1 && $_SESSION['isAdministrator'] != 2)) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit();
 }
