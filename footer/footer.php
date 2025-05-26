@@ -444,7 +444,8 @@
                 <h3>Resources</h3>
                 <div class="footer-links">
                     <li><a href="contact.php">Contact Us</a></li>
-                    <li><a href="faq.php">FAQ</a></li>
+                    <li><a href="<?php include "get_manual_page.php"; ?>" target="_blank">User Manual</a></li>
+                    <li><a href="faq.php" >FAQ</a></li>
                 </div>
             </div>
             <div class="footer-column">

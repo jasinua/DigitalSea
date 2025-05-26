@@ -127,6 +127,8 @@
                     <h1 style="text-align:center;" class="welcome-text">Welcome to DigitalSea</h1>
                     <p style="text-align:center;" class="welcome-text p">Your one-stop shop for all your digital needs</p>
                     <button class="shop-now-button" onClick="window.location.href='index.php'">Shop Now</button>
+                    <!-- etrit ndrreqe -->
+                    <a href="user_manuals/User Manual.pdf#page=3" target="_blank" style="text-align:center; display:block; margin-top: 20px; color: white; text-decoration: none; justify-self: flex-end;">User Manual</a>
                 </div>
             </div>
             
