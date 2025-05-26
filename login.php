@@ -151,6 +151,7 @@
                     </div>
                     <div class="signup-link">
                         <a href="javascript:void(0)" onclick="showForgotPassword()">Forgot Password?</a>
+                        <a href="index.php" class="guest-link">Continue as Guest</a>
                     </div>  
                 </div>
             </div>

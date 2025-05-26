@@ -182,6 +182,10 @@
         padding-top: 25px;
     }
 
+    .guest-link {
+        display: none;
+    }
+
     @media screen and (max-width: 1400px) {
         .login-container,
         .signup-container {
@@ -217,6 +221,10 @@
 
         #container {
             background-color: white !important;
+        }
+
+        .guest-link {
+            display: block;
         }
     }
     
