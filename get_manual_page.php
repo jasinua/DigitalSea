@@ -26,6 +26,9 @@ switch ($link) {
     case 'wishlist':
         $page = 'user_manuals/User Manual.pdf#page=8';
         break;
+    default:
+        $page = 'user_manuals/User Manual.pdf#page=1';
+        break;
 }
 
 echo $page;
