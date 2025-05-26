@@ -1152,8 +1152,13 @@
           <li><b>Ctrl + I </b>: Opens cart</li>
           <li><b>Ctrl + O</b>: Opens Wishlist</li>
           <li><b>Ctrl + L</b>: Quick Search</li>
+          <?php if(isset($_SESSION['isAdministrator']) && ($_SESSION['isAdministrator'] == 1 || $_SESSION['isAdministrator'] == 2)) { ?>
+          <li><b>Ctrl + M</b>: Opens Manage Stock</li>
+          <?php } ?>
+          <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 2) { ?>
+          <li><b>Ctrl + A</b>: Opens Admin Panel</li>
+          <?php } ?>
           <li><b>Esc</b>: Close this modal</li>
-          <!-- Add your own shortcuts here -->
         </ul>
       </div>
     </div>
@@ -1288,6 +1293,20 @@
                     $('.mobile-search-input').focus();
                 }
             }
+            <?php if(isset($_SESSION['isAdministrator']) && ($_SESSION['isAdministrator'] == 1 || $_SESSION['isAdministrator'] == 2)) { ?>
+            // Ctrl+M: Open Manage Stock
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+                e.preventDefault();
+                window.location.href = 'managestock.php';
+            }
+            <?php } ?>
+            <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 2) { ?>
+            // Ctrl+A: Open Admin Panel
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'a' || e.key === 'A')) {
+                e.preventDefault();
+                window.location.href = 'admin.php';
+            }
+            <?php } ?>
         });
 
         // Close modal on X click
