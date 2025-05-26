@@ -88,8 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
             <div class="content">
                 <h2>User Management</h2>
                 <form method="get" style="margin-bottom: 20px; display: flex; flex-direction: row; gap: 10px; justify-content: center;">
-                    <input type="text" name="search" placeholder="Search users by name or email..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" style="padding: 8px; width: 500px;">
-                    <button type="submit" style="padding: 8px 12px;">Search</button>
+                    <input type="text" name="search" placeholder="Search users by name or email..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" style="padding: 8px; width: 500px; border-radius: 10px; border: 1px solid #ccc;">
+                    <button type="submit" style="padding: 8px 12px; border-radius: 10px; border: 1px solid #ccc;">Search</button>
                 </form>
                 <table class="users-table">
                     <thead>
@@ -112,13 +112,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
                                         $adminClass = "admin-" . $row['isAdmin'];
                                         $adminText = $row['isAdmin'] == 0 ? "User" : ($row['isAdmin'] == 1 ? "Moderator" : "Administrator");
                                         echo "<span class='admin-badge " . $adminClass . "'>" . $adminText . "</span>";
-                                        if ($_SESSION['isAdministrator'] == 2 && $row['user_id'] != $_SESSION['user_id']) {
-                                            echo "<form method='post' class='admin-action-form'>";
+                                        if (
+                                            $_SESSION['isAdministrator'] == 2 && $row['user_id'] != $_SESSION['user_id']
+                                        ) {
+                                            // Desktop buttons
+                                            echo "<form method='post' class='admin-action-form desktop-admin-actions'>";
                                             echo "<input type='hidden' name='user_id' value='" . htmlspecialchars($row['user_id']) . "'>";
                                             echo "<button type='submit' name='isAdmin' value='0' class='admin-action-btn' style='margin-right:5px;'>User</button>";
                                             echo "<button type='submit' name='isAdmin' value='1' class='admin-action-btn' style='margin-right:5px;'>Moderator</button>";
                                             echo "<button type='submit' name='isAdmin' value='2' class='admin-action-btn' style='margin-right:10px;'>Admin</button>";
                                             echo "<button type='submit' name='deleteUser' value='1' class='admin-action-btn' style='background:#e74c3c;color:white;'>Delete</button>";
+                                            echo "</form>";
+
+                                            // Mobile dropdown
+                                            echo "<form method='post' class='admin-action-form mobile-admin-actions'>";
+                                            echo "<input type='hidden' name='user_id' value='" . htmlspecialchars($row['user_id']) . "'>";
+                                            echo "<select name='isAdmin' class='admin-action-select'>";
+                                            echo "<option value='0' " . ($row['isAdmin'] == 0 ? "selected" : "") . ">User</option>";
+                                            echo "<option value='1' " . ($row['isAdmin'] == 1 ? "selected" : "") . ">Moderator</option>";
+                                            echo "<option value='2' " . ($row['isAdmin'] == 2 ? "selected" : "") . ">Admin</option>";
+                                            echo "<option type='submit' name='deleteUser' value='1' class='admin-action-btn' style='background:#e74c3c;color:white; margin-left:5px; text-align:left;'>Delete</option>";
+                                            echo "</select>";
+                                            echo "<button type='submit' class='admin-action-btn mobile-submit-btn'>Submit</button>";
                                             echo "</form>";
                                         }
                                         ?>
@@ -135,4 +150,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
     </div>
     <?php include 'footer/footer.php'; ?>
 </body>
+
+<script>
+    function updateMobileUI() {
+        // Update submit button text
+        document.querySelectorAll('.mobile-submit-btn').forEach(function(btn) {
+            btn.textContent = (window.innerWidth < 540) ? '✓' : 'Submit';
+        });
+        // Update Moderator/Mod label
+        document.querySelectorAll('.admin-action-select').forEach(function(select) {
+            select.querySelectorAll('option').forEach(function(option) {
+                if (option.value === "1") {
+                    option.textContent = (window.innerWidth < 540) ? "Mod" : "Moderator";
+                }
+            });
+        });
+    }
+
+    window.addEventListener('resize', updateMobileUI);
+    window.addEventListener('load', updateMobileUI);
+</script>
 </html>

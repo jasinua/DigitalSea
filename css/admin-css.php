@@ -7,6 +7,7 @@
 
     .admin-container {
         max-width: 1200px;
+        width: 100%;
         margin: 2rem auto;
         padding: 0 1rem;
     }
@@ -43,7 +44,14 @@
     .users-table th, .users-table td {
         padding: 1rem;
         text-align: left;
+    }
+
+    .users-table th, .users-table tr {
         border-bottom: 1px solid #eee;
+    }
+
+    .users-table tr {
+        align-items: center;
     }
 
     .users-table th {
@@ -145,5 +153,91 @@
         margin: 0 !important;
         min-width: 90px;
         text-align: center;
+    }
+
+    @media (max-width: 1030px) {
+        thead th:nth-child(2),
+        tbody td:nth-child(2) {
+            display: none;
+        }
+    }
+
+    /* Desktop: show buttons, hide dropdown */
+    .desktop-admin-actions { 
+        display: flex; 
+    }
+
+    .mobile-admin-actions { 
+        display: none; 
+    }
+
+    /* Mobile: show dropdown, hide buttons */
+    @media (max-width: 930px) {
+        .desktop-admin-actions { 
+            display: none !important; 
+        }
+
+        .mobile-admin-actions { 
+            display: flex !important; 
+            flex-direction: row; 
+            gap: 5px; 
+        }
+
+        .admin-action-select { 
+            padding: 6px; 
+            min-width: max-content;
+            border-radius: 12px;
+        }
+    }
+
+    @media (max-width: 830px) {
+        .admin-badge {
+            display: none;
+        }
+
+        .users-table tbody td:nth-child(3) {
+            padding: 1rem 0rem;
+        }
+
+        
+        .users-table tbody td:nth-child(4) {
+            padding: 1rem 1rem 1rem 0rem;
+        }
+
+        .admin-action-form {
+            margin-left: 0;
+            justify-content: space-between;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 540px) {
+        .admin-action-btn {
+            min-width: unset;
+        }
+
+        .users-table {
+            font-size: 0.9rem;
+        }
+
+        .admin-action-select {
+            font-size: 0.8rem;
+        }
+
+        thead th:nth-child(1),
+        tbody td:nth-child(1) {
+            display: none;
+        }
+
+        .users-table tbody td:nth-child(3) {
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 440px) {
+        .users-table td:nth-child(3) {
+            word-break: break-all;
+            white-space: normal;
+        }
     }
 </style>

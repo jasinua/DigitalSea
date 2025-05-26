@@ -444,7 +444,7 @@
         }
         
         .info-grid {
-            display: none;
+            /* display: none; */
         }
     }
 

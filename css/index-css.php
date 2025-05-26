@@ -1058,7 +1058,7 @@
             font-size: 14px;
             min-height: 45px;
             /* margin: 12px 0; */
-            overflow: visible;
+            overflow: hidden;
         }
         
         .wheel-item .price {
