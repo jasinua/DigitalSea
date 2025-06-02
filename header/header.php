@@ -1148,7 +1148,7 @@
         <span class="modal-shortcuts-close" id="closeShortcutsModal">&times;</span>
         <h2>Keyboard Shortcuts</h2>
         <ul>
-          <li><b>F1</b>: Show this help</li>
+          <li><b>F1</b>: Keyboard Shortcuts</li>
           <li><b>Ctrl + I </b>: Opens cart</li>
           <li><b>Ctrl + O</b>: Opens Wishlist</li>
           <li><b>Ctrl + L</b>: Quick Search</li>
