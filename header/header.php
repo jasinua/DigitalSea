@@ -15,12 +15,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://cdn-uicons.flaticon.com/uicons-rounded-regular/css/uicons-rounded-regular.css" rel="stylesheet">
+    <!-- <link href="https://cdn-uicons.flaticon.com/uicons-rounded-regular/css/uicons-rounded-regular.css" rel="stylesheet"> -->
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="logo2.png">
@@ -931,6 +934,23 @@
       margin-bottom: 10px;
       font-size: 1.1em;
     }
+
+    [data-lucide] {
+        
+        color: white;
+        transition: scale 0.1s ease;
+    }
+    [data-lucide] svg {
+        color: inherit;
+        fill: none;
+        stroke: currentColor;
+    }
+
+    [data-lucide]:hover {
+        
+        scale: 1.1;
+        transition: scale 0.1s ease;
+     }
 </style>
 <body>
     <header>
@@ -957,11 +977,11 @@
                 
         <nav>
             <ul>
-                <li><a href="index.php"><i class="fas fa-home"></i></a></li>
+                <li><a href="index.php"><i data-lucide="home"></i></a></li>
                 <?php if(isset($_SESSION['user_id'])) { ?>
                     <li style="position: relative;">
                         <a href="wishlist.php" style="position: relative;">
-                            <i class="fas fa-heart"></i>
+                            <i data-lucide="heart"></i>
                             <?php
                                 $wishlist_count = getWishlistCount($_SESSION['user_id']);
                                 if ($wishlist_count > 0 && basename($_SERVER['PHP_SELF']) !== 'wishlist.php') {
@@ -973,7 +993,7 @@
                     </li>
                     <li class="cart-link">
                         <a href="cart.php" style="position: relative;">
-                            <i class="fas fa-shopping-cart"></i>
+                            <i data-lucide="shopping-cart"></i>
                             <?php
                                 $cart_items = returnCart($_SESSION['user_id']);
                                 $cart_count = 0;
@@ -1073,18 +1093,18 @@
                             ?>
                         </div>
                     </li>
-                    <li><a href="profile.php"><i class="fas fa-user"></i></a></li>
-                    <li><a href="controller/logout.php?from=header"><i class="fas fa-sign-out-alt"></i></a></li>
-                            <?php if(isset($_SESSION['isAdministrator']) && ($_SESSION['isAdministrator'] == 1 || $_SESSION['isAdministrator'] == 2)) { echo "<li><a href='managestock.php'><i class='fas fa-wrench'></i></a></li>"; } ?>
-                            <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 2) { echo "<li><a href='admin.php'><i class='fas fa-lock'></i></a></li>"; } ?>
+                    <li><a href="profile.php"><i data-lucide="user"></i></a></li>
+                    <li><a href="controller/logout.php?from=header"><i data-lucide="log-in"></i></a></li>
+                            <?php if(isset($_SESSION['isAdministrator']) && ($_SESSION['isAdministrator'] == 1 || $_SESSION['isAdministrator'] == 2)) { echo "<li><a href='managestock.php'><i data-lucide='wrench'></i></a></li>"; } ?>
+                            <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 2) { echo "<li><a href='admin.php'><i data-lucide='lock'></i></a></li>"; } ?>
                             <?php } else { ?>
-                    <li><a href="login.php"><i class="fas fa-sign-in-alt"></i></a></li>
+                    <li><a href="login.php"><i data-lucide="log-in"></i></a></li>
                 <?php } ?>
             </ul>
         </nav>
                 
                 <button class="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
+                <i data-lucide="menu"></i>
                 </button>
             </div>
         </div>
@@ -1101,41 +1121,41 @@
         
         <div class="mobile-menu">
             <a href="index.php" class="mobile-menu-item">
-                <i class="fas fa-home"></i>
+            <i data-lucide="home"></i>
                 <span>Home</span>
             </a>
             <?php if(isset($_SESSION['user_id'])) { ?>
             <a href="wishlist.php" class="mobile-menu-item">
-                <i class="fas fa-heart"></i>
+            <i data-lucide="heart"></i>
                 <span>Wishlist</span>
             </a>
             <a href="cart.php" class="mobile-menu-item">
-                <i class="fas fa-shopping-cart"></i>
+            <i data-lucide="shopping-cart"></i>
                 <span>Cart</span>
             </a>
             <a href="profile.php" class="mobile-menu-item">
-                <i class="fas fa-user"></i>
+            <i data-lucide="user"></i>
                 <span>Profile</span>
             </a>
             <a href="controller/logout.php?from=header" class="mobile-menu-item">
-                <i class="fas fa-sign-out-alt"></i>
+            <i data-lucide="log-in"></i>
                 <span>Logout</span>
             </a>
             <?php if(isset($_SESSION['isAdministrator']) && ($_SESSION['isAdministrator'] == 1 || $_SESSION['isAdministrator'] == 2)) { ?>
             <a href="managestock.php" class="mobile-menu-item">
-                <i class="fas fa-wrench"></i>
+            <i data-lucide="wrench"></i>
                 <span>Manage Stock</span>
             </a>
             <?php } ?>
             <?php if(isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator'] == 2) { ?>
             <a href="admin.php" class="mobile-menu-item">
-                <i class="fas fa-lock"></i>
+                <i data-lucide="lock"></i>
                 <span>Admin</span>
             </a>
             <?php } ?>
             <?php } else { ?>
             <a href="login.php" class="mobile-menu-item">
-                <i class="fas fa-sign-in-alt"></i>
+                <i data-lucide="log-in"></i>
                 <span>Login</span>
             </a>
             <?php } ?>
@@ -1301,4 +1321,9 @@
         });
     });
 </script>
+
+<script>
+      lucide.createIcons();
+</script>
 </html>
+    
