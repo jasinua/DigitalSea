@@ -100,6 +100,8 @@
                         Already have an account? <a href="javascript:void(0)" onclick="showLoginForm()">Log In</a>
                     </div>
                 </div>
+                
+                <a href="user_manuals/User Manual.pdf#page=3" target="_blank" class="user-manual-link">User Manual</a>
             </div>
 
             <div id="confirmationContainer">
@@ -120,6 +122,8 @@
                         <a href="javascript:void(0)" onclick="showSignupFromConfirmation()">Back to Sign Up</a>
                     </div>
                 </div>
+                
+                <a href="user_manuals/User Manual.pdf#page=3" target="_blank" class="user-manual-link">User Manual</a>
             </div>  
             
             <div id='img' style="justify-content:right;">
@@ -127,8 +131,6 @@
                     <h1 style="text-align:center;" class="welcome-text">Welcome to DigitalSea</h1>
                     <p style="text-align:center;" class="welcome-text p">Your one-stop shop for all your digital needs</p>
                     <button class="shop-now-button" onClick="window.location.href='index.php'">Shop Now</button>
-                    <!-- etrit ndrreqe -->
-                    <a href="user_manuals/User Manual.pdf#page=3" target="_blank" style="text-align:center; display:block; margin-top: 20px; color: white; text-decoration: none; justify-self: flex-end;">User Manual</a>
                 </div>
             </div>
             
@@ -156,6 +158,8 @@
                         <a href="index.php" class="guest-link">Continue as Guest</a>
                     </div>  
                 </div>
+                
+                <a href="user_manuals/User Manual.pdf#page=3" target="_blank" class="user-manual-link">User Manual</a>
             </div>
 
             <?php if(!isset($_GET['token'])) { ?>
@@ -176,8 +180,8 @@
                     <div class="signup-link">
                         <a href="javascript:void(0)" onclick="showLoginFromForgotPassword()">Back to Log In</a>
                     </div>
-                    
                 </div>
+                <a href="user_manuals/User Manual.pdf#page=3" target="_blank" class="user-manual-link">User Manual</a>
             </div> 
 
 

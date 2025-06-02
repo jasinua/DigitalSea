@@ -29,6 +29,7 @@
 
     #loginContainer{
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         height: 100%;
@@ -184,6 +185,17 @@
 
     .guest-link {
         display: none;
+    }
+
+    .user-manual-link {
+        text-align:center; 
+        display:block; 
+        margin-top: 20px; 
+        color: var(--page-text-color); 
+        text-decoration: none; 
+        justify-self: flex-end;
+        position: absolute;
+        bottom: 20px;
     }
 
     @media screen and (max-width: 1400px) {
