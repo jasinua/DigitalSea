@@ -660,11 +660,25 @@
     }
 
     /* Tablets and Small Desktops (768px to 1500px) */
-    @media screen and (max-width: 1500px) {
+    @media screen and (max-width: 1580px) {
         .search-container {
             width: 500px;
             margin: 0 15px;
             left: calc(50% - 250px);
+        }
+
+        .search-container input[type="text"] {
+            min-width: 400px;
+            font-size: 13px;
+            padding: 8px 30px 8px 12px;
+        }
+    }
+
+    @media screen and (max-width: 1510px) {
+        .search-container {
+            width: 500px;
+            margin: 0 15px;
+            left: calc(50% - 350px);
         }
 
         .search-container input[type="text"] {
@@ -702,7 +716,7 @@
         }
     }
 
-    @media screen and (max-width: 980px) {
+    @media screen and (max-width: 1110px) {
         .search-container {
             width: 400px;
             margin: 0 15px;
@@ -717,7 +731,7 @@
     }
 
     /* Search icon appears at 960px and below */
-    @media screen and (max-width: 940px) {
+    @media screen and (max-width: 1010px) {
         .search-container {
             display: none;
         }
